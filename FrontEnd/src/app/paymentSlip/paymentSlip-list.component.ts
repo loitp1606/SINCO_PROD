@@ -125,7 +125,7 @@ export class PaymentSlipGridComponent {
         enableTaxExcelExport: true
       },
     },
-    sort: 'voucherDate desc',
+    sort: 'voucherDate desc, voucherNumber desc',
     actions: [
     ]
   }

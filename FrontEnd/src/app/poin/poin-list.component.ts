@@ -83,7 +83,7 @@ export class PoinGridComponent {
         enableTaxExcelExport: true
       },
     },
-    sort: 'voucherDate desc',
+    sort: 'voucherDate desc, voucherNumber desc',
     ui: {
       summary: {
         field: 'total_payment',

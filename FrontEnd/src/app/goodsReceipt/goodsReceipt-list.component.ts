@@ -86,7 +86,7 @@ export class GoodsReceiptGridComponent {
         isFileHandle: 'export',
       },
     },
-    sort: 'voucherDate desc',
+    sort: 'voucherDate desc, voucherNumber desc',
     ui: {
       summary: {
         field: 'totalPayment',
