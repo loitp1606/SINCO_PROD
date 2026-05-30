@@ -1,0 +1,139 @@
+/* =====================================================
+   ERP FRAMED UI – CUSTOMER REQUEST
+   ===================================================== */
+
+/* =========================
+   Master Container Frame
+   ========================= */
+
+.master-detail-container {
+  border: 2px solid var(--erp-frame-border);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+/* Accent line on top (ERP style) */
+.master-detail-container::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: var(--erp-frame-accent);
+}
+
+/* =========================
+   Header Enhancement
+   ========================= */
+
+.form-header {
+  position: relative;
+}
+
+.form-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--erp-frame-border);
+}
+
+/* =========================
+   Tab Framing
+   ========================= */
+
+.tab-container {
+  border-left: 4px solid var(--erp-frame-accent);
+  background: var(--erp-frame-soft);
+}
+
+.tab-button.active {
+  background: white;
+  box-shadow: inset 0 -2px 0 var(--erp-frame-accent);
+}
+
+/* =========================
+   Master Form Block
+   ========================= */
+
+.master-form {
+  background: white;
+  border: 1px solid var(--erp-frame-border);
+  border-radius: 6px;
+  padding: 16px;
+  margin: 12px;
+}
+
+/* =========================
+   Section Title Highlight
+   ========================= */
+
+.master-form-title {
+  position: relative;
+  padding-left: 10px;
+}
+
+.master-form-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: var(--erp-frame-accent);
+  border-radius: 2px;
+}
+
+/* =========================
+   Detail Section Framing
+   ========================= */
+
+.detail-section {
+  margin: 12px;
+  border: 1px solid var(--erp-frame-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.detail-header {
+  background: var(--erp-frame-soft);
+  border-bottom: 1px solid var(--erp-frame-border);
+}
+
+/* =========================
+   Detail Table Emphasis
+   ========================= */
+
+.detail-table-container {
+  border: none;
+}
+
+.detail-table th {
+  border-bottom: 2px solid var(--erp-frame-accent);
+}
+
+/* =========================
+   Summary Highlight
+   ========================= */
+
+.summary-section {
+  background: linear-gradient(
+    180deg,
+    var(--erp-frame-soft),
+    white
+  );
+  border: 1px solid var(--erp-frame-border);
+  margin: 12px;
+  border-radius: 6px;
+}
+
+/* =========================
+   Buttons Accent
+   ========================= */
+
+.btn-primary {
+  box-shadow: 0 2px 6px rgba(37,99,235,.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+}

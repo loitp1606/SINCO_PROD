@@ -1,0 +1,193 @@
+{
+  "type": "report",
+  "action": "loading",
+  "language": "V",
+  "title": "Báo cáo giao hàng và dự kiến giao hàng trong 1/3/5/7 ngày tới",
+  "title2": "Quotation success rate per salesperson",
+  "data": [],
+  "header": [
+    {
+      "label": "STT",
+      "key": "stt",
+      "type": "number",
+      "width": 50,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "NVKD",
+      "key": "employee_name",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Số chứng từ",
+      "key": "voucherNumber",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Ngày chứng từ",
+      "key": "voucherDate",
+      "type": "date",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Mã khách hàng",
+      "key": "customer_id",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tên khách hàng",
+      "key": "customer_name",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Mã vật tư",
+      "key": "item_id",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tên vật tư",
+      "key": "item_name",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Số lượng",
+      "key": "quantity",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": "decimal-2"
+    },
+    {
+      "label": "Tiền",
+      "key": "amount",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Mã thuế",
+      "key": "taxCode",
+      "type": "text",
+      "width": 100,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Thuế",
+      "key": "tax",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Thanh toán",
+      "key": "payment",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Diễn giải",
+      "key": "so_ngay_giao_name",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "pageSize": 10,
+  "sort": "",
+  "filters": [
+    {
+      "key": "dateFrom",
+      "label": "Ngày từ",
+      "type": "date"
+    },
+    {
+      "key": "dateTo",
+      "label": "Ngày đến",
+      "type": "date"
+    },
+    {
+      "key": "customer",
+      "label": "Mã khách hàng",
+      "type": "lookup",
+      "placeholder": "",
+      "default": {
+        "controller": "customer",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "Job",
+      "label": "Dự án",
+      "type": "lookup",
+      "placeholder": "Nhập dự án",
+      "default": {
+        "controller": "Job",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "Employee",
+      "label": "Nhân viên kinh doanh",
+      "type": "lookup",
+      "placeholder": "Nhập nvkd",
+      "default": {
+        "controller": "Employee",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    }
+  ],
+  "dataProcessing": {
+    "report": [
+      {
+        "query": "exec rp_bcghdkgh135792 N'@dateFrom', N'@dateTo', N'@Employee', N'@customer', N'@Job', N'@userId';"
+      }
+    ]
+  }
+}

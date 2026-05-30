@@ -1,0 +1,34 @@
+:root {
+  /* ===== Color system ===== */
+  --erp-primary: #334155;        /* slate-700 */
+  --erp-primary-soft: #e2e8f0;   /* slate-200 */
+
+  --erp-accent: #2563eb;         /* blue-600 */
+  --erp-accent-soft: #dbeafe;
+
+  --erp-bg-page: #f8fafc;
+  --erp-bg-card: #ffffff;
+  --erp-bg-muted: #f1f5f9;
+
+  --erp-border: #cbd5e1;
+  --erp-border-strong: #94a3b8;
+
+  --erp-text-primary: #0f172a;
+  --erp-text-secondary: #334155;
+  --erp-text-muted: #64748b;
+
+  --erp-danger: #dc2626;
+  --erp-warning: #d97706;
+  --erp-success: #059669;
+
+  /* ===== Layout ===== */
+  --erp-radius: 6px;
+  --erp-radius-sm: 4px;
+
+  --erp-shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --erp-shadow: 0 2px 6px rgba(0,0,0,.08);
+
+  /* ===== Typography ===== */
+  --erp-font: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --erp-font-size: 14px;
+}

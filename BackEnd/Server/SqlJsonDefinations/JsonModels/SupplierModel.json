@@ -1,0 +1,176 @@
+{
+	"model": "Supplier",
+	"schema": {
+		"partition": false,
+		"fields": [
+			{
+				"name": "supplier_id",
+				"property": "supplier_id",
+				"type": "string",
+				"required": true,
+				"sqlType": "VARCHAR(50)",
+				"primaryKey": true
+			},
+			{
+				"name": "supplier_name",
+				"property": "supplier_name",
+				"type": "string",
+				"required": true,
+				"sqlType": "NVARCHAR(256)"
+			},
+			{
+				"name": "supplier_type_id",
+				"property": "supplier_type_id",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "industry_group_id",
+				"property": "industry_group_id",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "phone_number",
+				"property": "phone_number",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "email",
+				"property": "email",
+				"type": "string",
+				"sqlType": "VARCHAR(128)"
+			},
+			{
+				"name": "address",
+				"property": "address",
+				"type": "string",
+				"sqlType": "NVARCHAR(500)"
+			},
+			{
+				"name": "province",
+				"property": "province",
+				"type": "string",
+				"sqlType": "NVARCHAR(100)"
+			},
+			{
+				"name": "district",
+				"property": "district",
+				"type": "string",
+				"sqlType": "NVARCHAR(100)"
+			},
+			{
+				"name": "status",
+				"property": "status",
+				"type": "string",
+				"sqlType": "VARCHAR(1)"
+			},
+			{
+				"name": "customer_id",
+				"property": "customer_id",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			}
+		]
+	},
+	"excelIntegration": {
+		"sheetName": "Supplier",
+		"columnMapping": [
+			{
+				"excelColumn": "Mã nhà cung cấp",
+				"fieldName": "supplier_id",
+				"required": false
+			},
+			{
+				"excelColumn": "Tên nhà cung cấp",
+				"fieldName": "supplier_name",
+				"required": true
+			},
+			{
+				"excelColumn": "Loại nhà cung cấp",
+				"fieldName": "supplier_type_id",
+				"required": false,
+				"clauseForiegn": "SELECT supplier_type_id, supplier_type_name FROM supplierType where status = '1'"
+			},
+			{
+				"excelColumn": "Nhóm ngành hàng cung cấp",
+				"fieldName": "industry_group_id",
+				"required": false,
+				"clauseForiegn": "SELECT industry_group_id, industry_group_name FROM industryGroup where status = '1'"
+			},
+			{
+				"excelColumn": "Số điện thoại",
+				"fieldName": "phone_number",
+				"required": false
+			},
+			{
+				"excelColumn": "Email",
+				"fieldName": "email",
+				"required": false
+			},
+			{
+				"excelColumn": "Địa chỉ",
+				"fieldName": "address",
+				"required": false
+			},
+			{
+				"excelColumn": "Tỉnh/Thành phố",
+				"fieldName": "province",
+				"required": false
+			},
+			{
+				"excelColumn": "Quận/Huyện",
+				"fieldName": "district",
+				"required": false
+			},
+			{
+				"excelColumn": "Trạng thái (0,1)",
+				"fieldName": "status",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "Liên kết khách hàng",
+				"fieldName": "customer_id",
+				"required": false,
+				"hide": true,
+				"clauseForiegn": "SELECT customer_id, customer_name FROM customer where status = '1'"
+			}
+		],
+		"templateRules": {
+			"fileFormat": "xlsx",
+			"firstRowData": 2,
+			"maxRows": 20000
+		}
+	},
+	"checking": {
+		"rules": [
+			{
+				"fieldName": "supplier_id",
+				"type": "length",
+				"minLength": "1",
+				"maxLength": "50",
+				"message": "Supplier ID must be between 1 and 50 characters."
+			},
+			{
+				"fieldName": "supplier_name",
+				"type": "length",
+				"minLength": "1",
+				"maxLength": "256",
+				"message": "Supplier name is required and maximum 256 characters."
+			},
+			{
+				"fieldName": "supplier_id",
+				"type": "databaseCheck",
+				"overWrite": true,
+				"checkQuery": "WHERE supplier_id = @supplier_id and status <> '*'",
+				"threshold": "0",
+				"message": "Supplier ID already exists in the system."
+			}
+		]
+	},
+	"dataProcessing": {
+		"sqlStatements": []
+	}
+}

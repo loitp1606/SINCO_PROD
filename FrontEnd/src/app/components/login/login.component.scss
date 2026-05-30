@@ -1,0 +1,163 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f8ea 0%, #eef4fb 100%);
+  position: relative;
+}
+
+/* Language */
+.language-selector {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 6px;
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  font-size: 12px;
+  cursor: pointer;
+
+  &.active {
+    background-color: #4a6cb5;
+    border-color: #4a6cb5;
+    color: white;
+  }
+}
+
+/* Login box */
+.login-box {
+  background: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Illustration */
+.login-illustration {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+
+  img {
+    max-width: 80px;
+    opacity: 0.9;
+  }
+}
+.partner-logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 10;
+}
+
+.partner-logo img {
+  max-height: 80px;   /* ⬅ chuẩn logo đối tác */
+  width: auto;
+  object-fit: contain;
+  opacity: 0.95;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  background-color: #f8fafc;
+
+  &:focus {
+    outline: none;
+    border-color: #4a6cb5;
+    box-shadow: 0 0 0 3px rgba(74, 108, 181, 0.25);
+    background-color: white;
+  }
+
+  &:disabled {
+    background-color: #e5e7eb;
+  }
+}
+
+/* Button */
+button[type="submit"] {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #5b7fc7, #4a6cb5);
+  color: white;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 8px 20px rgba(74, 108, 181, 0.45);
+  }
+
+  &:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+/* Error */
+.error-message {
+  margin-top: 1rem;
+  text-align: center;
+  color: #dc2626;
+  font-size: 0.85rem;
+}
+
+/* Force login */
+.force-login-section {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+}
+
+.force-login-message {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #92400e;
+  margin-bottom: 0.75rem;
+}
+
+.force-login-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}

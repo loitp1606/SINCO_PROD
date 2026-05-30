@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="10/11/2025 17:22:35" ReportInfo.Modified="04/15/2026 22:57:40" ReportInfo.CreatorVersion="2025.1.10.0">
+  <Dictionary>
+    <TableDataSource Name="receiptV2" ReferenceName="ReportData.receiptV2" DataType="System.Int32" Enabled="true" TableName="receiptV2">
+      <Column Name="idGui" DataType="System.String"/>
+      <Column Name="voucherCode" DataType="System.String"/>
+      <Column Name="voucherNumber" DataType="System.String"/>
+      <Column Name="voucherDate" DataType="System.DateTime"/>
+      <Column Name="customerCode" DataType="System.String"/>
+      <Column Name="customerAddress" DataType="System.String"/>
+      <Column Name="reason" DataType="System.String"/>
+      <Column Name="invoiceNumber" DataType="System.String"/>
+      <Column Name="total_amount" DataType="System.Decimal"/>
+      <Column Name="unitCode" DataType="System.String"/>
+      <Column Name="paymentType" DataType="System.String"/>
+      <Column Name="dien_giai" DataType="System.String"/>
+      <Column Name="masothue" DataType="System.String"/>
+      <Column Name="dienthoai" DataType="System.String"/>
+      <Column Name="email" DataType="System.String"/>
+      <Column Name="amount_in_word" DataType="System.String"/>
+      <Column Name="total_amount_str" DataType="System.String"/>
+      <Column Name="ngay_in" DataType="System.String"/>
+    </TableDataSource>
+    <TableDataSource Name="receiptdetailV2" ReferenceName="ReportData.receiptdetailV2" DataType="System.Int32" Enabled="true" TableName="receiptdetailV2">
+      <Column Name="idGui" DataType="System.String"/>
+      <Column Name="line_nbr" DataType="System.Int32"/>
+      <Column Name="amount" DataType="System.Decimal"/>
+    </TableDataSource>
+  </Dictionary>
+  <ReportPage Name="Page1" Guides="718.2" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="94.5">
+      <PictureObject Name="Picture1" Width="132.3" Height="94.5" ImageLocation="Images\logo_cty.jpg"/>
+      <TextObject Name="Text2" Left="132.3" Width="576.45" Height="28.35" CanGrow="true" Text="Công ty TNHH TM &amp; XL Công Nghiệp Sài Gòn" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+      <TextObject Name="Text3" Left="132.3" Top="28.35" Width="576.45" Height="66.15" CanGrow="true" Text="Địa chỉ: 489/9 Khu phố 1, Phường Bình Hưng Hòa, TP Hồ Chí Minh&#13;&#10;ĐT: 0946 556 058 - 028 3750 2826&#13;&#10;Email: saigonsinco@gmail.com         -  Website: saigonsinco.com       &#13;&#10;Fanpage: https://www.facebook.com/saigonsinco.com.vn&#13;&#10;" VertAlign="Center" Font="Arial, 10pt"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="97.17" Width="718.2" Height="37.8">
+      <TextObject Name="Text4" Width="718.2" Height="37.8" Text="PHIẾU THU CÔNG NỢ" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="137.63" Width="718.2" Height="292.95" CanGrow="true" KeepTogether="true">
+      <TextObject Name="Text14" Width="132.3" Height="18.9" CanGrow="true" Text="Đơn vị trả: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text15" Top="37.8" Width="132.3" Height="18.9" CanGrow="true" Text="Mã số thuế:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text24" Top="18.9" Width="132.3" Height="18.9" Text="Địa chỉ:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text26" Top="56.7" Width="132.3" Height="18.9" CanGrow="true" Text="Điện thoại: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text27" Left="132.3" Top="56.7" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.dienthoai]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text28" Left="132.3" Top="94.5" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.reason]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text32" Top="75.6" Width="132.3" Height="18.9" CanGrow="true" Text="Email: " Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text33" Left="132.3" Top="75.6" Width="585.9" Height="18.9" CanGrow="true" Text="[receiptV2.email]" Font="Arial, 10pt"/>
+      <TextObject Name="Text41" Top="94.5" Width="132.3" Height="18.9" CanGrow="true" Text="Lý do thu:" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text42" Left="359.1" Top="56.7" Width="132.3" Height="18.9" CanGrow="true" Text="Fax: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text44" Left="359.1" Top="94.5" Width="132.3" Height="18.9" CanGrow="true" Text="Phương thức thu:" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text45" Left="491.4" Top="94.5" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.paymentType]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text46" Top="113.4" Width="132.3" Height="18.9" CanGrow="true" Text="Số tiền:" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text48" Top="132.3" Width="132.3" Height="18.9" CanGrow="true" Text="Bằng chữ:" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text49" Left="132.3" Top="132.3" Width="585.9" Height="18.9" CanGrow="true" Text="[receiptV2.amount_in_word]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text50" Top="151.2" Width="132.3" Height="18.9" CanGrow="true" Text="Diễn giải:" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text51" Left="132.3" Top="151.2" Width="585.9" Height="18.9" CanGrow="true" Text="[receiptV2.dien_giai]" VertAlign="Center" Font="Arial, 10pt" TextRenderType="HtmlTags"/>
+      <TextObject Name="Text34" Left="179.55" Top="226.8" Width="179.55" Height="18.9" Text="NGƯỜI THU TIỀN" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text35" Top="245.7" Width="179.55" Height="18.9" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text106" Top="226.8" Width="179.55" Height="18.9" Text="NGƯỜI NỘP TIỀN" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text107" Left="179.55" Top="245.7" Width="179.55" Height="18.9" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text108" Left="359.1" Top="226.8" Width="179.55" Height="18.9" Text="THỦ QUỸ " HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text109" Left="359.1" Top="245.7" Width="179.55" Height="18.9" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text110" Left="538.65" Top="226.8" Width="179.55" Height="18.9" Text="NGƯỜI LẬP PHIẾU" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text111" Left="538.65" Top="245.7" Width="179.55" Height="18.9" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text112" Left="132.3" Top="113.4" Width="585.9" Height="18.9" CanGrow="true" Text="[receiptV2.total_amount_str] VND" Format="Custom" Format.Format="### ### ###.00" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text113" Left="132.3" Top="37.8" Width="585.9" Height="18.9" CanGrow="true" Text="[receiptV2.masothue]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text114" Left="132.3" Top="18.9" Width="585.9" Height="18.9" CanGrow="true" Text="[receiptV2.customerAddress]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text115" Left="132.3" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.customerCode]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text116" Top="170.1" Width="718.2" Height="37.8" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text117" Left="538.65" Top="207.9" Width="179.55" Height="18.9" CanGrow="true" Text="[receiptV2.ngay_in]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text118" Left="359.1" Width="132.3" Height="18.9" CanGrow="true" Text="Số hóa đơn: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text119" Left="491.4" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.invoiceNumber]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
+    </DataBand>
+  </ReportPage>
+</Report>

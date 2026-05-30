@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ERP PRO</title>
+  <base href="/" />
+
+  <!-- SEO & Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Enterprise Web Application" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+  />
+
+  <!-- Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    integrity="sha512-dymI1..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Runtime environment config (edit assets/env.js without rebuild) -->
+  <script src="assets/env.js"></script>
+
+  <!-- Global minimal style for loading -->
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f4f6f9;
+    }
+
+    .app-loading {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+    }
+
+    .app-loading .logo {
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #1e3a8a;
+    }
+
+    .app-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #ddd;
+      border-top: 4px solid #1e3a8a;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    .app-loading .text {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .app-loading .logo {
+      width: 140px;
+      height: auto;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Loading screen (shown before Angular bootstraps) -->
+  <app-root>
+    <div class="app-loading">
+    <img
+      src="assets/images/erplogin.jpg"
+      alt="My App Logo"
+      class="logo"
+    />
+
+    <div class="spinner"></div>
+
+    <div class="text">Loading application...</div>
+  </div>
+  </app-root>
+</body>
+</html>

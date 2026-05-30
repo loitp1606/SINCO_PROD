@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" TextQuality="Regular">
+	<Dictionary>
+		<TableDataSource Name="Table" ReferenceName="ReportData.Table" Enabled="true">
+			<Column Name="maKhachHang" DataType="System.String"/>
+			<Column Name="ten" DataType="System.String"/>
+			<Column Name="ngayThanhLap" DataType="System.DateTime"/>
+			<Column Name="ngaySinhNguoiDaiDien" DataType="System.DateTime"/>
+			<Column Name="diaChiDangKy" DataType="System.String"/>
+			<Column Name="diaChiGiaoHang" DataType="System.String"/>
+			<Column Name="soDienThoai" DataType="System.String"/>
+			<Column Name="email" DataType="System.String"/>
+			<Column Name="hanMucCongNo" DataType="System.Double"/>
+			<Column Name="ghiChu" DataType="System.String"/>
+		</TableDataSource>
+	</Dictionary>
+
+	<ReportPage Name="Page1">
+		<ReportTitleBand Name="ReportTitle1" Width="718.2" Height="40">
+			<TextObject Name="TitleText" Width="718.2" Height="40"
+						Text="DANH SÁCH KHÁCH HÀNG"
+						HorzAlign="Center"
+						Font="Segoe UI, 16pt, style=Bold"
+						TextColor="DarkGreen"/>
+		</ReportTitleBand>
+
+		<PageHeaderBand Name="PageHeader1" Width="718.2" Height="30">
+			<TextObject Name="Header1" Left="0" Top="0" Width="100" Height="30" Text="Mã KH"
+						Border.Lines="All" Fill.Color="LightGreen" TextColor="DarkGreen"
+						HorzAlign="Center" Font="Segoe UI, 9pt, style=Bold"/>
+			<TextObject Name="Header2" Left="100" Top="0" Width="150" Height="30" Text="Tên"
+						Border.Lines="All" Fill.Color="LightGreen" TextColor="DarkGreen"
+						HorzAlign="Center" Font="Segoe UI, 9pt, style=Bold"/>
+			<TextObject Name="Header3" Left="250" Top="0" Width="100" Height="30" Text="Ngày TL"
+						Border.Lines="All" Fill.Color="LightGreen" TextColor="DarkGreen"
+						HorzAlign="Center" Font="Segoe UI, 9pt, style=Bold"/>
+			<TextObject Name="Header4" Left="350" Top="0" Width="100" Height="30" Text="Ngày Sinh"
+						Border.Lines="All" Fill.Color="LightGreen" TextColor="DarkGreen"
+						HorzAlign="Center" Font="Segoe UI, 9pt, style=Bold"/>
+			<TextObject Name="Header5" Left="450" Top="0" Width="150" Height="30" Text="Địa chỉ ĐK"
+						Border.Lines="All" Fill.Color="LightGreen" TextColor="DarkGreen"
+						HorzAlign="Center" Font="Segoe UI, 9pt, style=Bold"/>
+			<TextObject Name="Header6" Left="600" Top="0" Width="118.2" Height="30" Text="SĐT"
+						Border.Lines="All" Fill.Color="LightGreen" TextColor="DarkGreen"
+						HorzAlign="Center" Font="Segoe UI, 9pt, style=Bold"/>
+		</PageHeaderBand>
+
+		<DataBand Name="Data1" Width="718.2" Height="28" DataSource="Table" RowsPerPage="50">
+			<TextObject Name="Data1" Left="0" Top="0" Width="100" Height="28"
+						Text="[Table.maKhachHang]"
+						Border.Lines="All" WordWrap="true" CanGrow="true" GrowToBottom="true" Padding="2,2,2,2"
+						Font="Segoe UI, 9pt" HorzAlign="Center" VertAlign="Center"
+						Fill.ColorExpression="IIf(Row# % 2 == 0, Color.White, Color.Honeydew)"/>
+			<TextObject Name="Data2" Left="100" Top="0" Width="150" Height="28" Text="[Table.ten]"
+						Border.Lines="All" WordWrap="true" CanGrow="true" GrowToBottom="true" Padding="2,2,2,2"
+						Font="Segoe UI, 9pt" HorzAlign="Center" VertAlign="Center"
+						Fill.ColorExpression="IIf(Row# % 2 == 0, Color.White, Color.Honeydew)"/>
+			<TextObject Name="Data3" Left="250" Top="0" Width="100" Height="28" Text="[Table.ngayThanhLap]"
+						Border.Lines="All" Format="Date" Format.Format="dd/MM/yyyy"
+						HorzAlign="Center" VertAlign="Center" Font="Segoe UI, 9pt"
+						Fill.ColorExpression="IIf(Row# % 2 == 0, Color.White, Color.Honeydew)"/>
+			<TextObject Name="Data4" Left="350" Top="0" Width="100" Height="28" Text="[Table.ngaySinhNguoiDaiDien]"
+						Border.Lines="All" Format="Date" Format.Format="dd/MM/yyyy"
+						HorzAlign="Center" VertAlign="Center" Font="Segoe UI, 9pt"
+						Fill.ColorExpression="IIf(Row# % 2 == 0, Color.White, Color.Honeydew)"/>
+			<TextObject Name="Data5" Left="450" Top="0" Width="150" Height="28" Text="[Table.diaChiDangKy]"
+						Border.Lines="All" WordWrap="true" CanGrow="true" GrowToBottom="true" Padding="2,2,2,2"
+						Font="Segoe UI, 9pt" HorzAlign="Center" VertAlign="Center"
+						Fill.ColorExpression="IIf(Row# % 2 == 0, Color.White, Color.Honeydew)"/>
+			<TextObject Name="Data6" Left="600" Top="0" Width="118.2" Height="28" Text="[Table.soDienThoai]"
+						Border.Lines="All" WordWrap="true" CanGrow="true" GrowToBottom="true" Padding="2,2,2,2"
+						Font="Segoe UI, 9pt" HorzAlign="Center" VertAlign="Center"
+						Fill.ColorExpression="IIf(Row# % 2 == 0, Color.White, Color.Honeydew)"/>
+		</DataBand>
+
+
+		<PageFooterBand Name="PageFooter1" Width="718.2" Height="30">
+			<TextObject Name="PageNumberText" Left="0" Top="0" Width="200" Height="30"
+						Text="Trang [Page#] / [TotalPages#]"
+						Fill.Color="LightGreen"
+						TextColor="DarkGreen"
+						HorzAlign="Left"
+						Font="Segoe UI, 8pt, style=Italic"/>
+		</PageFooterBand>
+	</ReportPage>
+</Report>

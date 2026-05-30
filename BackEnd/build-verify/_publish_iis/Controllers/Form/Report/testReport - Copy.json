@@ -1,0 +1,117 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "age": 25,
+      "active": true,
+      "joined": "2024-01-15",
+      "role": "Admin"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "age": 30,
+      "active": false,
+      "joined": "2023-12-10",
+      "role": "User"
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "age": 28,
+      "active": true,
+      "joined": "2024-05-20",
+      "role": "Manager"
+    }
+  ],
+  "total": 3,
+  "page": 1,
+  "pageSize": 10,
+  "sort": "",
+  "filters": [
+    {
+      "key": "dateFrom",
+      "label": "Ngày từ",
+      "type": "date"
+    },
+    {
+      "key": "dateTo",
+      "label": "Ngày đến",
+      "type": "date"
+    },
+    {
+      "key": "customer",
+      "label": "Mã khách hàng",
+      "type": "lookup",
+      "placeholder": "",
+      "default": {
+        "controller": "customer",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "customer_group_id",
+      "label": "Nhóm / Loại khách hàng",
+      "type": "lookup",
+      "placeholder": "Nhập nhóm hoặc loại khách hàng",
+      "default": {
+        "controller": "customerGroup",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "name",
+      "label": "Name",
+      "type": "text",
+      "placeholder": "Enter name"
+    },
+    {
+      "key": "age",
+      "label": "Age",
+      "type": "number",
+      "placeholder": "Enter age"
+    },
+
+    {
+      "key": "role",
+      "label": "Role",
+      "type": "select",
+      "options": [
+        {
+          "label": "Admin",
+          "value": "Admin"
+        },
+        {
+          "label": "User",
+          "value": "User"
+        },
+        {
+          "label": "Manager",
+          "value": "Manager"
+        }
+      ],
+      "default": "User"
+    }
+    
+  ],
+  "dataProcessing": {
+    "report": [
+      { 
+        "query": "exec afterUpdateBaoGia N'@idGui', N'@voucherNumber', N'@voucherDate';"
+      }
+    ]
+  }
+}

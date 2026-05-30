@@ -1,0 +1,49 @@
+<div class="sidebar" [class.open]="isOpen" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <h2 *ngIf="!isCollapsed"></h2>
+  </div>
+  
+  <div class="sidebar-content">
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading-container">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span *ngIf="!isCollapsed">Đang tải menu...</span>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error && !isLoading" class="error-container">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span *ngIf="!isCollapsed">{{ error }}</span>
+      <button *ngIf="!isCollapsed" class="retry-btn" (click)="refreshMenu()">
+        <i class="fas fa-redo"></i> Thử lại
+      </button>
+    </div>
+
+    <!-- Menu items -->
+    <ng-container *ngIf="!isLoading && !error">
+      <ng-container *ngTemplateOutlet="menuTree; context: { $implicit: menuItems, level: 0 }"></ng-container>
+    </ng-container>
+  </div>
+</div> 
+
+<ng-template #menuTree let-items let-level="level">
+  <ng-container *ngFor="let item of items">
+    <div class="menu-item"
+         [class.parent]="hasChildren(item)"
+         [class.child]="level > 0"
+         [class.expanded]="item.isExpanded"
+         [class.has-children]="hasChildren(item)"
+         [class.active]="isMenuActive(item)"
+         [class.disabled]="!hasChildren(item) && !hasAccess(item)"
+         [style.padding-left.px]="isCollapsed ? null : (16 + (level * 20))"
+         (click)="onMenuItemClick($event, item)">
+      <i [class]="item.icon"></i>
+      <span *ngIf="!isCollapsed">{{ item.name }}</span>
+      <i class="fas fa-chevron-down arrow" *ngIf="hasChildren(item) && !isCollapsed"></i>
+    </div>
+
+    <div class="submenu" *ngIf="hasChildren(item)" [class.expanded]="item.isExpanded">
+      <ng-container *ngTemplateOutlet="menuTree; context: { $implicit: item.children, level: level + 1 }"></ng-container>
+    </div>
+  </ng-container>
+</ng-template>

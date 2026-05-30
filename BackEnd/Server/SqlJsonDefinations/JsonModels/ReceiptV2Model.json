@@ -1,0 +1,461 @@
+{
+	"model": "receiptV2",
+	"schema": {
+		"foriegn": [
+			"receiptdetailV2"
+		],
+		"foriegnKey": [
+			"idGui"
+		],
+		"partition": true,
+		"isMaster": true,
+		"fields": [
+			{
+				"name": "idGui",
+				"property": "idGui",
+				"type": "string",
+				"sqlType": "VARCHAR(64)",
+				"primaryKey": true,
+				"required": true
+			},
+			{
+				"name": "voucherCode",
+				"property": "voucherCode",
+				"type": "string",
+				"sqlType": "VARCHAR(8)"
+			},
+			{
+				"name": "voucherNumber",
+				"property": "voucherNumber",
+				"type": "string",
+				"sqlType": "VARCHAR(32)",
+				"required": true
+			},
+			{
+				"name": "voucherDate",
+				"property": "voucherDate",
+				"type": "date",
+				"sqlType": "DATE",
+				"required": true
+			},
+			{
+				"name": "createdDate",
+				"property": "createdDate",
+				"type": "date",
+				"sqlType": "DATETIME"
+			},
+			{
+				"name": "customerCode",
+				"property": "customerCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)",
+				"required": true,
+				"foreign": {
+					"table": "customer",
+					"key": "customer_id",
+					"lookup": "customer_name"
+				}
+			},
+			{
+				"name": "customerAddress",
+				"property": "customerAddress",
+				"type": "string",
+				"sqlType": "NVARCHAR(432)"
+			},
+			{
+				"name": "collectorCode",
+				"property": "collectorCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)",
+				"required": true,
+				"foreign": {
+					"table": "employee",
+					"key": "employee_id",
+					"lookup": "full_name"
+				}
+			},
+			{
+				"name": "collectorName",
+				"property": "collectorName",
+				"type": "string",
+				"sqlType": "NVARCHAR(432)"
+			},
+			{
+				"name": "receiptType",
+				"property": "receiptType",
+				"type": "string",
+				"sqlType": "NVARCHAR(20)"
+			},
+			{
+				"name": "deliveryNoteNo",
+				"property": "deliveryNoteNo",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "depositReceiptNo",
+				"property": "depositReceiptNo",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "reason",
+				"property": "reason",
+				"type": "string",
+				"sqlType": "NVARCHAR(432)",
+				"foreign": {
+					"table": "Incomeexpenditure",
+					"key": "incomeExpenditure_id",
+					"lookup": "incomeExpenditure_name"
+				}
+			},
+			{
+				"name": "accountReceiveCode",
+				"property": "accountReceiveCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "invoiceNumber",
+				"property": "invoiceNumber",
+				"type": "string",
+				"sqlType": "VARCHAR(100)"
+			},
+			{
+				"name": "paymentType",
+				"property": "paymentType",
+				"type": "string",
+				"sqlType": "NVARCHAR(20)",
+				"sqlExpression": "(case {m}.paymentType when 'TM/CK' then 'TM/CK' when 'TM' then N'Tiền Mặt' when 'CK' then N'Chuyển khoản' end )"
+			},
+			{
+				"name": "amountTransfer",
+				"property": "amountTransfer",
+				"type": "number",
+				"sqlType": "NUMERIC(19,4)"
+			},
+			{
+				"name": "amountCash",
+				"property": "amountCash",
+				"type": "number",
+				"sqlType": "NUMERIC(19,4)"
+			},
+			{
+				"name": "total_amount",
+				"property": "total_amount",
+				"type": "number",
+				"sqlType": "NUMERIC(19,4)"
+			},
+			{
+				"name": "isReceived",
+				"property": "isReceived",
+				"type": "number",
+				"sqlType": "INT"
+			},
+			{
+				"name": "dien_giai",
+				"property": "dien_giai",
+				"type": "string",
+				"sqlType": "NVARCHAR(MAX)"
+			},
+			{
+				"name": "status",
+				"property": "status",
+				"type": "string",
+				"sqlType": "CHAR(1)",
+				"required": true
+			},
+			{
+				"name": "unitCode",
+				"property": "unitCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "datetime0",
+				"property": "datetime0",
+				"type": "date",
+				"sqlType": "DATETIME"
+			},
+			{
+				"name": "datetime2",
+				"property": "datetime2",
+				"type": "date",
+				"sqlType": "DATETIME"
+			},
+			{
+				"name": "user_id0",
+				"property": "user_id0",
+				"type": "number",
+				"sqlType": "INT"
+			},
+			{
+				"name": "user_id2",
+				"property": "user_id2",
+				"type": "number",
+				"sqlType": "INT"
+			},
+			{
+				"name": "masothue",
+				"property": "masothue",
+				"type": "string",
+				"sqlType": "NVARCHAR(128)",
+				"sqlExpression": "(SELECT TOP 1 ISNULL(c.ma_so_thue, N'') FROM customer c WHERE c.customer_id = {m}.customerCode)"
+			},
+			{
+				"name": "dienthoai",
+				"property": "dienthoai",
+				"type": "string",
+				"sqlType": "NVARCHAR(128)",
+				"sqlExpression": "(SELECT TOP 1 ISNULL(c.phone_number, N'') FROM customer c WHERE c.customer_id = {m}.customerCode)"
+			},
+			{
+				"name": "email",
+				"property": "email",
+				"type": "string",
+				"sqlType": "NVARCHAR(128)",
+				"sqlExpression": "(SELECT TOP 1 ISNULL(c.email, N'') FROM customer c WHERE c.customer_id = {m}.customerCode)"
+			},
+			{
+				"name": "amount_in_word",
+				"property": "amount_in_word",
+				"type": "string",
+				"sqlType": "NVARCHAR(max)",
+				"sqlExpression": "dbo.fn_NumberToWordsVN(ISNULL({m}.total_amount,0))"
+			},
+			{
+				"name": "total_amount_str",
+				"property": "total_amount_str",
+				"type": "string",
+				"sqlType": "NVARCHAR(max)",
+				"sqlExpression": "dbo.fn_FormatByMask(ISNULL({m}.total_amount,0), '#.###.###.###.###')"
+			},
+			{
+				"name": "ngay_in",
+				"property": "ngay_in",
+				"type": "string",
+				"sqlType": "NVARCHAR(max)",
+				"sqlExpression": "N'Ngày '+ltrim(day(getdate()))+ N' tháng ' + ltrim(month(getdate())) + N' năm ' +ltrim(year(getdate()))"
+			}
+		]
+	},
+	"excelIntegration": {
+		"sheetName": "receiptV2",
+		"columnMapping": [
+			{
+				"excelColumn": "idGui",
+				"fieldName": "idGui",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "Đơn vị",
+				"fieldName": "unitCode",
+				"clauseForiegn": "SELECT UnitCode, UnitName FROM Unit where status = '1'",
+				"required": true
+			},
+			{
+				"excelColumn": "Ngày chứng từ",
+				"fieldName": "voucherDate",
+				"required": true
+			},
+			{
+				"excelColumn": "Số phiếu thu",
+				"fieldName": "voucherNumber",
+				"required": false
+			},
+			{
+				"excelColumn": "Mã khách hàng",
+				"fieldName": "customerCode",
+				"required": true
+			},
+			{
+				"excelColumn": "Lý do thu",
+				"fieldName": "reason",
+				"required": true,
+				"clauseForiegn": "select incomeExpenditure_id, incomeExpenditure_Name from Incomeexpenditure where status = '1' and type = '1'",
+			},
+			{
+				"excelColumn": "Số tài khoản",
+				"fieldName": "accountReceiveCode",
+				"required": false,
+				"clauseForiegn": "select account_sinco_id, account_sinco_name from AccountSinco where status = '1'",
+			},
+			{
+				"excelColumn": "collectorCode",
+				"fieldName": "collectorCode",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "Tổng tiền",
+				"fieldName": "total_amount",
+				"required": true,
+				"type": "number"
+			},
+			{
+				"excelColumn": "amountCash",
+				"fieldName": "amountCash",
+				"required": false,
+				"type": "number",
+				"hide": true
+			},
+			{
+				"excelColumn": "amountTransfer",
+				"fieldName": "amountTransfer",
+				"required": false,
+				"type": "number",
+				"hide": true
+			},
+			{
+				"excelColumn": "Loại thu",
+				"fieldName": "receiptType",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "Diễn giải",
+				"fieldName": "dien_giai",
+				"required": false
+			},
+			{
+				"excelColumn": "paymentType",
+				"fieldName": "paymentType",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "status",
+				"fieldName": "status",
+				"required": false,
+				"hide": true
+			}
+		],
+		"templateRules": {
+			"fileFormat": "xlsx",
+			"firstRowData": 2,
+			"maxRows": 20000
+		}
+	},
+	"checking": {
+		"rules": [
+			{
+				"fieldName": "invoiceNumber",
+				"type": "length",
+				"minLength": "1",
+				"maxLength": "50",
+				"message": "Price name is required and maximum 50 characters."
+			}
+		]
+	},
+	"dataProcessing": {
+		"sqlStatements": [
+			{
+				"statement": "update",
+				"query": "UPDATE a SET paymentType = 'CK', unitCode = a.unitCode, user_id0 = a.user_id0, a.receiptType = 'CUSTOMER', a.voucherCode = ISNULL(NULLIF(a.voucherCode, ''), 'Z07'), a.status = ISNULL(NULLIF(a.status, ''), '0'),  a.datetime0 = ISNULL(a.datetime0, GETDATE()), a.isReceived = ISNULL(a.isReceived, 0) FROM receiptV2@partition a INNER JOIN #TempTableName t ON a.idGui = t.idGui;exec [UpdateImportPhieuThu] 'receiptV2@partition', '#TempTableName';"
+			}
+		]
+	},
+	"foriegnModel": [
+		{
+			"model": "receiptdetailV2",
+			"schema": {
+				"partition": true,
+				"fields": [
+					{
+						"name": "idGui",
+						"property": "idGui",
+						"type": "string",
+						"sqlType": "VARCHAR(64)",
+						"primaryKey": true,
+						"required": true
+					},
+					{
+						"name": "line_nbr",
+						"property": "line_nbr",
+						"type": "number",
+						"sqlType": "INT",
+						"primaryKey": true,
+						"required": true
+					},
+					{
+						"name": "invoiceNumber",
+						"property": "invoiceNumber",
+						"type": "string",
+						"sqlType": "VARCHAR(100)"
+					},
+					{
+						"name": "invoiceDate",
+						"property": "invoiceDate",
+						"type": "date",
+						"sqlType": "datetime"
+					},
+					{
+						"name": "invoiceAmount",
+						"property": "invoiceAmount",
+						"type": "number",
+						"sqlType": "NUMERIC(19,4)"
+					},
+					{
+						"name": "paidAmount",
+						"property": "paidAmount",
+						"type": "number",
+						"sqlType": "NUMERIC(19,4)"
+					},
+					{
+						"name": "debtAmount",
+						"property": "debtAmount",
+						"type": "number",
+						"sqlType": "NUMERIC(19,4)"
+					},
+					{
+						"name": "accountReceiveCode",
+						"property": "accountReceiveCode",
+						"type": "string",
+						"sqlType": "VARCHAR(50)"
+					},
+					{
+						"name": "amountCur",
+						"property": "amountCur",
+						"type": "number",
+						"sqlType": "NUMERIC(19,4)"
+					},
+					{
+						"name": "amount",
+						"property": "amount",
+						"type": "number",
+						"sqlType": "NUMERIC(19,4)"
+					},
+					{
+						"name": "idGuiDN",
+						"property": "idGuiDN",
+						"type": "string",
+						"sqlType": "VARCHAR(64)"
+					},
+					{
+						"name": "lnDN",
+						"property": "lnDN",
+						"type": "number",
+						"sqlType": "INT"
+					},
+					{
+						"name": "vcNumberDN",
+						"property": "vcNumberDN",
+						"type": "string",
+						"sqlType": "VARCHAR(32)"
+					},
+					{
+						"name": "note",
+						"property": "note",
+						"type": "string",
+						"sqlType": "NVARCHAR(432)"
+					}
+				]
+			},
+			"excelIntegration": {
+				"sheetName": "receiptdetailV2",
+				"columnMapping": []
+			}
+		}
+	]
+}

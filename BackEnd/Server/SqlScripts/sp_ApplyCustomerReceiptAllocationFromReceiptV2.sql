@@ -1,0 +1,202 @@
+﻿CREATE OR ALTER PROCEDURE dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2
+    @idGui NVARCHAR(50),
+    @unitCode NVARCHAR(50) = NULL,
+    @userId NVARCHAR(50) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        IF OBJECT_ID('dbo.CustomerDebtLedger', 'U') IS NULL
+            RETURN;
+
+        IF OBJECT_ID('dbo.CustomerReceiptAllocation', 'U') IS NULL
+            RETURN;
+
+        DECLARE
+            @sync VARCHAR(6),
+            @q NVARCHAR(MAX),
+            @customerCode NVARCHAR(50),
+            @voucherNumber NVARCHAR(100),
+            @voucherDate DATE,
+            @receiptType NVARCHAR(30),
+            @masterAmount DECIMAL(24,6),
+            @resolvedUnitCode NVARCHAR(50),
+            @status NVARCHAR(10),
+            @isReceived INT,
+            @allocatedTotal DECIMAL(24,6);
+
+        SELECT @sync = CONVERT(VARCHAR(6), voucherDate, 112)
+        FROM dbo.receiptV2$000000
+        WHERE idGui = @idGui;
+
+        IF @sync IS NULL
+            RETURN;
+
+        IF OBJECT_ID('tempdb..#$mt') IS NOT NULL DROP TABLE #$mt;
+        CREATE TABLE #$mt
+        (
+            customerCode NVARCHAR(50) NULL,
+            voucherNumber NVARCHAR(100) NULL,
+            voucherDate DATE NULL,
+            receiptType NVARCHAR(30) NULL,
+            total_amount DECIMAL(24,6) NULL,
+            unitCode NVARCHAR(50) NULL,
+            status NVARCHAR(10) NULL,
+            isReceived INT NULL
+        );
+
+        SET @q = N'
+            INSERT INTO #$mt(customerCode, voucherNumber, voucherDate, receiptType, total_amount, unitCode, status, isReceived)
+            SELECT TOP 1
+                customerCode,
+                voucherNumber,
+                TRY_CONVERT(date, voucherDate),
+                ISNULL(receiptType, N''CUSTOMER''),
+                TRY_CONVERT(decimal(24,6), total_amount),
+                unitCode,
+                status,
+                TRY_CONVERT(int, isReceived)
+            FROM dbo.receiptV2$' + @sync + N'
+            WHERE idGui = @p_idGui;';
+        print @q
+        EXEC sp_executesql @q, N'@p_idGui nvarchar(50)', @p_idGui = @idGui;
+
+        SELECT TOP 1
+            @customerCode = customerCode,
+            @voucherNumber = voucherNumber,
+            @voucherDate = voucherDate,
+            @receiptType = UPPER(ISNULL(receiptType, N'CUSTOMER')),
+            @masterAmount = ISNULL(total_amount, 0),
+            @resolvedUnitCode = unitCode,
+            @status = status,
+            @isReceived = ISNULL(isReceived, 0)
+        FROM #$mt;
+
+        IF @customerCode IS NULL OR @receiptType <> N'CUSTOMER'
+            RETURN;
+
+        -- Chỉ áp dụng khi phiếu đã xác nhận/đã thu
+        IF ISNULL(@status, N'0') <> N'1' AND ISNULL(@isReceived, 0) <> 1
+            RETURN;
+
+        IF @unitCode IS NOT NULL AND LTRIM(RTRIM(@unitCode)) <> N''
+            SET @resolvedUnitCode = @unitCode;
+        IF @resolvedUnitCode IS NULL OR LTRIM(RTRIM(@resolvedUnitCode)) = N''
+            SET @resolvedUnitCode = N'CTY';
+
+        SELECT @allocatedTotal = ISNULL(SUM(ISNULL(AllocatedAmount, 0)), 0)
+        FROM dbo.CustomerReceiptAllocation
+        WHERE ReceiptIdGui = @idGui;
+
+        IF @allocatedTotal > ISNULL(@masterAmount, 0)
+        BEGIN
+            RAISERROR(N'Tổng phân bổ vượt quá số tiền phiếu thu.', 16, 1);
+            RETURN;
+        END;
+
+        BEGIN TRAN;
+
+        -- Chỉ thay thế nhánh CUSTOMER, không đụng INVOICE/DEPOSIT
+        DELETE dbo.CustomerDebtLedger
+        WHERE RefController = N'receiptV2'
+          AND ReceiptIdGui = @idGui
+          AND ReceiptType = N'RECEIPT_CUSTOMER';
+
+        INSERT dbo.CustomerDebtLedger
+        (
+            UnitCode,
+            CustomerId,
+            ReceiptIdGui,
+            VoucherNumber,
+            VoucherDate,
+            ReceiptType,
+            DebitAmount,
+            CreditAmount,
+            DepositAmount,
+            CollectedAmount,
+            ReceivableAmount,
+            RefController,
+            RefIdGui,
+            RefLineNbr,
+            Note,
+            CreatedBy,
+            CreatedAt
+        )
+        SELECT
+            @resolvedUnitCode,
+            @customerCode,
+            @idGui,
+            @voucherNumber,
+            @voucherDate,
+            N'RECEIPT_CUSTOMER',
+            0,
+            0,
+            0,
+            ISNULL(a.AllocatedAmount, 0),
+            0,
+            N'receiptV2',
+            ISNULL(a.RefIdGuiDN, @idGui),
+            a.RefLineNbrDN,
+            N'Thu tiền khách hàng (phân bổ hóa đơn)',
+            @userId,
+            SYSDATETIME()
+        FROM dbo.CustomerReceiptAllocation a
+        WHERE a.ReceiptIdGui = @idGui
+          AND ISNULL(a.AllocatedAmount, 0) > 0;
+
+        IF @masterAmount > @allocatedTotal
+        BEGIN
+            INSERT dbo.CustomerDebtLedger
+            (
+                UnitCode,
+                CustomerId,
+                ReceiptIdGui,
+                VoucherNumber,
+                VoucherDate,
+                ReceiptType,
+                DebitAmount,
+                CreditAmount,
+                DepositAmount,
+                CollectedAmount,
+                ReceivableAmount,
+                RefController,
+                RefIdGui,
+                RefLineNbr,
+                Note,
+                CreatedBy,
+                CreatedAt
+            )
+            VALUES
+            (
+                @resolvedUnitCode,
+                @customerCode,
+                @idGui,
+                @voucherNumber,
+                @voucherDate,
+                N'RECEIPT_CUSTOMER',
+                0,
+                0,
+                0,
+                @masterAmount - @allocatedTotal,
+                0,
+                N'receiptV2',
+                @idGui,
+                NULL,
+                N'Thu tiền khách hàng (chưa phân bổ hóa đơn)',
+                @userId,
+                SYSDATETIME()
+            );
+        END;
+
+        COMMIT;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0 ROLLBACK;
+        DECLARE @err NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@err, 16, 1);
+    END CATCH
+END
+GO
+

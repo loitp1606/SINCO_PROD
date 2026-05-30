@@ -1,0 +1,20 @@
+{
+  "controller": "manufacturer",
+  "formId": "nhasanxuat",
+  "primaryKey": ["ma_nsx"],
+  "language": "@language",
+  "unit": "@@unit",
+  "userId": "@@userId",
+  "type": "one",
+  "sort": ["ma_nsx"],
+  "fields": [
+    {
+      "field": "ma_nsx",
+      "header": "Mã nhà sản xuất"
+    },
+    {
+      "field": "ten_nsx",
+      "header": "Tên nhà sản xuất"
+    }
+  ]
+}

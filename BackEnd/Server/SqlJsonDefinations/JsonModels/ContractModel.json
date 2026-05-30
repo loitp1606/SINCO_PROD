@@ -1,0 +1,516 @@
+{
+  "model": "contract",
+  "schema": {
+    "foriegn": [ "contractDetail" ],
+    "foriegnKey": [ "idGui" ],
+    "partition": true,
+    "fields": [
+      {
+        "name": "idGui",
+        "property": "idGui",
+        "type": "string",
+        "sqlType": "VARCHAR(50)",
+        "primaryKey": true,
+        "required": true
+      },
+      {
+        "name": "customer_id",
+        "property": "customerId",
+        "type": "string",
+        "sqlType": "VARCHAR(50)",
+        "foreign": {
+					"table": "customer",
+					"key": "customer_id",
+					"lookup": "customer_name"
+				}
+      },
+      {
+        "name": "number_ddh",
+        "property": "numberDdh",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "quotationCode",
+        "property": "quotationCode",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "voucherDate",
+        "property": "voucherDate",
+        "type": "date",
+        "sqlType": "DATE"
+      },
+      {
+        "name": "unitCode",
+        "property": "unitCode",
+        "type": "string",
+        "sqlType": "VARCHAR(16)"
+      },
+      {
+        "name": "customer_group_id",
+        "property": "customerGroupId",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "customer_name",
+        "property": "customerName",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)"
+      },
+      {
+        "name": "representative",
+        "property": "representative",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)"
+      },
+      {
+        "name": "position",
+        "property": "position",
+        "type": "string",
+        "sqlType": "NVARCHAR(100)"
+      },
+      {
+        "name": "SaleID",
+        "property": "SaleID",
+        "type": "string",
+        "sqlType": "NVARCHAR(50)"
+      },
+      {
+        "name": "address",
+        "property": "address",
+        "type": "string",
+        "sqlType": "NVARCHAR(500)"
+      },
+      {
+        "name": "phone",
+        "property": "phone",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "account",
+        "property": "account",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "customer_account",
+        "property": "customerAccount",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "tax_code",
+        "property": "taxCode",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "delivery_note",
+        "property": "deliveryNote",
+        "type": "string",
+        "sqlType": "TEXT"
+      },
+      {
+        "name": "contract_note",
+        "property": "contractNote",
+        "type": "string",
+        "sqlType": "TEXT"
+      },
+      {
+        "name": "status",
+        "property": "status",
+        "type": "string",
+        "sqlType": "VARCHAR(50)"
+      },
+      {
+        "name": "amount_total",
+        "property": "amountTotal",
+        "type": "number",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "amount_in_word",
+        "property": "amountInWord",
+        "type": "string",
+        "sqlType": "NVARCHAR(500)"
+      }
+    ]
+  },
+  "excelIntegration": {
+    "sheetName": "Contract",
+    "columnMapping": [
+      {
+        "excelColumn": "idGui",
+        "fieldName": "idGui",
+        "required": false
+      },
+      {
+        "excelColumn": "customer_id",
+        "fieldName": "customer_id",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "number_ddh",
+        "fieldName": "number_ddh",
+        "required": true
+      },
+      {
+        "excelColumn": "Đơn vị",
+        "fieldName": "unitCode",
+        "required": true
+      },
+      {
+        "excelColumn": "quotationCode",
+        "fieldName": "quotationCode",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "voucherDate",
+        "fieldName": "voucherDate",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "customer_group_id",
+        "fieldName": "customer_group_id",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "customer_name",
+        "fieldName": "customer_name",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "representative",
+        "fieldName": "representative",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "position",
+        "fieldName": "position",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "Nhân viên kinh doanh",
+        "fieldName": "SaleID",
+        "foriegn": "SELECT full_name FROM employee where employee_id = @SaleID and status = '1'",
+        "required": false
+      },
+      {
+        "excelColumn": "address",
+        "fieldName": "address",
+        "required": false
+      },
+      {
+        "excelColumn": "phone",
+        "fieldName": "phone",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "account",
+        "fieldName": "account",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "customer_account",
+        "fieldName": "customer_account",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "tax_code",
+        "fieldName": "tax_code",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "delivery_note",
+        "fieldName": "delivery_note",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "contract_note",
+        "fieldName": "contract_note",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "status",
+        "fieldName": "status",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "amount_total",
+        "fieldName": "amount_total",
+        "required": false,
+        "hide": true
+      },
+      {
+        "excelColumn": "amount_in_word",
+        "fieldName": "amount_in_word",
+        "required": false,
+        "hide": true
+      }
+    ],
+    "templateRules": {
+      "fileFormat": "xlsx",
+      "firstRowData": 2,
+      "maxRows": 20000
+    }
+  },
+  "checking": {
+    "rules": [
+      {
+        "fieldName": "idGui",
+        "type": "databaseCheck",
+        "checkQuery": "WHERE idGui = @idGui",
+        "threshold": "0",
+        "message": "idGui đã tồn tại trong hệ thống"
+      },
+      {
+        "fieldName": "quotationCode",
+        "type": "length",
+        "minLength": "1",
+        "maxLength": "50",
+        "message": "Mã báo giá phải có độ dài từ 1 đến 50 ký tự"
+      },
+      {
+        "fieldName": "status",
+        "type": "length",
+        "minLength": "0",
+        "maxLength": "50",
+        "message": "Trạng thái không được vượt quá 50 ký tự"
+      },
+      {
+        "fieldName": "amount_total",
+        "type": "range",
+        "min": "0",
+        "max": "100000000000",
+        "message": "Tổng cộng phải lớn hơn hoặc bằng 0"
+      }
+    ]
+  },
+  "dataProcessing": {
+  },
+  "foriegnModel": [
+    {
+      "model": "contractDetail",
+      "schema": {
+        "partition": true,
+        "fields": [
+          {
+            "name": "idGui",
+            "property": "idGui",
+            "type": "string",
+            "sqlType": "VARCHAR(50)",
+            "primaryKey": true
+          },
+          {
+            "name": "line_nbr",
+            "property": "line_nbr",
+            "type": "number",
+            "sqlType": "INT",
+            "required": true,
+            "primaryKey": true
+          },
+          {
+            "name": "item_id",
+            "property": "itemId",
+            "type": "string",
+            "sqlType": "VARCHAR(50)"
+          },
+          {
+            "name": "item_name",
+            "property": "item_name",
+            "type": "string",
+            "sqlType": "VARCHAR(256)",
+            "foreign": {
+              "table": "item",
+              "key": "item_id",
+              "lookup": "item_name",
+              "sourceField": "item_id"
+            }
+          },
+          {
+            "name": "uomCode",
+            "property": "uomCode",
+            "type": "string",
+            "sqlType": "VARCHAR(50)",
+            "foreign": {
+              "table": "uom",
+              "key": "uomCode",
+              "lookup": "uomName"
+            }
+          },
+          {
+            "name": "quantity",
+            "property": "quantity",
+            "type": "number",
+            "sqlType": "NUMERIC(24, 4)"
+          },
+          {
+            "name": "tax_rate",
+            "property": "tax_rate",
+            "type": "number",
+            "sqlType": "NUMERIC(24, 4)"
+          },
+          {
+            "name": "price",
+            "property": "price",
+            "type": "number",
+            "sqlType": "NUMERIC(24, 4)"
+          },
+          {
+            "name": "amount",
+            "property": "amount",
+            "type": "number",
+            "sqlType": "NUMERIC(24, 4)"
+          },
+          {
+            "name": "note",
+            "property": "note",
+            "type": "string",
+            "sqlType": "TEXT"
+          }
+        ]
+      },
+      "excelIntegration": {
+        "sheetName": "ContractDetail",
+        "columnMapping": [
+          {
+            "excelColumn": "idGui",
+            "fieldName": "idGui",
+            "required": false
+          },
+          {
+            "excelColumn": "line_nbr",
+            "fieldName": "line_nbr",
+            "required": true
+          },
+          {
+            "excelColumn": "Mã vật tư",
+            "fieldName": "item_id",
+            "foriegn": "SELECT item_name FROM item where item_id = @item_id and status = '1'",
+            "required": false
+          },
+          {
+            "excelColumn": "item_name",
+            "fieldName": "item_name",
+            "required": false
+          },
+          {
+            "excelColumn": "uomCode",
+            "fieldName": "uomCode",
+            "required": true
+          },
+          {      
+            "excelColumn": "Số lượng",
+            "fieldName": "quantity",
+            "required": false
+          },
+          {
+            "excelColumn": "Thuế (%)",
+            "fieldName": "tax_rate",
+            "required": false
+          },
+          {
+            "excelColumn": "Giá",
+            "fieldName": "price",
+            "required": false
+          },
+          {
+            "excelColumn": "Tổng trước thế",
+            "fieldName": "amount",
+            "required": false,
+            "hide": true
+          },
+          {
+            "excelColumn": "Tổng sau thuế",
+            "fieldName": "payment",
+            "required": false,
+            "hide": true
+          },
+          {
+            "excelColumn": "note",
+            "fieldName": "note",
+            "required": false,
+            "hide": true
+          }
+        ],
+        "templateRules": {
+          "fileFormat": "xlsx",
+          "firstRowData": 2,
+          "maxRows": 20000
+        }
+      },
+      "checking": {
+        "rules": [
+          {
+            "fieldName": "idGui",
+            "type": "databaseCheck",
+            "checkQuery": "WHERE idGui = @idGui AND line_nbr = @line_nbr",
+            "threshold": "0",
+            "message": "Chi tiết hợp đồng đã tồn tại"
+          },
+          {
+            "fieldName": "item_name",
+            "type": "length",
+            "minLength": "1",
+            "maxLength": "256",
+            "message": "Tên hàng không được để trống và tối đa 256 ký tự"
+          },
+          {
+            "fieldName": "uomCode",
+            "type": "length",
+            "minLength": "1",
+            "maxLength": "50",
+            "message": "Đơn vị tính tối đa 50 ký tự"
+          },
+          {
+            "fieldName": "quantity",
+            "type": "range",
+            "min": "0",
+            "max": "1000000",
+            "message": "Số lượng phải từ 0 đến 1 triệu"
+          },
+          {
+            "fieldName": "price",
+            "type": "range",
+            "min": "0",
+            "max": "1000000000",
+            "message": "Đơn giá phải từ 0 đến 1 tỷ"
+          },
+          {
+            "fieldName": "amount",
+            "type": "range",
+            "min": "0",
+            "max": "100000000000",
+            "message": "Thành tiền phải >= 0"
+          }
+        ]
+      },
+      "dataProcessing": {
+        "sqlStatements": [
+          {
+            "statement":  "update",
+            "query": "IF NOT EXISTS (SELECT 1 FROM ContractDetail@partition WHERE idGui = @idGui AND line_nbr = @line_nbr) THROW 51002, 'Chi tiết hợp đồng không tồn tại', 1; UPDATE ContractDetail@partition SET item_id = @item_id, item_name = @item_name, uomCode = @uomCode, quantity = @quantity, tax_rate = @tax_rate, price = @price, note = @note, amount = ISNULL(TRY_CONVERT(NUMERIC(24, 4), @price), 0) * ISNULL(TRY_CONVERT(NUMERIC(24, 4), @quantity), 0), tax = (ISNULL(TRY_CONVERT(NUMERIC(24, 4), @price), 0) * ISNULL(TRY_CONVERT(NUMERIC(24, 4), @quantity), 0)) * ISNULL(TRY_CONVERT(NUMERIC(24, 4), @tax_rate), 0) / 100, payment = (ISNULL(TRY_CONVERT(NUMERIC(24, 4), @price), 0) * ISNULL(TRY_CONVERT(NUMERIC(24, 4), @quantity), 0)) + ((ISNULL(TRY_CONVERT(NUMERIC(24, 4), @price), 0) * ISNULL(TRY_CONVERT(NUMERIC(24, 4), @quantity), 0)) * ISNULL(TRY_CONVERT(NUMERIC(24, 4), @tax_rate), 0) / 100) WHERE idGui = @idGui AND line_nbr = @line_nbr; UPDATE c SET c.amount_total = d.TotalPayment FROM Contract@partition c INNER JOIN (SELECT idGui, SUM(ISNULL(payment, 0)) AS TotalPayment FROM ContractDetail@partition WHERE idGui = @idGui GROUP BY idGui) d ON c.idGui = d.idGui WHERE c.idGui = @idGui;"
+          }
+        ]
+      }
+    }
+  ]
+}

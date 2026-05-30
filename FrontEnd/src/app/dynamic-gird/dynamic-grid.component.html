@@ -1,0 +1,992 @@
+<div class="p-4 pt-[52px] md:pt-[54px]">
+  <!-- Loading/Error -->
+  <div *ngIf="!response" class="space-y-4 animate-pulse">
+    <div class="bg-white rounded-xl border border-gray-100 p-4">
+      <div class="h-8 bg-gray-200 rounded w-full mb-4"></div>
+      <div
+        *ngFor="let i of [1, 2, 3, 4, 5]"
+        class="flex space-x-4 py-3 border-b border-gray-50"
+      >
+        <div class="h-6 bg-gray-100 rounded w-1/4"></div>
+        <div class="h-6 bg-gray-100 rounded w-1/2"></div>
+        <div class="h-6 bg-gray-100 rounded w-1/4"></div>
+      </div>
+    </div>
+  </div>
+  <!--<div class="language-switcher flex items-center gap-2">
+    <span class="text-sm text-gray-600">{{ 'COMMON.LANGUAGE' | translate }}:</span>
+    <button type="button"
+            class="px-3 py-1 text-sm rounded border"
+            [class.bg-blue-500]="currentLanguage === 'vi'"
+            [class.text-white]="currentLanguage === 'vi'"
+            [class.bg-gray-100]="currentLanguage !== 'vi'"
+            (click)="switchLanguage('vi')">
+      Tiếng Việt
+    </button>
+    <button type="button"
+            class="px-3 py-1 text-sm rounded border"
+            [class.bg-blue-500]="currentLanguage === 'en'"
+            [class.text-white]="currentLanguage === 'en'"
+            [class.bg-gray-100]="currentLanguage !== 'en'"
+            (click)="switchLanguage('en')">
+      English
+    </button>
+  </div>-->
+  <!-- Table -->
+    <div *ngIf="response">
+      <div class="toolbar-actions mb-2 flex flex-wrap items-center gap-2">
+      <button
+        (click)="toggleFilter()"
+        class="inline-flex items-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-1.5 text-sm font-medium text-sky-800 hover:bg-sky-50 transition"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3 4h18M7 12h10m-7 8h4"
+          />
+        </svg>
+        {{ showFilter ? "Hide filter" : "Show filter" }}
+      </button>
+
+      <button
+        (click)="handleClickAdd()"
+        class="inline-flex items-center gap-2 rounded-md border border-emerald-200 bg-white px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        {{ "COMMON.ADD_NEW" | translate }}
+      </button>
+
+      <button
+        (click)="handleToolbarDelete()"
+        title="Xóa dòng đang chọn (F8 / Ctrl+Shift+D)"
+        class="inline-flex items-center gap-2 rounded-md border border-rose-200 bg-white px-3 py-1.5 text-sm font-medium text-rose-700 hover:bg-rose-50 transition"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          />
+        </svg>
+        {{ "COMMON.DELETE" | translate }}
+      </button>
+
+      <button
+        (click)="handleToolbarView()"
+        [disabled]="!getToolbarTargetRow()"
+        title="Xem dòng đang chọn (F4 / Ctrl+Shift+V)"
+        class="inline-flex items-center gap-2 rounded-md border border-cyan-200 bg-white px-3 py-1.5 text-sm font-medium text-cyan-700 hover:bg-cyan-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.27 2.943 9.543 7-1.273 4.057-5.065 7-9.543 7-4.477 0-8.268-2.943-9.542-7z"
+          />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        Xem
+      </button>
+
+      <button
+        (click)="handleToolbarUpdate()"
+        [disabled]="!getToolbarTargetRow()"
+        title="Sửa dòng đang chọn (F2 / Ctrl+Shift+E)"
+        class="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.5 3.5a2.121 2.121 0 013 3L12 14l-4 1 1-4 7.5-7.5z"
+          />
+        </svg>
+        Sửa
+      </button>
+
+      <button
+        (click)="handleToolbarRefresh()"
+        title="Làm tươi dữ liệu"
+        aria-label="Refresh data"
+        class="inline-flex items-center justify-center rounded-md border border-indigo-200 bg-white px-2.5 py-1.5 text-indigo-700 hover:bg-indigo-50 transition"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4 4v6h6M20 20v-6h-6M20 10a8 8 0 00-14-4M4 14a8 8 0 0014 4"
+          />
+        </svg>
+      </button>
+
+      <app-file-handle
+        #fileHandler
+        [minimalMode]="true"
+        [isFileHandle]="isFileHandle"
+        [isOption]="girdData?.query?.formId?.isOption || false"
+        [options]="girdData?.query?.formId?.options || {}"
+        [enableTaxExcelExport]="girdData?.query?.formId?.enableTaxExcelExport || false"
+        [user]="userData"
+        [controll]="controll"
+        [exportData]="exportData"
+        [exportAllRows]="filteredData"
+        [rawExportHeaders]="getRawExportHeaders()"
+        (importCompleted)="ngOnInit()"
+        class="w-full sm:w-auto"
+      ></app-file-handle>
+
+        <ng-container
+          *ngIf="selectedOptions && objectKeys(selectedOptions).length > 0"
+        >
+        <ng-container *ngFor="let btn of girdData.actions">
+          <button
+            class="inline-flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition w-full sm:w-auto"
+            [ngClass]="getButtonClasses(btn.color)"
+            (click)="btn.isCopy ? onCopyDataClick(btn) : onGridButtonClick(btn)"
+          >
+            {{ btn.label | translate }}
+          </button>
+        </ng-container>
+        </ng-container>
+
+      </div>
+
+      <div
+        *ngIf="showShortcutHelp"
+        class="mb-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+      >
+        <div class="mb-1 font-semibold">Phím tắt nhanh</div>
+        <div class="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div><span class="font-medium">F2</span> / <span class="font-medium">Ctrl+Shift+E</span>: Sửa dòng đang chọn</div>
+          <div><span class="font-medium">F4</span> / <span class="font-medium">Ctrl+Shift+V</span>: Xem dòng đang chọn</div>
+          <div><span class="font-medium">F8</span> / <span class="font-medium">Ctrl+Shift+D</span>: Xóa dòng đang chọn</div>
+          <div><span class="font-medium">F9</span> / <span class="font-medium">Ctrl+Shift+S</span>: Lưu trong popup</div>
+          <div><span class="font-medium">Esc</span>: Hủy trong popup / đóng help</div>
+          <div><span class="font-medium">?</span>: Bật/tắt help phím tắt</div>
+        </div>
+      </div>
+
+    <app-advanced-filter
+      [class.hidden]="!showFilter"
+      [fields]="getAdvancedFilterFields()"
+      [autoApply]="true"
+      [applyDebounceMs]="600"
+      [showStats]="false"
+      [showExport]="false"
+      [compactMode]="true"
+      [superCompactMode]="true"
+      (filtersApplied)="onFiltersApplied($event)"
+      [initialFilters]="initFilter"
+    >
+    </app-advanced-filter>
+    <!-- Advanced Filter Component -->
+    <div class="my-2"></div>
+
+    <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+      <app-dynamic-pagination
+        *ngIf="shouldShowPagination()"
+        class="block"
+        [totalItems]="getPaginationTotalItems()"
+        [itemsPerPage]="response.pageSize"
+        [pageSizeOptions]="[10, 20, 50, 100, 200]"
+        [currentPage]="getPaginationCurrentPage()"
+        (pageChange)="onPageChange($event)"
+        (itemsPerPageChange)="onItemsPerPageChange($event)"
+      >
+      </app-dynamic-pagination>
+
+      <div
+        *ngIf="hasQuickEditableMasterFields()"
+        class="flex flex-wrap items-center gap-1.5"
+      >
+        <button
+          *ngIf="!quickEditMasterMode"
+          type="button"
+          (click)="startQuickEditMaster()"
+          [disabled]="!getToolbarTargetRow()"
+          class="inline-flex items-center rounded border border-sky-200 bg-white px-2 py-1 text-xs font-medium text-sky-700 hover:bg-sky-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Sửa nhanh
+        </button>
+
+        <button
+          *ngIf="quickEditMasterMode"
+          type="button"
+          (click)="saveQuickEditMaster()"
+          [disabled]="quickEditMasterSaving"
+          class="inline-flex items-center rounded border border-emerald-200 bg-white px-2 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ quickEditMasterSaving ? 'Đang lưu...' : 'Lưu nhanh' }}
+        </button>
+
+        <button
+          *ngIf="quickEditMasterMode"
+          type="button"
+          (click)="cancelQuickEditMaster()"
+          [disabled]="quickEditMasterSaving"
+          class="inline-flex items-center rounded border border-rose-200 bg-white px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Hủy nhanh
+        </button>
+      </div>
+    </div>
+    <!-- Dynamic Buttons
+
+    <div class="overflow-x-auto rounded-lg shadow">
+      <div class="overflow-x-auto">
+        <table class="w-full table-auto border-collapse hidden md:table">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
+                {{ "COMMON.ACTION" | translate }}
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">#</th>
+              <ng-container *ngFor="let header of girdData.headers">
+                <th *ngIf="!header.hidden"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  [style.width]="getFieldWidth(header.key)">
+
+                  <div class="flex items-center justify-between">
+                    <span>{{ header.label | translate }}</span>
+                  </div>
+                </th>
+              </ng-container>
+
+            </tr>
+          <tr class="bg-slate-100 text-slate-700">
+            <th class="px-3 py-2"></th>
+            <th class="px-3 py-2"></th>
+            <ng-container *ngFor="let header of girdData.headers">
+              <th *ngIf="!header.hidden" class="px-3 py-2 border-r border-slate-200">
+                <input
+                  [type]="header.type === 'date' ? 'date' : 'text'"
+                  [(ngModel)]="filterColumns[header.key]"
+                  (ngModelChange)="onColumnFilterChange()"
+                  class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  [placeholder]="header.type === 'date' ? '' : 'Filter...'" />
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let data of filteredData; let i = index"
+              class="cursor-pointer hover:bg-gray-50 transition-colors">
+              <td class="px-4 py-3 text-sm text-center">
+                <div class="flex justify-center gap-2">
+                  <button (click)="handleClickUpdate(data)"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded-md shadow-sm transition-all duration-200">
+                    {{ 'COMMON.EDIT' | translate }}
+                  </button>
+                  <button (click)="handleClickDelete(data)"
+                    class="bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-3 rounded-md shadow-sm transition-all duration-200">
+                    {{ 'COMMON.DELETE' | translate }}
+                  </button>
+                  <button (click)="handleClickView(data)"
+                    class="bg-purple-500 hover:bg-purple-600 text-white text-xs font-medium py-1 px-2 rounded">
+                    {{ 'COMMON.VIEW' | translate }}
+                  </button>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-500">
+                <input type="checkbox"
+                  [checked]="selectedOptions[data[girdData.query.formId.primaryKey[0]]] !== undefined"
+                  (change)="handleSelection($event, data)" />
+              </td>
+              <ng-container *ngFor="let header of girdData.headers">
+                <td *ngIf="!header.hidden" class="px-4 py-3 text-sm">
+                  <span *ngIf="header.type === 'date'; else normalDisplay">
+                    {{ data[header.key] | date:'dd-MM-yyyy' }}
+                  </span>
+                  <ng-template #normalDisplay>
+                    {{ data[header.key] }}
+                  </ng-template>
+                </td>
+              </ng-container>
+
+            </tr>
+
+            <tr *ngIf="filteredData.length === 0">
+              <td [attr.colspan]="girdData.headers.length + 2" class="px-4 py-8 text-center text-gray-500">
+                <div class="flex flex-col items-center">
+                  <svg class="w-12 h-12 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <p class="text-lg font-medium">Không có dữ liệu</p>
+                  <p class="text-xs mt-2 text-gray-500">
+                    Có {{ response.total }} dòng dữ liệu gốc
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+    <div class="md:hidden space-y-4">
+      <div *ngFor="let data of filteredData" class="bg-white shadow-sm rounded-md p-4 border border-gray-200">
+        <div class="flex items-center justify-between mb-2">
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="form-checkbox"
+              [checked]="selectedOptions[data[girdData.query.formId.primaryKey[0]]] !== undefined"
+              (change)="handleSelection($event, data)" />
+            <span class="text-sm font-medium text-gray-700">Đã chọn</span>
+          </label>
+          <div class="flex gap-2">
+            <button (click)="handleClickUpdate(data)"
+              class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-1 px-2 rounded">
+              Sửa
+            </button>
+            <button (click)="handleClickDelete(data)"
+              class="bg-red-500 hover:bg-red-600 text-white text-xs font-medium py-1 px-2 rounded">
+              Xóa
+            </button>
+            <button (click)="handleClickView(data)"
+              class="bg-purple-500 hover:bg-purple-600 text-white text-xs font-medium py-1 px-2 rounded">
+              Xem
+            </button>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm">
+          <div *ngFor="let header of girdData.headers">
+            <div class="text-gray-500">{{ header.label }}:</div>
+            <div class="text-gray-800 font-medium break-words">{{ data[header.key] }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="filteredData.length === 0" class="text-center text-gray-500 py-10 border rounded-md">
+        <p class="text-lg font-medium">Không có dữ liệu</p>
+        <p class="text-xs mt-2 text-gray-500">Có {{ response.total }} dòng dữ liệu gốc</p>
+      </div>
+    </div>
+  </div>
+</div>
+-->
+    <div
+      class="bg-white rounded-xl shadow-md border border-sky-100 overflow-hidden"
+    >
+      <div
+        class="master-scroll-zone"
+        [class.master-scroll-zone-full]="!isVoucherType() || !isDetailPanelVisible()"
+        [style.height.px]="isDetailPanelVisible() ? masterPaneHeight : null"
+        [style.max-height.px]="isDetailPanelVisible() ? masterPaneHeight : null"
+        [style.min-height.px]="isDetailPanelVisible() ? paneMinHeight : null"
+        tabindex="0"
+      >
+        <table
+          [class]="getGridTableClasses()"
+        >
+          <thead class="bg-sky-900 text-white sticky top-0 z-5">
+          <tr>
+            <th
+              class="relative px-2 py-1 text-center text-[11px] font-bold uppercase"
+              [ngStyle]="getHeaderCellStyle('__selection', true)"
+            >
+              <input
+                type="checkbox"
+                [checked]="isAllMasterRowsSelected()"
+                [indeterminate]="isSomeMasterRowsSelected()"
+                (click)="$event.stopPropagation()"
+                (change)="toggleSelectAllMaster($event)"
+                title="Chọn tất cả"
+              />
+              <div
+                class="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-cyan-400 transition-colors"
+                (mousedown)="onResizeColumn($event, { key: '__selection' })"
+              ></div>
+            </th>
+            <ng-container *ngFor="let header of girdData.headers">
+              <th
+                *ngIf="!header.hidden"
+                class="relative px-3 py-1 text-left text-[11px] font-bold uppercase tracking-wider group border-r border-sky-800"
+                [class.cursor-pointer]="isHeaderSortable(header)"
+                [ngStyle]="getHeaderCellStyle(header.key)"
+                (click)="onHeaderSortClick(header)"
+              >
+                <div class="flex items-center gap-1">
+                  <span>{{ header.label | translate }}</span>
+                  <span
+                    *ngIf="isHeaderSortable(header)"
+                    class="text-[10px] leading-none select-none"
+                    [class.text-cyan-200]="getHeaderSortDirection(header.key) !== ''"
+                    [class.text-sky-200]="getHeaderSortDirection(header.key) === ''"
+                    [attr.title]="
+                      getHeaderSortDirection(header.key) === 'asc'
+                        ? 'Đang sắp xếp tăng dần'
+                        : getHeaderSortDirection(header.key) === 'desc'
+                        ? 'Đang sắp xếp giảm dần'
+                        : 'Bấm để sắp xếp'
+                    "
+                  >
+                    {{
+                      getHeaderSortDirection(header.key) === 'asc'
+                        ? '▲'
+                        : getHeaderSortDirection(header.key) === 'desc'
+                        ? '▼'
+                        : '↕'
+                    }}
+                  </span>
+                </div>
+
+                <div
+                  class="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-cyan-400 transition-colors"
+                  (click)="$event.stopPropagation()"
+                  (mousedown)="onResizeColumn($event, header)"
+                ></div>
+              </th>
+            </ng-container>
+          </tr>
+          <tr class="bg-sky-50 text-slate-700">
+            <th class="px-2 py-0.5"></th>
+            <ng-container *ngFor="let header of girdData.headers">
+              <th
+                *ngIf="!header.hidden"
+                class="px-3 py-0.5 border-r border-sky-100"
+              >
+                <input
+                  [type]="header.type === 'date' ? 'date' : 'text'"
+                  [(ngModel)]="filterColumns[header.key]"
+                  (ngModelChange)="onColumnFilterChange()"
+                  class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                  [placeholder]="header.type === 'date' ? '' : 'Filter...'"
+                />
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <ng-container *ngFor="let data of filteredData; let i = index">
+            <tr
+              class="hover:bg-sky-50 transition-colors group/row"
+              [attr.data-master-index]="i"
+              [class.cursor-pointer]="isVoucherType()"
+              [class.bg-sky-100]="
+                isVoucherType() &&
+                expandedRowId === data[girdData.query.formId.primaryKey[0]]
+              "
+              [class.master-row-active]="
+                isVoucherType() &&
+                expandedRowId === data[girdData.query.formId.primaryKey[0]]
+              "
+              [style.height.px]="rowHeights[i] || 38"
+              (click)="onMasterRowClick(data)"
+            >
+              <td class="px-2 py-0.5 text-xs text-gray-500 relative">
+                <input
+                  type="checkbox"
+                  [checked]="isMasterRowSelected(data)"
+                  (click)="$event.stopPropagation()"
+                  (change)="handleSelection($event, data)"
+                />
+                <div
+                  class="absolute bottom-0 left-0 w-full h-1 cursor-row-resize hover:bg-cyan-500 bg-transparent group-hover/row:bg-cyan-300/50 transition-all z-20"
+                  (mousedown)="onResizeRow($event, i)"
+                ></div>
+              </td>
+
+              <ng-container *ngFor="let header of girdData.headers">
+                <td *ngIf="!header.hidden" class="px-2 py-0.5 text-xs relative">
+                  <ng-container *ngIf="isQuickEditEnabledForMasterCell(data, header); else readonlyMasterCell">
+                    <input
+                      *ngIf="header.type === 'date'"
+                      type="date"
+                      [ngModel]="toDateInputValue(data[header.key])"
+                      (ngModelChange)="onQuickMasterFieldChange(data, header.key, $event, header.type)"
+                      (click)="$event.stopPropagation()"
+                      class="w-full rounded border border-sky-200 px-1.5 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    />
+
+                    <select
+                      *ngIf="header.type === 'select'"
+                      [ngModel]="data[header.key]"
+                      (ngModelChange)="onQuickMasterFieldChange(data, header.key, $event, header.type)"
+                      (click)="$event.stopPropagation()"
+                      class="w-full rounded border border-sky-200 px-1.5 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    >
+                      <option value="">--</option>
+                      <option *ngFor="let opt of getMasterSelectOptions(header)" [value]="opt.value">
+                        {{ opt.label | translate }}
+                      </option>
+                    </select>
+
+                    <input
+                      *ngIf="header.type === 'checkbox'"
+                      type="checkbox"
+                      [checked]="data[header.key] == 1 || data[header.key] === true"
+                      (change)="onQuickMasterFieldChange(data, header.key, $any($event.target).checked, header.type)"
+                      (click)="$event.stopPropagation()"
+                    />
+
+                    <input
+                      *ngIf="header.type !== 'date' && header.type !== 'select' && header.type !== 'checkbox'"
+                      [type]="header.type === 'number' ? 'number' : 'text'"
+                      [ngModel]="data[header.key]"
+                      (ngModelChange)="onQuickMasterFieldChange(data, header.key, $event, header.type)"
+                      (click)="$event.stopPropagation()"
+                      class="w-full rounded border border-sky-200 px-1.5 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    />
+                  </ng-container>
+                  <ng-template #readonlyMasterCell>
+                    <span *ngIf="header.type === 'checkbox'; else nonCheckboxMasterDisplay">
+                      <input
+                        type="checkbox"
+                        [checked]="data[header.key] == 1 || data[header.key] === true"
+                        disabled
+                      />
+                    </span>
+                    <ng-template #nonCheckboxMasterDisplay>
+                    <span *ngIf="header.type === 'date'; else normalDisplay">
+                      {{ data[header.key] | date: "dd-MM-yyyy" }}
+                    </span>
+                    <ng-template #normalDisplay>
+                      {{ getGridCellDisplayValue(data, header) }}
+                    </ng-template>
+                    </ng-template>
+                  </ng-template>
+                  <div
+                    class="absolute bottom-0 left-0 w-full h-1 cursor-row-resize hover:bg-cyan-500 bg-transparent group-hover/row:bg-cyan-300/50 transition-all z-20"
+                    (mousedown)="onResizeRow($event, i)"
+                  ></div>
+                </td>
+              </ng-container>
+              <div
+                class="absolute bottom-0 left-0 w-full h-1 cursor-row-resize hover:bg-cyan-500 opacity-0 group-hover/row:opacity-100 transition-all z-10"
+                (mousedown)="onResizeRow($event, i)"
+              ></div>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        *ngIf="hasGridSummary()"
+        class="flex items-center justify-end gap-3 px-4 py-2 border-t border-slate-200 bg-slate-50 text-sm"
+      >
+        <span class="text-slate-600 font-medium">{{ getGridSummaryLabel() }}:</span>
+        <span class="font-bold text-slate-900 whitespace-nowrap">
+          {{ getFormattedSummaryValue() }}
+          <span *ngIf="gridSummaryLoading" class="ml-1 text-xs font-medium text-slate-500">
+            (đang tính...)
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div *ngIf="isVoucherType()" class="my-1">
+      <div
+        *ngIf="isDetailPanelVisible(); else hiddenDetailToggle"
+        class="h-2 rounded bg-slate-200 hover:bg-cyan-200 cursor-row-resize transition-colors flex items-center justify-center"
+        (mousedown)="startPaneResize($event)"
+        title="Kéo để thay đổi chiều cao Master/Detail"
+      >
+        <span class="w-12 h-0.5 rounded bg-slate-400"></span>
+      </div>
+      <ng-template #hiddenDetailToggle>
+        <button
+          type="button"
+          class="w-full rounded border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700 hover:bg-sky-100 transition"
+          (click)="showDetailPanel()"
+        >
+          Chi tiết đang ẩn - Bấm để hiện lại
+        </button>
+      </ng-template>
+    </div>
+
+    <div
+      *ngIf="isDetailPanelVisible()"
+      class="mt-0 rounded-lg border border-slate-200 shadow-sm bg-white detail-equal-width detail-professional"
+      [class.detail-collapsed]="!expandedRowId"
+    >
+      <div class="panel-header detail-panel-header py-2 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="panel-title">Chi tiết</span>
+          <span class="panel-subtitle" *ngIf="expandedRowId">
+            Đang xem chứng từ: {{ getExpandedVoucherNumber() || expandedRowId }}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
+            (click)="toggleDetailPanelVisibility()"
+          >
+            Ẩn chi tiết
+          </button>
+
+          <div *ngIf="expandedRowId && hasQuickEditableDetailFields()" class="flex items-center gap-2">
+          <button
+            *ngIf="!quickEditDetailMode"
+            type="button"
+            class="inline-flex items-center rounded-md border border-sky-200 bg-white px-2.5 py-1 text-xs font-semibold text-sky-700 hover:bg-sky-50 transition"
+            (click)="startQuickEditDetail()"
+          >
+            Sửa nhanh
+          </button>
+
+          <button
+            *ngIf="quickEditDetailMode"
+            type="button"
+            class="inline-flex items-center rounded-md border border-emerald-200 bg-white px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 transition disabled:opacity-50"
+            [disabled]="quickEditSaving"
+            (click)="saveQuickEditDetail()"
+          >
+            {{ quickEditSaving ? 'Đang lưu...' : 'Lưu nhanh' }}
+          </button>
+
+          <button
+            *ngIf="quickEditDetailMode"
+            type="button"
+            class="inline-flex items-center rounded-md border border-rose-200 bg-white px-2.5 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-50 transition"
+            [disabled]="quickEditSaving"
+            (click)="cancelQuickEditDetail()"
+          >
+            Hủy
+          </button>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="!metadata || !expandedRowId"
+        class="px-4 py-5 text-sm text-slate-600 detail-empty-state"
+      >
+        Chọn một dòng ở bảng master để xem chi tiết.
+      </div>
+
+      <ng-container *ngIf="metadata && expandedRowId">
+        <div
+          *ngIf="metadata.tabs[selectedTab]?.detail!.length > 1"
+          class="detail-nav-container bg-slate-100 border-b border-slate-200 px-4 py-2"
+        >
+          <div class="detail-nav flex gap-2">
+            <button
+              *ngFor="
+                let detailSection of metadata.tabs[selectedTab]?.detail;
+                let i = index
+              "
+              type="button"
+              class="detail-nav-button"
+              [class]="
+                'btn-modern btn-small ' +
+                (selectedDetailIndex === i ? 'btn-primary' : 'btn-secondary')
+              "
+              (click)="onDetailSectionChange(i)"
+            >
+              {{ (detailSection.title ?? "" | translate) + (i + 1) }}
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="detail-table-container detail-scroll-zone detail-fixed-zone"
+          *ngIf="getAllDetailFields().length > 0"
+          [style.height.px]="detailPaneHeight"
+          [style.max-height.px]="detailPaneHeight"
+          [style.min-height.px]="paneMinHeight"
+          tabindex="0"
+        >
+          <div class="detail-scroll-content">
+            <table
+              appArrowNavigation
+              class="detail-table text-xs"
+            >
+              <thead>
+                <tr class="bg-slate-700 text-white">
+                  <th
+                    class="px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
+                  >
+                    #
+                  </th>
+                  <th
+                    *ngFor="let field of getAllDetailFields()"
+                    [style.width]="getFieldWidth(field.key)"
+                    class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group"
+                    [hidden]="field.type === 'hidden'"
+                    [attr.data-field-key]="field.key"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>
+                        {{ field.label | translate }}
+                        <span *ngIf="field.required" class="text-red-500"
+                          >*</span
+                        >
+                      </span>
+                      <span
+                        *ngIf="currentColumnFilters[field.key]"
+                        class="ml-2 text-cyan-200 text-[10px] font-semibold"
+                        title="Đang lọc: {{ currentColumnFilters[field.key] }}"
+                      >
+                        LOC
+                      </span>
+                    </div>
+                    <div
+                      class="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-cyan-300 transition-colors"
+                      (mousedown)="onResizeColumn($event, field)"
+                    ></div>
+                  </th>
+                </tr>
+
+                <tr class="bg-slate-100">
+                  <td class="p-0"></td>
+                  <td
+                    *ngFor="let field of getAllDetailFields()"
+                    class="p-0"
+                    [hidden]="field.type === 'hidden'"
+                  >
+                    <div class="relative" [hidden]="field.disabled">
+                      <input
+                        *ngIf="
+                          field.type !== 'select' && isCurrencyField(field.key)
+                        "
+                        type="text"
+                        class="w-full text-[11px] border border-slate-300 rounded px-2 py-0.5 focus:border-sky-500 focus:outline-none"
+                        [value]="getFormattedFilterValue(field.key, field)"
+                        (blur)="onCurrencyFilterBlur(field.key, $event, field)"
+                        [(ngModel)]="currentColumnFilters[field.key]"
+                        (ngModelChange)="onFilterChange(field.key, $event)"
+                        (keydown.enter)="applyFilters()"
+                      />
+
+                      <input
+                        *ngIf="
+                          field.type !== 'select' && !isCurrencyField(field.key)
+                        "
+                        type="text"
+                        class="w-full text-[11px] border border-slate-300 rounded px-2 py-0.5 focus:border-sky-500 focus:outline-none"
+                        [(ngModel)]="currentColumnFilters[field.key]"
+                        (ngModelChange)="onFilterChange(field.key, $event)"
+                        (keydown.enter)="applyFilters()"
+                      />
+
+                      <select
+                        *ngIf="field.type === 'select'"
+                        class="w-full text-[11px] border border-slate-300 rounded px-2 py-0.5 focus:border-sky-500 focus:outline-none"
+                        [(ngModel)]="currentColumnFilters[field.key]"
+                        (ngModelChange)="onFilterChange(field.key, $event)"
+                      >
+                        <option value="">
+                          {{ "COMMON.ALL" | translate }}
+                        </option>
+                        <option
+                          *ngFor="let opt of field.options || []"
+                          [value]="opt.value"
+                        >
+                          {{ opt.label | translate }}
+                        </option>
+                      </select>
+
+                      <button
+                        *ngIf="currentColumnFilters[field.key]"
+                        type="button"
+                        class="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors text-xs"
+                        (click)="clearFilter(field.key)"
+                        title="Xóa bộ lọc"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr
+                  *ngFor="
+                    let row of currentFilteredDetailRows;
+                    let i = index;
+                    trackBy: trackByIndex
+                  "
+                  class="hover:bg-sky-50"
+                  [attr.data-detail-index]="i"
+                  [class.bg-sky-100]="i === activeDetailRowIndex"
+                  (click)="activeDetailRowIndex = i"
+                >
+                  <td class="text-center text-slate-500 px-2 py-0.5">
+                    {{ row.line_nbr || i + 1 }}
+                  </td>
+
+                  <td
+                    class="relative px-2 py-0.5"
+                    *ngFor="let field of getAllDetailFields()"
+                    [hidden]="field.type === 'hidden'"
+                  >
+                    <input
+                      *ngIf="
+                        field.type === 'number' &&
+                        isCurrencyField(field.key) &&
+                        !field.disabled
+                      "
+                      type="text"
+                      [value]="formatCurrencyNumber(row[field.key] || 0, field.key, field)"
+                      class="form-input w-full text-xs text-right"
+                      placeholder="0"
+                      [disabled]="!isQuickEditEnabledForField(field)"
+                    />
+
+                    <input
+                      *ngIf="
+                        field.type === 'number' &&
+                        !isCurrencyField(field.key) &&
+                        !field.disabled
+                      "
+                      type="text"
+                      [value]="formatCurrencyNumber(row[field.key] || 0, field.key, field)"
+                      class="form-input w-full text-xs text-right"
+                      placeholder="0"
+                      [disabled]="!isQuickEditEnabledForField(field)"
+                    />
+
+                    <input
+                      *ngIf="field.type === 'checkbox' && !field.disabled"
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="row[field.key] == 1 || row[field.key] === true"
+                      [disabled]="!isQuickEditEnabledForField(field)"
+                      (change)="onQuickCheckboxToggle(row, field.key, $event)"
+                    />
+
+                    <input
+                      *ngIf="field.type === 'text' && !field.disabled"
+                      [type]="field.type"
+                      [name]="field.key"
+                      [min]="field.min"
+                      [max]="field.max"
+                      [step]="field.step"
+                      class="form-input w-full text-xs"
+                      [(ngModel)]="row[field.key]"
+                      [disabled]="!isQuickEditEnabledForField(field)"
+                    />
+
+                    <select
+                      *ngIf="field.type === 'select' && !field.disabled"
+                      [name]="field.key + '_' + i"
+                      class="form-select w-full text-xs"
+                      [(ngModel)]="row[field.key]"
+                      [disabled]="!isQuickEditEnabledForField(field)"
+                    >
+                      <option value="">--</option>
+                      <option
+                        *ngFor="let opt of field.options || []"
+                        [value]="opt.value"
+                      >
+                        {{ opt.label | translate }}
+                      </option>
+                    </select>
+
+                    <input
+                      *ngIf="(field.type === 'date' || field.type === 'datetime') && !field.disabled"
+                      type="date"
+                      [name]="field.key + '_' + i"
+                      class="form-input w-full text-xs"
+                      [(ngModel)]="row[field.key]"
+                      [disabled]="!isQuickEditEnabledForField(field)"
+                    />
+
+                    <ckeditor
+                      *ngIf="field.type === 'richtext'"
+                      [editor]="Editor"
+                      [name]="field.key + '_' + i"
+                      [disabled]="true"
+                      [(ngModel)]="row[field.key]"
+                      [data]="row[field.key] || ''"
+                      [config]="editorConfig || {}"
+                    >
+                    </ckeditor>
+
+                    <span
+                      *ngIf="
+                        field.disabled &&
+                        field.type !== 'select' &&
+                        field.type !== 'number'
+                      "
+                      class="text-right block text-sm"
+                      [ngClass]="{
+                        'text-green-600 font-bold': field.key === 'total'
+                      }"
+                    >
+                      {{ formatFieldValue(row, field) }}
+                    </span>
+
+                    <span
+                      *ngIf="field.disabled && field.type === 'number'"
+                      class="text-right block text-sm"
+                      [ngClass]="{
+                        'text-green-600 font-bold': field.key === 'total'
+                      }"
+                    >
+                      {{ formatFieldValue(row, field) }}
+                    </span>
+
+                    <app-lookup
+                      *ngIf="field.type === 'lookup' && lookupMap[field.key]"
+                      [multiple]="field.multiple ? true : false"
+                      [value]="row[field.key]"
+                      [response]="lookupMap[field.key]"
+                      [disable]="true"
+                    >
+                    </app-lookup>
+
+                    <div *ngIf="field.type === 'select'" class="text-xs">
+                      <span *ngIf="field.key !== 'product'">
+                        {{ getOptionLabel(field.key, row[field.key]) }}
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

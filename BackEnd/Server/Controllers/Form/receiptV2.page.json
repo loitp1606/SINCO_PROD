@@ -1,0 +1,478 @@
+{
+	"controller": "receiptV2",
+	"type": "voucher",
+	"formId": "receiptV2",
+	"primaryKey": [
+		"idGui"
+	],
+	"idVC": "Z07",
+	"VCDate": "voucherDate",
+	"title": "Phiếu thu tiền",
+	"tabs": [
+		{
+			"title": "Phiếu thu tiền",
+			"form": {
+				"title": "Thông tin phiếu thu",
+				"formId": "receiptV2",
+				"fields": [
+					{
+						"key": "idGui",
+						"label": "Key",
+						"type": "hidden"
+					},
+					{
+						"key": "voucherNumber",
+						"label": "Số phiếu",
+						"type": "text",
+						"required": true,
+						"autoIncrement": true,
+						"autoGenerate": true,
+						"readonly": true
+					},
+					{
+						"key": "voucherDate",
+						"label": "Ngày",
+						"type": "date",
+						"required": true,
+						"default": "now"
+					},
+					{
+						"key": "receiptType",
+						"label": "Loại thu",
+						"type": "select",
+						"required": true,
+						"default": "CUSTOMER",
+						"quickEditable": true,
+						"options": [
+							{
+								"label": "Thu đặt cọc",
+								"value": "DEPOSIT"
+							},
+							{
+								"label": "Thu tiền khách hàng",
+								"value": "CUSTOMER"
+							},
+							{
+								"label": "Thu theo hóa đơn",
+								"value": "INVOICE"
+							},
+							{
+								"label": "Cấn trừ từ phiếu đặt cọc",
+								"value": "DEPOSIT_OFFSET"
+							}
+						]
+					},
+					{
+						"key": "customerCode",
+						"label": "Khách hàng",
+						"type": "lookup",
+						"required": true,
+						"multiple": false,
+						"default": {
+							"controller": "customer",
+							"filter": [
+								{
+									"field": "status",
+									"value": "1",
+									"operator": "="
+								}
+							]
+						},
+						"onChange": {
+							"api": "/api/CustomQuery/execute",
+							"params": [
+								"customerCode"
+							],
+							"dataType": [
+								"String"
+							],
+							"query": "select isnull(address,'') as customerAddress from customer where customer_id = @customerCode",
+							"map": {
+								"customerAddress": "customerAddress"
+							}
+						}
+					},
+					{
+						"key": "deliveryNoteNo",
+						"label": "Mã tham chiếu",
+						"type": "text",
+						"required": false
+					},
+					{
+						"key": "depositReceiptNo",
+						"label": "Phiếu thu cọc tham chiếu",
+						"type": "text",
+						"required": false,
+						"visibleWhen": {
+							"field": "receiptType",
+							"operator": "=",
+							"value": "DEPOSIT_OFFSET"
+						}
+					},
+					{
+						"key": "reason",
+						"label": "Lý do thu",
+						"type": "lookup",
+						"required": true,
+						"multiple": false,
+						"default": {
+							"controller": "Incomeexpenditure",
+							"filter": [
+								{
+									"field": "status",
+									"value": "1",
+									"operator": "="
+								},
+								{
+									"field": "type",
+									"value": "1",
+									"operator": "="
+								}
+							]
+						}
+					},
+					{
+						"key": "customerAddress",
+						"label": "Địa chỉ - Điện thoại",
+						"type": "text",
+						"required": false
+					},
+					{
+						"key": "collectorCode",
+						"label": "Nhân viên thu",
+						"type": "lookup",
+						"required": true,
+						"multiple": false,
+						"default": {
+							"controller": "Employee",
+							"filter": [
+								{
+									"field": "status",
+									"value": "1",
+									"operator": "="
+								}
+							]
+						}
+					},
+					{
+						"key": "accountReceiveCode",
+						"label": "Số tài khoản (*)",
+						"type": "lookup",
+						"required": false,
+						"multiple": false,
+						"default": {
+							"controller": "AccountSinco",
+							"filter": [
+								{
+									"field": "status",
+									"value": "1",
+									"operator": "="
+								}
+							]
+						}
+					},
+					{
+						"key": "invoiceNumber",
+						"label": "Số biên thu",
+						"type": "text",
+						"required": false
+					},
+					{
+						"key": "paymentType",
+						"label": "Loại thanh toán",
+						"type": "select",
+						"required": true,
+						"options": [
+							{
+								"label": "Tiền mặt",
+								"value": "TM"
+							},
+							{
+								"label": "Chuyển khoản",
+								"value": "CK"
+							},
+							{
+								"label": "TM/CK",
+								"value": "TM/CK"
+							}
+						]
+					},
+					{
+						"key": "total_amount",
+						"label": "Số tiền thu (*)",
+						"type": "number",
+						"currency": "VN",
+						"disabled": false,
+						"subtotal": true,
+						"calculation": {
+							"calculations": [
+								{
+									"formula": "[total_amount] = SUM([amount])",
+									"dependencies": [
+										"amount"
+									],
+									"precision": 0
+								}
+							]
+						}
+					},
+					{
+						"key": "dien_giai",
+						"label": "Diễn giải",
+						"type": "textarea",
+						"required": false,
+						"placeholder": "Nhập diễn giải"
+					},
+					{
+						"key": "status",
+						"label": "Trạng thái",
+						"type": "select",
+						"required": true,
+						"options": [
+							{
+								"label": "Tạo phiếu",
+								"value": "0"
+							},
+							{
+								"label": "Xác nhận",
+								"value": "1"
+							}
+						]
+					},
+					{
+						"key": "isReceived",
+						"label": "Đã thu",
+						"type": "checkbox",
+						"width": "100px"
+					},
+					{
+						"key": "note",
+						"label": "Ghi chú",
+						"type": "textarea",
+						"uiTab": "Ghi chú",
+						"required": false
+					}
+				],
+				"initialData": {}
+			},
+			"detail": [
+				{
+					"title": "Thu tiền chi tiết theo hóa đơn",
+					"quickEditable": true,
+					"visibleWhen": {
+						"field": "receiptType",
+						"operator": "=",
+						"value": "INVOICE"
+					},
+					"controllerDetail": "receiptdetailV2",
+					"formId": "receiptdetailV2",
+					"foreignKey": "idGui,line_nbr",
+					"fields": [
+						{
+							"key": "line_nbr",
+							"label": "Stt",
+							"disabled": true,
+							"type": "text",
+							"width": "70px"
+						},
+						{
+							"key": "invoiceNumber",
+							"label": "Số hóa đơn",
+							"type": "text",
+							"required": true,
+							"width": "160px"
+						},
+						{
+							"key": "invoiceDate",
+							"label": "Ngày HĐ",
+							"type": "date",
+							"required": false,
+							"width": "130px"
+						},
+						{
+							"key": "invoiceAmount",
+							"label": "Tiền HĐ",
+							"type": "number",
+							"currency": "VN",
+							"required": false,
+							"width": "140px",
+							"trigger": [
+								"debtAmount"
+							]
+						},
+						{
+							"key": "paidAmount",
+							"label": "Đã thu",
+							"type": "number",
+							"currency": "VN",
+							"required": false,
+							"width": "140px",
+							"trigger": [
+								"debtAmount"
+							]
+						},
+						{
+							"key": "debtAmount",
+							"label": "Còn phải thu",
+							"type": "number",
+							"currency": "VN",
+							"disabled": true,
+							"width": "150px",
+							"calculation": {
+								"calculations": [
+									{
+										"formula": "[debtAmount] = [invoiceAmount] - [paidAmount]",
+										"dependencies": [
+											"invoiceAmount",
+											"paidAmount"
+										],
+										"precision": 0
+									}
+								]
+							}
+						},
+						{
+							"key": "amount",
+							"label": "Số tiền thu",
+							"type": "number",
+							"currency": "VN",
+							"required": true,
+							"width": "150px"
+						},
+						{
+							"key": "note",
+							"label": "Ghi chú",
+							"type": "text",
+							"uiTab": "Ghi chú",
+							"required": false,
+							"width": "220px"
+						}
+					],
+					"initialData": []
+				}
+			]
+		},
+		{
+			"title": "Tệp đính kèm",
+			"type": "file-attachment"
+		}
+	],
+	"dataProcessing": {
+		"actions": {
+			"post": [
+				{
+					"step": "beforeUpdate",
+					"type": "sql01",
+					"query": "exec beforeUpdateReceiptV2 N'@idGui', N'@voucherNumber', N'@voucherDate';"
+				},
+				{
+					"step": "afterUpdate",
+					"type": "sql02",
+					"query": "exec afterUpdateReceiptV2 N'@idGui', N'@voucherNumber', N'@voucherDate';EXEC dbo.sp_PostDebtFromReceiptV2 N'@idGui', '@unit', '@userId';EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2 N'@idGui', '@unit', '@userId';"
+				}
+			]
+		}
+	},
+	"popupActions": [
+		{
+			"id": "customerDebt",
+			"label": "Xem công nợ",
+			"type": "customerDebt",
+			"style": "info",
+			"showInView": true,
+			"config": {
+				"title": "Công nợ khách hàng",
+				"depositLabel": "Đã cọc",
+				"receivableLabel": "Phải thu",
+				"payableLabel": "Đã thu",
+				"depositField": "depositAmount",
+				"receivableField": "receivableAmount",
+				"payableField": "collectedAmount",
+				"dataSource": {
+					"api": "/api/CustomQuery/execute",
+					"query": "exec sp_GetCustomerDebtSummary @customerCode, @unitCode",
+					"params": [
+						"customerCode",
+						"unitCode"
+					],
+					"dataType": [
+						"String",
+						"String"
+					],
+					"values": [
+						"@customerCode",
+						"@unit"
+					],
+					"map": {
+						"deposit": "depositAmount",
+						"receivable": "receivableAmount",
+						"payable": "collectedAmount"
+					}
+				}
+			}
+		},
+		{
+			"id": "receiptAllocation",
+			"label": "Phân bổ phải thu",
+			"type": "receiptAllocation",
+			"style": "primary",
+			"showInView": false,
+			"visibleWhen": {
+				"field": "receiptType",
+				"operator": "=",
+				"value": "CUSTOMER"
+			},
+			"config": {
+				"title": "Phân bổ thu theo hóa đơn",
+				"receiptAmountField": "total_amount",
+				"openInvoiceDataSource": {
+					"api": "/api/CustomQuery/execute",
+					"query": "exec dbo.sp_GetCustomerReceiptAllocation @mode, @idGui, @customerCode, @unitCode, @keyword",
+					"params": [
+						"mode",
+						"idGui",
+						"customerCode",
+						"unitCode",
+						"keyword"
+					],
+					"dataType": [
+						"String",
+						"String",
+						"String",
+						"String",
+						"String"
+					],
+					"values": [
+						"EDIT",
+						"@idGui",
+						"@customerCode",
+						"@unitCode",
+						"@keyword"
+					]
+				},
+				"saveAllocationDataSource": {
+					"api": "/api/CustomQuery/execute",
+					"query": "exec dbo.sp_SaveCustomerReceiptAllocation @idGui, @allocationJson, @unitCode, @userId",
+					"params": [
+						"idGui",
+						"allocationJson",
+						"unitCode",
+						"userId"
+					],
+					"dataType": [
+						"String",
+						"String",
+						"String",
+						"String"
+					],
+					"values": [
+						"@idGui",
+						"@allocationJson",
+						"@unit",
+						"@userId"
+					]
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,258 @@
+{
+  "model": "orderReturn",
+  "schema": {
+    "foriegn": [
+      "orderReturnDetail"
+    ],
+    "foriegnKey": [
+      "idGui"
+    ],
+    "partition": true,
+    "isMaster": true,
+    "fields": [
+      {
+        "name": "idGui",
+        "property": "idGui",
+        "type": "string",
+        "sqlType": "VARCHAR(64)",
+        "primaryKey": true,
+        "required": true
+      },
+      {
+        "name": "voucherNumber",
+        "property": "voucherNumber",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true
+      },
+      {
+        "name": "voucherDate",
+        "property": "voucherDate",
+        "type": "date",
+        "sqlType": "DATE",
+        "required": true
+      },
+      {
+        "name": "customerGroupCode",
+        "property": "customerGroupCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true,
+        "foreign": {
+          "table": "customerGroup",
+          "key": "customer_group_id",
+          "lookup": "customer_group_name"
+        }
+      },
+      {
+        "name": "customerCode",
+        "property": "customerCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true,
+        "foreign": {
+          "table": "supplier",
+          "key": "supplier_id",
+          "lookup": "supplier_name"
+        }
+      },
+      {
+        "name": "addressCustomer",
+        "property": "addressCustomer",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)",
+        "required": true
+      },
+      {
+        "name": "phoneCustomer",
+        "property": "phoneCustomer",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true
+      },
+      {
+        "name": "employeeCode",
+        "property": "employeeCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true,
+        "foreign": {
+          "table": "employee",
+          "key": "employee_id",
+          "lookup": "full_name"
+        }
+      },
+      {
+        "name": "number_delivery",
+        "property": "number_delivery",
+        "type": "string",
+        "sqlType": "VARCHAR(32)"
+      },
+      {
+        "name": "note",
+        "property": "note",
+        "type": "string",
+        "sqlType": "NVARCHAR(MAX)"
+      },
+      {
+        "name": "status",
+        "property": "status",
+        "type": "string",
+        "sqlType": "CHAR(1)",
+        "required": true
+      },
+      {
+        "name": "totalQuantity",
+        "property": "totalQuantity",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "totalAmount",
+        "property": "totalAmount",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "totalDiscount",
+        "property": "totalDiscount",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "totalTax",
+        "property": "totalTax",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "totalPayment",
+        "property": "totalPayment",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      }
+    ]
+  },
+  "foriegnModel": [
+    {
+      "model": "orderReturnDetail",
+      "schema": {
+        "partition": true,
+        "fields": [
+          {
+            "name": "idGui",
+            "property": "idGui",
+            "type": "string",
+            "sqlType": "VARCHAR(64)",
+            "primaryKey": true,
+            "required": true
+          },
+          {
+            "name": "line_nbr",
+            "property": "line_nbr",
+            "type": "number",
+            "sqlType": "INT",
+            "primaryKey": true,
+            "required": true
+          },
+          {
+            "name": "item_id",
+            "property": "item_id",
+            "type": "string",
+            "sqlType": "VARCHAR(32)",
+            "required": true
+            //"foreign": {
+            //  "table": "item",
+            //  "key": "item_id",
+            //  "lookup": "item_name"
+            //}
+          },
+          {
+            "name": "item_name",
+            "property": "item_name",
+            "type": "string",
+            "sqlType": "VARCHAR(256)",
+            "foreign": {
+              "table": "item",
+              "key": "item_id",
+              "lookup": "item_name",
+              "sourceField": "item_id"
+            }
+          },
+          {
+            "name": "uom",
+            "property": "uom",
+            "required": true,
+            "type": "string",
+            "sqlType": "nvarchar(16)",
+            "foreign": {
+              "table": "uom",
+              "key": "uomCode",
+              "lookup": "uomName"
+            }
+          },
+          {
+            "name": "quantity",
+            "property": "quantity",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "price",
+            "property": "price",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "amount",
+            "property": "amount",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "ratioDiscount",
+            "property": "ratioDiscount",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "discount",
+            "property": "discount",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "taxCode",
+            "property": "taxCode",
+            "type": "string",
+            "sqlType": "VARCHAR(32)",
+            "required": true,
+            "foreign": {
+              "table": "tax",
+              "key": "tax_id",
+              "lookup": "tax_type"
+            }
+          },
+          {
+            "name": "tax_rate",
+            "property": "tax_rate",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "tax",
+            "property": "tax",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "payment",
+            "property": "payment",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          }
+        ]
+      }
+    }
+  ]
+}

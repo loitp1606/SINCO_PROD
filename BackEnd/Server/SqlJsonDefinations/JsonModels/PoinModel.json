@@ -1,0 +1,384 @@
+{
+  "model": "poin",
+  "schema": {
+    "foriegn": [
+      "poindetail"
+    ],
+    "foriegnKey": [
+      "idGui"
+    ],
+    "partition": true,
+    "isMaster": true,
+    "fields": [
+      {
+        "name": "idGui",
+        "property": "idGui",
+        "type": "string",
+        "sqlType": "VARCHAR(64)",
+        "primaryKey": true,
+        "required": true
+      },
+      {
+        "name": "voucherNumber",
+        "property": "voucherNumber",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true
+      },
+      {
+        "name": "voucherDate",
+        "property": "voucherDate",
+        "type": "date",
+        "sqlType": "DATE",
+        "required": true
+      },
+      {
+        "name": "vendorGroupCode",
+        "property": "vendorGroupCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true,
+        //"foreign": {
+        //  "table": "customerGroup",
+        //  "key": "customerGroupCode",
+        //  "lookup": "customerGroupName"
+        //}
+      },
+      {
+        "name": "expectedDate",
+        "property": "expectedDate",
+        "type": "date",
+        "sqlType": "DATE"
+      },
+      {
+        "name": "approveDate",
+        "property": "approveDate",
+        "type": "date",
+        "sqlType": "DATE"
+      },
+      {
+        "name": "vendorCode",
+        "property": "vendorCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true,
+        //"foreign": {
+        //  "table": "supplier",
+        //  "key": "vendorCode",
+        //  "lookup": "vendorName"
+        //}
+      },
+      {
+        "name": "vendorName",
+        "property": "vendorName",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)"
+      },
+      {
+        "name": "vendorAddress",
+        "property": "vendorAddress",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)"
+      },
+      {
+        "name": "vendorEmail",
+        "property": "vendorEmail",
+        "type": "string",
+        "sqlType": "VARCHAR(128)"
+      },
+      {
+        "name": "statusCode",
+        "property": "statusCode",
+        "type": "string",
+        "sqlType": "CHAR(1)",
+        "required": true
+      },
+      {
+        "name": "employeeCode",
+        "property": "employeeCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true,
+        "foreign": {
+          "table": "employee",
+          "key": "employee_id",
+          "lookup": "full_name"
+        }
+      },
+      {
+        "name": "payTermCode",
+        "property": "payTermCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true
+      },
+      {
+        "name": "payTimeDays",
+        "property": "payTimeDays",
+        "type": "number",
+        "sqlType": "INT",
+        "required": true
+      },
+      {
+        "name": "receivePlace",
+        "property": "receivePlace",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)",
+        "required": true
+      },
+      {
+        "name": "receiveAddress",
+        "property": "receiveAddress",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)",
+        "required": true
+      },
+      {
+        "name": "note",
+        "property": "note",
+        "type": "string",
+        "sqlType": "NVARCHAR(MAX)"
+      },
+      {
+        "name": "status",
+        "property": "status",
+        "type": "string",
+        "sqlType": "CHAR(1)",
+        "required": true
+      },
+      {
+        "name": "total_amount",
+        "property": "total_amount",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      }
+    ]
+  },
+  "excelIntegration": {
+    "sheetName": "POIN",
+    "columnMapping": [
+      {
+        "excelColumn": "Số phiếu",
+        "fieldName": "voucherNumber",
+        "required": true
+      },
+      {
+        "excelColumn": "Ngày tạo",
+        "fieldName": "voucherDate"
+      },
+      {
+        "excelColumn": "Mã NCC",
+        "fieldName": "vendorCode",
+        "required": true,
+        //"clauseForiegn": "SELECT vendorCode, vendorName FROM supplier WHERE status = '1'"
+      },
+      {
+        "excelColumn": "Nhóm NCC",
+        "fieldName": "vendorGroupCode",
+        //"clauseForiegn": "SELECT customerGroupCode, customerGroupName FROM customerGroup WHERE status = '1'"
+      },
+      {
+        "excelColumn": "Nhân viên",
+        "fieldName": "employeeCode",
+        //"clauseForiegn": "SELECT employeeCode, employeeName FROM employee WHERE status = '1'"
+      }
+    ],
+    "templateRules": {
+      "fileFormat": "xlsx",
+      "firstRowData": 2,
+      "maxRows": 20000
+    }
+  },
+  "checking": {
+    "rules": [
+      {
+        "fieldName": "voucherNumber",
+        "type": "length",
+        "minLength": "1",
+        "maxLength": "32",
+        "message": "voucherNumber không được để trống và tối đa 32 ký tự."
+      },
+      {
+        "fieldName": "voucherNumber",
+        "type": "databaseCheck",
+        "checkQuery": "WHERE voucherNumber = @voucherNumber and status <> '*'",
+        "overWrite": true,
+        "threshold": "0",
+        "message": "voucherNumber đã tồn tại trong hệ thống."
+      }
+    ]
+  },
+  "dataProcessing": {
+    "actions": {
+    }
+  },
+  "foriegnModel": [
+    {
+      "model": "poindetail",
+      "schema": {
+        "partition": true,
+        "fields": [
+          {
+            "name": "idGui",
+            "property": "idGui",
+            "type": "string",
+            "sqlType": "VARCHAR(64)",
+            "primaryKey": true,
+            "required": true
+          },
+          {
+            "name": "line_nbr",
+            "property": "line_nbr",
+            "type": "number",
+            "sqlType": "INT",
+            "primaryKey": true,
+            "required": true
+          },
+          {
+            "name": "itemCode",
+            "property": "itemCode",
+            "type": "string",
+            "sqlType": "VARCHAR(50)",
+            "required": true
+          },
+          {
+            "name": "itemName",
+            "property": "itemName",
+            "type": "string",
+            "sqlType": "VARCHAR(256)",
+            "foreign": {
+              "table": "item",
+              "key": "item_id",
+              "lookup": "item_name",
+              "sourceField": "itemCode"
+            }
+          },
+          {
+            "name": "uom",
+            "property": "uom",
+            "type": "string",
+            "sqlType": "NVARCHAR(16)",
+            "required": true,
+            "foreign": {
+              "table": "uom",
+              "key": "uomCode",
+              "lookup": "uomName"
+            }
+          },
+          {
+            "name": "quantity",
+            "property": "quantity",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)",
+            "required": true
+          },
+          {
+            "name": "price",
+            "property": "price",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "discountRate",
+            "property": "discountRate",
+            "type": "number",
+            "sqlType": "NUMERIC(9,4)"
+          },
+          {
+            "name": "discount",
+            "property": "discount",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "amount",
+            "property": "amount",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "note",
+            "property": "note",
+            "type": "string",
+            "sqlType": "NVARCHAR(512)"
+          }
+        ]
+      },
+      "excelIntegration": {
+        "sheetName": "POINDetail",
+        "columnMapping": [
+          {
+            "excelColumn": "STT",
+            "fieldName": "line_nbr",
+            "required": true
+          },
+          {
+            "excelColumn": "Mã vật tư",
+            "fieldName": "itemCode",
+            "required": true
+          },
+          {
+            "excelColumn": "Đơn vị tính",
+            "fieldName": "uom",
+            "required": true,
+            "clauseForiegn": "SELECT uomCode, uomName FROM uom WHERE status = '1'"
+          },
+          {
+            "excelColumn": "Số lượng đặt",
+            "fieldName": "quantity",
+            "type": "number",
+            "required": true
+          },
+          {
+            "excelColumn": "Đơn giá",
+            "fieldName": "price",
+            "type": "number"
+          },
+          {
+            "excelColumn": "% Chiết khấu",
+            "fieldName": "discountRate",
+            "type": "number"
+          },
+          {
+            "excelColumn": "Chiết khấu",
+            "fieldName": "discount",
+            "type": "number"
+          },
+          {
+            "excelColumn": "Thành tiền",
+            "fieldName": "amount",
+            "type": "number"
+          },
+          {
+            "excelColumn": "Ghi chú",
+            "fieldName": "note"
+          }
+        ],
+        "templateRules": {
+          "fileFormat": "xlsx",
+          "firstRowData": 2,
+          "maxRows": 20000
+        }
+      },
+      "checking": {
+        "rules": [
+          {
+            "fieldName": "line_nbr",
+            "type": "value",
+            "minValue": "1",
+            "message": "line_nbr phải lớn hơn hoặc bằng 1."
+          },
+          {
+            "fieldName": "line_nbr",
+            "errorCol": "itemCode",
+            "type": "databaseCheck",
+            "checkQuery": "WHERE idGui = @idGui AND line_nbr = @line_nbr",
+            "overWrite": true,
+            "threshold": "0",
+            "message": "line_nbr đã tồn tại trong hệ thống."
+          }
+        ]
+      }
+    }
+  ]
+}

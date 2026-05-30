@@ -1,0 +1,11 @@
+services:
+  sinco.server:
+    image: ${DOCKER_REGISTRY-}sincoserver
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+
+  redis:
+    image: "redis"
+    ports:
+    - "6379:6379"

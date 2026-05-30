@@ -1,0 +1,447 @@
+{
+	"model": "paymentSlip",
+	"schema": {
+		"foriegn": [
+			"paymentslipDetail"
+		],
+		"foriegnKey": [
+			"idGui"
+		],
+		"partition": true,
+		"isMaster": true,
+		"fields": [
+			{
+				"name": "idGui",
+				"property": "idGui",
+				"type": "string",
+				"sqlType": "VARCHAR(64)",
+				"primaryKey": true,
+				"required": true
+			},
+			{
+				"name": "voucherCode",
+				"property": "voucherCode",
+				"type": "string",
+				"sqlType": "VARCHAR(8)"
+			},
+			{
+				"name": "voucherNumber",
+				"property": "voucherNumber",
+				"type": "string",
+				"sqlType": "VARCHAR(32)",
+				"required": true
+			},
+			{
+				"name": "voucherDate",
+				"property": "voucherDate",
+				"type": "date",
+				"sqlType": "DATE",
+				"required": true
+			},
+			{
+				"name": "createdDate",
+				"property": "createdDate",
+				"type": "date",
+				"sqlType": "DATETIME"
+			},
+			{
+				"name": "supplierCode",
+				"property": "supplierCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)",
+				"required": true,
+				"foreign": {
+					"table": "supplier",
+					"key": "supplier_id",
+					"lookup": "supplier_name"
+				}
+			},
+			{
+				"name": "supplierAddress",
+				"property": "supplierAddress",
+				"type": "string",
+				"sqlType": "NVARCHAR(432)"
+			},
+			{
+				"name": "receiptCode",
+				"property": "receiptCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "invoiceNumber",
+				"property": "invoiceNumber",
+				"type": "string",
+				"sqlType": "VARCHAR(100)"
+			},
+			{
+				"name": "cashier",
+				"property": "cashier",
+				"type": "string",
+				"sqlType": "NVARCHAR(432)"
+			},
+			{
+				"name": "spentMoney",
+				"property": "spentMoney",
+				"type": "number",
+				"sqlType": "INT"
+			},
+			{
+				"name": "reason",
+				"property": "reason",
+				"type": "string",
+				"sqlType": "NVARCHAR(432)",
+				"foreign": {
+					"table": "Incomeexpenditure",
+					"key": "incomeExpenditure_id",
+					"lookup": "incomeExpenditure_name"
+				}
+			},
+			{
+				"name": "employeeCode",
+				"property": "employeeCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "amountTransfer",
+				"property": "amountTransfer",
+				"type": "number",
+				"sqlType": "DECIMAL(24,6)"
+			},
+			{
+				"name": "amountCash",
+				"property": "amountCash",
+				"type": "number",
+				"sqlType": "DECIMAL(24,6)"
+			},
+			{
+				"name": "paymentType",
+				"property": "paymentType",
+				"type": "string",
+				"sqlType": "NVARCHAR(20)"
+			},
+			{
+				"name": "htttType",
+				"property": "htttType",
+				"type": "string",
+				"sqlType": "NVARCHAR(20)",
+				"sqlExpression": "(case {m}.htttType when 'TM/CK' then 'TM/CK' when 'TM' then N'Tiền Mặt' when 'CK' then N'Chuyển khoản' end )"
+			},
+			{
+				"name": "total_amount",
+				"property": "total_amount",
+				"type": "number",
+				"sqlType": "DECIMAL(24,6)"
+			},
+			{
+				"name": "note",
+				"property": "note",
+				"type": "string",
+				"sqlType": "NVARCHAR(MAX)"
+			},
+			{
+				"name": "status",
+				"property": "status",
+				"type": "string",
+				"sqlType": "CHAR(1)",
+				"required": true
+			},
+			{
+				"name": "unitCode",
+				"property": "unitCode",
+				"type": "string",
+				"sqlType": "VARCHAR(50)"
+			},
+			{
+				"name": "datetime0",
+				"property": "datetime0",
+				"type": "date",
+				"sqlType": "DATETIME"
+			},
+			{
+				"name": "datetime2",
+				"property": "datetime2",
+				"type": "date",
+				"sqlType": "DATETIME"
+			},
+			{
+				"name": "user_id0",
+				"property": "user_id0",
+				"type": "number",
+				"sqlType": "INT"
+			},
+			{
+				"name": "user_id2",
+				"property": "user_id2",
+				"type": "number",
+				"sqlType": "INT"
+			},
+			{
+				"name": "masothue",
+				"property": "masothue",
+				"type": "string",
+				"sqlType": "NVARCHAR(128)",
+				"sqlExpression": "(SELECT TOP 1 ISNULL(c.ma_so_thue, N'') FROM supplier c WHERE c.supplier_id = {m}.supplierCode)"
+			},
+			{
+				"name": "dienthoai",
+				"property": "dienthoai",
+				"type": "string",
+				"sqlType": "NVARCHAR(128)",
+				"sqlExpression": "(SELECT TOP 1 ISNULL(c.phone_number, N'') FROM supplier c WHERE c.supplier_id = {m}.supplierCode)"
+			},
+			{
+				"name": "email",
+				"property": "email",
+				"type": "string",
+				"sqlType": "NVARCHAR(128)",
+				"sqlExpression": "(SELECT TOP 1 ISNULL(c.email, N'') FROM supplier c WHERE c.supplier_id = {m}.supplierCode)"
+			},
+			{
+				"name": "amount_in_word",
+				"property": "amount_in_word",
+				"type": "string",
+				"sqlType": "NVARCHAR(max)",
+				"sqlExpression": "dbo.fn_NumberToWordsVN(ISNULL({m}.total_amount,0))"
+			},
+			{
+				"name": "total_amount_str",
+				"property": "total_amount_str",
+				"type": "string",
+				"sqlType": "NVARCHAR(max)",
+				"sqlExpression": "dbo.fn_FormatByMask(ISNULL({m}.total_amount,0), '#.###.###.###.###')"
+			},
+			{
+				"name": "ngay_in",
+				"property": "ngay_in",
+				"type": "string",
+				"sqlType": "NVARCHAR(max)",
+				"sqlExpression": "N'Ngày '+ltrim(day(getdate()))+ N' tháng ' + ltrim(month(getdate())) + N' năm ' +ltrim(year(getdate()))"
+			}
+		]
+	},
+	"excelIntegration": {
+		"sheetName": "paymentSlip",
+		"columnMapping": [
+			{
+				"excelColumn": "idGui",
+				"fieldName": "idGui",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "Đơn vị",
+				"fieldName": "unitCode",
+				"clauseForiegn": "SELECT UnitCode, UnitName FROM Unit where status = '1'",
+				"required": true
+			},
+			{
+				"excelColumn": "Ngày lập phiếu",
+				"fieldName": "voucherDate",
+				"required": true
+			},
+			{
+				"excelColumn": "Số phiếu chi",
+				"fieldName": "voucherNumber",
+				"required": false
+			},
+			{
+				"excelColumn": "Nhà cung cấp",
+				"fieldName": "supplierCode",
+				"required": true
+			},
+			{
+				"excelColumn": "Tổng tiền",
+				"fieldName": "total_amount",
+				"required": true,
+				"type": "number"
+			},
+			{
+				"excelColumn": "receiptCode",
+				"fieldName": "receiptCode",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "invoiceNumber",
+				"fieldName": "invoiceNumber",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "Lý do",
+				"fieldName": "reason",
+				"required": false,
+				"clauseForiegn": "select incomeExpenditure_id, incomeExpenditure_Name from Incomeexpenditure where status = '1' and type = '2'"
+			},
+			{
+				"excelColumn": "Diễn giải",
+				"fieldName": "dien_giai",
+				"required": false
+			},
+			{
+				"excelColumn": "employeeCode",
+				"fieldName": "employeeCode",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "cashier",
+				"fieldName": "cashier",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "amountCash",
+				"fieldName": "amountCash",
+				"required": false,
+				"type": "number",
+				"hide": true
+			},
+			{
+				"excelColumn": "amountTransfer",
+				"fieldName": "amountTransfer",
+				"required": false,
+				"type": "number",
+				"hide": true
+			},
+			{
+				"excelColumn": "paymentType",
+				"fieldName": "paymentType",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "htttType",
+				"fieldName": "htttType",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "spentMoney",
+				"fieldName": "spentMoney",
+				"required": false,
+				"hide": true
+			},
+			{
+				"excelColumn": "status",
+				"fieldName": "status",
+				"required": false,
+				"hide": true
+			}
+		],
+		"templateRules": {
+			"fileFormat": "xlsx",
+			"firstRowData": 2,
+			"maxRows": 20000
+		}
+	},
+	"checking": {
+		"rules": []
+	},
+	"dataProcessing": {
+		"sqlStatements": [
+			{
+				"statement": "update",
+				"query": "UPDATE a SET a.paymentType = 'SUPPLIER', a.voucherCode = ISNULL(NULLIF(a.voucherCode, ''), 'Z06'), a.status = ISNULL(NULLIF(a.status, ''), '0'), a.htttType = 'CK', a.spentMoney = 0, a.datetime0 = ISNULL(a.datetime0, GETDATE()) FROM paymentSlip@partition a INNER JOIN #TempTableName t ON a.idGui = t.idGui;exec [UpdateImportPhieuChi] 'paymentslip@partition', '#TempTableName';"
+			}
+		]
+	},
+	"foriegnModel": [
+		{
+			"model": "paymentslipDetail",
+			"schema": {
+				"partition": true,
+				"fields": [
+					{
+						"name": "idGui",
+						"property": "idGui",
+						"type": "string",
+						"sqlType": "VARCHAR(64)",
+						"primaryKey": true,
+						"required": true
+					},
+					{
+						"name": "line_nbr",
+						"property": "line_nbr",
+						"type": "number",
+						"sqlType": "INT",
+						"primaryKey": true,
+						"required": true
+					},
+					{
+						"name": "invoiceNumber",
+						"property": "invoiceNumber",
+						"type": "string",
+						"sqlType": "VARCHAR(100)"
+					},
+					{
+						"name": "invoiceDate",
+						"property": "invoiceDate",
+						"type": "date",
+						"sqlType": "DATE"
+					},
+					{
+						"name": "invoiceAmount",
+						"property": "invoiceAmount",
+						"type": "number",
+						"sqlType": "DECIMAL(24,6)"
+					},
+					{
+						"name": "paidAmount",
+						"property": "paidAmount",
+						"type": "number",
+						"sqlType": "DECIMAL(24,6)"
+					},
+					{
+						"name": "debtAmount",
+						"property": "debtAmount",
+						"type": "number",
+						"sqlType": "DECIMAL(24,6)"
+					},
+					{
+						"name": "accountPaymentCode",
+						"property": "accountPaymentCode",
+						"type": "string",
+						"sqlType": "VARCHAR(50)"
+					},
+					{
+						"name": "amountCur",
+						"property": "amountCur",
+						"type": "number",
+						"sqlType": "DECIMAL(24,6)"
+					},
+					{
+						"name": "amount",
+						"property": "amount",
+						"type": "number",
+						"sqlType": "DECIMAL(24,6)"
+					},
+					{
+						"name": "idGuiPN",
+						"property": "idGuiPN",
+						"type": "string",
+						"sqlType": "VARCHAR(64)"
+					},
+					{
+						"name": "lnPN",
+						"property": "lnPN",
+						"type": "number",
+						"sqlType": "INT"
+					},
+					{
+						"name": "note",
+						"property": "note",
+						"type": "string",
+						"sqlType": "NVARCHAR(432)"
+					}
+				]
+			},
+			"excelIntegration": {
+				"sheetName": "paymentslipDetail",
+				"columnMapping": []
+			}
+		}
+	]
+}

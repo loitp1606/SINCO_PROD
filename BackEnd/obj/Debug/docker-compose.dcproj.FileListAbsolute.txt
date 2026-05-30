@@ -1,0 +1,1 @@
+C:\LOITP\Sinco\DEV\Sinco\main\BackEnd\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache

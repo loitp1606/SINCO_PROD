@@ -1,0 +1,151 @@
+<div *ngIf="totalPages >= 1">
+  <div class="hidden md:flex md:items-center md:justify-between mt-1 gap-3">
+    <div class="flex items-center gap-2 text-xs text-slate-600">
+      <span>Hiển thị</span>
+      <select
+        [ngModel]="itemsPerPage"
+        (ngModelChange)="handleItemsPerPageChange($event)"
+        class="rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+      >
+        <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
+          {{ size }}
+        </option>
+      </select>
+      <span>dòng / trang</span>
+    </div>
+    <div class="flex justify-end space-x-1.5">
+    <!-- First Page -->
+    <button
+      (click)="handlePageClick(1)"
+      [ngClass]="{
+        'bg-gray-200': currentPage === 1,
+        'bg-gray-100 cursor-pointer': currentPage !== 1
+      }"
+      class="w-[30px] h-[26px] rounded text-xs leading-none flex items-center justify-center"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-3.5 w-3.5"
+        [ngClass]="{
+          'text-gray-400': currentPage === 1,
+          'text-gray-700': currentPage !== 1
+        }"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M8.16016 1.41L3.58016 6L8.16016 10.59L6.75016 12L0.750156 6L6.75016 0L8.16016 1.41Z"
+        />
+      </svg>
+    </button>
+
+    <!-- Page Numbers -->
+    <button
+      *ngFor="let page of getPaginationRange()"
+      (click)="handlePageClick(page)"
+      [ngClass]="{
+        'bg-gray-200 text-indigo-500 border border-indigo-500':
+          page === currentPage,
+        'bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer':
+          page !== currentPage
+      }"
+      class="min-w-[30px] h-[26px] px-1 rounded text-xs leading-none"
+    >
+      {{ page }}
+    </button>
+
+    <!-- Last Page -->
+    <button
+      (click)="handlePageClick(totalPages)"
+      [ngClass]="{
+        'bg-gray-200': currentPage === totalPages,
+        'bg-gray-100 cursor-pointer': currentPage !== totalPages
+      }"
+      class="w-[30px] h-[26px] rounded text-xs leading-none flex items-center justify-center"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-3.5 w-3.5"
+        [ngClass]="{
+          'text-gray-400': currentPage === totalPages,
+          'text-gray-700': currentPage !== totalPages
+        }"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M0.839844 1.41L5.41984 6L0.839844 10.59L2.24984 12L8.24984 6L2.24984 0L0.839844 1.41Z"
+        />
+      </svg>
+    </button>
+    </div>
+  </div>
+  <div class="flex md:hidden justify-between items-center mt-2 px-1 gap-2">
+    <select
+      [ngModel]="itemsPerPage"
+      (ngModelChange)="handleItemsPerPageChange($event)"
+      class="rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+    >
+      <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
+        {{ size }}/trang
+      </option>
+    </select>
+
+    <button
+      (click)="handlePageClick(currentPage - 1)"
+      [disabled]="currentPage === 1"
+      [ngClass]="{
+        'bg-gray-200 text-gray-400 cursor-not-allowed': currentPage === 1,
+        'bg-indigo-500 text-white hover:bg-indigo-600 cursor-pointer':
+          currentPage !== 1
+      }"
+      class="flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition duration-150 ease-in-out"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+    </button>
+
+    <span class="text-xs font-medium text-gray-700">
+      {{ currentPage }} / {{ totalPages }}
+    </span>
+
+    <button
+      (click)="handlePageClick(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+      [ngClass]="{
+        'bg-gray-200 text-gray-400 cursor-not-allowed':
+          currentPage === totalPages,
+        'bg-indigo-500 text-white hover:bg-indigo-600 cursor-pointer':
+          currentPage !== totalPages
+      }"
+      class="flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition duration-150 ease-in-out"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
+    </button>
+  </div>
+</div>

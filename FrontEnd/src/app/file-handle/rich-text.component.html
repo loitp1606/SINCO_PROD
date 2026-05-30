@@ -1,0 +1,17 @@
+
+<h1 mat-dialog-title>Chỉnh sửa Nội dung</h1>
+<div class="toolbar-container" style="border: 1px solid #ccc; border-bottom: none;"></div>
+<div mat-dialog-content>
+    <div style="height: 500px; border: none;"> 
+        <ckeditor 
+            [editor]="Editor" 
+            [config]="editorConfig" 
+            [(ngModel)]="data.content"  
+            name="editorContent"
+            (ready)="onReady($event)"  ></ckeditor>
+    </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="data.content" cdkFocusInitial>Lưu & Export</button>
+  <button mat-button (click)="dialogRef.close()">Hủy</button>
+</div>

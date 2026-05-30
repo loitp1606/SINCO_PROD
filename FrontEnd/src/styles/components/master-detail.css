@@ -1,0 +1,505 @@
+/* =========================================================
+   MASTER – DETAIL ERP PROFESSIONAL UI
+   ========================================================= */
+
+/* =========================
+   Container & Layout
+   ========================= */
+
+.master-detail-container {
+  background: var(--erp-bg-card);
+  border: 1px solid var(--erp-border);
+  border-radius: var(--erp-radius);
+  box-shadow: var(--erp-shadow);
+  font-family: var(--erp-font);
+  font-size: var(--erp-font-size);
+  color: var(--erp-text-primary);
+}
+
+/* =========================
+   Header
+   ========================= */
+
+.form-header {
+  background: var(--erp-primary);
+  color: white;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--erp-border-strong);
+}
+
+.form-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.form-subtitle {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* =========================
+   Tabs
+   ========================= */
+
+.tab-container {
+  display: flex;
+  background: var(--erp-bg-muted);
+  border-bottom: 1px solid var(--erp-border);
+}
+
+.tab-button {
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--erp-text-muted);
+  background: transparent;
+  border-right: 1px solid var(--erp-border);
+  cursor: pointer;
+}
+
+.tab-button:hover {
+  background: var(--erp-bg-card);
+}
+
+.tab-button.active {
+  background: var(--erp-bg-card);
+  color: var(--erp-text-primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--erp-accent);
+}
+
+/* =========================
+   Master Form
+   ========================= */
+
+.master-form {
+  padding: 16px 20px;
+}
+
+.master-form-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--erp-border);
+  padding-bottom: 6px;
+}
+
+/* =========================
+   Form Grid
+   ========================= */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 20px;
+}
+
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* =========================
+   Labels
+   ========================= */
+
+.form-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--erp-text-secondary);
+  margin-bottom: 4px;
+}
+
+.form-label.required::after {
+  content: '*';
+  color: var(--erp-danger);
+  margin-left: 4px;
+}
+
+/* =========================
+   Inputs
+   ========================= */
+
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid var(--erp-border);
+  border-radius: var(--erp-radius-sm);
+  background: white;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--erp-accent);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--erp-accent);
+}
+
+.form-input:disabled {
+  background: var(--erp-bg-muted);
+  color: var(--erp-text-muted);
+}
+
+.form-input.error {
+  border-color: var(--erp-danger);
+}
+
+/* =========================
+   Lookup Field
+   ========================= */
+
+.form-lookup {
+  display: flex;
+}
+
+.form-lookup .form-input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.form-lookup-button {
+  padding: 6px 10px;
+  font-size: 12px;
+  background: var(--erp-accent);
+  color: white;
+  border: 1px solid var(--erp-accent);
+  border-left: none;
+  border-top-right-radius: var(--erp-radius-sm);
+  border-bottom-right-radius: var(--erp-radius-sm);
+  cursor: pointer;
+}
+
+.form-lookup-button:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   Form Actions
+   ========================= */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--erp-border);
+}
+
+/* =========================
+   Buttons (ERP Flat)
+   ========================= */
+
+.btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: var(--erp-radius-sm);
+  border: 1px solid var(--erp-border);
+  background: white;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--erp-accent);
+  border-color: var(--erp-accent);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--erp-bg-muted);
+}
+
+.btn-danger {
+  background: var(--erp-danger);
+  border-color: var(--erp-danger);
+  color: white;
+}
+
+/* =========================
+   Detail Section
+   ========================= */
+
+.detail-section {
+  border-top: 1px solid var(--erp-border);
+  background: var(--erp-bg-card);
+}
+
+.detail-header {
+  padding: 10px 20px;
+  background: var(--erp-bg-muted);
+  border-bottom: 1px solid var(--erp-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* =========================
+   Detail Table
+   ========================= */
+
+.detail-table-container {
+  border: 1px solid var(--erp-border);
+  overflow-x: auto;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.detail-table th {
+  background: var(--erp-primary-soft);
+  color: var(--erp-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid var(--erp-border);
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.detail-table td {
+  border: 1px solid var(--erp-border);
+  padding: 4px 6px;
+}
+
+.detail-table tbody tr:nth-child(even) {
+  background: var(--erp-bg-muted);
+}
+
+.detail-table tbody tr:hover {
+  background: var(--erp-accent-soft);
+}
+
+/* =========================
+   Table Inputs
+   ========================= */
+
+.detail-table input,
+.detail-table select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+}
+
+.detail-table input:focus,
+.detail-table select:focus {
+  background: white;
+  border: 1px solid var(--erp-accent);
+  border-radius: 2px;
+}
+
+/* =========================
+   Row Actions
+   ========================= */
+
+.row-actions {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* =========================
+   Summary
+   ========================= */
+
+.summary-section {
+  padding: 12px 20px;
+  background: var(--erp-bg-muted);
+  border-top: 1px solid var(--erp-border);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 6px 24px;
+  margin-left: auto;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: var(--erp-text-muted);
+  text-align: right;
+}
+
+.summary-value {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* =========================
+   Status Badge
+   ========================= */
+
+.status-badge {
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.status-draft { background: var(--erp-bg-muted); }
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-approved { background: #dcfce7; color: #166534; }
+.status-rejected { background: #fee2e2; color: #991b1b; }
+
+/* =========================
+   Errors & Loading
+   ========================= */
+
+.error-message {
+  font-size: 11px;
+  color: var(--erp-danger);
+  margin-top: 2px;
+}
+
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* =========================
+   Print
+   ========================= */
+
+@media print {
+  .tab-container,
+  .form-actions,
+  .detail-actions,
+  .row-actions {
+    display: none;
+  }
+
+  .master-detail-container {
+    box-shadow: none;
+  }
+}
+/* =====================================================
+   DETAIL TABLE – ERP PROFESSIONAL OVERRIDE
+   ===================================================== */
+
+/* --- Table layout --- */
+.detail-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+
+/* --- Header --- */
+.detail-table th {
+  background: #f1f5f9;                 /* header rõ */
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #2563eb;
+  border-right: 1px solid #cbd5e1;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+/* --- Body cells --- */
+.detail-table td {
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  padding: 6px 6px;
+  vertical-align: middle;
+}
+
+/* --- Zebra row --- */
+.detail-table tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+/* --- Hover row --- */
+.detail-table tbody tr:hover {
+  background-color: #e0f2fe;
+}
+
+/* --- Inputs in table --- */
+.detail-table td input,
+.detail-table td select {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5f5;
+  border-radius: 4px;
+  padding: 4px 6px;
+  width: 100%;
+  font-size: 13px;
+}
+
+/* Focus */
+.detail-table td input:focus,
+.detail-table td select:focus {
+  background-color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+/* --- Numeric columns --- */
+.detail-table td.amount,
+.detail-table td.number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* --- Action buttons --- */
+.row-actions button {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.row-actions button:hover {
+  background: #f1f5f9;
+}
+
+.row-actions button.delete {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+/* --- Summary (Total) --- */
+.summary-section {
+  margin-top: 12px;
+  padding: 12px;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #eff6ff, #ffffff);
+}
+
+.summary-total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e40af;
+}
+

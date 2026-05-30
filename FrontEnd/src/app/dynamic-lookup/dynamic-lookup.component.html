@@ -1,0 +1,174 @@
+<div class="relative w-full">
+  <div *ngIf="response && !multiple" class="relative">
+    <div class="flex items-center gap-1.5">
+      <input
+        type="text"
+        class="w-full h-9 border border-gray-300 rounded-lg px-2 py-1 text-sm"
+        [disabled]="disable"
+        [ngModel]="inlineQuery"
+        (ngModelChange)="onInlineQueryChange($event)"
+        (keydown.enter)="onInlineEnter($event)"
+        (focus)="onInlineInputFocus()"
+        (click)="onInlineInputClick($event)"
+        (blur)="onInlineInputBlur()"
+        placeholder="Nhập để tìm nhanh..."
+        [ngClass]="disable ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'"
+      />
+      <button
+        type="button"
+        class="h-9 w-9 min-w-9 border border-gray-300 rounded-lg text-sm hover:bg-blue-50 hover:border-blue-300 flex items-center justify-center text-slate-600"
+        [disabled]="disable"
+        (click)="togglePopup()"
+        title="Mở danh sách"
+        aria-label="Mở danh sách"
+      >
+        <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div
+      *ngIf="showInlineDropdown && !disable"
+      class="absolute z-40 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-56 overflow-y-auto overflow-x-hidden"
+    >
+      <button
+        type="button"
+        *ngFor="let data of getInlineFilteredData()"
+        (mousedown)="selectInlineData(data)"
+        class="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 border-b border-gray-100 last:border-b-0 whitespace-normal break-words leading-5"
+        [title]="getItemDisplayText(data)"
+      >
+        {{ getItemDisplayText(data) }}
+      </button>
+      <div
+        *ngIf="getInlineFilteredData().length === 0"
+        class="px-3 py-2 text-sm text-gray-500"
+      >
+        Không có dữ liệu phù hợp
+      </div>
+    </div>
+  </div>
+
+  <!-- Multiple mode keeps popup selection -->
+  <textarea
+    *ngIf="response && multiple"
+    class="w-full h-10 max-h-32 overflow-y-auto border border-gray-300 rounded-lg px-2 py-1 text-sm resize-none cursor-pointer"
+    [readonly]="true"
+    (click)="togglePopup()"
+    [value]="getDisplayText()"
+    [disabled]="disable"
+    placeholder="Nhấn để chọn..."
+    [ngClass]="
+      disable ? 'bg-gray-100 cursor-not-allowed' : 'bg-white cursor-pointer'
+    "
+  ></textarea>
+
+  <!-- Overlay & Popup -->
+  <div
+    *ngIf="showPopup"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/35 backdrop-blur-[1px]"
+  >
+    <div
+      appDraggable
+      class="bg-white w-full max-w-6xl max-h-[90vh] rounded-2xl shadow-2xl p-4 overflow-hidden flex flex-col border border-slate-200"
+    >
+      <div class="flex justify-between items-center mb-4 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+        <div class="flex items-center gap-4">
+          <div class="flex flex-col sm:flex-row gap-3 w-full">
+            <input
+              type="text"
+              [(ngModel)]="searchText"
+              (ngModelChange)="filterData()"
+              placeholder="Tìm kiếm..."
+              class="w-1/2 px-4 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            />
+
+            <input
+              type="text"
+              [(ngModel)]="searchName"
+              (ngModelChange)="filterData()"
+              placeholder="Tìm kiếm theo tên..."
+              class="w-1/2 px-4 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            *ngIf="canQuickCreate()"
+            type="button"
+            (click)="openQuickCreate()"
+            class="px-3 py-2 text-sm border border-emerald-300 rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition font-medium"
+          >
+            + Tạo nhanh
+          </button>
+          <button
+            (click)="showPopup = false"
+            class="text-slate-600 hover:text-red-500 px-2 py-1 rounded-md hover:bg-slate-100"
+          >
+            Đóng ✕
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="overflow-auto flex-1 rounded-xl border border-slate-200 shadow-sm"
+      >
+        <table class="min-w-full text-sm text-slate-700">
+          <!-- Header -->
+          <thead class="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 text-xs text-slate-100 uppercase tracking-wider sticky top-0 z-10">
+            <tr>
+              <th
+                *ngFor="let field of response?.fields"
+                class="px-4 py-2.5 text-left border-b border-slate-600/60 font-semibold"
+              >
+                {{ field.header }}
+              </th>
+            </tr>
+          </thead>
+
+          <!-- Body -->
+          <tbody>
+            <tr
+              *ngFor="let data of paginatedData"
+              (click)="selectData(data[response.primaryKey[0]])"
+              class="cursor-pointer transition-colors duration-150 border-b border-slate-100"
+              [ngClass]="{
+                'lookup-selected-row': isSelected(data[response.primaryKey[0]]),
+                'hover:bg-blue-50': !isSelected(data[response.primaryKey[0]])
+              }"
+            >
+              <td
+                *ngFor="let field of response.fields"
+                class="px-4 py-2.5 truncate"
+              >
+                {{ data[field.field] }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between items-center mt-3 text-sm text-slate-600">
+        <div class="font-medium">Trang {{ currentPage + 1 }} / {{ totalPages }}</div>
+        <div class="space-x-2">
+          <button
+            (click)="prevPage()"
+            [disabled]="currentPage === 0"
+            class="px-3 py-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40"
+          >
+            ←
+          </button>
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage + 1 >= totalPages"
+            class="px-3 py-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40"
+          >
+            →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

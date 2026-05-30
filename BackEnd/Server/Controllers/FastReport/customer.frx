@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="07/02/2025 01:11:41" ReportInfo.Modified="10/03/2025 19:57:46" ReportInfo.CreatorVersion="2025.2.6.0">
+  <Dictionary>
+    <TableDataSource Name="customer" ReferenceName="ReportData.customer" DataType="System.Int32" Enabled="true" TableName="customer">
+      <Column Name="customer_id" DataType="System.String"/>
+      <Column Name="customer_name" DataType="System.String"/>
+      <Column Name="customer_group_id" DataType="System.String"/>
+      <Column Name="status" DataType="System.String"/>
+      <Column Name="represent_birthday" DataType="System.DateTime"/>
+      <Column Name="debt_limit" DataType="System.String"/>
+      <Column Name="phone_number" DataType="System.String"/>
+      <Column Name="email" DataType="System.String"/>
+      <Column Name="address" DataType="System.String"/>
+      <Column Name="city" DataType="System.String"/>
+      <Column Name="district" DataType="System.String"/>
+      <Column Name="note" DataType="System.String"/>
+      <Column Name="supplier_id" DataType="System.String"/>
+      <Column Name="user_id0" DataType="System.Int32"/>
+      <Column Name="user_id2" DataType="System.Int32"/>
+      <Column Name="datetime0" DataType="System.DateTime"/>
+      <Column Name="datetime2" DataType="System.DateTime"/>
+    </TableDataSource>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <PageHeaderBand Name="PageHeader1" Width="718.2" Height="28.35">
+      <TextObject Name="Text1" Width="718.2" Height="28.35" Text="Danh sách &quot;Khách Hàng&quot;" VertAlign="Center" Font="Arial, 18pt, style=Bold, Italic" TextFill.Color="Brown"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="31.02" Width="718.2" Height="18.9" CanGrow="true">
+      <TableObject Name="Table1" Width="718.26" Height="18.9">
+        <TableColumn Name="Column10" Width="40.17"/>
+        <TableColumn Name="Column18" Width="59.07"/>
+        <TableColumn Name="Column3" Width="77.97"/>
+        <TableColumn Name="Column5" Width="106.32"/>
+        <TableColumn Name="Column6" Width="96.87"/>
+        <TableColumn Name="Column7" Width="87.42"/>
+        <TableColumn Name="Column8" Width="106.32"/>
+        <TableColumn Name="Column9" Width="144.12"/>
+        <TableRow Name="Row1" AutoSize="true">
+          <TableCell Name="Cell37" Border.Lines="All" CanGrow="true" Text="STT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+          <TableCell Name="Cell45" Border.Lines="All" CanGrow="true" Text="Mã khách hàng" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+          <TableCell Name="Cell3" Border.Lines="All" CanGrow="true" Text="Tên khách hàng" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+          <TableCell Name="Cell5" Border.Lines="All" CanGrow="true" Text="Địa chỉ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+          <TableCell Name="Cell21" Border.Lines="All" CanGrow="true" Text="Hạn mức công nợ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+          <TableCell Name="Cell25" Border.Lines="All" CanGrow="true" Text="Ngày sinh người đại diện" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+          <TableCell Name="Cell29" Border.Lines="All" CanGrow="true" Text="Số điện thoại" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+          <TableCell Name="Cell33" Border.Lines="All" CanGrow="true" Text="Email" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextOutline.Color="RosyBrown"/>
+        </TableRow>
+      </TableObject>
+      <DataBand Name="Data2" Top="52.58" Width="718.2" Height="18.9" CanGrow="true" DataSource="customer">
+        <TableObject Name="Table3" Width="718.26" Height="18.9">
+          <TableColumn Name="Column20" Width="40.17"/>
+          <TableColumn Name="Column21" Width="59.07"/>
+          <TableColumn Name="Column22" Width="77.97"/>
+          <TableColumn Name="Column23" Width="106.32"/>
+          <TableColumn Name="Column24" Width="96.87"/>
+          <TableColumn Name="Column25" Width="87.42"/>
+          <TableColumn Name="Column26" Width="106.32"/>
+          <TableColumn Name="Column27" Width="144.12"/>
+          <TableRow Name="Row2" AutoSize="true" CanBreak="true">
+            <TableCell Name="Cell46" Border.Lines="All" CanGrow="true" CanBreak="false" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell47" Border.Lines="All" CanGrow="true" Text="[customer.customer_id]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell48" Border.Lines="All" CanGrow="true" Text="[customer.customer_name]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell49" Border.Lines="All" CanGrow="true" Text="[customer.address]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell50" Border.Lines="All" CanGrow="true" Text="[customer.debt_limit]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell51" Border.Lines="All" CanGrow="true" Text="[customer.represent_birthday]" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell52" Border.Lines="All" CanGrow="true" Text="[customer.phone_number]" Format="Custom" Format.Format="(000) 000-0000" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell53" Border.Lines="All" CanGrow="true" Text="[customer.email]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+      </DataBand>
+    </DataBand>
+  </ReportPage>
+</Report>

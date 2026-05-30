@@ -1,0 +1,20 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <button class="menu-toggle" (click)="onToggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+  <div class="navbar-center" *ngIf="isAuthenticated && pageTitle">
+    <span class="page-title">{{ pageTitle | translate }}</span>
+  </div>
+  <div class="navbar-right">
+    <button class="shortcut-btn" (click)="toggleShortcutHelp()" *ngIf="isAuthenticated" title="Hướng dẫn phím tắt (?)">
+      <i class="fas fa-keyboard"></i>
+      <span>Phím tắt</span>
+    </button>
+    <button class="logout-btn" (click)="logout()" *ngIf="isAuthenticated">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Đăng xuất</span>
+    </button>
+  </div>
+</nav> 

@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/15/2025 15:04:29" ReportInfo.Modified="11/15/2025 17:47:19" ReportInfo.CreatorVersion="2025.2.12.0">
+  <Dictionary/>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="85.05" CanGrow="true">
+      <PictureObject Name="Picture1" Width="246.6" Height="85" CanGrow="true" ImageLocation="Images\logo_cty.jpg"/>
+      <TextObject Name="Text5" Left="245.7" Top="37.8" Width="803.25" Height="47.25" CanGrow="true" Text="Địa chỉ: 489/9 Khu phố 1, Phường Bình Hưng Hòa, TP Hồ Chí Minh        - ĐT: 0946 556 058 - 028 3750 2826&#13;&#10;Email: saigonsinco@gmail.con         -  Website: saigonsinco.com           - Fanpage: https://www.facebook.com/saigonsinco.com.vn" AutoShrink="FontWidth" Font="Arial, 10pt"/>
+      <TextObject Name="Text10" Left="245.7" Width="803.25" Height="37.8" CanGrow="true" Text="Công ty TNHH TM &amp; XL Công Nghiệp Sài Gòn" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="88.25" Width="1047.06" Height="37.8" CanGrow="true">
+      <TextObject Name="Text4" Width="1048.95" Height="37.8" Text="BẢNG TỔNG HỢP DOANH THU - CHI PHÍ NĂM 2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="129.25" Width="1047.06" Height="94.5" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table1" Width="1045.9" Height="94.5">
+        <TableColumn Name="Column1" Width="47.25"/>
+        <TableColumn Name="Column2" Width="94.5"/>
+        <TableColumn Name="Column3" Width="75.6"/>
+        <TableColumn Name="Column4" Width="54.2"/>
+        <TableColumn Name="Column5" Width="75.6"/>
+        <TableColumn Name="Column6" Width="75.6"/>
+        <TableColumn Name="Column7" Width="54.2"/>
+        <TableColumn Name="Column8"/>
+        <TableColumn Name="Column9"/>
+        <TableColumn Name="Column10" Width="54.2"/>
+        <TableColumn Name="Column11" Width="56.7"/>
+        <TableColumn Name="Column12"/>
+        <TableColumn Name="Column13" Width="54.2"/>
+        <TableColumn Name="Column14" Width="75.6"/>
+        <TableColumn Name="Column15" Width="75.6"/>
+        <TableColumn Name="Column16" Width="54.2"/>
+        <TableRow Name="Row1">
+          <TableCell Name="Cell1" GroupIndex="1" Border.Lines="All" Text="THÁNG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" RowSpan="3"/>
+          <TableCell Name="Cell2" Border.Lines="All" Fill.Color="Gold" Text="Doanh Thu" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" ColSpan="3"/>
+          <TableCell Name="Cell3" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell4" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell5" Border.Lines="All" Fill.Color="LimeGreen" Text="GIÁ VỐN" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" ColSpan="3"/>
+          <TableCell Name="Cell26" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell31" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell36" Border.Lines="All" Fill.Color="Olive" Text="LỢI NHUẬN" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" ColSpan="3"/>
+          <TableCell Name="Cell41" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell46" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell51" Border.Lines="All" Fill.Color="DeepSkyBlue" Text="CHI PHÍ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" ColSpan="3"/>
+          <TableCell Name="Cell56" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell61" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell66" Border.Lines="All" Fill.Color="DarkGray" Text="LL" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" ColSpan="3"/>
+          <TableCell Name="Cell71" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell76" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row2" Height="37.8">
+          <TableCell Name="Cell6" GroupIndex="1" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell7" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell8" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell9" Border.Lines="All" Text="% CL(25/24)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell10" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell27" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell32" Border.Lines="All" Text="% CL(25/24)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell37" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell42" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell47" Border.Lines="All" Text="% CL(25/24)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell52" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell57" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell62" Border.Lines="All" Text="% CL(25/24)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell67" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell72" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="OliveDrab"/>
+          <TableCell Name="Cell77" Border.Lines="All" Text="% CL(25/24)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row3" Height="37.8">
+          <TableCell Name="Cell11" GroupIndex="1" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell12" Border.Lines="All" Text="A" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell13" Border.Lines="All" Text="B" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell14" Border.Lines="All" Text="(A/B)-1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell15" Border.Lines="All" Text="C" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell28" Border.Lines="All" Text="D" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell33" Border.Lines="All" Text="(C/D)-1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell38" Border.Lines="All" Text="E=A-C" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell43" Border.Lines="All" Text="F=B-D" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell48" Border.Lines="All" Text="(E/F)-1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell53" Border.Lines="All" Text="G" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell58" Border.Lines="All" Text="H" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell63" Border.Lines="All" Text="(G/H)-1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell68" Border.Lines="All" Text="L=E-G" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell73" Border.Lines="All" Text="M=F-H" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell78" Border.Lines="All" Text="(L/M)-1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data2" Top="226.95" Width="1047.06" Height="18.9" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table2" Width="1045.9" Height="18.9" Border.Lines="All" Fill.Color="DarkGray">
+        <TableColumn Name="Column17" Width="47.25"/>
+        <TableColumn Name="Column18" Width="94.5"/>
+        <TableColumn Name="Column19" Width="75.6"/>
+        <TableColumn Name="Column20" Width="54.2"/>
+        <TableColumn Name="Column21" Width="75.6"/>
+        <TableColumn Name="Column22" Width="75.6"/>
+        <TableColumn Name="Column23" Width="54.2"/>
+        <TableColumn Name="Column24"/>
+        <TableColumn Name="Column25"/>
+        <TableColumn Name="Column26" Width="54.2"/>
+        <TableColumn Name="Column27" Width="56.7"/>
+        <TableColumn Name="Column28"/>
+        <TableColumn Name="Column29" Width="54.2"/>
+        <TableColumn Name="Column30" Width="75.6"/>
+        <TableColumn Name="Column31" Width="75.6"/>
+        <TableColumn Name="Column32" Width="54.2"/>
+        <TableRow Name="Row4">
+          <TableCell Name="Cell79" Border.Lines="All" Fill.Color="White" Text="T#" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell80" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell81" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell82" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell83" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell84" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell85" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell86" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell87" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell88" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell89" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell90" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell91" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell92" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell93" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell94" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data3" Top="249.05" Width="1047.06" Height="132.3" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table3" Width="1045.9" Height="18.9" Border.Lines="All" Fill.Color="DarkGray">
+        <TableColumn Name="Column33" Width="47.25"/>
+        <TableColumn Name="Column34" Width="94.5"/>
+        <TableColumn Name="Column35" Width="75.6"/>
+        <TableColumn Name="Column36" Width="54.2"/>
+        <TableColumn Name="Column37" Width="75.6"/>
+        <TableColumn Name="Column38" Width="75.6"/>
+        <TableColumn Name="Column39" Width="54.2"/>
+        <TableColumn Name="Column40"/>
+        <TableColumn Name="Column41"/>
+        <TableColumn Name="Column42" Width="54.2"/>
+        <TableColumn Name="Column43" Width="56.7"/>
+        <TableColumn Name="Column44"/>
+        <TableColumn Name="Column45" Width="54.2"/>
+        <TableColumn Name="Column46" Width="75.6"/>
+        <TableColumn Name="Column47" Width="75.6"/>
+        <TableColumn Name="Column48" Width="54.2"/>
+        <TableRow Name="Row5">
+          <TableCell Name="Cell95" Border.Lines="All" Fill.Color="White" Text="Tổng" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell96" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell97" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell98" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell99" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell100" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell101" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell102" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell103" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell104" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell105" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell106" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell107" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell108" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell109" Border.Lines="All" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell110" Fill.Color="White" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+      <TextObject Name="Text6" Left="720" Top="18.9" Width="330.75" Height="37.8" CanGrow="true" Text="Người lập" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text7" Left="720" Top="56.7" Width="330.75" Height="56.7" CanGrow="true" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text8" Left="720" Top="113.4" Width="330.75" Height="18.9" CanGrow="true" Text="Nguyễn Thị ." HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text9" Top="18.9" Width="720" Height="113.4" CanGrow="true" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+    </DataBand>
+  </ReportPage>
+</Report>

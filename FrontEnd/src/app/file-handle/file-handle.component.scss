@@ -1,0 +1,28 @@
+.preview-modal {
+  position: fixed;
+  top: 10%;
+  left: 5%;
+  width: 90%;
+  height: 80%;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 9999;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .error-snackbar .mat-simple-snackbar {
+  white-space: pre-line;
+}
+
+:host ::ng-deep .toolbar-file-btn .mat-icon {
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+  line-height: 15px !important;
+}
+
+:host ::ng-deep .toolbar-file-btn {
+  line-height: 1;
+}

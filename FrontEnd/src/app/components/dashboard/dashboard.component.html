@@ -1,0 +1,64 @@
+<div class="dashboard">
+  <div class="header">
+    <div class="header-left">
+      <h1>Dashboard</h1>
+      <div class="date-range">
+        <span>Hôm nay: {{ today | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="refresh-btn" (click)="refreshData()" [disabled]="isLoading">
+        <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i>
+        Làm mới
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-banner">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <div class="content" [class.loading]="isLoading">
+    <section class="finance-hero">
+      <article class="finance-card revenue">
+        <div class="finance-card__label">Doanh thu tháng hiện tại</div>
+        <div class="finance-card__value">{{ formatCurrencyVnd(financialHighlights.revenue) }}</div>
+        <div class="finance-card__meta">Biên lợi nhuận: {{ financialHighlights.margin | number:'1.0-1' }}%</div>
+      </article>
+      <article class="finance-card profit">
+        <div class="finance-card__label">Lợi nhuận hiện tại</div>
+        <div class="finance-card__value">{{ formatCurrencyVnd(financialHighlights.profit) }}</div>
+        <div class="finance-card__meta">Nguồn dữ liệu: báo cáo BCĐTLN</div>
+      </article>
+    </section>
+
+    <div class="statistics-grid">
+      <app-statistics-card
+        *ngFor="let stat of statistics"
+        [title]="stat.title"
+        [value]="stat.value"
+        [icon]="stat.icon"
+        [trend]="stat.trend"
+        [trendText]="stat.trendText"
+        [trendUp]="stat.trendUp"
+        [color]="stat.color">
+      </app-statistics-card>
+    </div>
+
+    <div class="charts-grid">
+      <app-chart-card
+        *ngFor="let chart of charts"
+        [title]="chart.title"
+        [chartType]="chart.type"
+        [data]="chart.data"
+        [labels]="chart.labels"
+        [color]="chart.color">
+      </app-chart-card>
+    </div>
+  </div>
+</div>

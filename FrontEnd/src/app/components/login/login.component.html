@@ -1,0 +1,97 @@
+<div class="login-container">
+
+  <!-- Language Selector -->
+  <div class="language-selector">
+    <button 
+      class="lang-btn" 
+      [class.active]="currentLanguage === 'vi'"
+      (click)="changeLanguage('vi')"
+    >
+      VI
+    </button>
+    <!-- <button 
+          class="lang-btn" 
+          [class.active]="currentLanguage === 'en'"
+          (click)="changeLanguage('en')"
+        >
+          EN
+        </button>-->
+  </div>
+
+  <div class="login-box">
+
+    <!-- ERP Illustration -->
+    <div class="login-illustration">
+      <img src="assets/images/erplogin.jpg" alt="ERP System" />
+    </div>
+    <div class="partner-logo">
+      <img src="assets/images/sinco.png"alt="Partner Logo" />
+    </div>
+
+    <h2>{{ translations.loginTitle }}</h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>{{ translations.username }}</label>
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>{{ translations.password }}</label>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>{{ translations.unit }}</label>
+        <select
+          name="unit"
+          [(ngModel)]="selectedUnitCode"
+          required
+          [disabled]="isLoadingUnits"
+        >
+          <option value="">
+            {{ isLoadingUnits ? translations.loadingUnits : translations.selectUnit }}
+          </option>
+          <option *ngFor="let unit of units" [value]="unit.unitCode">
+            {{ currentLanguage === 'vi' ? unit.unitName : unit.unitName2 }}
+          </option>
+        </select>
+      </div>
+
+      <button type="submit" [disabled]="isLoading || isLoadingUnits || showForceLoginOption">
+        {{ isLoading ? translations.loggingIn : translations.loginButton }}
+      </button>
+
+      <!-- Force Login -->
+      <div *ngIf="showForceLoginOption" class="force-login-section">
+        <div class="force-login-message">
+          Tài khoản đã được đăng nhập ở thiết bị khác.
+        </div>
+        <div class="force-login-buttons">
+          <button type="button" class="btn-force-login" (click)="forceLogin()" [disabled]="isLoading">
+            Đăng xuất thiết bị khác
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancelForceLogin()" [disabled]="isLoading">
+            Hủy
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-notification></app-notification>

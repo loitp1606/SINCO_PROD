@@ -1,0 +1,189 @@
+{
+	"type": "report",
+	"action": "loading",
+	"language": "V",
+	"title": "Báo cáo doanh số tổng hợp",
+	"title2": "Consolidated Sales Report",
+	"data": [],
+	"header": [
+		{
+			"label": "employee_id",
+			"key": "Mã nhân viên",
+			"type": "text",
+			"width": 100,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "employee_name",
+			"key": "Tên nhân viên",
+			"type": "text",
+			"width": 200,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 1 năm này",
+			"key": "ky1_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 1 năm trước",
+			"key": "ky1_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 1 tỷ lệ",
+			"key": "ky1_tl",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 2 năm này",
+			"key": "ky2_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 2 năm trước",
+			"key": "ky2_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 2 tỷ lệ",
+			"key": "ky2_tl",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 3 năm này",
+			"key": "ky3_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 3 năm trước",
+			"key": "ky3_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Kỳ 3 tỷ lệ",
+			"key": "ky3_tl",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		}
+	],
+	"total": 5,
+	"page": 1,
+	"pageSize": 100,
+	"sort": "",
+	"filters": [
+		{
+			"key": "loc_theo",
+			"label": "Lọc theo",
+			"type": "select",
+			"options": [
+				{
+					"value": "1",
+					"label": "Quý 1"
+				},
+				{
+					"value": "2",
+					"label": "Quý 2"
+				},
+				{
+					"value": "3",
+					"label": "Quý 3"
+				},
+				{
+					"value": "4",
+					"label": "Quý 4"
+				}
+			],
+			"default": "1"
+		},
+		{
+			"key": "year",
+			"label": "Năm",
+			"required": true,
+			"type": "number"
+		},
+		{
+			"key": "customer",
+			"label": "Mã khách hàng",
+			"type": "lookup",
+			"placeholder": "",
+			"default": {
+				"controller": "customer",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		},
+		{
+			"key": "Employee",
+			"label": "Người phụ trách",
+			"type": "lookup",
+			"placeholder": "Nhập phụ trách",
+			"default": {
+				"controller": "Employee",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		},
+		{
+			"key": "item_id",
+			"label": "Mã sản phẩm",
+			"type": "lookup",
+			"placeholder": "",
+			"default": {
+				"controller": "item",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		}
+	],
+	"dataProcessing": {
+		"report": [
+			{
+				"query": "exec rp_bcdsth N'@year', N'@loc_theo', N'@customer', N'@Employee', N'@item_id', N'@userId';"
+			}
+		]
+	}
+}

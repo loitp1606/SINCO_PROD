@@ -1,0 +1,412 @@
+{
+  "model": "quotationPaper",
+  "schema": {
+    "foriegn": [
+      "quotationPaperDetail"
+    ],
+    "foriegnKey": [
+      "idGui"
+    ],
+    "partition": true,
+    "isMaster":  true,
+    "fields": [
+      {
+        "name": "idGui",
+        "property": "idGui",
+        "type": "string",
+        "sqlType": "VARCHAR(64)",
+        "primaryKey": true,
+        "required": true
+      },
+      {
+        "name": "voucherDate",
+        "property": "voucherDate",
+        "type": "date",
+        "sqlType": "DATE",
+        "required": true
+      },
+      {
+        "name": "voucherNumber",
+        "property": "voucherNumber",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": false
+      },
+      {
+        "name": "unitCode",
+        "property": "unitCode",
+        "type": "string",
+        "sqlType": "VARCHAR(16)"
+      },
+      {
+        "name": "customerCode",
+        "property": "customerCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true,
+        "foreign": {
+          "table": "customer",
+          "key": "customer_id",
+          "lookup": "customer_name"
+        }
+      },
+      {
+        "name": "jobCode",
+        "property": "jobCode",
+        "type": "string",
+        "sqlType": "VARCHAR(32)"
+      },
+      {
+        "name": "employee_id",
+        "property": "employee_id",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true
+      },
+      {
+        "name": "employeeName",
+        "property": "employeeName",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)",
+        "required": true
+      },
+      {
+        "name": "contactPerson",
+        "property": "contactPerson",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)",
+        "required": true
+      },
+      {
+        "name": "phonePerson",
+        "property": "phonePerson",
+        "type": "string",
+        "sqlType": "VARCHAR(32)",
+        "required": true
+      },
+      {
+        "name": "orderAddress",
+        "property": "orderAddress",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)",
+        "required": true
+      },
+      {
+        "name": "emailPerson",
+        "property": "emailPerson",
+        "type": "string",
+        "sqlType": "VARCHAR(128)",
+        "required": true
+      },
+      {
+        "name": "phone",
+        "property": "phone",
+        "type": "string",
+        "sqlType": "VARCHAR(32)"
+      },
+      {
+        "name": "fax",
+        "property": "fax",
+        "type": "string",
+        "sqlType": "VARCHAR(32)"
+      },
+      {
+        "name": "email",
+        "property": "email",
+        "type": "string",
+        "sqlType": "VARCHAR(128)"
+      },
+      {
+        "name": "note",
+        "property": "note",
+        "type": "string",
+        "sqlType": "NVARCHAR(MAX)"
+      },
+      {
+        "name": "status",
+        "property": "status",
+        "type": "string",
+        "sqlType": "CHAR(1)",
+        "required": true
+      },
+      {
+        "name": "ten_trang_thai",
+        "property": "ten_trang_thai",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)"
+      },
+      {
+        "name": "total_quantity",
+        "property": "total_quantity",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "total_amount",
+        "property": "total_amount",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "total_vat",
+        "property": "total_vat",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      },
+      {
+        "name": "total_payment",
+        "property": "total_payment",
+        "type": "decimal",
+        "sqlType": "DECIMAL(18,2)"
+      }
+    ]
+  },
+  "excelIntegration": {
+    "sheetName": "QuotationPaper",
+    "columnMapping": [
+      {
+        "excelColumn": "Số báo giá",
+        "fieldName": "voucherNumber",
+        "required": true
+      },
+      {
+        "excelColumn": "Đơn vị",
+        "fieldName": "unitCode",
+        "clauseForiegn": "SELECT UnitCode, UnitName FROM Unit where status = '1'",
+        "required": false
+      }
+    ],
+    "templateRules": {
+      "fileFormat": "xlsx",
+      "firstRowData": 2,
+      "maxRows": 20000
+    }
+  },
+  "checking": {
+    "rules": [
+      
+    ]
+  },
+  "dataProcessing": {
+    "sqlStatements": [
+      {
+        "statement": "update",
+        "query": "UPDATE q SET q.note = N'Đơn giá chưa bao gồm: chi phí thí nghiệm vật tư, MBA, bánh xe MBA\n- Thời gian giao hàng : Trong vòng .... ngày làm việc kể từ ngày tạm ứng\n- Địa điểm giao hàng : giao hàng tại ... phần xuống hàng thuộc phạm vi Bên Mua\n- Hình thức thanh toán : Bằng chuyển khoản theo hai đợt\n    + Đợt 1: Bên Mua tạm ứng 30% giá trị đơn hàng để xác nhận đặt hàng\n    + Đợt 2: Bên Mua thanh toán 70% giá trị còn lại trước khi nhận hàng\n- Hiệu lực báo giá : Trong vòng 03 ngày.\n- Số TK : 12913269 - NH ACB HỘI SỞ TP.HCM.\n\nCÔNG TY TNHH TM & XL CÔNG NGHIỆP SÀI GÒN\nRất mong nhận được thông tin từ Quý công ty' FROM QuotationPaper@partition q INNER JOIN #TempTableName tt ON q.idGui = tt.idGui;"
+      }
+    ]
+  },
+  "foriegnModel": [
+    {
+      "model": "quotationPaperDetail",
+      "schema": {
+        "partition": true,
+        "fields": [
+          {
+            "name": "idGui",
+            "property": "idGui",
+            "type": "string",
+            "sqlType": "VARCHAR(64)",
+            "primaryKey": true,
+            "required": true
+          },
+          {
+            "name": "line_nbr",
+            "property": "line_nbr",
+            "type": "number",
+            "sqlType": "INT",
+            "required": true,
+            "primaryKey": true
+          },
+          {
+            "name": "itemNameCustomer",
+            "property": "itemNameCustomer",
+            "type": "string",
+            "sqlType": "NVARCHAR(256)"
+          },
+          {
+            "name": "itemCode",
+            "property": "itemCode",
+            "type": "string",
+            "sqlType": "VARCHAR(50)"
+          },
+          {
+            "name": "quantity",
+            "property": "quantity",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "uom",
+            "property": "uom",
+            "required": true,
+            "type": "string",
+            "sqlType": "nvarchar(16)",
+            "foreign": {
+              "table": "uom",
+              "key": "uomCode",
+              "lookup": "uomName"
+            }
+          },
+          {
+            "name": "price",
+            "property": "price",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "price2",
+            "property": "price2",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "amount",
+            "property": "amount",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "tax_rate",
+            "property": "tax_rate",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "payment",
+            "property": "payment",
+            "type": "number",
+            "sqlType": "NUMERIC(19,4)"
+          },
+          {
+            "name": "nha_san_xuat",
+            "property": "nha_san_xuat",
+            "type": "string",
+            "sqlType": "NVARCHAR(128)"
+          },
+          {
+            "name": "note",
+            "property": "note",
+            "type": "string",
+            "sqlType": "NVARCHAR(256)"
+          }
+        ]
+      },
+      "excelIntegration": {
+        "sheetName": "QuotationPaperDetail",
+        "columnMapping": [
+          {
+            "excelColumn": "STT",
+            "fieldName": "line_nbr",
+            "required": true
+          },
+          {
+            "excelColumn": "Mô tả",
+            "fieldName": "itemNameCustomer",
+            "required": false
+          },
+          {
+            "excelColumn": "Số lượng",
+            "fieldName": "quantity",
+            "type": "number",
+            "required": false
+          },
+          {
+            "excelColumn": "Giá",
+            "fieldName": "price",
+            "type": "number",
+            "required": false
+          },
+          {
+            "excelColumn": "Thành tiền",
+            "fieldName": "amount",
+            "type": "number",
+            "required": false
+          },
+          {
+            "excelColumn": "Thuế suất",
+            "fieldName": "tax_rate",
+            "type": "number",
+            "required": false
+          },
+          {
+            "excelColumn": "Tổng cộng",
+            "fieldName": "payment",
+            "type": "number",
+            "required": false
+          },
+          {
+            "excelColumn": "Nhà sản xuất",
+            "fieldName": "nha_san_xuat",
+            "required": true,
+            "clauseForiegn": "SELECT ma_nsx, ten_nsx FROM nhasanxuat where status = '1'"
+          },
+          {
+            "excelColumn": "Ghi chú",
+            "fieldName": "note",
+            "required": false
+          }
+        ],
+        "templateRules": {
+          "fileFormat": "xlsx",
+          "firstRowData": 2,
+          "maxRows": 20000
+        }
+      },
+      "checking": {
+        "rules": [
+          {
+            "fieldName": "line_nbr",
+            "type": "value",
+            "minValue": "1",
+            "message": "line_nbr phải lớn hơn hoặc bằng 1."
+          },
+          {
+            "fieldName": "line_nbr",
+            "errorCol": "itemNameCustomer",
+            "type": "databaseCheck",
+            "checkQuery": "WHERE idGui = @idGui AND line_nbr = @line_nbr",
+            "overWrite": true,
+            "threshold": "0",
+            "message": "line_nbr đã tồn tại trong hệ thống."
+          }
+        ]
+      },
+      "dataProcessing": {
+        "sqlStatements": [
+          {
+            "statement": "update",
+            "query": "
+		
+			declare @sbg varchar(50), @up_i int, @zid varchar (50);
+			SELECT @zid = idGui FROM #TempTableName;
+			exec [UpdateImportBaoGia]  'quotationPaperDetail@partition', @zid
+			
+			UPDATE qd SET qd.uom = i.uom, qd.taxCode = t.tax_id, qd.tax_rate = t.tax_number, qd.amount = ISNULL(qd.price,0) * ISNULL(qd.quantity,0), qd.vat = v.calculated_vat, qd.payment = ISNULL(qd.amount,0) + v.calculated_vat FROM quotationPaperDetail@partition qd JOIN #TempTableName tt ON qd.idGui = tt.idGui CROSS APPLY (SELECT TOP 1 tax_id, tax_number FROM tax WHERE tax_number = qd.tax_rate AND status = 1 ORDER BY tax_id) t CROSS APPLY (SELECT ISNULL(qd.amount,0) * ISNULL(t.tax_number,0) / 100 AS calculated_vat) v JOIN item i WITH (NOLOCK) ON qd.itemCode = i.item_id; UPDATE q SET q.total_quantity = qd.total_quantity, q.total_amount = qd.total_amount, q.total_vat = qd.total_vat, q.total_payment = qd.total_payment FROM QuotationPaper@partition q INNER JOIN (SELECT idGui, SUM(ISNULL(quantity,0)) AS total_quantity, SUM(ISNULL(amount,0)) AS total_amount, SUM(ISNULL(vat,0)) AS total_vat, SUM(ISNULL(payment,0)) AS total_payment FROM quotationPaperDetail@partition WHERE idGui IN (SELECT idGui FROM #TempTableName) GROUP BY idGui) qd ON q.idGui = qd.idGui; insert into itemsearch (item_id, item_name, Vector, vector_dim, datetime0, idGui, nha_san_xuat) select itemCode, itemNameCustomer, null, 768 , getdate(), idGui, nha_san_xuat from quotationPaperDetail@partition a WHERE idGui IN (SELECT idGui FROM #TempTableName) and not exists (select 1 from itemsearch z WITH (NOLOCK, INDEX = idGui) where a.idGui = z.idGui); insert into QuotationPaper$000000 (idGui, idVC, unitCode, customerCode, voucherCode, voucherDate, voucherNumber) select idGui, idVC, unitCode, customerCode, 'Z02', voucherDate, voucherNumber from quotationPaper@partition a WHERE idGui IN (SELECT idGui FROM #TempTableName) and not exists (select 1 from QuotationPaper$000000 z WITH (NOLOCK) where a.idGui = z.idGui);
+						
+						select @up_i = 0, @sbg = prefix + rtrim(year(getdate())) + replace(str(month(getdate()), 2), ' ', '0') + right('0000000000'+ rtrim((currentNumber + 1)), NumberLength)
+	from VoucherSequence
+		where Controller = 'QuotationPaper' and Field = 'voucherNumber';
+update quotationPaper@partition set trang_thai_duyet = 0, ten_trang_thai = N'Chưa chuyển đơn đặt hàng'  WHERE idGui = @zid;		
+update quotationPaper@partition set @up_i = 1,voucherNumber  = @sbg  WHERE idGui = @zid and isnull(voucherNumber,'') = 'SINCO';
+					
+insert into itemsearch (item_id, item_name, Vector, vector_dim, datetime0, idGui, nha_san_xuat)
+	select itemCode, itemNameCustomer, null, 768 , getdate(), @zid, nha_san_xuat 
+	from quotationPaperDetail@partition a WHERE idGui = @zid and not exists (select 1 from itemsearch z WITH (NOLOCK, INDEX = idGui) where a.idGui = z.idGui)
+					
+insert into QuotationPaper$000000 (idGui, idVC, unitCode, customerCode, voucherCode, voucherDate, voucherNumber)
+	select idGui, idVC, unitCode, customerCode, 'Z02', voucherDate, voucherNumber
+	from quotationPaper@partition a 
+		WHERE idGui = @zid and not exists (select 1 from QuotationPaper$000000 z WITH (NOLOCK) where a.idGui = z.idGui)
+					
+					
+exec [sp_UpdateNullsToDefault] 'quotationPaper@partition', @zid
+exec [sp_UpdateNullsToDefault] 'quotationPaperDetail@partition', @zid
+update VoucherSequence set currentNumber = currentNumber + 1, LastResetDate = getdate(), UpdatedDate = getdate() from VoucherSequence
+		where Controller = 'QuotationPaper' and Field = 'voucherNumber' and @up_i = 1;
+		"																																																 
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "type": "report",
+  "action": "loading",
+  "language": "V",
+  "title":"Sự kiện Sinh nhật Khách hàng trong tháng",
+  "title2":"Customer Birthday Event of the Month",
+  "data": [],
+  "header": [
+
+    {
+      "label": "Mã khách hàng",
+      "key": "ma_kh",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tên khách hàng",
+      "key": "ten_kh",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+	{
+      "label": "Ngày sinh ",
+      "key": "ngay_sn",
+      "type": "date",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Email",
+      "key": "email",
+      "type": "text",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Điện thoại",
+      "key": "phone_number",
+      "type": "number",
+	  "currency": "VN",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "pageSize": 10,
+  "sort": "",
+  "filters": [
+    {
+      "key": "loc_theo",
+      "label": "Lọc theo",
+      "type": "select",
+      "options": [
+        {
+          "value": "0",
+          "label": "Tuần"
+        },
+        {
+          "value": "1",
+          "label": "Tháng"
+        },
+        {
+          "value": "*",
+          "label": "Tất cả"
+        }
+      ],
+      "default": "*"
+    },
+    {
+      "key": "customer",
+      "label": "Mã khách hàng",
+      "type": "lookup",
+      "placeholder": "",
+      "default": {
+        "controller": "customer",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    }
+
+  ],
+  "dataProcessing": {
+    "report": [
+      {
+        "query": "exec rp_sksnkhtt N'@customer', N'@loc_theo', N'@userId';"
+      }
+    ]
+  }
+}

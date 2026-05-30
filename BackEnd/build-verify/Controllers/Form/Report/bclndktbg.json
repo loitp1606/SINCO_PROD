@@ -1,0 +1,213 @@
+{
+  "type": "report",
+  "action": "loading",
+  "language": "V",
+  "title": "Lợi nhuận dự kiến theo báo giá",
+  "title2": "Expected Profit According To Quotation",
+  "data": [],
+  "header": [
+    {
+      "label": "STT",
+      "key": "stt",
+      "type": "number",
+      "width": 50,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Số báo giá",
+      "key": "voucherNumber",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Ngày chứng từ",
+      "key": "voucherDate",
+      "type": "date",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Mã khách hàng",
+      "key": "customerCode",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tên khách hàng",
+      "key": "customer_name",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Dự án",
+      "key": "jobCode",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Mã vật tư",
+      "key": "itemCode",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tên vật tư",
+      "key": "item_name",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Hãng sản xuất",
+      "key": "manufacturer",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Số lượng",
+      "key": "quantity",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Giá bán",
+      "key": "price2",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Giá mua",
+      "key": "purchasePrice",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Lợi nhuận dự kiến",
+      "key": "loi_nhuan_dk",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tỷ suất lợi nhuận %",
+      "key": "ty_le_ln",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "pageSize": 10,
+  "sort": "",
+  "filters": [
+    {
+      "key": "dateFrom",
+      "label": "Ngày từ",
+      "type": "date"
+    },
+    {
+      "key": "dateTo",
+      "label": "Ngày đến",
+      "type": "date"
+    },
+    {
+      "key": "customer",
+      "label": "Mã khách hàng",
+      "type": "lookup",
+      "placeholder": "",
+      "default": {
+        "controller": "customer",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "Item",
+      "label": "Mã vật tư",
+      "type": "lookup",
+      "placeholder": "",
+      "default": {
+        "controller": "Item",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "Job",
+      "label": "Dự án",
+      "type": "lookup",
+      "placeholder": "Nhập dự án",
+      "default": {
+        "controller": "Job",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "status",
+      "label": "Trạng thái",
+      "type": "select",
+      "options": [
+        {
+          "value": "0",
+          "label": "Đang báo giá"
+        },
+        {
+          "value": "1",
+          "label": "Đã báo giá"
+        },
+        {
+          "value": "*",
+          "label": "Tất cả"
+        }
+      ],
+      "default": "*"
+    }
+  ],
+  "dataProcessing": {
+    "report": [
+      {
+        "query": "exec rp_bclndktbg N'@dateFrom', N'@dateTo', N'@customer', N'@Job', N'@Item', N'@status', N'@userId';"
+      }
+    ]
+  }
+}

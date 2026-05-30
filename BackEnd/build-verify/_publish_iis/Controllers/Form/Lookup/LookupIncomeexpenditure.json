@@ -1,0 +1,20 @@
+{
+  "controller": "income-expenditure",
+  "formId": "incomeExpenditure",
+  "primaryKey": [ "incomeExpenditure_id" ],
+  "language": "@language",
+  "unit": "@@unit",
+  "userId": "@@userId",
+  "type": "one",
+  "sort": [ "incomeExpenditure_id" ],
+  "fields": [
+    {
+      "field": "incomeExpenditure_id",
+      "header": "Mã thu chi"
+    },
+    {
+      "field": "incomeExpenditure_Name",
+      "header": "Diễn giải"
+    }
+  ]
+}

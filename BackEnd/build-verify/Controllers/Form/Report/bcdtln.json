@@ -1,0 +1,227 @@
+{
+	"type": "report",
+	"action": "loading",
+	"language": "V",
+	"title": "Báo cáo tổng hợp doanh thu lợi nhuận",
+	"title2": "Revenue and Profit Report",
+	"data": [],
+	"header": [
+		{
+			"label": "Tháng",
+			"key": "dien_giai",
+			"type": "text",
+			"width": 200,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Doanh thu kỳ này",
+			"key": "dt_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Doanh thu kỳ trước",
+			"key": "dt_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Tỷ lệ",
+			"key": "tl_dt",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Giá vốn kỳ này",
+			"key": "gv_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Giá vốn kỳ trước",
+			"key": "gv_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Tỷ lệ",
+			"key": "tl_gv",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Lợi nhuận kỳ này",
+			"key": "loi_nhuan_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Lợi nhuận kỳ trước",
+			"key": "loi_nhuan_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Tỷ lệ",
+			"key": "tl_gv",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Chi phí kỳ này",
+			"key": "cp_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Chi phí kỳ trước",
+			"key": "cp_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Tỷ lệ",
+			"key": "tl_cp",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Lãi lỗ kỳ này",
+			"key": "lai_lo_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Lãi lỗ kỳ trước",
+			"key": "lai_lo_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Tỷ lệ",
+			"key": "tl_lai_lo",
+			"type": "number",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		}
+	],
+	"total": 5,
+	"page": 1,
+	"pageSize": 100,
+	"sort": "",
+	"filters": [
+		{
+			"key": "dateFrom",
+			"label": "Ngày bắt đầu",
+			"required": true,
+			"type": "date"
+		},
+		{
+			"key": "dateTo",
+			"label": "Ngày kết thúc",
+			"required": true,
+			"type": "date"
+		},
+		{
+			"key": "item_group",
+			"label": "Nhóm vật tư",
+			"type": "lookup",
+			"placeholder": "",
+			"default": {
+				"controller": "ItemGroup",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		},
+		{
+			"key": "customer",
+			"label": "Mã khách hàng",
+			"type": "lookup",
+			"placeholder": "",
+			"default": {
+				"controller": "customer",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		},
+		{
+			"key": "Employee",
+			"label": "Người phụ trách",
+			"type": "lookup",
+			"placeholder": "Nhập phụ trách",
+			"default": {
+				"controller": "Employee",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		},
+		{
+			"key": "item_id",
+			"label": "Mã sản phẩm",
+			"type": "lookup",
+			"placeholder": "",
+			"default": {
+				"controller": "item",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		}
+	],
+	"dataProcessing": {
+		"report": [
+			{
+				"query": "exec rp_bcdtln N'@dateFrom', N'@dateTo', N'@item_group', N'@customer', N'@Employee', N'@item_id', N'@userId';"
+			}
+		]
+	}
+}

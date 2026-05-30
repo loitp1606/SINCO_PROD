@@ -1,0 +1,113 @@
+{
+  "type": "report",
+  "action": "loading",
+  "language": "V",
+  "title":"Khách hàng mới giao dịch lần đầu",
+  "title2":"New customers transacting for the first time",
+  "data": [],
+  "header": [
+
+    {
+      "label": "Mã khách hàng",
+      "key": "ma_kh",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tên khách hàng",
+      "key": "ten_kh",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+	{
+      "label": "Ngày giao dịch gần nhất",
+      "key": "ngay_cc",
+      "type": "date",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Giá trị gần nhất",
+      "key": "tien_gd",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "NVKD phụ trách",
+      "key": "ten_nv",
+      "type": "text",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Số lần giao dịch",
+      "key": "sl_gd",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "pageSize": 10,
+  "sort": "",
+  "filters": [
+    {
+      "key": "loc_theo",
+      "label": "Lọc theo",
+      "type": "select",
+      "options": [
+        {
+          "value": "0",
+          "label": "Tuần"
+        },
+        {
+          "value": "1",
+          "label": "Tháng"
+        },
+        {
+          "value": "2",
+          "label": "Quý"
+        },
+        {
+          "value": "*",
+          "label": "Tất cả"
+        }
+      ],
+      "default": "*"
+    },
+    {
+      "key": "Employee",
+      "label": "Nhân viên kinh doanh",
+      "type": "lookup",
+      "placeholder": "Nhân viên kinh doanh",
+      "default": {
+        "controller": "Employee",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    }
+
+  ],
+  "dataProcessing": {
+    "report": [
+      {
+        "query": "exec rp_khpsgdgn N'@Employee', N'@loc_theo', N'@userId';"
+      }
+    ]
+  }
+}

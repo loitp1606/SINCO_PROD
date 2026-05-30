@@ -1,0 +1,123 @@
+{
+  "type": "report",
+  "action": "loading",
+  "language": "V",
+  "title":"Danh sách Nhắc nợ Khách hàng cần thanh toán",
+  "title2":"List of Customer Payment Reminders",
+  "data": [],
+  "header": [
+
+    {
+      "label": "Mã khách hàng",
+      "key": "ma_kh",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tên khách hàng",
+      "key": "ten_kh",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+	{
+      "label": "Ngày đến hạn",
+      "key": "ngay_hen",
+      "type": "date",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Trạng thái thanh toán",
+      "key": "trang_thai",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Số tiền cần thanh toán",
+      "key": "tien_cl",
+      "type": "number",
+	  "currency": "VN",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "pageSize": 10,
+  "sort": "",
+  "filters": [
+ 
+    {
+      "key": "customer",
+      "label": "Mã khách hàng",
+      "type": "lookup",
+      "placeholder": "",
+      "default": {
+        "controller": "customer",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "Employee",
+      "label": "Người phụ trách",
+      "type": "lookup",
+      "placeholder": "Nhập phụ trách",
+      "default": {
+        "controller": "Employee",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "status",
+      "label": "Trạng thái nợ",
+      "type": "select",
+      "options": [
+        {
+          "value": "0",
+          "label": "Sắp đến hạn (<= 7 ngày)"
+        },
+        {
+          "value": "1",
+          "label": "Quá hạn"
+        },
+        {
+          "value": "2",
+          "label": "Đã thanh toán"
+        },
+        {
+          "value": "*",
+          "label": "Tất cả"
+        }
+      ],
+      "default": "*"
+    }
+
+  ],
+  "dataProcessing": {
+    "report": [
+      {
+        "query": "exec rp_dsnnkhctn N'@customer', N'@Employee', N'@status', N'@userId';"
+      }
+    ]
+  }
+}

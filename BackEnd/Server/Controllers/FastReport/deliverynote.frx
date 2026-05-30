@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="07/31/2025 16:53:50" ReportInfo.Modified="04/15/2026 22:38:10" ReportInfo.CreatorVersion="2025.1.10.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+    public string phoneFax = &quot;&quot;;
+    public void handelPhoneAndFax(object sender, EventArgs e){
+      string phone   = ((String)Report.GetColumnValue(&quot;deliverynote.phonePersonCreate&quot;));
+      string fax   = ((String)Report.GetColumnValue(&quot;deliverynote.faxPersonCreate&quot;));
+      phoneFax = !string.IsNullOrEmpty(fax) ? phone + &quot; - &quot; + fax : phone;
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <TableDataSource Name="deliverynote" ReferenceName="ReportData.deliverynote" DataType="System.Int32" Enabled="true" TableName="deliverynote">
+      <Column Name="idGui" DataType="System.String"/>
+      <Column Name="voucherNumber" DataType="System.String"/>
+      <Column Name="voucherDate" DataType="System.DateTime"/>
+      <Column Name="number_ddh" DataType="System.String"/>
+      <Column Name="number_quotation" DataType="System.String"/>
+      <Column Name="number_contract" DataType="System.String"/>
+      <Column Name="jobCode" DataType="System.String"/>
+      <Column Name="deliveryDate" DataType="System.DateTime"/>
+      <Column Name="customer_id" DataType="System.String"/>
+      <Column Name="contactPerson" DataType="System.String"/>
+      <Column Name="phonePerson" DataType="System.String"/>
+      <Column Name="emailPerson" DataType="System.String"/>
+      <Column Name="employee_id" DataType="System.String"/>
+      <Column Name="phonePersonCreate" DataType="System.String"/>
+      <Column Name="faxPersonCreate" DataType="System.String"/>
+      <Column Name="mailFrom" DataType="System.String"/>
+      <Column Name="term" DataType="System.Decimal"/>
+      <Column Name="amoutFare" DataType="System.Decimal"/>
+      <Column Name="truck_id" DataType="System.String"/>
+      <Column Name="addresstruck" DataType="System.String"/>
+      <Column Name="totalAmount" DataType="System.Decimal"/>
+      <Column Name="totalTax" DataType="System.Decimal"/>
+      <Column Name="totalPayment" DataType="System.Decimal"/>
+      <Column Name="status" DataType="System.String"/>
+      <Column Name="user_id0" DataType="System.Int32"/>
+      <Column Name="user_id2" DataType="System.Int32"/>
+      <Column Name="datetime0" DataType="System.DateTime"/>
+      <Column Name="datetime2" DataType="System.DateTime"/>
+      <Column Name="invoiceVAT" DataType="System.String"/>
+      <Column Name="orderAddress" DataType="System.String"/>
+      <Column Name="totalQuantity" DataType="System.Decimal"/>
+      <Column Name="note" DataType="System.String"/>
+      <Column Name="voucherCode" DataType="System.String"/>
+    </TableDataSource>
+    <TableDataSource Name="deliveryNoteDetail" ReferenceName="ReportData.deliverynotedetail" DataType="System.Int32" Enabled="true" TableName="deliverynotedetail">
+      <Column Name="idGui" DataType="System.String"/>
+      <Column Name="line_nbr" DataType="System.Int32"/>
+      <Column Name="stt" DataType="System.Int32"/>
+      <Column Name="itemNameCustomer" DataType="System.String"/>
+      <Column Name="uomCustomer" DataType="System.String"/>
+      <Column Name="item_id" DataType="System.String"/>
+      <Column Name="uom" DataType="System.String"/>
+      <Column Name="quantity" DataType="System.Decimal"/>
+      <Column Name="price" DataType="System.Decimal"/>
+      <Column Name="purchasePrice" DataType="System.Decimal"/>
+      <Column Name="amount" DataType="System.Decimal"/>
+      <Column Name="tax" DataType="System.Decimal"/>
+      <Column Name="payment" DataType="System.Decimal"/>
+      <Column Name="note" DataType="System.String"/>
+      <Column Name="tax_rate" DataType="System.Decimal"/>
+      <Column Name="taxCode" DataType="System.String"/>
+    </TableDataSource>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="113.4" CanGrow="true">
+      <PictureObject Name="Picture1" Width="151.2" Height="113.4" CanGrow="true" ImageLocation="Images\logo_cty.jpg"/>
+      <TextObject Name="Text2" Left="151.2" Width="415.8" Height="56.7" CanGrow="true" Text="    BIÊN BẢN GIAO NHẬN" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold"/>
+      <TextObject Name="Text87" Left="151.2" Top="56.7" Width="415.8" Height="37.8" CanGrow="true" Text="Số: [deliverynote.voucherNumber]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text114" Left="151.2" Top="94.5" Width="415.8" Height="18.9" CanGrow="true" Text="[Format(&quot;{0}, {1}&quot;, &quot;TP.HCM&quot;, FormatDateTime([deliverynote.voucherDate], &quot;dd/MM/yyyy&quot;))]" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text123" Left="567" Width="151.2" Height="113.4" CanGrow="true" HorzAlign="Center" Font="Arial, 10pt"/>
+    </ReportTitleBand>
+    <DataBand Name="MasterBand" Top="116.07" Width="718.2" Height="321.3" CanGrow="true" PrintOn="FirstPage" KeepTogether="true">
+      <TextObject Name="Text14" Width="151.2" Height="18.9" CanGrow="true" Text="Bên nhận:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text19" Left="151.2" Top="18.9" Width="567" Height="18.9" CanGrow="true" Text="[deliverynote.jobCode]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text24" Top="37.8" Width="151.2" Height="18.9" CanGrow="true" Text="- Địa chỉ nhận hàng:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text25" Left="151.2" Top="37.8" Width="567" Height="18.9" CanGrow="true" Text="[deliverynote.orderAddress]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text32" Top="56.7" Width="151.2" Height="18.9" CanGrow="true" Text="- Người nhận:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text33" Left="151.2" Top="56.7" Width="264.6" Height="18.9" CanGrow="true" Text="[deliverynote.contactPerson]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text15" Top="18.9" Width="151.2" Height="18.9" CanGrow="true" Text="- Công trình: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text56" Top="75.6" Width="151.2" Height="18.9" CanGrow="true" Text="Bên giao:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text58" Top="94.5" Width="151.2" Height="18.9" CanGrow="true" Text="- Địa chỉ:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text59" Left="151.2" Top="94.5" Width="567" Height="18.9" CanGrow="true" Text="489/9 Khu Phố 1, P. Bình Hưng Hoà A, Q. Bình Tân, TPHCM" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text60" Top="113.4" Width="151.2" Height="18.9" CanGrow="true" Text="- Điện thoại/Fax: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text61" Left="151.2" Top="113.4" Width="567" Height="18.9" CanGrow="true" BeforePrintEvent="handelPhoneAndFax" Text="0946 556 058 - 028 3750 2826" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text62" Top="132.3" Width="151.2" Height="18.9" CanGrow="true" Text="- Email:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text63" Left="151.2" Top="132.3" Width="567" Height="18.9" CanGrow="true" Text="saigonsinco@gmail.com" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text64" Top="170.1" Width="151.2" Height="18.9" CanGrow="true" Text="- Người giao: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text65" Left="151.2" Top="151.2" Width="264.6" Height="18.9" CanGrow="true" Text="facebook.com/SAIGONSINCO/" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text66" Top="151.2" Width="151.2" Height="18.9" CanGrow="true" Text="- Facebook:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text69" Left="151.2" Width="567" Height="18.9" CanGrow="true" Text="[deliverynote.customer_id]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text70" Left="151.2" Top="75.6" Width="567" Height="18.9" CanGrow="true" Text="CÔNG TY TNHH TM &amp; XL CÔNG NGHIỆP SÀI GÒN" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text71" Left="415.8" Top="151.2" Width="132.3" Height="18.9" CanGrow="true" Text="- Website:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text72" Left="548.1" Top="151.2" Width="170.1" Height="18.9" CanGrow="true" Text="saigonsinco.com" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text74" Top="207.9" Width="151.2" Height="18.9" CanGrow="true" Text="Ngày giao hàng: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text76" Top="302.4" Width="718.2" Height="18.9" CanGrow="true" Text="Cùng nhau giao nhận vật tư:" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text89" Top="189" Width="151.2" Height="18.9" CanGrow="true" Text="Cần phụ xuống hàng:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text90" Left="160.65" Top="189" Width="18.9" Height="18.9" Border.Lines="All" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text91" Left="415.8" Top="189" Width="132.3" Height="18.9" CanGrow="true" Text="Phương tiện giao: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text92" Left="548.1" Top="189" Width="170.1" Height="18.9" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text93" Left="415.8" Top="207.9" Width="132.3" Height="18.9" CanGrow="true" Text="Thanh toán bằng: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text94" Left="548.1" Top="207.9" Width="170.1" Height="18.9" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text95" Top="226.8" Width="151.2" Height="18.9" CanGrow="true" Text="Chứng từ kèm theo:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text96" Left="151.2" Top="226.8" Width="567" Height="18.9" CanGrow="true" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text97" Top="245.7" Width="151.2" Height="28.35" Border.Lines="Left, Top" CanGrow="true" Text="Chành xe: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text98" Top="274.05" Width="151.2" Height="28.35" Border.Lines="Left, Bottom" CanGrow="true" Text="Địa chỉ chành xe: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text99" Left="151.2" Top="245.7" Width="226.8" Height="28.35" Border.Lines="Top" CanGrow="true" Text="[deliverynote.truck_id]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text100" Left="378" Top="245.7" Width="85.05" Height="28.35" Border.Lines="Top" CanGrow="true" Text="Tiền cước:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text101" Left="642.6" Top="245.7" Width="75.6" Height="28.35" Border.Lines="Right, Top" CanGrow="true" Text="CTY trả" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text102" Left="463.05" Top="245.7" Width="132.3" Height="28.35" Border.Lines="Top" CanGrow="true" Text="[deliverynote.amoutFare]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="." Format.GroupSeparator="." Format.NegativePattern="2" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text103" Left="642.6" Top="274.05" Width="75.6" Height="28.35" Border.Lines="Right, Bottom" CanGrow="true" Text="KH trả" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text104" Left="151.2" Top="274.05" Width="491.4" Height="28.35" Border.Lines="Bottom" CanGrow="true" Text="[deliverynote.addresstruck]" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text115" Left="415.8" Top="56.7" Width="132.3" Height="18.9" CanGrow="true" Text="ĐT người nhận:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text116" Left="548.1" Top="56.7" Width="170.1" Height="18.9" CanGrow="true" Text="[deliverynote.phonePerson]" Format="Date" Format.Format="MMMM dd, yyyy" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text127" Left="151.2" Top="170.1" Width="567" Height="18.9" CanGrow="true" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text129" Left="151.2" Top="207.9" Width="264.6" Height="18.9" CanGrow="true" Text="[Format(FormatDateTime([deliverynote.deliveryDate], &quot;dd/MM/yyyy&quot;))]" Format="Date" Format.Format="dd/MM/yyyy" Font="Arial, 10pt"/>
+      <TextObject Name="Text130" Left="623.7" Top="245.7" Width="18.9" Height="18.9" Border.Lines="All" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text131" Left="623.7" Top="274.05" Width="18.9" Height="18.9" Border.Lines="All" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text132" Left="585.9" Top="245.7" Width="37.8" Height="28.35" Border.Lines="Top" CanGrow="true" Text="vnđ" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="DetailHeaderBand" Top="440.03" Width="718.2" Height="18.9" CanGrow="true" KeepTogether="true">
+      <TableObject Name="MaterialsHeader" Width="722.41" Height="18.9" Border.Lines="All">
+        <TableColumn Name="Column1" Width="38.69"/>
+        <TableColumn Name="Column3" Width="265.48"/>
+        <TableColumn Name="Column4" Width="95.39"/>
+        <TableColumn Name="Column5" Width="123.74"/>
+        <TableColumn Name="Column9" Width="199.11"/>
+        <TableRow Name="HeaderRow" AutoSize="true">
+          <TableCell Name="Cell1" Border.Lines="All" CanGrow="true" Text="STT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell3" Border.Lines="All" CanGrow="true" Text="Tên thiết bị vật tư" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell4" Border.Lines="All" CanGrow="true" Text="ĐVT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell5" Border.Lines="All" CanGrow="true" Text="Số lượng giao" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell9" Border.Lines="All" Text="Ghi chú" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="DetailBand" Top="461.6" Width="718.2" Height="18.9" CanGrow="true" DataSource="deliveryNoteDetail" PrintIfDetailEmpty="true" PrintIfDatasourceEmpty="true" KeepTogether="true">
+      <TableObject Name="Table1" Width="722.41" Height="18.9" Border.Lines="All">
+        <TableColumn Name="Column10" Width="38.69"/>
+        <TableColumn Name="Column12" Width="265.48"/>
+        <TableColumn Name="Column13" Width="95.39"/>
+        <TableColumn Name="Column14" Width="123.74"/>
+        <TableColumn Name="Column18" Width="199.11"/>
+        <TableRow Name="Row1" AutoSize="true">
+          <TableCell Name="Cell10" Border.Lines="All" CanGrow="true" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell12" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.itemNameCustomer]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell13" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.uom]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell14" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.quantity]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell18" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.note]" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data2" Top="483.17" Width="718.2" Height="18.9" CanGrow="true" KeepTogether="true">
+      <TableObject Name="Table2" Width="722.41" Height="18.9" Border.Lines="All">
+        <TableColumn Name="Column25" Width="38.69"/>
+        <TableColumn Name="Column26" Width="265.48"/>
+        <TableColumn Name="Column27" Width="95.39"/>
+        <TableColumn Name="Column28" Width="123.74"/>
+        <TableColumn Name="Column32" Width="199.11"/>
+        <TableRow Name="Row2" AutoSize="true">
+          <TableCell Name="Cell25" Border.Lines="All" CanGrow="true" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell26" Border.Lines="All" CanGrow="true" Text="TỔNG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell27" Border.Lines="All" CanGrow="true" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell28" Border.Lines="All" CanGrow="true" Text="[deliveryNote.totalQuantity]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell32" Border.Lines="All" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data1" Top="504.73" Width="718.2" Height="217.35" CanGrow="true" KeepTogether="true">
+      <TextObject Name="Text85" Top="18.9" Width="415.8" Height="18.9" CanGrow="true" Text="Bảo hành : theo tiêu chuẩn của hãng sản xuất và Phiếu BH số :" VertAlign="Center" Font="Arial, 10pt, style=Italic"/>
+      <TextObject Name="Text86" Left="415.8" Top="18.9" Width="302.4" Height="18.9" CanGrow="true" Text="[deliverynote.voucherNumber]" VertAlign="Center" Font="Arial, 10pt, style=Bold, Italic"/>
+      <TextObject Name="Text105" Width="718.2" Height="18.9" CanGrow="true" Text="Hàng hóa mới 100%, đã được kiểm tra và hoạt động tốt." VertAlign="Center" Font="Arial, 10pt, style=Italic"/>
+      <TextObject Name="Text34" Top="103.95" Width="179.55" Height="18.9" CanGrow="true" Text="BÊN NHẬN" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text35" Top="122.85" Width="179.55" Height="18.9" CanGrow="true" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text106" Left="179.55" Top="103.95" Width="179.55" Height="18.9" CanGrow="true" Text="BÊN GIAO    " HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text107" Left="179.55" Top="122.85" Width="179.55" Height="18.9" CanGrow="true" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text108" Left="359.1" Top="103.95" Width="179.55" Height="18.9" CanGrow="true" Text="PHÒNG KINH DOANH     " HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text109" Left="359.1" Top="122.85" Width="179.55" Height="18.9" CanGrow="true" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text110" Left="538.65" Top="103.95" Width="179.55" Height="18.9" CanGrow="true" Text="NGƯỜI LẬP PHIẾU" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text111" Left="538.65" Top="122.85" Width="179.55" Height="18.9" CanGrow="true" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
+      <TextObject Name="Text126" Top="37.8" Width="718.2" Height="47.25" CanGrow="true" Text="&lt;b&gt;&lt;u&gt;GHI CHÚ:&lt;/u&gt;&lt;/b&gt; &#13;&#10;Quý khách hàng vui lòng kiểm tra hàng hóa trong vòng 02 ngày (48 giờ) kể từ lúc nhận hàng. Sau khoảng thời gian trên chúng tôi không có cơ sở để kiểm tra, giải quyết khiếu nại cho Quý khách. Xin cảm ơn." Font="Arial, 10pt, style=Bold" TextRenderType="HtmlTags"/>
+      <TextObject Name="Text125" Top="141.75" Width="718.2" Height="28.35" CanGrow="true" HorzAlign="Right" Font="Arial, 10pt"/>
+      <TextObject Name="Text128" Top="85.05" Width="718.2" Height="18.9" CanGrow="true" Font="Arial, 10pt"/>
+    </DataBand>
+  </ReportPage>
+</Report>

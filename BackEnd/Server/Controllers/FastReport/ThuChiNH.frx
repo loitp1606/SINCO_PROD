@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/15/2025 17:25:30" ReportInfo.Modified="11/15/2025 17:44:07" ReportInfo.CreatorVersion="2025.2.12.0">
+  <Dictionary/>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="37.8" CanGrow="true">
+      <TextObject Name="Text2" Width="1048.95" Height="18.9" Text="Chủ tài khoản: CTY TNHH TM &amp; XLAP CNGHIEP SAI GON" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="0, 0, 0"/>
+      <TextObject Name="Text3" Top="18.9" Width="1048.95" Height="18.9" Text="Địa chỉ: 489/9 KHU PHO 1 P.BINH HUNG HOA A Quan Binh Tan Thanh pho Ho Chi Minh" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="0, 0, 0"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41" Width="1047.06" Height="113.4" CanGrow="true" CanBreak="true">
+      <TextObject Name="Text1" Top="18.9" Width="1048.95" Height="18.9" Text="BẢNG SAO KÊ GIAO DỊCH - Số tài khoản (VND): 12913269" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="0, 0, 0"/>
+      <TextObject Name="Text4" Top="37.8" Width="1048.95" Height="18.9" Text="Từ ngày: 01/06/2025    Đến ngày: 02/06/2025" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TableObject Name="Table2" Top="56.7" Width="1048.95" Height="56.7">
+        <TableColumn Name="Column10" Width="103.95"/>
+        <TableColumn Name="Column11" Width="113.4"/>
+        <TableColumn Name="Column12" Width="85.05"/>
+        <TableColumn Name="Column13" Width="151.2"/>
+        <TableColumn Name="Column14" Width="122.85"/>
+        <TableColumn Name="Column15" Width="141.75"/>
+        <TableColumn Name="Column16" Width="122.85"/>
+        <TableColumn Name="Column17" Width="113.4"/>
+        <TableColumn Name="Column18" Width="94.5"/>
+        <TableRow Name="Row2" Height="37.8">
+          <TableCell Name="Cell42" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell43" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell44" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell45" Border.Lines="All" Text="Số dư đầu" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell46" Border.Lines="All" Text="(-) Tổng tiền rút ra" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell47" Border.Lines="All" Text="(+) Tổng tiền gửi vào" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell48" Border.Lines="All" Text="Số dư" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell49" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell50" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+        <TableRow Name="Row3">
+          <TableCell Name="Cell51" Font="Arial, 10pt"/>
+          <TableCell Name="Cell52" Font="Arial, 10pt"/>
+          <TableCell Name="Cell53" Font="Arial, 10pt"/>
+          <TableCell Name="Cell54" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell55" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell56" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell57" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell58" Font="Arial, 10pt"/>
+          <TableCell Name="Cell59" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <TextObject Name="Text5" Width="1048.95" Height="18.9" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="0, 0, 0"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="157.6" Width="1047.06" Height="37.8" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table1" Width="1048.95" Height="37.8">
+        <TableColumn Name="Column1" Width="103.95"/>
+        <TableColumn Name="Column2" Width="113.4"/>
+        <TableColumn Name="Column3" Width="85.05"/>
+        <TableColumn Name="Column4" Width="151.2"/>
+        <TableColumn Name="Column5" Width="122.85"/>
+        <TableColumn Name="Column6" Width="141.75"/>
+        <TableColumn Name="Column7" Width="122.85"/>
+        <TableColumn Name="Column8" Width="113.4"/>
+        <TableColumn Name="Column9" Width="94.5"/>
+        <TableRow Name="Row1" Height="37.8">
+          <TableCell Name="Cell1" Border.Lines="All" Text="Ngày hiệu lực" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="All" Text="Ngày giao dịch" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell3" Border.Lines="All" Text="Số GD" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell4" Border.Lines="All" Text="Nội dung GD" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell5" Border.Lines="All" Text="Số tiền rút ra" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell26" Border.Lines="All" Text="Số tiền gửi vào" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell31" Border.Lines="All" Text="Số dư" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell36" Border.Lines="All" Text="Tên TK đối ứng" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell41" Border.Lines="All" Text="TK đối ứng" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data2" Top="198.6" Width="1047.06" Height="18.9" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table3" Width="1048.95" Height="18.9">
+        <TableColumn Name="Column19" Width="103.95"/>
+        <TableColumn Name="Column20" Width="113.4"/>
+        <TableColumn Name="Column21" Width="85.05"/>
+        <TableColumn Name="Column22" Width="151.2"/>
+        <TableColumn Name="Column23" Width="122.85"/>
+        <TableColumn Name="Column24" Width="141.75"/>
+        <TableColumn Name="Column25" Width="122.85"/>
+        <TableColumn Name="Column26" Width="113.4"/>
+        <TableColumn Name="Column27" Width="94.5"/>
+        <TableRow Name="Row4">
+          <TableCell Name="Cell60" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell61" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell62" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell63" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell64" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell65" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell66" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell67" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell68" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+</Report>

@@ -1,0 +1,119 @@
+/* =====================================================
+   ERP DARK MODE – PROFESSIONAL
+   ===================================================== */
+
+[data-theme="dark"] {
+  /* ===== Core colors ===== */
+  --erp-primary: #0f172a;          /* slate-900 */
+  --erp-primary-soft: #1e293b;     /* slate-800 */
+
+  --erp-accent: #60a5fa;           /* blue-400 */
+  --erp-accent-soft: #1e3a8a;      /* blue-900 */
+
+  --erp-bg-page: #020617;          /* near-black */
+  --erp-bg-card: #020617;
+  --erp-bg-muted: #020617;
+
+  --erp-border: #1e293b;
+  --erp-border-strong: #334155;
+
+  --erp-text-primary: #e5e7eb;     /* gray-200 */
+  --erp-text-secondary: #cbd5e1;
+  --erp-text-muted: #94a3b8;
+
+  --erp-danger: #f87171;
+  --erp-warning: #facc15;
+  --erp-success: #34d399;
+
+  /* ===== Shadow ===== */
+  --erp-shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+  --erp-shadow: 0 4px 12px rgba(0,0,0,.7);
+}
+
+/* =========================
+   Page background
+   ========================= */
+
+[data-theme="dark"] body {
+  background: var(--erp-bg-page);
+  color: var(--erp-text-primary);
+}
+
+/* =========================
+   Inputs refinement
+   ========================= */
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+  background: #020617;
+  color: var(--erp-text-primary);
+  border-color: var(--erp-border);
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .form-textarea:focus {
+  box-shadow: 0 0 0 1px var(--erp-accent);
+}
+
+/* =========================
+   Table refinement
+   ========================= */
+
+[data-theme="dark"] .detail-table th {
+  background: #020617;
+  color: var(--erp-text-secondary);
+}
+
+[data-theme="dark"] .detail-table td {
+  background: #020617;
+}
+
+[data-theme="dark"] .detail-table tbody tr:nth-child(even) {
+  background: #020617;
+}
+
+[data-theme="dark"] .detail-table tbody tr:hover {
+  background: #020617;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+
+[data-theme="dark"] .btn {
+  background: #020617;
+  color: var(--erp-text-primary);
+  border-color: var(--erp-border);
+}
+
+[data-theme="dark"] .btn-primary {
+  background: var(--erp-accent);
+  border-color: var(--erp-accent);
+  color: #020617;
+}
+
+/* =========================
+   Status badges
+   ========================= */
+
+[data-theme="dark"] .status-draft {
+  background: #020617;
+  color: var(--erp-text-muted);
+}
+
+[data-theme="dark"] .status-approved {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+[data-theme="dark"] .status-rejected {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+[data-theme="dark"] .status-pending {
+  background: rgba(250, 204, 21, 0.15);
+  color: #facc15;
+}

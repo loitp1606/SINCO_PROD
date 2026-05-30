@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="12/23/2025 21:48:33" ReportInfo.Modified="01/10/2026 15:17:41" ReportInfo.CreatorVersion="2026.1.3.0">
+  <Dictionary>
+    <TableDataSource Name="param" ReferenceName="ReportData.param" DataType="System.Int32" Enabled="true">
+      <Column Name="dateFrom" DataType="System.DateTime"/>
+      <Column Name="dateTo" DataType="System.DateTime"/>
+      <Column Name="customer" DataType="System.String"/>
+      <Column Name="Employee" DataType="System.String"/>
+      <Column Name="userId" DataType="System.Int32"/>
+      <Column Name="language" DataType="System.String"/>
+    </TableDataSource>
+    <TableDataSource Name="rp" ReferenceName="ReportData.bccnttg" DataType="System.Int32" Enabled="true">
+      <Column Name="sysorder" DataType="System.Int32"/>
+      <Column Name="systotal" DataType="System.Int32"/>
+      <Column Name="sysprint" DataType="System.Int32"/>
+      <Column Name="stt" DataType="System.Int32"/>
+      <Column Name="ma_kh" DataType="System.String"/>
+      <Column Name="ten_kh" DataType="System.String"/>
+      <Column Name="tong_tien_no" DataType="System.Decimal"/>
+      <Column Name="ngay_no_lau" DataType="System.DateTime"/>
+      <Column Name="ngay_gd_gn" DataType="System.DateTime"/>
+      <Column Name="so_ngay_no_tb" DataType="System.Decimal"/>
+    </TableDataSource>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="75.6" CanGrow="true">
+      <PictureObject Name="Picture1" Width="226.8" Height="75.6" CanGrow="true" ImageLocation="Images\logo_cty.jpg"/>
+      <TextObject Name="Text3" Left="226.8" Width="1285.2" Height="75.6" CanGrow="true" Text="Địa chỉ: 489/9 Khu phố 1, Phường Bình Hưng Hòa, TP Hồ Chí Minh&#13;&#10;ĐT: 0946 556 058 - 028 3750 2826&#13;&#10;Email: saigonsinco@gmail.con         -  Website: saigonsinco.com       &#13;&#10;Fanpage: https://www.facebook.com/saigonsinco.com.vn&#13;&#10;" Font="Arial, 12pt"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="77.89" Width="1047.06" Height="56.7">
+      <TextObject Name="Text1" Width="1048.95" Height="37.8" Fill.Color="DodgerBlue" Text="BẢNG TỔNG HỢP CÔNG NỢ THEO THỜI GIAN" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+      <TextObject Name="Text3" Top="37.8" Width="1048.95" Height="18.9" Fill.Color="DodgerBlue" Text="Báo Cáo Công Nợ Theo Thời Gian (Toán bộ khách hàng)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="136.87" Width="1047.06" Height="37.8" CanGrow="true" CanBreak="true" KeepTogether="true" KeepDetail="true">
+      <TextObject Name="Text2" Width="1048.95" Height="18.9" Fill.Color="DodgerBlue" Text="Từ ngày: [FormatDateTime([param.dateFrom], &quot;dd/MM/yyyy&quot;)] - Đến ngày: [FormatDateTime([param.dateTo], &quot;dd/MM/yyyy&quot;)]" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text4" Top="18.9" Width="1048.95" Height="18.9" Fill.Color="DodgerBlue" Text="Ngày lập báo cáo: " HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+    </DataBand>
+    <DataBand Name="Data2" Top="176.96" Width="1047.06" Height="47.25" CanGrow="true" CanShrink="true" CanBreak="true" KeepTogether="true" KeepDetail="true">
+      <TableObject Name="Table1" Width="1048.95" Height="47.25">
+        <TableColumn Name="Column1" Width="37.8"/>
+        <TableColumn Name="Column2" Width="189"/>
+        <TableColumn Name="Column3" Width="226.8"/>
+        <TableColumn Name="Column4" Width="217.35"/>
+        <TableColumn Name="Column5" Width="198.45"/>
+        <TableColumn Name="Column6" Width="179.55"/>
+        <TableRow Name="Row1" Height="47.25" AutoSize="true">
+          <TableCell Name="Cell1" Border.Lines="All" Fill.Color="LimeGreen" Text="STT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="All" Fill.Color="LimeGreen" Text="MÃ KHÁCH HÀNG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell3" Border.Lines="All" Fill.Color="LimeGreen" Text="TÊN KHÁCH HÀNG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell4" Border.Lines="All" Fill.Color="LimeGreen" Text="NGÀY NỢ LÂU NHẤT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell5" Border.Lines="All" Fill.Color="LimeGreen" Text="NGÀY GIAO DỊCH GẦN NHẤT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell26" Border.Lines="All" Fill.Color="LimeGreen" Text="SỐ NGÀY NỢ TRUNG BÌNH" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data3" Top="226.49" Width="1047.06" Height="28.35" CanGrow="true" CanShrink="true" CanBreak="true" DataSource="rp" KeepTogether="true">
+      <TableObject Name="Table2" Width="1048.95" Height="28.35">
+        <TableColumn Name="Column14" Width="37.8"/>
+        <TableColumn Name="Column15" Width="189"/>
+        <TableColumn Name="Column16" Width="226.8"/>
+        <TableColumn Name="Column17" Width="217.35"/>
+        <TableColumn Name="Column18" Width="198.45"/>
+        <TableColumn Name="Column19" Width="179.55"/>
+        <TableRow Name="Row9" Height="28.35" AutoSize="true">
+          <TableCell Name="Cell101" Border.Lines="All" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell102" Border.Lines="All" Text="[rp.ma_kh]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell103" Border.Lines="All" Text="[rp.ten_kh]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell104" Border.Lines="All" Text="[rp.ngay_no_lau]" Format="Date" Format.Format="d" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell105" Border.Lines="All" Text="[rp.ngay_gd_gn]" Format="Date" Format.Format="d" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell106" Border.Lines="All" Text="[rp.so_ngay_no_tb]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="1" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+</Report>

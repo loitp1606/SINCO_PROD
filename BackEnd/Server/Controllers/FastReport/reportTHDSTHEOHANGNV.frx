@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/15/2025 16:19:57" ReportInfo.Modified="11/15/2025 17:50:17" ReportInfo.CreatorVersion="2025.2.12.0">
+  <Dictionary/>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="85.05" CanGrow="true">
+      <PictureObject Name="Picture1" Width="227.7" Height="85" CanGrow="true" ImageLocation="Images\logo_cty.jpg"/>
+      <TextObject Name="Text3" Left="226.8" Top="18.9" Width="822.15" Height="66.15" CanGrow="true" Text="Địa chỉ: 489/9 Khu phố 1, Phường Bình Hưng Hòa, TP Hồ Chí Minh     - ĐT: 0946 556 058 - 028 3750 2826&#13;&#10;Email: saigonsinco@gmail.con         -  Website: saigonsinco.com       - Fanpage: https://www.facebook.com/saigonsinco.com.vn&#13;&#10;" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text4" Left="226.8" Width="822.15" Height="18.9" CanGrow="true" Text="Công ty TNHH TM &amp; XL Công Nghiệp Sài Gòn" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="88.25" Width="1047.06" Height="28.35" CanGrow="true">
+      <TextObject Name="Text5" Width="1048.95" Height="28.35" Text="DOANH SỐ QUÝ 1/2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="119.8" Width="1047.06" Height="75.6" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TextObject Name="Text6" Width="226.8" Height="18.9" CanGrow="true" Text="- Doanh số Quý 1/2024: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text7" Top="18.9" Width="226.8" Height="18.9" CanGrow="true" Text="- Doanh số Quý 1/2025: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text8" Top="37.8" Width="226.8" Height="18.9" CanGrow="true" Text="- CL 2025/2024:" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text9" Top="56.7" Width="1048.95" Height="18.9" CanGrow="true" Text="Cụ thể từng tháng như sau: " VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text10" Left="226.8" Width="822.15" Height="18.9" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text11" Left="226.8" Top="18.9" Width="822.15" Height="18.9" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text12" Left="226.8" Top="37.8" Width="822.15" Height="18.9" CanGrow="true" VertAlign="Center" Font="Arial, 10pt"/>
+    </DataBand>
+    <DataBand Name="Data2" Top="198.6" Width="1047.06" Height="170.1" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table1" Width="1048.95" Height="170.1">
+        <TableColumn Name="Column1" Width="18.9"/>
+        <TableColumn Name="Column2" Width="207.9"/>
+        <TableColumn Name="Column3" Width="103.95"/>
+        <TableColumn Name="Column4" Width="103.95"/>
+        <TableColumn Name="Column5" Width="56.7"/>
+        <TableColumn Name="Column6" Width="103.95"/>
+        <TableColumn Name="Column7" Width="103.95"/>
+        <TableColumn Name="Column8" Width="56.7"/>
+        <TableColumn Name="Column9" Width="113.4"/>
+        <TableColumn Name="Column10" Width="94.5"/>
+        <TableColumn Name="Column11" Width="85.05"/>
+        <TableRow Name="Row1">
+          <TableCell Name="Cell1" Border.Lines="All" Text="STT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" RowSpan="2"/>
+          <TableCell Name="Cell2" Border.Lines="All" Text="DOANH SỐ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" RowSpan="2"/>
+          <TableCell Name="Cell3" Border.Lines="All" Text="THÁNG 1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" ColSpan="3"/>
+          <TableCell Name="Cell4" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell5" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell26" Border.Lines="All" Text="THÁNG 2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" ColSpan="3"/>
+          <TableCell Name="Cell31" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell36" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell41" Border.Lines="All" Text="THÁNG 3" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" ColSpan="3"/>
+          <TableCell Name="Cell46" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell51" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+        <TableRow Name="Row2" Height="37.8">
+          <TableCell Name="Cell6" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell7" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell8" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell9" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell10" Border.Lines="All" Text="% 25/24" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell27" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell32" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell37" Border.Lines="All" Text="% 25/24" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell42" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell47" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell52" Border.Lines="All" Text="% 25/24" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row8">
+          <TableCell Name="Cell78" Border.Lines="All" Text="1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell79" Border.Lines="All" Text="MBA" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell80" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell81" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell82" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell83" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell84" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell85" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell86" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell87" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell88" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row6">
+          <TableCell Name="Cell56" Border.Lines="All" Text="2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell57" Border.Lines="All" Text="RECLOSER" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell58" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell59" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell60" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell61" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell62" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell63" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell64" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell65" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell66" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row7">
+          <TableCell Name="Cell67" Border.Lines="All" Text="3" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell68" Border.Lines="All" Text="VẬT TƯ" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell69" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell70" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell71" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell72" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell73" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell74" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell75" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell76" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell77" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row3">
+          <TableCell Name="Cell11" Border.Lines="All" Text="4" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell12" Border.Lines="All" Text="TỦ + CHÌ ỐNG" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell13" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell14" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell15" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell28" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell33" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell38" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell43" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell48" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell53" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row4">
+          <TableCell Name="Cell16" Border.Lines="All" Text="5" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell17" Border.Lines="All" Text="NLMT" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell18" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell19" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell20" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell29" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell34" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell39" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell44" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell49" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell54" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row5">
+          <TableCell Name="Cell21" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell22" Border.Lines="All" Text="TỔNG" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell23" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell24" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell25" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell30" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell35" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell40" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell45" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell50" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell55" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data3" Top="371.9" Width="1047.06" Height="94.5" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table2" Top="37.8" Width="1048.95" Height="56.7">
+        <TableColumn Name="Column12" Width="18.9"/>
+        <TableColumn Name="Column13" Width="207.9"/>
+        <TableColumn Name="Column14" Width="103.95"/>
+        <TableColumn Name="Column15" Width="103.95"/>
+        <TableColumn Name="Column16" Width="56.7"/>
+        <TableColumn Name="Column17" Width="103.95"/>
+        <TableColumn Name="Column18" Width="103.95"/>
+        <TableColumn Name="Column19" Width="56.7"/>
+        <TableColumn Name="Column20" Width="113.4"/>
+        <TableColumn Name="Column21" Width="94.5"/>
+        <TableColumn Name="Column22" Width="85.05"/>
+        <TableRow Name="Row9">
+          <TableCell Name="Cell89" Border.Lines="All" Text="STT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" RowSpan="2"/>
+          <TableCell Name="Cell90" Border.Lines="All" Text="NHÂN VIÊN" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" RowSpan="2"/>
+          <TableCell Name="Cell91" Border.Lines="All" Text="THÁNG 1" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" ColSpan="3"/>
+          <TableCell Name="Cell92" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell93" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell94" Border.Lines="All" Text="THÁNG 2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" ColSpan="3"/>
+          <TableCell Name="Cell95" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell96" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell97" Border.Lines="All" Text="THÁNG 3" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" ColSpan="3"/>
+          <TableCell Name="Cell98" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell99" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+        <TableRow Name="Row10" Height="37.8">
+          <TableCell Name="Cell100" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell101" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell102" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell103" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell104" Border.Lines="All" Text="% 25/24" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell105" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell106" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell107" Border.Lines="All" Text="% 25/24" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell108" Border.Lines="All" Text="2024" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell109" Border.Lines="All" Text="2025" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell110" Border.Lines="All" Text="% 25/24" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <TextObject Name="Text13" Width="1048.95" Height="37.8" CanGrow="true" Text="DOANH SỐ  VẬT TƯ THEO NHÂN VIÊN QUÝ I/2025&#13;&#10;TP: NGUYỄN THỊ BÍCH LIÊN" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
+      <DataBand Name="Data6" Top="469.6" Width="1047.06" Height="37.8">
+        <TableObject Name="Table7" Width="1048.95" Height="37.8">
+          <TableColumn Name="Column40" Width="18.9"/>
+          <TableColumn Name="Column41" Width="207.9"/>
+          <TableColumn Name="Column42" Width="103.95"/>
+          <TableColumn Name="Column43" Width="103.95"/>
+          <TableColumn Name="Column44" Width="56.7"/>
+          <TableColumn Name="Column45" Width="103.95"/>
+          <TableColumn Name="Column46" Width="103.95"/>
+          <TableColumn Name="Column47" Width="56.7"/>
+          <TableColumn Name="Column48" Width="113.4"/>
+          <TableColumn Name="Column49" Width="94.5"/>
+          <TableColumn Name="Column50" Width="85.05"/>
+          <TableRow Name="Row46">
+            <TableCell Name="Cell328" Border.Lines="All" Text="#" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell329" Border.Lines="All" Text="Huỳnh Thị Thanh Huyền" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+            <TableCell Name="Cell330" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell331" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell332" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell333" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell334" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell335" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell336" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell337" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell338" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          </TableRow>
+          <TableRow Name="Row47">
+            <TableCell Name="Cell339" Border.Lines="All" Font="Arial, 10pt"/>
+            <TableCell Name="Cell340" Border.Lines="All" Text="Số khách hàng" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell341" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell342" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell343" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell344" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell345" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell346" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell347" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell348" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+            <TableCell Name="Cell349" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          </TableRow>
+        </TableObject>
+      </DataBand>
+    </DataBand>
+    <DataBand Name="Data4" Top="510.6" Width="1047.06" Height="85.05" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table3" Width="1048.95" Height="37.8">
+        <TableColumn Name="Column23" Width="18.9"/>
+        <TableColumn Name="Column24" Width="207.9"/>
+        <TableColumn Name="Column25" Width="103.95"/>
+        <TableColumn Name="Column26" Width="103.95"/>
+        <TableColumn Name="Column27" Width="56.7"/>
+        <TableColumn Name="Column28" Width="103.95"/>
+        <TableColumn Name="Column29" Width="103.95"/>
+        <TableColumn Name="Column30" Width="56.7"/>
+        <TableColumn Name="Column31" Width="113.4"/>
+        <TableColumn Name="Column32" Width="94.5"/>
+        <TableColumn Name="Column33" Width="85.05"/>
+        <TableRow Name="Row23">
+          <TableCell Name="Cell243" Border.Lines="All" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell244" Border.Lines="All" Text="TỔNG" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell245" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell246" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell247" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell268" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell270" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell272" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell274" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell276" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell278" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+        <TableRow Name="Row27">
+          <TableCell Name="Cell263" Border.Lines="All" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell264" Border.Lines="All" Text="TỔNG KH" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell265" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell266" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell267" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell269" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell271" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell273" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell275" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell277" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell279" Border.Lines="All" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data5" Top="598.85" Width="1047.06" Height="132.3" CanGrow="true" CanBreak="true" KeepTogether="true">
+      <TableObject Name="Table4" Left="226.8" Width="207.9" Height="132.3" Border.Lines="All" PrintOnParent="true">
+        <TableColumn Name="Column34" Width="132.3"/>
+        <TableColumn Name="Column35" Width="75.6"/>
+        <TableRow Name="Row28" Height="37.8">
+          <TableCell Name="Cell280" Border.Lines="All" Text="Trong 183 KH mua hàng T1" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="Red" ColSpan="2"/>
+          <TableCell Name="Cell281" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row29">
+          <TableCell Name="Cell285" Border.Lines="All" Text="- DS &gt;1tỷ" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell286" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row30">
+          <TableCell Name="Cell290" Border.Lines="All" Text="- DS từ 500tr - 1tỷ" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell291" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row31">
+          <TableCell Name="Cell295" Border.Lines="All" Text="- DS từ 100-500tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell296" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row32">
+          <TableCell Name="Cell300" Border.Lines="All" Text="- DS từ 50-100tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell301" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row33">
+          <TableCell Name="Cell302" Border.Lines="All" Text="- DS &lt; 50tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell303" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <TableObject Name="Table5" Left="491.4" Width="207.9" Height="132.3" Border.Lines="All" PrintOnParent="true">
+        <TableColumn Name="Column36" Width="132.3"/>
+        <TableColumn Name="Column37" Width="75.6"/>
+        <TableRow Name="Row34" Height="37.8">
+          <TableCell Name="Cell304" Border.Lines="All" Text="Trong 183 KH mua hàng T1" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="Red" ColSpan="2"/>
+          <TableCell Name="Cell305" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row35">
+          <TableCell Name="Cell306" Border.Lines="All" Text="- DS &gt;1tỷ" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell307" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row36">
+          <TableCell Name="Cell308" Border.Lines="All" Text="- DS từ 500tr - 1tỷ" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell309" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row37">
+          <TableCell Name="Cell310" Border.Lines="All" Text="- DS từ 100-500tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell311" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row38">
+          <TableCell Name="Cell312" Border.Lines="All" Text="- DS từ 50-100tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell313" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row39">
+          <TableCell Name="Cell314" Border.Lines="All" Text="- DS &lt; 50tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell315" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <TableObject Name="Table6" Left="756" Width="207.9" Height="132.3" Border.Lines="All" PrintOnParent="true">
+        <TableColumn Name="Column38" Width="132.3"/>
+        <TableColumn Name="Column39" Width="75.6"/>
+        <TableRow Name="Row40" Height="37.8">
+          <TableCell Name="Cell316" Border.Lines="All" Text="Trong 183 KH mua hàng T1" VertAlign="Center" Font="Arial, 10pt" TextFill.Color="Red" ColSpan="2"/>
+          <TableCell Name="Cell317" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row41">
+          <TableCell Name="Cell318" Border.Lines="All" Text="- DS &gt;1tỷ" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell319" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row42">
+          <TableCell Name="Cell320" Border.Lines="All" Text="- DS từ 500tr - 1tỷ" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell321" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row43">
+          <TableCell Name="Cell322" Border.Lines="All" Text="- DS từ 100-500tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell323" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row44">
+          <TableCell Name="Cell324" Border.Lines="All" Text="- DS từ 50-100tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell325" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row45">
+          <TableCell Name="Cell326" Border.Lines="All" Text="- DS &lt; 50tr" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell327" Border.Lines="All" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+</Report>

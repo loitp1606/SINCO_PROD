@@ -1,0 +1,20 @@
+{
+  "controller": "customerDetail",
+  "formId": "customerDetail",
+  "primaryKey": [ "name" ],
+  "language": "@language",
+  "unit": "@@unit",
+  "userId": "@@userId",
+  "type": "one",
+  "sort": [ "name" ],
+  "fields": [
+    {
+      "field": "name",
+      "header": "Tên người liên hệ"
+    },
+    {
+      "field": "role",
+      "header": "Chức vụ"
+    }
+  ]
+}

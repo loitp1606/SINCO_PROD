@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="12/23/2025 21:48:33" ReportInfo.Modified="01/10/2026 15:24:33" ReportInfo.CreatorVersion="2026.1.3.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+    // Hàm này gắn vào sự kiện OnBeforePrint của Memo/TextObject trong report
+    private void Memo1_BeforePrint(object sender, EventArgs e)
+    {
+      var memo = sender as FastReport.TextObject;
+
+      DateTime? dateFrom = Report.GetColumnValue(&quot;param.dateFrom&quot;) as DateTime?;
+      DateTime? dateTo   = Report.GetColumnValue(&quot;param.dateTo&quot;) as DateTime?;
+
+      string text = &quot;&quot;;
+
+      if (dateFrom.HasValue)
+        text = &quot;Từ ngày: &quot; + dateFrom.Value.ToString(&quot;dd/MM/yyyy&quot;);
+
+      if (dateTo.HasValue)
+      {
+        if (text != &quot;&quot;)
+          text += &quot; - &quot;;
+        text += &quot;Đến ngày: &quot; + dateTo.Value.ToString(&quot;dd/MM/yyyy&quot;);
+      }
+
+      memo.Text = text;
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <TableDataSource Name="param" ReferenceName="ReportData.param" DataType="System.Int32" Enabled="true">
+      <Column Name="dateFrom" DataType="System.DateTime"/>
+      <Column Name="dateTo" DataType="System.DateTime"/>
+      <Column Name="customer" DataType="System.String"/>
+      <Column Name="Employee" DataType="System.String"/>
+      <Column Name="userId" DataType="System.Int32"/>
+      <Column Name="language" DataType="System.String"/>
+    </TableDataSource>
+    <TableDataSource Name="rp" ReferenceName="ReportData.bcthspdmnccttg91" DataType="System.Int32" Enabled="true">
+      <Column Name="sysorder" DataType="System.Int32"/>
+      <Column Name="systotal" DataType="System.Int32"/>
+      <Column Name="sysprint" DataType="System.Int32"/>
+      <Column Name="stt" DataType="System.Int32"/>
+      <Column Name="idGui" DataType="System.String"/>
+      <Column Name="voucherNumber" DataType="System.String"/>
+      <Column Name="voucherDate" DataType="System.DateTime"/>
+      <Column Name="supplierCode" DataType="System.String"/>
+      <Column Name="phoneSupplier" DataType="System.String"/>
+      <Column Name="addressSupplier" DataType="System.String"/>
+      <Column Name="supplier_name" DataType="System.String"/>
+      <Column Name="employeeCode" DataType="System.String"/>
+      <Column Name="employee_name" DataType="System.String"/>
+      <Column Name="jobCode" DataType="System.String"/>
+      <Column Name="item_id" DataType="System.String"/>
+      <Column Name="quantity" DataType="System.Decimal"/>
+      <Column Name="price" DataType="System.Decimal"/>
+      <Column Name="amount" DataType="System.Decimal"/>
+      <Column Name="ratioDiscount" DataType="System.Decimal"/>
+      <Column Name="discount" DataType="System.Decimal"/>
+      <Column Name="taxCode" DataType="System.String"/>
+      <Column Name="tax_rate" DataType="System.Decimal"/>
+      <Column Name="tax" DataType="System.Decimal"/>
+      <Column Name="payment" DataType="System.Decimal"/>
+      <Column Name="phan_loai" DataType="System.String"/>
+      <Column Name="item_name" DataType="System.String"/>
+    </TableDataSource>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="420.1" PaperHeight="296.9" RawPaperSize="8" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1512.38" Height="75.6" CanGrow="true">
+      <PictureObject Name="Picture1" Width="302.4" Height="75.6" CanGrow="true" ImageLocation="Images\logo_cty.jpg"/>
+      <TextObject Name="Text3" Left="302.4" Width="1209.6" Height="75.6" CanGrow="true" Text="Địa chỉ: 489/9 Khu phố 1, Phường Bình Hưng Hòa, TP Hồ Chí Minh&#13;&#10;ĐT: 0946 556 058 - 028 3750 2826&#13;&#10;Email: saigonsinco@gmail.con         -  Website: saigonsinco.com       &#13;&#10;Fanpage: https://www.facebook.com/saigonsinco.com.vn&#13;&#10;" Font="Arial, 12pt"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="77.89" Width="1512.38" Height="37.8" CanGrow="true" PrintOn="FirstPage">
+      <TextObject Name="Text1" Width="1512" Height="37.8" Fill.Color="DodgerBlue" Text="TỔNG HỢP SẢN PHẨM ĐÃ MUA TỪ NHÀ CUNG CẤP THEO THỜI GIAN" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="117.97" Width="1512.38" Height="18.9" CanGrow="true" CanBreak="true" KeepTogether="true" KeepDetail="true">
+      <TextObject Name="Text2" Width="1512" Height="18.9" Fill.Color="MistyRose" BeforePrintEvent="Memo1_BeforePrint" Text="Từ ngày: [FormatDateTime([param.dateFrom], &quot;dd/MM/yyyy&quot;)] - Đến ngày: [FormatDateTime([param.dateTo], &quot;dd/MM/yyyy&quot;)]" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="Data2" Top="139.16" Width="1512.38" Height="66.15" CanGrow="true" CanShrink="true" CanBreak="true" KeepTogether="true" KeepDetail="true">
+      <TableObject Name="Table1" Width="1512" Height="66.15" RepeatHeaders="false">
+        <TableColumn Name="Column1" Width="37.8"/>
+        <TableColumn Name="Column155" Width="122.85"/>
+        <TableColumn Name="Column143" Width="132.3"/>
+        <TableColumn Name="Column2" Width="103.95"/>
+        <TableColumn Name="Column3" Width="113.4"/>
+        <TableColumn Name="Column4" Width="170.1"/>
+        <TableColumn Name="Column6" Width="113.4"/>
+        <TableColumn Name="Column132" Width="151.2"/>
+        <TableColumn Name="Column145" Width="85.05"/>
+        <TableColumn Name="Column146" Width="113.4"/>
+        <TableColumn Name="Column147" Width="113.4"/>
+        <TableColumn Name="Column148" Width="113.4"/>
+        <TableColumn Name="Column149" Width="141.75"/>
+        <TableRow Name="Row1" Height="66.15" AutoSize="true">
+          <TableCell Name="Cell1" Border.Lines="All" Fill.Color="LimeGreen" Text="STT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell288" Border.Lines="All" Fill.Color="LimeGreen" Text="NHÂN VIÊN KINH DOANH" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell275" Border.Lines="All" Fill.Color="LimeGreen" Text="SỐ BÁO GIÁ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="All" Fill.Color="LimeGreen" Text="NGÀY BÁO GIÁ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell3" Border.Lines="All" Fill.Color="LimeGreen" Text="MÃ NHÀ CUNG CẤP" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell4" Border.Lines="All" Fill.Color="LimeGreen" Text="TÊN NHÀ CUNG CẤP" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell26" Border.Lines="All" Fill.Color="LimeGreen" Text="MÃ VẬT TƯ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell260" Border.Lines="All" Fill.Color="LimeGreen" Text="TÊN VẬT TƯ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell278" Border.Lines="All" Fill.Color="LimeGreen" Text="SỐ LƯỢNG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell279" Border.Lines="All" Fill.Color="LimeGreen" Text="ĐƠN GIÁ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell280" Border.Lines="All" Fill.Color="LimeGreen" Text="GIẢM GIÁ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell281" Border.Lines="All" Fill.Color="LimeGreen" Text="THUẾ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell282" Border.Lines="All" Fill.Color="LimeGreen" Text="THANH TOÁN" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <DataBand Name="Data3" Top="207.59" Width="1512.38" Height="37.8" CanGrow="true" CanShrink="true" CanBreak="true" DataSource="rp" KeepTogether="true">
+      <TableObject Name="Table2" Width="1512" Height="37.8">
+        <TableColumn Name="Column14" Width="37.8"/>
+        <TableColumn Name="Column156" Width="122.85"/>
+        <TableColumn Name="Column144" Width="132.3"/>
+        <TableColumn Name="Column15" Width="103.95"/>
+        <TableColumn Name="Column16" Width="113.4"/>
+        <TableColumn Name="Column17" Width="170.1"/>
+        <TableColumn Name="Column19" Width="113.4"/>
+        <TableColumn Name="Column134" Width="151.2"/>
+        <TableColumn Name="Column150" Width="85.05"/>
+        <TableColumn Name="Column151" Width="113.4"/>
+        <TableColumn Name="Column152" Width="113.4"/>
+        <TableColumn Name="Column153" Width="113.4"/>
+        <TableColumn Name="Column154" Width="141.75"/>
+        <TableRow Name="Row9" Height="37.8" AutoSize="true">
+          <TableCell Name="Cell101" Border.Lines="All" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell289" Border.Lines="All" Text="[rp.employee_name]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell277" Border.Lines="All" Text="[rp.voucherNumber]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell102" Border.Lines="All" Text="[rp.voucherDate]" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell103" Border.Lines="All" Text="[rp.supplierCode]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell104" Border.Lines="All" Text="[rp.supplier_name]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell106" Border.Lines="All" Text="[rp.item_id]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell264" Border.Lines="All" Text="[rp.item_name]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell283" Border.Lines="All" Text="[rp.quantity]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="1" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell284" Border.Lines="All" Text="[rp.price]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="1" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell285" Border.Lines="All" Text="[rp.discount]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="1" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell286" Border.Lines="All" Text="[rp.tax]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="1" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell287" Border.Lines="All" Text="[rp.payment]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="0" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+</Report>
