@@ -60,6 +60,8 @@ export class DynamicReportComponent implements OnInit {
   filterForm!: FormGroup;
   page: number = 1;
   data: Record<string, any>[] = [];
+  filteredData: Record<string, any>[] = [];
+  columnFilters: { [key: string]: string } = {};
   isFileHandle: string | undefined = "export";
   userData: { [key: string]: string } = {};
   exportData: { [key: string]: any[] } = {};
@@ -89,6 +91,7 @@ export class DynamicReportComponent implements OnInit {
       .subscribe(async (meta) => {
         this.response = meta.data;
         this.initFilterForm();
+        this.initColumnFilters();
       });
   }
 
@@ -134,6 +137,7 @@ export class DynamicReportComponent implements OnInit {
       )
       .subscribe(async (meta) => {
         this.data = meta.data.data;
+        this.applyColumnFilters();
         this.page = 1;
         if(this.data.length> 0){
           const cleanControll = this.controller.endsWith('.json')
@@ -157,6 +161,17 @@ export class DynamicReportComponent implements OnInit {
   }
   onPageSizeChange(): void {
     this.page = 1; // reset về trang đầu
+  }
+
+  onColumnFilterChange(): void {
+    this.applyColumnFilters();
+    this.page = 1;
+  }
+
+  clearColumnFilters(): void {
+    Object.keys(this.columnFilters).forEach((k) => (this.columnFilters[k] = ''));
+    this.applyColumnFilters();
+    this.page = 1;
   }
 
   onFilter(): void {
@@ -198,7 +213,7 @@ export class DynamicReportComponent implements OnInit {
   }
 
   exportReport(): void {
-    const rawData = this.data;
+    const rawData = this.filteredData.length > 0 ? this.filteredData : this.data;
     
     if (!rawData || rawData.length === 0) {
       console.warn('Không có dữ liệu để xuất.');
@@ -272,5 +287,32 @@ export class DynamicReportComponent implements OnInit {
     }
     // Thêm điều kiện khác tại đây nếu cần
     return '';
+  }
+
+  private initColumnFilters(): void {
+    this.columnFilters = {};
+    for (const header of this.response?.header || []) {
+      this.columnFilters[header.key] = '';
+    }
+    this.applyColumnFilters();
+  }
+
+  private applyColumnFilters(): void {
+    const activeFilters = Object.entries(this.columnFilters || {})
+      .map(([key, value]) => ({ key, value: (value || '').trim().toLowerCase() }))
+      .filter((f) => !!f.value);
+
+    if (activeFilters.length === 0) {
+      this.filteredData = [...this.data];
+      return;
+    }
+
+    this.filteredData = this.data.filter((row) =>
+      activeFilters.every((f) => {
+        const raw = row?.[f.key];
+        if (raw === null || raw === undefined) return false;
+        return String(raw).toLowerCase().includes(f.value);
+      })
+    );
   }
 }

@@ -1,0 +1,109 @@
+{
+	"type": "report",
+	"action": "loading",
+	"language": "V",
+	"title": "Báo cáo đối chiếu hóa đơn và phiếu nhập",
+	"title2": "Invoice and Goods Receipt Reconciliation Report",
+	"data": [],
+	"header": [
+		{
+			"label": "Ngày hóa đơn",
+			"key": "invoice_date",
+			"type": "date",
+			"width": 140,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Số hóa đơn",
+			"key": "invoice_no",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Nhà cung cấp XHĐ",
+			"key": "invoiceCustomerName",
+			"type": "text",
+			"width": 220,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Ngày phiếu nhập",
+			"key": "receipt_date",
+			"type": "date",
+			"width": 140,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Số phiếu nhập",
+			"key": "receipt_no",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Nhà cung cấp",
+			"key": "supplier_name",
+			"type": "text",
+			"width": 220,
+			"align": "text-left",
+			"format": ""
+		}
+	],
+	"total": 0,
+	"page": 1,
+	"pageSize": 100,
+	"sort": "",
+	"filters": [
+		{
+			"key": "dateFrom",
+			"label": "Từ ngày",
+			"required": true,
+			"type": "date"
+		},
+		{
+			"key": "dateTo",
+			"label": "Đến ngày",
+			"required": true,
+			"type": "date"
+		},
+		{
+			"key": "supplier",
+			"label": "Nhà cung cấp",
+			"type": "lookup",
+			"placeholder": "",
+			"default": {
+				"controller": "supplier",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		},
+		{
+			"key": "invoiceNo",
+			"label": "Số hóa đơn",
+			"type": "text"
+		},
+		{
+			"key": "receiptNo",
+			"label": "Số phiếu nhập",
+			"type": "text"
+		}
+	],
+	"dataProcessing": {
+		"report": [
+			{
+				"query": "exec rp_bcdchdpn N'@dateFrom', N'@dateTo', N'@supplier', N'@invoiceNo', N'@receiptNo', N'@userId';"
+			}
+		]
+	}
+}

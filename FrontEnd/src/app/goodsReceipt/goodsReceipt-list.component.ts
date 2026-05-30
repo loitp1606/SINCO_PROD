@@ -54,14 +54,19 @@ export class GoodsReceiptGridComponent {
         "type": "number"
       },
       {
-        key: 'receiveStatus',
-        label: 'TT nhận hàng',
-        type: 'text',
-      },
-      {
-        key: 'paymentStatus',
-        label: 'TT thanh toán',
-        type: 'text',
+        "key": "status",
+        "label": "Trạng thái",
+        "type": "select",
+        "options": [
+          {
+            "label": "Đang chờ nhập",
+            "value": "0"
+          },
+          {
+            "label": "Đã nhập hàng",
+            "value": "1"
+          }
+        ]
       },
       {
         key: 'note',
