@@ -295,25 +295,26 @@
         </div>
       </div>
     </div>
-    <!-- Page size selector -->
-  <div class="flex items-center gap-2 text-sm">
-    <span>Hiển thị</span>
-    <select
-      class="border rounded px-2 py-1"
-      [(ngModel)]="pageSize"
-      (change)="onPageSizeChange()"
-    >
-      <option *ngFor="let size of pageSizeOptions" [value]="size">
-        {{ size }}
-      </option>
-    </select>
-    <span>dòng / trang</span>
-  </div>
+    <div class="flex items-center gap-2 text-sm">
+      <span>Hiển thị</span>
+      <select
+        class="border rounded px-2 py-1"
+        [(ngModel)]="pageSize"
+        [ngModelOptions]="{ standalone: true }"
+        (change)="onPageSizeChange()"
+      >
+        <option *ngFor="let size of pageSizeOptions" [value]="size">
+          {{ size }}
+        </option>
+      </select>
+      <span>dòng / trang</span>
+    </div>
     <!-- Pagination -->
     <app-dynamic-pagination
       [totalItems]="filteredData.length"
       [itemsPerPage]="pageSize"
       [currentPage]="page"
+      [showPageSizeSelector]="false"
       (pageChange)="onPageChange($event)"
     >
     </app-dynamic-pagination>

@@ -11,6 +11,7 @@ export class DynamicPaginationComponent {
     @Input() totalItems = 0;
     @Input() itemsPerPage = 10;
     @Input() currentPage = 1;
+    @Input() showPageSizeSelector = true;
     @Input() pageSizeOptions: number[] = [10, 20, 50, 100];
     @Output() pageChange = new EventEmitter<number>();
     @Output() itemsPerPageChange = new EventEmitter<number>();
