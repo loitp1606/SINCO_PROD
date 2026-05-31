@@ -368,6 +368,7 @@
               <!-- Column Filters Row -->
               <tr class="bg-gray-50">
                 <td class="p-1"></td>
+                <td class="p-1"></td>
                 <td *ngFor="let field of getAllDetailFields()" class="p-1" [hidden]="field.type === 'hidden'">
                   <div class="relative" [hidden]="field.disabled">
 
@@ -404,7 +405,6 @@
                     </button>
                   </div>
                 </td>
-                <td class="p-1"></td>
               </tr>
             </thead>
 
