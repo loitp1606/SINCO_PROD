@@ -109,14 +109,14 @@
 						"key": "phoneSupplier",
 						"label": "Điện thoại",
 						"type": "text",
-						"required": true,
+						"required": false,
 						"placeholder": ""
 					},
 					{
 						"key": "emailSupplier",
 						"label": "Email",
 						"type": "text",
-						"required": true,
+						"required": false,
 						"placeholder": ""
 					},
 					{
