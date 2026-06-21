@@ -378,6 +378,7 @@
 							"type": "number",
 							"width": "150px",
 							"currency": "VN",
+							"precision": 2,
 							"trigger": [
 								"amount",
 								"tax",

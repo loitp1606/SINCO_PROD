@@ -147,7 +147,8 @@
 							"label": "Giá mua (VND)",
 							"type": "number",
 							"required": true,
-							"min": 0.01
+							"min": 0.01,
+							"precision": 2
 						},
 						{
 							"key": "apply_date",
