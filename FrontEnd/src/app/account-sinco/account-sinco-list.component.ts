@@ -12,69 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class AccountSincoGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/account-sinco.list.json
+  initData = {
     id: 'account-sinco',
-    title: 'GRID.ACCOUNT_SINCO',
-    headers: [
-      {
-        key: 'account_sinco_id',
-        label: 'POPUP.ACCOUNT_SINCO.CODE',
-        type: 'text',
-        sortable: true,
-      },
-      {
-        key: 'account_sinco_name',
-        label: 'POPUP.ACCOUNT_SINCO.NAME',
-        type: 'text',
-      },
-      {
-        key: 'account_type',
-        label: 'POPUP.ACCOUNT_SINCO.TYPE',
-        type: 'select',
-      },
-      {
-        key: 'bank_name',
-        label: 'POPUP.ACCOUNT_SINCO.BANK_NAME',
-        type: 'lookup',
-      },
-      {
-        key: 'account_number',
-        label: 'POPUP.ACCOUNT_SINCO.ACCOUNT_NUMBER',
-        type: 'text',
-      },
-      {
-        key: 'bank_branch',
-        label: 'POPUP.ACCOUNT_SINCO.BANK_BRANCH',
-        type: 'text',
-      },
-      {
-        key: 'note',
-        label: 'POPUP.ACCOUNT_SINCO.NOTE',
-        type: 'textarea',
-      },
-      {
-        key: 'status',
-        label: 'POPUP.ACCOUNT_SINCO.STATUS',
-        type: 'select',
-      }
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'account-sinco.page.json',
-        formId: 'accountSinco',
-        primaryKey: ['account_sinco_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['accountSinco'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'account_sinco_id',
-    actions: []
-  };
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

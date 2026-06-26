@@ -12,44 +12,27 @@ import { GirdInitData } from '../models';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class IndustryGroupGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/industry-group.list.json
+  initData = {
     id: 'industry-group',
-    title: 'Ngành hàng',
-    headers: [
-      {
-        key: 'industry_group_id',
-        label: 'Mã ngành',
-        type: 'text',
-        sortable: true,
-      },
-      {
-        key: 'industry_group_name',
-        label: 'Tên ngành',
-        type: 'text',
-      },
-      {
-        key: 'note',
-        label: 'Ghi chú',
-        type: 'text',
-      },
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'industry-group.page.json',
-        formId: 'industryGroup',
-        primaryKey: ['industry_group_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['industryGroup', 'itemGroup'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'industry_group_id',
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

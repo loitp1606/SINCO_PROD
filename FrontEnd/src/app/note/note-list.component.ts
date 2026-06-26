@@ -12,48 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class NoteGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/note.list.json
+  initData = {
     id: 'note',
-    title: 'Ghi chú',
-    headers: [
-      {
-        key: 'note_id',
-        label: 'Mã ghi chú',
-        type: 'text',
-      },
-      {
-        key: 'note_content',
-        label: 'Ghi chú default',
-        type: 'textarea',
-      },
-      {
-        key: 'feature_code',
-        label: 'Tính năng',
-        type: 'lookup',
-      },
-      {
-        key: 'status',
-        label: 'Trạng thái',
-        type: 'select',
-      },
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'note.page.json',
-        formId: 'note',
-        primaryKey: ['note_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['note'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'note_id',
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

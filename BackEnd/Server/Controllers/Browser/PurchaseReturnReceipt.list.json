@@ -1,0 +1,71 @@
+{
+  "id": "PurchaseReturnReceipt",
+  "title": "Phiếu nhập hàng trả lại",
+  "headers": [
+    {
+      "key": "idGui",
+      "label": "ID",
+      "type": "text",
+      "hidden": true,
+      "sortable": true
+    },
+    {
+      "key": "voucherDate",
+      "label": "Ngày nhập hàng",
+      "type": "date"
+    },
+    {
+      "key": "voucherNumber",
+      "label": "Số phiếu nhập hàng",
+      "type": "text"
+    },
+    {
+      "key": "customerCode",
+      "label": "Khách hàng",
+      "type": "lookup"
+    },
+    {
+      "key": "status",
+      "label": "Trạng thái",
+      "type": "text"
+    },
+    {
+      "key": "note",
+      "label": "Ghi chú",
+      "type": "text"
+    },
+    {
+      "key": "totalPayment",
+      "label": "GRID.total_amount",
+      "type": "number"
+    }
+  ],
+  "query": {
+    "formId": {
+      "controller": "purchaseReturnReceipt.page.json",
+      "formId": "purchaseReturn",
+      "primaryKey": [
+        "idGui"
+      ],
+      "type": "voucher",
+      "action": "loading",
+      "idVC": "Z09",
+      "value": [],
+      "listTable": [
+        "purchaseReturn",
+        "purchaseReturnDetail"
+      ],
+      "VCDate": "",
+      "isFileHandle": "export"
+    }
+  },
+  "sort": "voucherDate desc, voucherNumber desc",
+  "ui": {
+    "summary": {
+      "field": "totalPayment",
+      "label": "Tổng tiền",
+      "format": "number"
+    }
+  },
+  "actions": []
+}

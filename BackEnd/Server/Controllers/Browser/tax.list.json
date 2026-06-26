@@ -1,0 +1,40 @@
+{
+  "id": "tax",
+  "title": "Thuế suất",
+  "headers": [
+    {
+      "key": "tax_id",
+      "label": "Mã thuế",
+      "type": "text"
+    },
+    {
+      "key": "tax_type",
+      "label": "Loại thuế",
+      "type": "text"
+    },
+    {
+      "key": "tax_number",
+      "label": "Mức thuế %",
+      "type": "number"
+    }
+  ],
+  "query": {
+    "formId": {
+      "controller": "tax.page.json",
+      "formId": "tax",
+      "primaryKey": [
+        "tax_id"
+      ],
+      "type": "list",
+      "action": "loading",
+      "idVC": "",
+      "value": [],
+      "listTable": [
+        "tax"
+      ],
+      "VCDate": ""
+    }
+  },
+  "sort": "tax_id",
+  "actions": []
+}

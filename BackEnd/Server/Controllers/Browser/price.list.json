@@ -1,0 +1,52 @@
+{
+  "id": "price",
+  "title": "Giá bán",
+  "headers": [
+    {
+      "key": "price_id",
+      "label": "Mã bảng giá bán",
+      "type": "text"
+    },
+    {
+      "key": "price_name",
+      "label": "Tên bảng giá bán",
+      "type": "text"
+    },
+    {
+      "key": "customer_group_id",
+      "label": "Nhóm khách hàng",
+      "type": "text"
+    },
+    {
+      "key": "effective_date",
+      "label": "Ngày hiệu lực",
+      "type": "date"
+    },
+    {
+      "key": "expired_date",
+      "label": "Ngày hết hiệu lực",
+      "type": "date"
+    }
+  ],
+  "query": {
+    "formId": {
+      "controller": "price.page.json",
+      "formId": "price",
+      "primaryKey": [
+        "price_id"
+      ],
+      "type": "list",
+      "action": "loading",
+      "idVC": "",
+      "value": [],
+      "listTable": [
+        "price",
+        "priceDetail"
+      ],
+      "VCDate": "",
+      "isFileHandle": "import"
+    }
+  },
+  "sort": "price_id",
+  "actions": []
+}

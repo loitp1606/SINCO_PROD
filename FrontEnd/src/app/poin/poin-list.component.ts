@@ -13,92 +13,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
 })
 
 export class PoinGridComponent {
-  initData: GirdInitData = {
-    id: "poin",
-    title:"Đơn đặt nhập hàng",
-    headers: [
-      {
-        "key": "idGui",
-        "label": "ID",
-        "type": "text",
-        hidden: true,
-        "sortable": true
-      },
-      {
-        "key": "voucherDate",
-        "label": "Ngày tạo",
-        "type": "date"
-      },
-      {
-        "key": "voucherNumber",
-        "label": "Số phiếu",
-        "type": "text"
-      },
-      {
-        "key": "vendorCode",
-        "label": "Mã NCC",
-        "type": "lookup"
-      },
-      {
-        "key": "status",
-        "label": "Trạng thái",
-        "type": "select",
-        "options": [
-          {
-            "label": "Lập chứng từ",
-            "value": "0"
-          },
-          {
-            "label": "Đặt hàng",
-            "value": "1"
-          }
-        ]
-      },
-      {
-        "key": "note",
-        "label": "Ghi chú",
-        "type": "text"
-      },
-      {
-        "key":"total_payment",
-        "label": "GRID.total_amount",
-        "type": "number"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/poin.list.json
+  initData = {
+    id: 'poin',
+    headers: [],
     query: {
       formId: {
-        controller: "poin.page.json",
-        formId: "poin",
-        primaryKey: ["idGui"],
-        type: "voucher",
-        action: "loading",
-        language: localStorage.getItem("language") ?? "vn",
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: "Z03",
-        userId: localStorage.getItem("userId") ?? "",
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ["poin", "poindetail"],
-        VCDate: "",
-        isFileHandle: "export",
-        enableTaxExcelExport: true
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
+        VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'voucherDate desc, voucherNumber desc',
-    ui: {
-      summary: {
-        field: 'total_payment',
-        label: 'Tổng tiền',
-        format: 'number',
-      },
-    },
-    actions: [
-      {
-        controller: "goodsReceipt",
-        id: "goodsReceipt.page.json",
-        label: "Tạo phiếu nhập hàng",
-        target: "goodsReceipt/popup",
-        color: "orange"
-      }
-    ]
-  }
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

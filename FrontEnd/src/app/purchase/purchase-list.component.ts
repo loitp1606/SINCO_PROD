@@ -12,64 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class PurchaseGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/purchase.list.json
+  initData = {
     id: 'purchase',
-    title: 'Giá mua',
-    headers: [
-      {
-        key: 'purchase_id',
-        label: 'Mã bảng giá mua',
-        type: 'text',
-      },
-      {
-        key: 'purchase_name',
-        label: 'Tên bảng giá mua',
-        type: 'text',
-      },
-      {
-        key: 'supplier_id',
-        label: 'Nhà cung cấp',
-        type: 'select',
-      },
-      {
-        key: 'start_date',
-        label: 'Ngày hiệu lực',
-        type: 'date',
-      },
-      {
-        key: 'end_date',
-        label: 'Ngày hết hiệu lực',
-        type: 'date',
-      },
-      {
-        key: 'status',
-        label: 'Trạng thái',
-        type: 'select',
-      },
-      {
-        key: 'note',
-        label: 'POPUP.PURCHASE.NOTE',
-        type: 'text',
-      },
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'purchase.page.json',
-        formId: 'purchase',
-        primaryKey: ['purchase_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['purchase', 'purchaseDetail'],
         VCDate: '',
-        isFileHandle: "import",
+        listTable: [],
       },
     },
-    sort: 'purchase_id',
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

@@ -13,49 +13,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
 })
 
 export class JobGridComponent {
-  initData: GirdInitData = {
-    id: "job",
-    title:"Dự án",
-    headers: [
-      {
-        "key": "jobCode",
-        "label": "Mã dự án",
-        "type": "text",
-        "sortable": true
-      },
-      {
-        "key": "jobName",
-        "label": "Tên dự án (VN)",
-        "type": "text"
-      },
-      {
-        "key": "jobName2",
-        "label": "Tên khác",
-        "type": "text"
-      }, 
-      {
-        "key": "status",
-        "label": "Trạng thái",
-        "type": "text"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/job.list.json
+  initData = {
+    id: 'job',
+    headers: [],
     query: {
       formId: {
-        controller: "job.page.json",
-        formId: "job",
-        primaryKey: ["jobCode"],
-        type: "list",
-        action: "loading",
-        language: localStorage.getItem("language") ?? "vn",
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: "",
-        userId: localStorage.getItem("userId") ?? "",
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ["job"],
-        VCDate: ""
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
+        VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'jobCode',
-    actions: []
-  }
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

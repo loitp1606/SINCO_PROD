@@ -12,54 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class PriceGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/price.list.json
+  initData = {
     id: 'price',
-    title: 'Giá bán',
-    headers: [
-      {
-        key: 'price_id',
-        label: 'Mã bảng giá bán',
-        type: 'text',
-      },
-      {
-        key: 'price_name',
-        label: 'Tên bảng giá bán',
-        type: 'text',
-      },
-      {
-        key: 'customer_group_id',
-        label: 'Nhóm khách hàng',
-        type: 'text',
-      },
-      {
-        key: 'effective_date',
-        label: 'Ngày hiệu lực',
-        type: 'date',
-      },
-      {
-        key: 'expired_date',
-        label: 'Ngày hết hiệu lực',
-        type: 'date',
-      },
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'price.page.json',
-        formId: 'price',
-        primaryKey: ['price_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['price', 'priceDetail'],
         VCDate: '',
-        isFileHandle: "import",
+        listTable: [],
       },
     },
-    sort: 'price_id',
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

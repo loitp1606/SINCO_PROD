@@ -12,59 +12,27 @@ import { GirdInitData } from '../models';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class CompanyGridComponent {
-  initData: GirdInitData = {
-    id: "company",
-    title: "GRID.COMPANY",
-    headers: [
-      {
-        key: "company_id",
-        label: "POPUP.COMPANY.ID",
-        type: "text",
-        sortable: true
-      },
-      {
-        key: "company_name",
-        label: "POPUP.COMPANY.NAME",
-        type: "text"
-      },
-      {
-        key: "address",
-        label: "POPUP.COMPANY.ADDRESS",
-        type: "text"
-      },
-      {
-        key: "phone_number",
-        label: "POPUP.COMPANY.PHONE_NUMBER",
-        type: "text"
-      },
-      {
-        key: "fax_number",
-        label: "POPUP.COMPANY.FAX_NUMBER",
-        type: "text"
-      },
-      {
-        key: "mst",
-        label: "POPUP.COMPANY.MST",
-        type: "text"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/company.list.json
+  initData = {
+    id: 'company',
+    headers: [],
     query: {
       formId: {
-        controller: 'company.page.json',
-        formId: 'company',
-        primaryKey: ['company_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
-        unit: 'CTY',
+        unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['company'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'company_id',
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

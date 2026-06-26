@@ -13,49 +13,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
 })
 
 export class UomGridComponent {
-  initData: GirdInitData = {
-    id: "uom",
-    title:"GRID.UOM",
-    headers: [
-      {
-        "key": "uomCode",
-        "label": "POPUP.UOM.CODE",
-        "type": "text",
-        "sortable": true
-      },
-      {
-        "key": "uomName",
-        "label": "POPUP.UOM.NAME_VN",
-        "type": "text"
-      },
-      {
-        "key": "uomName2",
-        "label": "POPUP.UOM.NAME_EN",
-        "type": "text"
-      },
-      {
-        "key": "status",
-        "label": "POPUP.UOM.STATUS",
-        "type": "text"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/uom.list.json
+  initData = {
+    id: 'uom',
+    headers: [],
     query: {
       formId: {
-        controller: "uom.page.json",
-        formId: "uom",
-        primaryKey: ["uomCode"],
-        type: "list",
-        action: "loading",
-        language: localStorage.getItem("language") ?? "vi",
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: "",
-        userId: localStorage.getItem("userId") ?? "",
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ["uom"],
-        VCDate: ""
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
+        VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'uomCode',
-    actions: []
-  }
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

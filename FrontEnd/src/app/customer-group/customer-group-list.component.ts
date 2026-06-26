@@ -12,49 +12,27 @@ import { GirdInitData } from '../models';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class CustomerGroupGridComponent {
-  initData: GirdInitData = {
-    id: "customer-group",
-    title: "GRID.CUSTOMER_GROUP",
-    headers: [
-      {
-        key: "customer_group_id",
-        label: "POPUP.CUSTOMER_GROUP.ID",
-        type: "text",
-        sortable: true
-      },
-      {
-        key: "customer_group_name",
-        label: "POPUP.CUSTOMER_GROUP.NAME",
-        type: "text"
-      },
-      {
-        key: "note",
-        label: "POPUP.CUSTOMER_GROUP.NOTE",
-        type: "text"
-      },
-      {
-        key: "status",
-        label: "POPUP.CUSTOMER_GROUP.STATUS",
-        type: "text"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/customer-group.list.json
+  initData = {
+    id: 'customer-group',
+    headers: [],
     query: {
       formId: {
-        controller: 'customer-group.page.json',
-        formId: 'customerGroup',
-        primaryKey: ['customer_group_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['customerGroup'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'customer_group_id',
-    actions: []
-  };
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

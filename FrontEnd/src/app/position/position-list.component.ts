@@ -12,63 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class PositionGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/position.list.json
+  initData = {
     id: 'position',
-    headers: [
-      {
-        key: 'position_id',
-        label: 'Mã Chức Vụ',
-        type: 'text',
-        sortable: true,
-      },
-      {
-        "key": "position_name",
-        "label": "Tên chức vụ",
-        "type": "text",
-      },
-      {
-        "key": "position_group_id",
-        "label": "Nhóm chức vụ",
-        "type": "select",
-      },
-      {
-        "key": "level",
-        "label": "Cấp bậc",
-        "type": "select",
-      },
-      {
-        "key": "description",
-        "label": "Mô tả chức vụ",
-        "type": "text",
-      },
-      {
-        "key": "status",
-        "label": "Trạng thái",
-        "type": "select",
-      },
-      {
-        "key": "display_order",
-        "label": "Thứ tự hiển thị",
-        "type": "number",
-      }
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'position.page.json',
-        formId: 'position',
-        primaryKey: ['position_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['position'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'position_id',
-    actions: []
-  };
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

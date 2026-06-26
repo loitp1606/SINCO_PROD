@@ -12,108 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class GoodsReceiptGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/goodsReceipt.list.json
+  initData = {
     id: 'goodsReceipt',
-    title: 'Phiếu nhập hàng',
-    headers: [
-      {
-        key: 'idGui',
-        label: 'ID',
-        type: 'text',
-        hidden: true,
-        sortable: true,
-      },
-      {
-        key: 'voucherDate',
-        label: 'Ngày nhập hàng',
-        type: 'date',
-      },
-      {
-        key: 'voucherNumber',
-        label: 'Số phiếu nhập hàng',
-        type: 'text',
-      },
-      {
-        key: 'supplierCode',
-        label: 'Khách hàng',
-        type: 'lookup',
-      },
-      {
-        key: 'paidAmount',
-        label: 'Đã thanh toán',
-        type: 'number',
-      },
-      {
-        key: 'debtAmount',
-        label: 'Còn phải trả',
-        type: 'number',
-      },
-      {
-        "key":"totalPayment",
-        "label": "GRID.total_amount",
-        "type": "number"
-      },
-      {
-        "key": "status",
-        "label": "Trạng thái",
-        "type": "select",
-        "options": [
-          {
-            "label": "Đang chờ nhập",
-            "value": "0"
-          },
-          {
-            "label": "Đã nhập hàng",
-            "value": "1"
-          }
-        ]
-      },
-      {
-        key: 'note',
-        label: 'Ghi chú',
-        type: 'text',
-      }
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'goodsReceipt.page.json',
-        formId: 'goodsReceipt',
-        primaryKey: ['idGui'],
-        type: 'voucher',
-        action: 'loading',
-        language: localStorage.getItem('language') ?? 'vn',
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: 'Z10',
-        userId: localStorage.getItem('userId') ?? '',
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ['goodsReceipt', 'goodsReceiptDetail'],
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
         VCDate: '',
-        isFileHandle: 'export',
+        listTable: [],
       },
     },
-    sort: 'voucherDate desc, voucherNumber desc',
-    ui: {
-      summary: {
-        field: 'totalPayment',
-        label: 'Tổng tiền',
-        format: 'number',
-      },
-    },
-    actions: [
-      {
-        controller: 'paymentSlip',
-        id: 'paymentSlip.page.json',
-        label: 'Tạo phiếu chi',
-        target: 'paymentslip/popup',
-        color: 'orange',
-      },
-      {
-        controller: 'OrderReturn',
-        id: 'orderReturn.page.json',
-        label: 'Tạo phiếu xuất trả hàng',
-        target: 'orderReturn/popup',
-        color: 'orange',
-      },
-    ],
-  };
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

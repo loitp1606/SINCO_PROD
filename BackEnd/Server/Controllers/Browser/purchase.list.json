@@ -1,0 +1,62 @@
+{
+  "id": "purchase",
+  "title": "Giá mua",
+  "headers": [
+    {
+      "key": "purchase_id",
+      "label": "Mã bảng giá mua",
+      "type": "text"
+    },
+    {
+      "key": "purchase_name",
+      "label": "Tên bảng giá mua",
+      "type": "text"
+    },
+    {
+      "key": "supplier_id",
+      "label": "Nhà cung cấp",
+      "type": "select"
+    },
+    {
+      "key": "start_date",
+      "label": "Ngày hiệu lực",
+      "type": "date"
+    },
+    {
+      "key": "end_date",
+      "label": "Ngày hết hiệu lực",
+      "type": "date"
+    },
+    {
+      "key": "status",
+      "label": "Trạng thái",
+      "type": "select"
+    },
+    {
+      "key": "note",
+      "label": "POPUP.PURCHASE.NOTE",
+      "type": "text"
+    }
+  ],
+  "query": {
+    "formId": {
+      "controller": "purchase.page.json",
+      "formId": "purchase",
+      "primaryKey": [
+        "purchase_id"
+      ],
+      "type": "list",
+      "action": "loading",
+      "idVC": "",
+      "value": [],
+      "listTable": [
+        "purchase",
+        "purchaseDetail"
+      ],
+      "VCDate": "",
+      "isFileHandle": "import"
+    }
+  },
+  "sort": "purchase_id",
+  "actions": []
+}

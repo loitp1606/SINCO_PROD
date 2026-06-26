@@ -12,78 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class CustomerGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/customer.list.json
+  initData = {
     id: 'customer',
-    title: "GRID.CUSTOMER",
-    headers: [
-      {
-        key: 'customer_id',
-        label: 'POPUP.CUSTOMER.CODE',
-        type: 'text',
-        sortable: true,
-      },
-      {
-        key: 'customer_name',
-        label: 'POPUP.CUSTOMER.NAME',
-        type: 'text',
-        width: "450px",
-      },
-      {
-        key: 'customer_group_id',
-        label: 'POPUP.CUSTOMER.GROUP',
-        type: 'text',
-      },
-      {
-        key: 'phone_number',
-        label: 'POPUP.CUSTOMER.PHONE',
-        type: 'text',
-      },
-      {
-        key: 'email',
-        label: 'POPUP.CUSTOMER.EMAIL',
-        type: 'text',
-      },
-      {
-        key: 'address',
-
-        label: 'POPUP.CUSTOMER.ADDRESS',
-        width: "450px",
-        type: 'text',
-      },
-      {
-        key: 'city',
-        label: 'POPUP.CUSTOMER.CITY',
-        type: 'text',
-      },
-      {
-        key: 'district',
-        label: 'POPUP.CUSTOMER.DISTRICT',
-        type: 'text',
-      },
-      {
-        key: 'statusname',
-        label: 'POPUP.CUSTOMER.STATUS',
-        type: 'text',
-      },
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'customer.page.json',
-        formId: 'customer',
-        primaryKey: ['customer_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['customer', 'customerDetail'],
         VCDate: '',
-        isFileHandle: "both",
+        listTable: [],
       },
     },
-    sort: 'customer_id',
-    actions: []
-  };
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }
