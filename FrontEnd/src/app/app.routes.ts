@@ -98,6 +98,7 @@ import { ReportBccntheongay61Component } from './bccntheongay61/bccntheongay61.c
 import { ReportBcdtlnComponent } from './bcdtln/bcdtln.component';
 import { ReportBcdtlnctComponent } from './bcdtlnct/bcdtlnct.component';
 import { ReportBcdsthComponent } from './bcdsth/bcdsth.component';
+import { ReportBcdchdpnComponent } from './bcdchdpn/bcdchdpn.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -509,4 +510,5 @@ export const routes: Routes = [
   { path: 'bcdtln', component: ReportBcdtlnComponent, pathMatch: 'full' },
   { path: 'bcdtlnct', component: ReportBcdtlnctComponent, pathMatch: 'full' },
   { path: 'bcdsth', component: ReportBcdsthComponent, pathMatch: 'full' },
+  { path: 'bcdchdpn', component: ReportBcdchdpnComponent, pathMatch: 'full' },
 ];

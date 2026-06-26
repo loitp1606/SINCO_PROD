@@ -148,8 +148,17 @@
         </svg>
         Xuất Báo Cáo
       </button> -->
-      <app-file-handle #fileHandler [minimalMode]="true" [isFileHandle]="isFileHandle" [user]="userData" [controll]="controller" nameExport="Xuất báo cáo" [IsReport]="true" [exportData]="exportData" (importCompleted)="ngOnInit()"
-        class="w-full sm:w-auto"></app-file-handle>
+      <div class="w-full sm:w-auto flex items-center gap-2">
+        <button
+          type="button"
+          (click)="clearColumnFilters()"
+          class="px-3 py-2 text-xs rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+        >
+          Xóa lọc cột
+        </button>
+        <app-file-handle #fileHandler [minimalMode]="true" [isFileHandle]="isFileHandle" [user]="userData" [controll]="controller" nameExport="Xuất báo cáo" [IsReport]="true" [exportData]="exportData" (importCompleted)="ngOnInit()"
+          class="w-full sm:w-auto"></app-file-handle>
+      </div>
     </div>
     <div class="overflow-x-auto rounded-lg shadow-amber-100">
       <!-- Desktop Table -->
@@ -175,6 +184,21 @@
               </th>
             </ng-container>
           </tr>
+          <tr class="bg-white">
+            <th class="px-2 py-2 border-b border-blue-200"></th>
+            <ng-container *ngFor="let header of response.header">
+              <th [ngStyle]="{ 'width.px': header.width }" class="px-2 py-2 border-b border-blue-200">
+                <input
+                  type="text"
+                  [(ngModel)]="columnFilters[header.key]"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="onColumnFilterChange()"
+                  [placeholder]="'Lọc ' + header.label"
+                  class="w-full border border-blue-200 rounded-md px-2 py-1 text-xs font-normal normal-case focus:outline-none focus:ring-2 focus:ring-blue-200"
+                />
+              </th>
+            </ng-container>
+          </tr>
         </thead>
 
         <tbody
@@ -182,7 +206,7 @@
         >
           <tr
             *ngFor="
-              let row of data.slice(
+              let row of filteredData.slice(
                 (page - 1) * pageSize,
                 page * pageSize
               );
@@ -207,7 +231,7 @@
             </ng-container>
           </tr>
 
-          <tr *ngIf="data.length === 0">
+          <tr *ngIf="filteredData.length === 0">
             <td
               [attr.colspan]="response.header.length + 1"
               class="px-4 py-8 text-center text-gray-500"
@@ -228,7 +252,7 @@
                 </svg>
                 <p class="text-lg font-medium">Không có dữ liệu</p>
                 <p class="text-xs mt-2 text-gray-500">
-                  Có {{ response.total }} dòng dữ liệu gốc
+                  Có {{ filteredData.length }} dòng sau lọc
                 </p>
               </div>
             </td>
@@ -240,7 +264,7 @@
       <div class="md:hidden space-y-4 mt-4">
         <div
           *ngFor="
-            let row of data.slice(
+            let row of filteredData.slice(
               (page - 1) * pageSize,
               page * pageSize
             )
@@ -263,33 +287,34 @@
           </div>
         </div>
 
-        <div *ngIf="data.length === 0" class="text-center py-10 text-gray-500">
+        <div *ngIf="filteredData.length === 0" class="text-center py-10 text-gray-500">
           <p class="font-medium">Không có dữ liệu</p>
           <p class="text-xs text-gray-400">
-            Có {{ response.total }} dòng dữ liệu gốc
+            Có {{ filteredData.length }} dòng sau lọc
           </p>
         </div>
       </div>
     </div>
-    <!-- Page size selector -->
-  <div class="flex items-center gap-2 text-sm">
-    <span>Hiển thị</span>
-    <select
-      class="border rounded px-2 py-1"
-      [(ngModel)]="pageSize"
-      (change)="onPageSizeChange()"
-    >
-      <option *ngFor="let size of pageSizeOptions" [value]="size">
-        {{ size }}
-      </option>
-    </select>
-    <span>dòng / trang</span>
-  </div>
+    <div class="flex items-center gap-2 text-sm">
+      <span>Hiển thị</span>
+      <select
+        class="border rounded px-2 py-1"
+        [(ngModel)]="pageSize"
+        [ngModelOptions]="{ standalone: true }"
+        (change)="onPageSizeChange()"
+      >
+        <option *ngFor="let size of pageSizeOptions" [value]="size">
+          {{ size }}
+        </option>
+      </select>
+      <span>dòng / trang</span>
+    </div>
     <!-- Pagination -->
     <app-dynamic-pagination
-      [totalItems]="response?.total || data.length"
+      [totalItems]="filteredData.length"
       [itemsPerPage]="pageSize"
       [currentPage]="page"
+      [showPageSizeSelector]="false"
       (pageChange)="onPageChange($event)"
     >
     </app-dynamic-pagination>

@@ -109,14 +109,14 @@
 						"key": "phoneSupplier",
 						"label": "Điện thoại",
 						"type": "text",
-						"required": true,
+						"required": false,
 						"placeholder": ""
 					},
 					{
 						"key": "emailSupplier",
 						"label": "Email",
 						"type": "text",
-						"required": true,
+						"required": false,
 						"placeholder": ""
 					},
 					{
@@ -378,6 +378,7 @@
 							"type": "number",
 							"width": "150px",
 							"currency": "VN",
+							"precision": 2,
 							"trigger": [
 								"amount",
 								"tax",

@@ -60,6 +60,34 @@
             "placeholder": "Nhập mã số thuế"
           },
           {
+            "key": "bank_number",
+            "label": "STK",
+            "type": "text",
+            "required": false,
+            "placeholder": "Nhập số tài khoản"
+          },
+          {
+            "key": "bank_name",
+            "label": "Ngân hàng",
+            "type": "text",
+            "required": false,
+            "placeholder": "Nhập ngân hàng"
+          },
+          {
+            "key": "giam_doc",
+            "label": "Người đại diện",
+            "type": "text",
+            "required": false,
+            "placeholder": "Nhập người đại diện"
+          },
+          {
+            "key": "email",
+            "label": "Email",
+            "type": "text",
+            "required": false,
+            "placeholder": "Nhập email"
+          },
+          {
             "key": "status",
             "label": "Trạng thái",
             "type": "select",

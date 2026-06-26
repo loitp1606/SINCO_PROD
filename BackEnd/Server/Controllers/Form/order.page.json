@@ -423,6 +423,7 @@
 							"type": "hidden",
 							"width": "150px",
 							"currency": "VN",
+							"precision": 2,
 							"trigger": [
 								"amountCur",
 								"vatCur",
@@ -435,6 +436,7 @@
 							"type": "number",
 							"width": "150px",
 							"currency": "VN",
+							"precision": 2,
 							"trigger": [
 								"amount",
 								"vat",
@@ -446,6 +448,7 @@
 							"label": "Giá mua",
 							"currency": "VN",
 							"width": "150px",
+							"precision": 2,
 							"type": "hidden"
 						},
 						{

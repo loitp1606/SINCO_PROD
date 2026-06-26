@@ -690,6 +690,31 @@ export class DynamicPopupComponent implements OnInit {
         )
     }
 
+    private ensureDetailState(
+        tabIndex: number = this.selectedTab,
+        detailIndex: number = this.selectedDetailIndex
+    ): void {
+        if (!this.detailRowsData[tabIndex]) {
+            this.detailRowsData[tabIndex] = {}
+        }
+        if (!this.filteredDetailRowsData[tabIndex]) {
+            this.filteredDetailRowsData[tabIndex] = {}
+        }
+        if (!this.columnFiltersData[tabIndex]) {
+            this.columnFiltersData[tabIndex] = {}
+        }
+
+        if (!Array.isArray(this.detailRowsData[tabIndex][detailIndex])) {
+            this.detailRowsData[tabIndex][detailIndex] = []
+        }
+        if (!Array.isArray(this.filteredDetailRowsData[tabIndex][detailIndex])) {
+            this.filteredDetailRowsData[tabIndex][detailIndex] = []
+        }
+        if (!this.columnFiltersData[tabIndex][detailIndex]) {
+            this.columnFiltersData[tabIndex][detailIndex] = {}
+        }
+    }
+
     get currentDetailSections(): any[] {
         const currentTab = this.metadata?.tabs[this.selectedTab]
         return currentTab?.detail || []
@@ -2169,6 +2194,7 @@ export class DynamicPopupComponent implements OnInit {
 
     // Filter methods updated for multiple detail sections
     onFilterChange(fieldKey: string, value: string): void {
+        this.ensureDetailState()
         const filters =
             this.columnFiltersData[this.selectedTab][this.selectedDetailIndex]
         if (value && value.trim()) {
@@ -2191,6 +2217,7 @@ export class DynamicPopupComponent implements OnInit {
     }
 
     applyFilters(): void {
+        this.ensureDetailState()
         const currentRows = this.currentDetailRows
         if (!currentRows || currentRows.length === 0) {
             this.filteredDetailRowsData[this.selectedTab][this.selectedDetailIndex] =
@@ -2199,8 +2226,11 @@ export class DynamicPopupComponent implements OnInit {
         }
 
         const filters = this.currentColumnFilters
+        const validFieldKeys = new Set(
+            (this.getAllDetailFields() || []).map((f) => f.key)
+        )
         const activeFilters = Object.keys(filters).filter(
-            (key) => filters[key] && filters[key].trim()
+            (key) => validFieldKeys.has(key) && filters[key] && filters[key].trim()
         )
 
         if (activeFilters.length === 0) {
@@ -2213,7 +2243,8 @@ export class DynamicPopupComponent implements OnInit {
             currentRows.filter((row) => {
                 const matches = activeFilters.map((fieldKey) => {
                     const filterValue = filters[fieldKey].toLowerCase()
-                    const rowValue = (row[fieldKey] || '').toString().toLowerCase()
+                    const rawRowValue = row[fieldKey]
+                    const rowValue = (rawRowValue || '').toString().toLowerCase()
 
                     const field = this.getAllDetailFields()?.find(
                         (f) => f.key === fieldKey
@@ -2221,6 +2252,12 @@ export class DynamicPopupComponent implements OnInit {
 
                     if (field?.type === 'select') {
                         return rowValue === filterValue
+                    } else if (field?.type === 'lookup') {
+                        const displayValue = this.getLookupDisplayValue(
+                            fieldKey,
+                            rawRowValue
+                        ).toLowerCase()
+                        return displayValue.includes(filterValue)
                     } else if (field?.type === 'number') {
                         return this.applyNumberFilter(rowValue, filterValue)
 
@@ -2241,6 +2278,28 @@ export class DynamicPopupComponent implements OnInit {
                     ? matches.every((match) => match)
                     : matches.some((match) => match)
             })
+    }
+
+    private getLookupDisplayValue(fieldKey: string, rawValue: any): string {
+        const lookup = this.lookupMap[fieldKey]
+        if (!lookup || rawValue === null || rawValue === undefined) {
+            return (rawValue || '').toString()
+        }
+
+        const primaryField = lookup.fields?.[0]?.field
+        if (!primaryField) {
+            return (rawValue || '').toString()
+        }
+
+        const found = lookup.datas?.find((item) => item[primaryField] == rawValue)
+        if (!found) {
+            return (rawValue || '').toString()
+        }
+
+        return lookup.fields
+            .map((f) => found[f.field])
+            .filter((v) => v !== null && v !== undefined && `${v}`.trim() !== '')
+            .join(' - ')
     }
 
     private applyNumberFilter(rawValue: any, filterValue: string): boolean {
@@ -2317,6 +2376,7 @@ export class DynamicPopupComponent implements OnInit {
     }
 
     clearFilter(fieldKey: string): void {
+        this.ensureDetailState()
         delete this.columnFiltersData[this.selectedTab][this.selectedDetailIndex][
             fieldKey
         ]
@@ -2324,6 +2384,7 @@ export class DynamicPopupComponent implements OnInit {
     }
 
     clearAllFilters(): void {
+        this.ensureDetailState()
         this.columnFiltersData[this.selectedTab][this.selectedDetailIndex] = {}
         this.applyFilters()
     }

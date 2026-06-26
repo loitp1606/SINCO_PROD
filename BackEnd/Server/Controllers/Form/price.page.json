@@ -167,7 +167,8 @@
 							"label": "Giá bán (VND)",
 							"currency": "VN",
 							"type": "number",
-							"required": true
+							"required": true,
+							"precision": 2
 						},
 						{
 							"key": "apply_date",

@@ -516,6 +516,7 @@
 							"type": "number",
 							"width": "150px",
 							"currency": "VN",
+							"precision": 2,
 							"trigger": [
 								"amount",
 								"tax",
@@ -527,6 +528,7 @@
 							"label": "Giá mua",
 							"currency": "VN",
 							"width": "150px",
+							"precision": 2,
 							"type": "number"
 						},
 						{

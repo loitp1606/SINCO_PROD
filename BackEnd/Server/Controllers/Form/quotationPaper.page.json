@@ -408,6 +408,7 @@
 							"type": "number",
 							"currency": "VN",
 							"width": "150px",
+							"precision": 2,
 							"trigger": [
 								"price2",
 								"amount",
@@ -434,6 +435,7 @@
 							"type": "number",
 							"width": "150px",
 							"currency": "VN",
+							"precision": 2,
 							"trigger": [
 								"amount",
 								"vat",
@@ -447,7 +449,7 @@
 											"price",
 											"ratioDiscount"
 										],
-										"precision": 0
+										"precision": 2
 									}
 								]
 							}
@@ -457,6 +459,7 @@
 							"label": "Giá mua",
 							"currency": "VN",
 							"width": "150px",
+							"precision": 2,
 							"type": "number"
 						},
 						{
@@ -464,6 +467,7 @@
 							"label": "Chênh lệch bán mua",
 							"currency": "VN",
 							"width": "150px",
+							"precision": 2,
 							"type": "number",
 							"calculation": {
 								"calculations": [
@@ -473,7 +477,7 @@
 											"price2",
 											"purchasePrice"
 										],
-										"precision": 0
+										"precision": 2
 									}
 								]
 							}
