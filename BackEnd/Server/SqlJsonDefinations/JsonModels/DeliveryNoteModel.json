@@ -307,6 +307,18 @@
             "sqlType": "NVARCHAR(256)"
           },
           {
+            "name": "item_name",
+            "property": "item_name",
+            "type": "string",
+            "sqlType": "NVARCHAR(256)",
+            "foreign": {
+              "table": "item",
+              "key": "item_id",
+              "lookup": "item_name",
+              "sourceField": "item_id"
+            }
+          },
+          {
             "name": "uomCustomer",
             "property": "uomCustomer",
             "type": "string",

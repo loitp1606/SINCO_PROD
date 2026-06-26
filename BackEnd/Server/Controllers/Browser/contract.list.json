@@ -1,94 +1,99 @@
 {
-  "id": "contract",
-  "title": "Hợp đồng",
-  "headers": [
-    {
-      "key": "idGui",
-      "label": "ID",
-      "type": "text",
-      "hidden": true,
-      "sortable": true
-    },
-    {
-      "key": "voucherDate",
-      "label": "Ngày tạo",
-      "type": "date"
-    },
-    {
-      "key": "number_ddh",
-      "label": "Số ĐĐH",
-      "type": "text"
-    },
-    {
-      "key": "customer_id",
-      "label": "Mã khách hàng",
-      "type": "lookup"
-    },
-    {
-      "key": "quotationCode",
-      "label": "Số báo giá",
-      "type": "text"
-    },
-    {
-      "key": "total_payment",
-      "label": "GRID.total_amount",
-      "type": "number"
-    },
-    {
-      "key": "isReceived",
-      "label": "Đã nhận",
-      "type": "checkbox",
-	  "quickEditable": true
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "contract.page.json",
-      "formId": "contract",
-      "primaryKey": [
-        "idGui"
-      ],
-      "type": "voucher",
-      "action": "loading",
-      "idVC": "Z04",
-      "value": [],
-      "listTable": [
-        "Contract",
-        "ContractDetail"
-      ],
-      "VCDate": "",
-      "isFileHandle": "export",
-      "isOption": true,
-      "options": {
-        "1": "Hợp đồng kinh tế (MBA - bảo lãnh)",
-        "2": "Hợp đồng kinh tế (MBA)",
-        "3": "Hợp đồng Vật tư (Bảo lãnh)",
-        "4": "Hợp đồng Vật tư"
-      }
-    }
-  },
-  "sort": "voucherDate desc",
-  "ui": {
-    "summary": {
-      "field": "total_payment",
-      "label": "Tổng tiền",
-      "format": "number"
-    }
-  },
-  "actions": [
-    {
-      "controller": "poin",
-      "id": "poin.page.json",
-      "label": "Tạo đơn đặt nhập hàng",
-      "target": "poin/popup",
-      "color": "orange"
-    },
-    {
-      "controller": "deliveryNote",
-      "id": "deliveryNote.page.json",
-      "label": "Tạo phiếu xuất hàng",
-      "target": "deliveryNote/popup",
-      "color": "orange"
-    }
-  ]
+	"id": "contract",
+	"title": "Hợp đồng",
+	"headers": [
+		{
+			"key": "idGui",
+			"label": "ID",
+			"type": "text",
+			"hidden": true,
+			"sortable": true
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày tạo",
+			"type": "date"
+		},
+		{
+			"key": "voucherNumber",
+			"label": "Số hợp đồng",
+			"type": "text"
+		},
+		{
+			"key": "customer_id",
+			"label": "Mã khách hàng",
+			"type": "lookup"
+		},
+		{
+			"key": "number_ddh",
+			"label": "Số ĐĐH",
+			"type": "text"
+		},
+		{
+			"key": "quotationCode",
+			"label": "Số báo giá",
+			"type": "text"
+		},
+		{
+			"key": "total_payment",
+			"label": "GRID.total_amount",
+			"type": "number"
+		},
+		{
+			"key": "isReceived",
+			"label": "Đã nhận",
+			"type": "checkbox",
+			"quickEditable": true
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "contract.page.json",
+			"formId": "contract",
+			"primaryKey": [
+				"idGui"
+			],
+			"type": "voucher",
+			"action": "loading",
+			"idVC": "Z04",
+			"value": [],
+			"listTable": [
+				"Contract",
+				"ContractDetail"
+			],
+			"VCDate": "",
+			"isFileHandle": "export",
+			"isOption": true,
+			"options": {
+				"1": "Hợp đồng kinh tế (MBA - bảo lãnh)",
+				"2": "Hợp đồng kinh tế (MBA)",
+				"3": "Hợp đồng Vật tư (Bảo lãnh)",
+				"4": "Hợp đồng Vật tư"
+			}
+		}
+	},
+	"sort": "voucherDate desc",
+	"ui": {
+		"summary": {
+			"field": "total_payment",
+			"label": "Tổng tiền",
+			"format": "number"
+		}
+	},
+	"actions": [
+		{
+			"controller": "poin",
+			"id": "poin.page.json",
+			"label": "Tạo đơn đặt nhập hàng",
+			"target": "poin/popup",
+			"color": "orange"
+		},
+		{
+			"controller": "deliveryNote",
+			"id": "deliveryNote.page.json",
+			"label": "Tạo phiếu xuất hàng",
+			"target": "deliveryNote/popup",
+			"color": "orange"
+		}
+	]
 }

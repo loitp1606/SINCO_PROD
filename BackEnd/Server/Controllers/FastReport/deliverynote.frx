@@ -68,6 +68,7 @@ namespace FastReport
       <Column Name="line_nbr" DataType="System.Int32"/>
       <Column Name="stt" DataType="System.Int32"/>
       <Column Name="itemNameCustomer" DataType="System.String"/>
+      <Column Name="item_name" DataType="System.String"/>
       <Column Name="uomCustomer" DataType="System.String"/>
       <Column Name="item_id" DataType="System.String"/>
       <Column Name="uom" DataType="System.String"/>
@@ -163,7 +164,7 @@ namespace FastReport
         <TableColumn Name="Column18" Width="199.11"/>
         <TableRow Name="Row1" AutoSize="true">
           <TableCell Name="Cell10" Border.Lines="All" CanGrow="true" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
-          <TableCell Name="Cell12" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.itemNameCustomer]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell12" Border.Lines="All" CanGrow="true" Text="[IIf(String.IsNullOrEmpty([deliveryNoteDetail.itemNameCustomer] == null ? &quot;&quot; : [deliveryNoteDetail.itemNameCustomer].ToString().Trim()), [deliveryNoteDetail.item_name], [deliveryNoteDetail.itemNameCustomer])]" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell13" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.uom]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell14" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.quantity]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell18" Border.Lines="All" CanGrow="true" Text="[deliveryNoteDetail.note]" VertAlign="Center" Font="Arial, 10pt"/>

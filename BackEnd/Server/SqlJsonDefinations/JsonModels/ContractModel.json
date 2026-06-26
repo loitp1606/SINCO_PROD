@@ -137,6 +137,62 @@
         "property": "amountInWord",
         "type": "string",
         "sqlType": "NVARCHAR(500)"
+      },
+      {
+        "name": "sellerCompanyName",
+        "property": "sellerCompanyName",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)",
+        "sqlExpression": "(SELECT TOP 1 ISNULL(c.company_name, N'') FROM company c WHERE c.company_id = 'SINCO01')"
+      },
+      {
+        "name": "sellerCompanyAddress",
+        "property": "sellerCompanyAddress",
+        "type": "string",
+        "sqlType": "NVARCHAR(500)",
+        "sqlExpression": "(SELECT TOP 1 ISNULL(c.address, N'') FROM company c WHERE c.company_id = 'SINCO01')"
+      },
+      {
+        "name": "sellerCompanyPhone",
+        "property": "sellerCompanyPhone",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)",
+        "sqlExpression": "(SELECT TOP 1 CONCAT(ISNULL(c.phone_number, N''), CASE WHEN ISNULL(c.fax_number, N'') = N'' THEN N'' ELSE N' - ' + c.fax_number END) FROM company c WHERE c.company_id = 'SINCO01')"
+      },
+      {
+        "name": "sellerCompanyBankAccount",
+        "property": "sellerCompanyBankAccount",
+        "type": "string",
+        "sqlType": "NVARCHAR(256)",
+        "sqlExpression": "(SELECT TOP 1 CONCAT(ISNULL(c.bank_number, N''), CASE WHEN ISNULL(c.bank_name, N'') = N'' THEN N'' ELSE N' - ' + c.bank_name END) FROM company c WHERE c.company_id = 'SINCO01')"
+      },
+      {
+        "name": "sellerCompanyTaxCode",
+        "property": "sellerCompanyTaxCode",
+        "type": "string",
+        "sqlType": "NVARCHAR(64)",
+        "sqlExpression": "(SELECT TOP 1 ISNULL(c.mst, N'') FROM company c WHERE c.company_id = 'SINCO01')"
+      },
+      {
+        "name": "sellerRepresentative",
+        "property": "sellerRepresentative",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)",
+        "sqlExpression": "(SELECT TOP 1 ISNULL(c.giam_doc, N'') FROM company c WHERE c.company_id = 'SINCO01')"
+      },
+      {
+        "name": "sellerPosition",
+        "property": "sellerPosition",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)",
+        "sqlExpression": "N'Giám đốc'"
+      },
+      {
+        "name": "sellerEmail",
+        "property": "sellerEmail",
+        "type": "string",
+        "sqlType": "NVARCHAR(128)",
+        "sqlExpression": "(SELECT TOP 1 ISNULL(c.email, N'') FROM company c WHERE c.company_id = 'SINCO01')"
       }
     ]
   },
