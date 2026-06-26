@@ -575,6 +575,12 @@
 									}
 								]
 							}
+						},
+						{
+							"key": "note",
+							"label": "Ghi chú",
+							"type": "text",
+							"width": "250px"
 						}
 					],
 					"initialData": []

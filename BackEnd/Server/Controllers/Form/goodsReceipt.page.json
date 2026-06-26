@@ -167,8 +167,22 @@
 					{
 						"key": "paymentStatus",
 						"label": "TT thanh toán",
-						"type": "text",
-						"disabled": true
+						"type": "select",
+						"disabled": true,
+						"options": [
+							{
+								"label": "Chưa chi",
+								"value": "UNPAID"
+							},
+							{
+								"label": "Đã chi một phần",
+								"value": "PARTIAL"
+							},
+							{
+								"label": "Đã chi",
+								"value": "PAID"
+							}
+						]
 					},
 					{
 						"key": "totalQuantity",
