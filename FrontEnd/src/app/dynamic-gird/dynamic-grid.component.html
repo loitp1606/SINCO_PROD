@@ -306,12 +306,24 @@
             <th class="px-3 py-2"></th>
             <ng-container *ngFor="let header of girdData.headers">
               <th *ngIf="!header.hidden" class="px-3 py-2 border-r border-slate-200">
-                <input
-                  [type]="header.type === 'date' ? 'date' : 'text'"
+                <select
+                  *ngIf="header.type === 'select'; else standardHeaderFilter"
                   [(ngModel)]="filterColumns[header.key]"
                   (ngModelChange)="onColumnFilterChange()"
-                  class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  [placeholder]="header.type === 'date' ? '' : 'Filter...'" />
+                  class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <option value="">Filter...</option>
+                  <option *ngFor="let option of header.options || []" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+                <ng-template #standardHeaderFilter>
+                  <input
+                    [type]="header.type === 'date' ? 'date' : 'text'"
+                    [(ngModel)]="filterColumns[header.key]"
+                    (ngModelChange)="onColumnFilterChange()"
+                    class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    [placeholder]="header.type === 'date' ? '' : 'Filter...'" />
+                </ng-template>
               </th>
             </ng-container>
           </tr>
@@ -491,13 +503,25 @@
                 *ngIf="!header.hidden"
                 class="px-3 py-0.5 border-r border-sky-100"
               >
-                <input
-                  [type]="header.type === 'date' ? 'date' : 'text'"
+                <select
+                  *ngIf="header.type === 'select'; else compactStandardHeaderFilter"
                   [(ngModel)]="filterColumns[header.key]"
                   (ngModelChange)="onColumnFilterChange()"
-                  class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                  [placeholder]="header.type === 'date' ? '' : 'Filter...'"
-                />
+                  class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                  <option value="">Filter...</option>
+                  <option *ngFor="let option of header.options || []" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+                <ng-template #compactStandardHeaderFilter>
+                  <input
+                    [type]="header.type === 'date' ? 'date' : 'text'"
+                    [(ngModel)]="filterColumns[header.key]"
+                    (ngModelChange)="onColumnFilterChange()"
+                    class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    [placeholder]="header.type === 'date' ? '' : 'Filter...'"
+                  />
+                </ng-template>
               </th>
             </ng-container>
           </tr>

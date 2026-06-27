@@ -2067,7 +2067,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
         if (!value) return null;
 
         const header = this.getHeaderByKey(field);
-        const operator = header?.type === 'date' ? '=' : 'like';
+        // Các giá trị select là mã được lưu trong DB (thường là số/status),
+        // nên phải so sánh chính xác thay vì LIKE như các trường text.
+        const operator = header?.type === 'date' || header?.type === 'select' ? '=' : 'like';
 
         return {
           id: `header_${field}_${index}`,
