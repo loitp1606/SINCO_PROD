@@ -113,6 +113,8 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   masterPaneHeight = 360;
   detailPaneHeight = 240;
   private paneUserResized = false;
+  private quickEditPaneSnapshot: { master: number; detail: number } | null = null;
+  private readonly quickEditMasterPaneHeight = 96;
   private readonly documentShortcutListener = (event: KeyboardEvent) =>
     this.onGridKeyboardShortcut(event);
   detailPanelHidden = false;
@@ -147,6 +149,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   quickEditDetailMode = false;
   quickEditSaving = false;
   private quickEditDetailSnapshot: any[] | null = null;
+  quickBulkValues: Record<string, any> = {};
+  quickBulkEnabled: Record<string, boolean> = {};
+  private quickBulkSelectedRows = new Set<any>();
   quickEditMasterMode = false;
   quickEditMasterSaving = false;
   private quickEditMasterSnapshot: Record<string, any> | null = null;
@@ -179,6 +184,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   toggleDetailPanelVisibility(): void {
     if (!this.isVoucherType()) return;
+    if (!this.detailPanelHidden && this.quickEditDetailMode) {
+      this.cancelQuickEditDetail(false);
+    }
     this.detailPanelHidden = !this.detailPanelHidden;
   }
 
@@ -629,6 +637,35 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.detailPaneHeight = total - this.masterPaneHeight;
   }
 
+  getMasterPaneMinHeight(): number {
+    return this.quickEditDetailMode ? this.quickEditMasterPaneHeight : this.paneMinHeight;
+  }
+
+  private collapseMasterPaneForQuickEdit(): void {
+    if (!this.isVoucherType() || !this.isDetailPanelVisible()) return;
+    if (!this.quickEditPaneSnapshot) {
+      this.quickEditPaneSnapshot = {
+        master: this.masterPaneHeight,
+        detail: this.detailPaneHeight,
+      };
+    }
+
+    const total = this.masterPaneHeight + this.detailPaneHeight;
+    const nextMaster = Math.min(
+      this.quickEditMasterPaneHeight,
+      Math.max(this.quickEditMasterPaneHeight, total - this.paneMinHeight),
+    );
+    this.masterPaneHeight = nextMaster;
+    this.detailPaneHeight = total - nextMaster;
+  }
+
+  private restorePaneAfterQuickEdit(): void {
+    if (!this.quickEditPaneSnapshot) return;
+    this.masterPaneHeight = this.quickEditPaneSnapshot.master;
+    this.detailPaneHeight = this.quickEditPaneSnapshot.detail;
+    this.quickEditPaneSnapshot = null;
+  }
+
   startPaneResize(event: MouseEvent): void {
     if (!this.isVoucherType()) return;
 
@@ -640,7 +677,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     const startMaster = this.masterPaneHeight;
     const startDetail = this.detailPaneHeight;
     const total = startMaster + startDetail;
-    const min = this.paneMinHeight;
+    const min = this.getMasterPaneMinHeight();
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const delta = moveEvent.clientY - startY;
@@ -2673,13 +2710,96 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     );
   }
 
+  getQuickEditableDetailFields(): any[] {
+    return this.getAllDetailFields().filter(
+      (field) => this.isQuickEditableField(field) && !field?.disabled,
+    );
+  }
+
+  getQuickBulkSelectedCount(): number {
+    return this.quickBulkSelectedRows.size;
+  }
+
+  isQuickBulkRowSelected(row: any): boolean {
+    return this.quickBulkSelectedRows.has(row);
+  }
+
+  areAllVisibleQuickBulkRowsSelected(): boolean {
+    const rows = this.currentFilteredDetailRows || [];
+    return rows.length > 0 && rows.every((row) => this.quickBulkSelectedRows.has(row));
+  }
+
+  onQuickBulkRowToggle(row: any, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.checked) {
+      this.quickBulkSelectedRows.add(row);
+    } else {
+      this.quickBulkSelectedRows.delete(row);
+    }
+  }
+
+  toggleAllVisibleQuickBulkRows(event?: Event): void {
+    const input = event?.target as HTMLInputElement | undefined;
+    const shouldSelect = input ? input.checked : !this.areAllVisibleQuickBulkRowsSelected();
+    const rows = this.currentFilteredDetailRows || [];
+
+    rows.forEach((row) => {
+      if (shouldSelect) {
+        this.quickBulkSelectedRows.add(row);
+      } else {
+        this.quickBulkSelectedRows.delete(row);
+      }
+    });
+  }
+
+  onQuickBulkValueChange(field: any, value: any): void {
+    if (!field?.key) return;
+    this.quickBulkValues[field.key] = field.type === 'checkbox' ? (value ? 1 : 0) : value;
+    this.quickBulkEnabled[field.key] = true;
+  }
+
+  applyQuickBulkToSelectedRows(): void {
+    const selectedRows = Array.from(this.quickBulkSelectedRows);
+    if (selectedRows.length === 0) {
+      alert('Vui lòng chọn ít nhất một dòng chi tiết.');
+      return;
+    }
+
+    const fieldsToApply = this.getQuickEditableDetailFields().filter(
+      (field) => this.quickBulkEnabled[field.key],
+    );
+
+    if (fieldsToApply.length === 0) {
+      alert('Vui lòng chọn ít nhất một field để áp dụng.');
+      return;
+    }
+
+    selectedRows.forEach((row) => {
+      fieldsToApply.forEach((field) => {
+        row[field.key] = field.type === 'checkbox'
+          ? (this.quickBulkValues[field.key] ? 1 : 0)
+          : this.quickBulkValues[field.key];
+      });
+    });
+
+    this.applyFilters();
+  }
+
+  private resetQuickBulkEditState(): void {
+    this.quickBulkValues = {};
+    this.quickBulkEnabled = {};
+    this.quickBulkSelectedRows.clear();
+  }
+
   startQuickEditDetail(): void {
     if (!this.hasQuickEditableDetailFields()) return;
     if (this.quickEditMasterMode) {
       this.cancelQuickEditMaster(false);
     }
+    this.resetQuickBulkEditState();
     this.quickEditDetailSnapshot = JSON.parse(JSON.stringify(this.currentDetailRows || []));
     this.quickEditDetailMode = true;
+    this.collapseMasterPaneForQuickEdit();
   }
 
   cancelQuickEditDetail(showAlert: boolean = true): void {
@@ -2692,6 +2812,8 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.quickEditDetailMode = false;
     this.quickEditSaving = false;
     this.quickEditDetailSnapshot = null;
+    this.resetQuickBulkEditState();
+    this.restorePaneAfterQuickEdit();
     if (showAlert) {
       alert('Đã hủy thay đổi nhanh ở chi tiết.');
     }
@@ -2749,6 +2871,8 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       await firstValueFrom(this.http.post(`${environment.apiUrl}/api/Dynamic/save`, payload));
       this.quickEditDetailMode = false;
       this.quickEditDetailSnapshot = null;
+      this.resetQuickBulkEditState();
+      this.restorePaneAfterQuickEdit();
       alert('Cập nhật chi tiết thành công.');
 
       const row = this.getExpandedRowData();
