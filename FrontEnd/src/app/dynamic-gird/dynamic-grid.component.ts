@@ -121,6 +121,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   showShortcutHelp = false;
   gridSummaryValue = 0;
   gridSummaryLoading = false;
+  selectingAllFilteredRows = false;
   private gridSummaryCache = new Map<string, number>();
   private gridSummaryRequestId = 0;
   private headerFilterDebounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -1026,13 +1027,16 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.setMasterRowSelection(row, !!input.checked);
   }
 
-  toggleSelectAllMaster(event: Event): void {
+  async toggleSelectAllMaster(event: Event): Promise<void> {
     event.stopPropagation();
     const input = event.target as HTMLInputElement;
     const checked = !!input.checked;
-    const rows = this.filteredData || [];
-    rows.forEach((row) => this.setMasterRowSelection(row, checked, false));
-    this.persistSelectionState();
+    if (!checked) {
+      this.clearAllMasterSelection();
+      return;
+    }
+
+    await this.selectAllFilteredRowsForTaxExport();
   }
 
   isMasterRowSelected(row: any): boolean {
@@ -1041,16 +1045,25 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   }
 
   isAllMasterRowsSelected(): boolean {
-    const rows = this.filteredData || [];
-    if (!rows.length) return false;
-    return rows.every((row) => this.isMasterRowSelected(row));
+    const total = this.response?.total || 0;
+    if (!total) return false;
+    return this.countSelected() >= total;
   }
 
   isSomeMasterRowsSelected(): boolean {
-    const rows = this.filteredData || [];
-    if (!rows.length) return false;
-    const selectedCount = rows.filter((row) => this.isMasterRowSelected(row)).length;
-    return selectedCount > 0 && selectedCount < rows.length;
+    const total = this.response?.total || 0;
+    const selectedCount = this.countSelected();
+    return selectedCount > 0 && (!total || selectedCount < total);
+  }
+
+  private clearAllMasterSelection(): void {
+    this.selectedOptions = {};
+    this.exportData = {};
+    this.exportKeyMap = {};
+    this.masterPrimaryKeys = [];
+    this.exportCount = 0;
+    this.updateExportData();
+    this.persistSelectionState();
   }
 
   private setMasterRowSelection(row: any, checked: boolean, persist: boolean = true): void {
@@ -1125,6 +1138,57 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   countSelected(): number {
     return Object.values(this.selectedOptions).filter((v) => v).length;
+  }
+
+  getSelectedExportRows(): any[] {
+    return Object.values(this.selectedOptions || {}).filter((row) => !!row);
+  }
+
+  async selectAllFilteredRowsForTaxExport(): Promise<void> {
+    const totalRecords = this.response?.total || 0;
+    if (totalRecords <= 0 || this.selectingAllFilteredRows) return;
+
+    this.selectingAllFilteredRows = true;
+    try {
+      this.selectedOptions = {};
+      this.exportData = {};
+      this.exportKeyMap = {};
+      this.masterPrimaryKeys = [];
+      this.exportCount = 0;
+
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem(`token`)}`,
+        'Custom-Header': 'CustomValue',
+      });
+      const chunkSize = Math.max(200, Math.min(1000, totalRecords));
+      const totalPages = Math.ceil(totalRecords / chunkSize);
+      const primaryKey = this.girdData.query.formId.primaryKey[0];
+
+      for (let page = 1; page <= totalPages; page++) {
+        const params = this.buildSummaryQueryParams(page, chunkSize);
+        const response = await firstValueFrom(
+          this.http.get<ListApiResponse>(`${environment.apiUrl}/api/Dynamic/filter`, {
+            params,
+            headers,
+          }),
+        );
+
+        (response?.data || []).forEach((row: any) => {
+          const key = row?.[primaryKey];
+          if (key) {
+            this.selectedOptions[key] = row;
+          }
+        });
+      }
+
+      this.updateExportData();
+      this.persistSelectionState();
+    } catch (error) {
+      console.error('Không thể chọn tất cả dữ liệu theo bộ lọc:', error);
+      alert('Không thể chọn tất cả dữ liệu theo bộ lọc.');
+    } finally {
+      this.selectingAllFilteredRows = false;
+    }
   }
 
   selectedRefresh(): void {
