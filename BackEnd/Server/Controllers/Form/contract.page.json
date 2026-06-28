@@ -185,6 +185,7 @@
 					},
 					{
 						"key": "status",
+						"default": "0",
 						"label": "Trạng thái",
 						"type": "select",
 						"required": true,

@@ -42,6 +42,7 @@
           },
           {
             "key": "status",
+            "default": "1",
             "label": "POPUP.UOM.STATUS",
             "type": "select",
             "required": true,

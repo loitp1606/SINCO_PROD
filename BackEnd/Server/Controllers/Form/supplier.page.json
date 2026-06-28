@@ -94,6 +94,7 @@
 					},
 					{
 						"key": "status",
+						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
 						"required": true,
