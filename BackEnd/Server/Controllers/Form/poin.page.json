@@ -170,12 +170,16 @@
 						"required": true,
 						"options": [
 							{
-								"label": "Lập chứng từ",
+								"label": "Đặt hàng",
 								"value": "0"
 							},
 							{
-								"label": "Đặt hàng",
+								"label": "Chuyển phiếu nhập 1 phần",
 								"value": "1"
+							},
+							{
+								"label": "Đã nhập hàng",
+								"value": "2"
 							}
 						]
 					},
