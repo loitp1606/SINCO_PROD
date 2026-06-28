@@ -42,6 +42,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
   showInlineDropdown = false;
   pageSize = 10;
   currentPage = 0;
+  private quickCreateRequestId = '';
   private readonly quickCreateStorageKey = 'sinco_quick_create_result';
   private readonly quickCreateRouteMap: Record<string, string> = {
     customer: 'customer/popup',
@@ -101,8 +102,12 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       if (!controller || controller !== this.getLookupController()) {
         return;
       }
+      const requestId = typeof payload?.requestId === 'string' ? payload.requestId : '';
+      if (requestId && requestId !== this.quickCreateRequestId) {
+        return;
+      }
 
-      this.reloadLookupData();
+      this.reloadLookupData(payload);
     } catch (error) {
       console.warn('Unable to parse quick create payload:', error);
     }
@@ -256,7 +261,8 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       return;
     }
 
-    const popupUrl = `${window.location.origin}/${popupRoute}?quickCreate=1&controller=${encodeURIComponent(controller)}`;
+    this.quickCreateRequestId = `${controller}_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const popupUrl = `${window.location.origin}/${popupRoute}?quickCreate=1&controller=${encodeURIComponent(controller)}&requestId=${encodeURIComponent(this.quickCreateRequestId)}`;
     const quickCreateWindow = window.open(
       popupUrl,
       '_blank',
@@ -419,7 +425,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       : '';
   }
 
-  private reloadLookupData(): void {
+  private reloadLookupData(quickCreatePayload?: any): void {
     if (!this.lookupQuery) {
       return;
     }
@@ -427,7 +433,45 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     this.http.post<any>(`${environment.apiUrl}/api/Lookup`, this.lookupQuery)
       .subscribe((res) => {
         this.response = res.data as LookupApiResponse;
+        this.selectQuickCreatedRecord(quickCreatePayload);
         this.syncResponseData();
       });
+  }
+
+  private selectQuickCreatedRecord(payload?: any): void {
+    if (!payload || !this.response?.primaryKey?.length) {
+      return;
+    }
+
+    const primaryField = this.response.primaryKey[0];
+    const primaryValue =
+      payload?.primaryKeyValues?.[primaryField] ??
+      payload?.record?.[primaryField];
+
+    if (primaryValue === null || primaryValue === undefined || primaryValue === '') {
+      return;
+    }
+
+    const found = this.response.datas?.some(
+      (item) => `${item?.[primaryField] ?? ''}` === `${primaryValue}`,
+    );
+
+    if (!found && payload.record) {
+      this.response.datas = [...(this.response.datas || []), payload.record];
+    }
+
+    if (this.multiple) {
+      const exists = this.selectedItems.some((item) => `${item}` === `${primaryValue}`);
+      if (!exists) {
+        this.selectedItems = [...this.selectedItems, primaryValue];
+        this.valueChange.emit(this.selectedItems);
+      }
+    } else {
+      this.selectedItem = primaryValue;
+      this.valueChange.emit(this.selectedItem);
+      this.showPopup = false;
+    }
+
+    this.syncInlineQueryWithSelection();
   }
 }

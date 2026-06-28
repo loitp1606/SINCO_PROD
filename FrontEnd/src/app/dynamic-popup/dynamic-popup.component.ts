@@ -181,18 +181,19 @@ export class DynamicPopupComponent implements OnInit {
         (window as any).debugUIAfterChange = (rowIndex: number) => this.debugUIAfterChange(rowIndex);
         (window as any).debugAutoGenerate = () => this.debugAutoGenerateFields();
 
-        const actionStr = localStorage.getItem(`action_${this.id}`);
+        const isQuickCreate = this.isQuickCreateWindow();
+        const actionStr = isQuickCreate ? null : localStorage.getItem(`action_${this.id}`);
         // Thử cả 2 format key để tương thích
-        let copyActionStr = localStorage.getItem(`action_${this.id}_copy`);
+        let copyActionStr = isQuickCreate ? null : localStorage.getItem(`action_${this.id}_copy`);
 
-        if (!copyActionStr) {
+        if (!isQuickCreate && !copyActionStr) {
             // Thử với format từ grid: QuotationPaper thay vì quotationPaper
             const capitalizedId = this.id.charAt(0).toUpperCase() + this.id.slice(1);
             copyActionStr = localStorage.getItem(`action_${capitalizedId}_copy`);
         }
 
         if (actionStr) localStorage.removeItem(`param_${this.id}`)
-        const girdDataStr = localStorage.getItem(`param_${this.id}`)
+        const girdDataStr = isQuickCreate ? null : localStorage.getItem(`param_${this.id}`)
 
 
         this.girdData = girdDataStr
@@ -1443,11 +1444,23 @@ export class DynamicPopupComponent implements OnInit {
         if (!controller) {
             return;
         }
+        const requestId = this.route.snapshot.queryParamMap.get('requestId')?.trim() || '';
+
+        const record = this.normalizeValues(this.mergeFormData());
+        const primaryKeys = this.metadata?.primaryKey || [];
+        const primaryKeyValues = primaryKeys.reduce((acc: Record<string, any>, key: string) => {
+            acc[key] = record?.[key];
+            return acc;
+        }, {});
 
         localStorage.setItem(
             this.quickCreateStorageKey,
             JSON.stringify({
                 controller,
+                requestId,
+                primaryKeys,
+                primaryKeyValues,
+                record,
                 updatedAt: Date.now(),
             })
         );
@@ -1546,6 +1559,9 @@ export class DynamicPopupComponent implements OnInit {
 
     // Check if primary key values have changed
     hasPrimaryKeyChanged(): boolean {
+        if (this.isQuickCreateWindow() || this.mode === 'insert' || this.mode === 'copy') {
+            return false
+        }
         if (!this.girdData || !this.metadata?.primaryKey) {
             return false // New record or no primary key defined
         }
