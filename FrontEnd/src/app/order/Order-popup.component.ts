@@ -11,6 +11,6 @@ import { DynamicPopupComponent } from '../dynamic-popup/dynamic-popup.component'
   templateUrl: '../dynamic-popup/dynamic-popup-parent.component.html',
 })
 export class OrderPopupComponent {
-  id: string = 'Order';
-  name: string = 'Order.page.json';
+  id: string = 'order';
+  name: string = 'order.page.json';
 }

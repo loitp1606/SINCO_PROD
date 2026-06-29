@@ -194,7 +194,7 @@
 					},
 					{
 						"key": "status",
-						"default": "0",
+						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
 						"required": true,

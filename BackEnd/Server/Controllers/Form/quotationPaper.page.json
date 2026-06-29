@@ -194,6 +194,10 @@
 								"value": "0"
 							},
 							{
+								"label": "Chuyển DDH một phần",
+								"value": "2"
+							},
+							{
 								"label": "Báo giá thành công",
 								"value": "1"
 							}

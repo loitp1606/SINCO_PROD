@@ -182,18 +182,17 @@ export class DynamicPopupComponent implements OnInit {
         (window as any).debugAutoGenerate = () => this.debugAutoGenerateFields();
 
         const isQuickCreate = this.isQuickCreateWindow();
-        const actionStr = isQuickCreate ? null : localStorage.getItem(`action_${this.id}`);
-        // Thử cả 2 format key để tương thích
-        let copyActionStr = isQuickCreate ? null : localStorage.getItem(`action_${this.id}_copy`);
+        const storageIds = this.getPopupStorageIds();
+        const actionStorage = isQuickCreate ? null : this.getFirstLocalStorageItem(storageIds.map(id => `action_${id}`));
+        const copyActionStorage = isQuickCreate ? null : this.getFirstLocalStorageItem(storageIds.map(id => `action_${id}_copy`));
+        const actionStr = actionStorage?.value ?? null;
+        const copyActionStr = copyActionStorage?.value ?? null;
 
-        if (!isQuickCreate && !copyActionStr) {
-            // Thử với format từ grid: QuotationPaper thay vì quotationPaper
-            const capitalizedId = this.id.charAt(0).toUpperCase() + this.id.slice(1);
-            copyActionStr = localStorage.getItem(`action_${capitalizedId}_copy`);
+        if (actionStr) {
+            this.removePopupStorageItems(storageIds.map(id => `param_${id}`));
         }
-
-        if (actionStr) localStorage.removeItem(`param_${this.id}`)
-        const girdDataStr = isQuickCreate ? null : localStorage.getItem(`param_${this.id}`)
+        const girdDataStorage = isQuickCreate ? null : this.getFirstLocalStorageItem(storageIds.map(id => `param_${id}`));
+        const girdDataStr = girdDataStorage?.value ?? null;
 
 
         this.girdData = girdDataStr
@@ -218,9 +217,7 @@ export class DynamicPopupComponent implements OnInit {
         } else if (copyActionStr) {
             // Xử lý copy mode với dữ liệu từ SyncData API
             // Xóa cả 2 key có thể có
-            localStorage.removeItem(`action_${this.id}_copy`);
-            const capitalizedId = this.id.charAt(0).toUpperCase() + this.id.slice(1);
-            localStorage.removeItem(`action_${capitalizedId}_copy`);
+            this.removePopupStorageItems(storageIds.map(id => `action_${id}_copy`));
             this.metadata = JSON.parse(copyActionStr) as PageMetadata;
             this.mode = 'copy';
             this.updatePageTitle();
@@ -236,7 +233,7 @@ export class DynamicPopupComponent implements OnInit {
             // }, 500);
 
         } else if (actionStr) {
-            localStorage.removeItem(`action_${this.id}`)
+            this.removePopupStorageItems(storageIds.map(id => `action_${id}`));
 
             this.metadata = JSON.parse(actionStr) as PageMetadata;
             this.updatePageTitle();
@@ -273,6 +270,31 @@ export class DynamicPopupComponent implements OnInit {
             '';
 
         this.pageTitleService.setTitle(pageTitle);
+    }
+
+    private getPopupStorageIds(): string[] {
+        const id = (this.id || '').trim();
+        if (!id) return [];
+
+        const lowerId = id.charAt(0).toLowerCase() + id.slice(1);
+        const capitalizedId = id.charAt(0).toUpperCase() + id.slice(1);
+
+        return Array.from(new Set([id, lowerId, capitalizedId]));
+    }
+
+    private getFirstLocalStorageItem(keys: string[]): { key: string; value: string } | null {
+        for (const key of keys) {
+            const value = localStorage.getItem(key);
+            if (value !== null) {
+                return { key, value };
+            }
+        }
+
+        return null;
+    }
+
+    private removePopupStorageItems(keys: string[]): void {
+        keys.forEach(key => localStorage.removeItem(key));
     }
 
 
