@@ -427,6 +427,7 @@
 							"required": false,
 							"width": "150px",
 							"type": "number",
+							"precision": 2,
 							"trigger": [
 								"price2",
 								"amount",
