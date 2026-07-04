@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="07/31/2025 16:53:50" ReportInfo.Modified="06/21/2026 20:55:54" ReportInfo.CreatorVersion="2025.1.10.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="07/31/2025 16:53:50" ReportInfo.Modified="07/02/2026 21:53:16" ReportInfo.CreatorVersion="2025.1.10.0">
   <ScriptText>
 		using System;
 		using System.Collections;
@@ -64,6 +64,7 @@
       <Column Name="idGui" DataType="System.String"/>
       <Column Name="customer_id" DataType="System.String"/>
       <Column Name="number_ddh" DataType="System.String"/>
+      <Column Name="voucherNumber" DataType="System.String"/>
       <Column Name="quotationCode" DataType="System.String"/>
       <Column Name="voucherDate" DataType="System.DateTime"/>
       <Column Name="customer_group_id" DataType="System.String"/>
@@ -77,6 +78,7 @@
       <Column Name="customer_account" DataType="System.String"/>
       <Column Name="tax_code" DataType="System.String"/>
       <Column Name="amount_total" DataType="System.Decimal"/>
+      <Column Name="total_payment" DataType="System.Decimal"/>
       <Column Name="amount_in_word" DataType="System.String"/>
       <Column Name="delivery_note" DataType="System.String"/>
       <Column Name="contract_note" DataType="System.String"/>
@@ -114,7 +116,7 @@
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="255.15" CanGrow="true">
       <PictureObject Name="Picture1" Width="189.9" Height="85" ImageLocation="Images\logo_cty.jpg"/>
       <TextObject Name="Text13" Top="85.05" Width="718.2" Height="37.8" Text="HỢP ĐỒNG KINH TẾ" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 20pt, style=Bold"/>
-      <TextObject Name="Text54" Top="122.85" Width="718.2" Height="18.9" Text="(Số: [contract.number_ddh]/HĐKT-[DateTime.Now.Year.ToString().Substring(2)])" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 11pt, style=Bold"/>
+      <TextObject Name="Text54" Top="122.85" Width="718.2" Height="18.9" Text="(Số: [contract.voucherNumber]/HĐKT-[DateTime.Now.Year.ToString().Substring(2)])" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 11pt, style=Bold"/>
       <TextObject Name="Text55" Top="141.75" Width="718.2" Height="85.05" CanGrow="true" Text="- Căn cứ Bộ Luật Dân Sự số 91/2015/QH13 được Quốc hội nước Cộng hòa xã hội chủ nghĩa Việt Nam khóa XIII, kỳ họp thứ 10 thông qua ngày 24/11/2015 và có hiệu lực từ ngày 01/01/2017. &#13;&#10;- Căn cứ Luật Thương Mại số 36/2005/QH11 được Quốc Hội nước Cộng hòa xã hội chủ nghĩa Việt Nam khóa XI, kỳ họp thứ 7 thông qua ngày 14/06/2005 có hiệu lực từ ngày 01/01/2006.&#13;&#10;- Căn cứ vào nhu cầu thực tế của Bên mua và khả năng cung cấp của Bên bán." Font="Times New Roman, 12pt"/>
       <TextObject Name="Text92" Top="226.8" Width="718.2" Height="28.35" CanGrow="true" Text="Hôm nay, ngày [String.Format(&quot;{0} tháng {1} năm {2}&quot;, [contract.voucherDate].Day, [contract.voucherDate].Month, [contract.voucherDate].Year)], chúng tôi gồm:" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold" TextRenderType="HtmlTags"/>
       <TextObject Name="Text149" Left="189" Width="529.2" Height="37.8" Text="CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM&#13;&#10;" HorzAlign="Center" VertAlign="Bottom" Font="Times New Roman, 14pt, style=Bold"/>
@@ -217,9 +219,9 @@
           <TableCell Name="Cell43" Border.Lines="All" CanGrow="true" Text="TỔNG" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
           <TableCell Name="Cell44" Border.Lines="All" CanGrow="true" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
           <TableCell Name="Cell45" Border.Lines="All" CanGrow="true" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
-          <TableCell Name="Cell46" Border.Lines="All" CanGrow="true" Text="[totalPrice]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
+          <TableCell Name="Cell46" Border.Lines="All" CanGrow="true" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
           <TableCell Name="Cell47" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
-          <TableCell Name="Cell48" Border.Lines="All" CanGrow="true" Text="[total]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
+          <TableCell Name="Cell48" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contract.total_payment])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
           <TableCell Name="Cell49" Border.Lines="All" CanGrow="true" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 12pt, style=Bold"/>
         </TableRow>
       </TableObject>
