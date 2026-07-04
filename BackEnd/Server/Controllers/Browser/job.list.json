@@ -21,7 +21,17 @@
     {
       "key": "status",
       "label": "Trạng thái",
-      "type": "text"
+      "type": "select",
+      "options": [
+        {
+          "label": "Đang hoạt động",
+          "value": "1"
+        },
+        {
+          "label": "Bị khóa",
+          "value": "0"
+        }
+      ]
     }
   ],
   "query": {

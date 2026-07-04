@@ -27,7 +27,17 @@
     {
       "key": "status",
       "label": "Trạng thái",
-      "type": "text"
+      "type": "select",
+      "options": [
+        {
+          "label": "Lập chứng từ",
+          "value": "0"
+        },
+        {
+          "label": "Nhập kho",
+          "value": "1"
+        }
+      ]
     },
     {
       "key": "note",

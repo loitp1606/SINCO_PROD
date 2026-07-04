@@ -52,7 +52,17 @@
     {
       "key": "status",
       "label": "Trạng thái",
-      "type": "text"
+      "type": "select",
+      "options": [
+        {
+          "label": "Lập chứng từ",
+          "value": "0"
+        },
+        {
+          "label": "Xuất hàng",
+          "value": "1"
+        }
+      ]
     },
     {
       "key": "ten_trang_thai2",
