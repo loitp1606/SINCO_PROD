@@ -13,104 +13,27 @@ import { TranslateModule } from '@ngx-translate/core'
 })
 
 export class ReceiptV2GridComponent {
-  initData: GirdInitData = {
-    id: "receiptV2",
-    title: "Phiếu thu tiền",
-    headers: [
-      {
-        "key": "idGui",
-        "label": "ID",
-        "type": "text",
-        "hidden": true,
-        "sortable": true
-      },
-      {
-        "key": "voucherDate",
-        "label": "Ngày",
-        "type": "date"
-      },
-      {
-        "key": "voucherNumber",
-        "label": "Số phiếu",
-        "type": "text"
-      },
-      {
-        "key": "deliveryNoteNo",
-        "label": "Mã tham chiếu",
-        "type": "text"
-      },
-      {
-        "key": "isReceived",
-        "label": "Đã thu tiền",
-        "quickEditable": true,
-        "type": "checkbox"
-      },
-      {
-        "key": "reason",
-        "label": "Lý do thu",
-        "type": "lookup"
-      },
-      {
-        "key": "customerCode",
-        "label": "Khách hàng",
-        "type": "lookup"
-      },
-      {
-        "key": "paymentType",
-        "label": "Loại thanh toán",
-        "type": "select",
-        "options": [
-							{
-								"label": "Tiền mặt",
-								"value": "TM"
-							},
-							{
-								"label": "Chuyển khoản",
-								"value": "CK"
-							},
-							{
-								"label": "TM/CK",
-								"value": "TM/CK"
-							}
-						]
-      },
-      {
-        "key": "collectorCode",
-        "label": "Nhân viên thu",
-        "type": "lookup"
-      },
-      {
-        "key": "accountReceiveCode",
-        "label": "Số tài khoản",
-        "type": "lookup"
-      },
-      {
-        "key": "total_amount",
-        "label": "Số tiền thu",
-        "type": "number",
-        "currency": "VN"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/receiptV2.list.json
+  initData = {
+    id: 'receiptV2',
+    headers: [],
     query: {
       formId: {
-        controller: "receiptV2.page.json",
-        formId: "receiptV2",
-        primaryKey: ["idGui"],
-        type: "voucher",
-        action: "loading",
-        language: localStorage.getItem("language") ?? "vn",
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: "Z07",
-        userId: localStorage.getItem("userId") ?? "",
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ["receiptV2", "receiptdetailV2"],
-        VCDate: "voucherDate",
-        isFileHandle: "both",
-        enableTaxExcelExport: true
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
+        VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'voucherDate desc, voucherNumber desc',
-    actions: []
-  }
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }
-

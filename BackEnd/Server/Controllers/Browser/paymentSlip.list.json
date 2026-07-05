@@ -20,21 +20,36 @@
       "type": "text"
     },
     {
+      "key": "supplierCode",
+      "label": "Mã NCC",
+      "type": "lookup"
+    },
+    {
       "key": "paymentType",
       "label": "Loại chi",
       "quickEditable": true,
-      "type": "select"
+      "type": "select",
+	  "options": [
+							{
+								"label": "Chi tiền nhà cung cấp",
+								"value": "SUPPLIER"
+							},
+							{
+								"label": "Chi theo hóa đơn",
+								"value": "INVOICE"
+							}
+						]
+    },
+    {
+      "key": "dien_giai",
+      "label": "Diễn giải",
+      "type": "text"
     },
     {
       "key": "spentMoney",
       "label": "Đã chi tiền",
       "quickEditable": true,
       "type": "checkbox"
-    },
-    {
-      "key": "supplierCode",
-      "label": "Mã NCC",
-      "type": "lookup"
     },
     {
       "key": "htttType",
@@ -68,7 +83,7 @@
     {
       "key": "reason",
       "label": "Lý do chi",
-      "type": "text"
+      "type": "lookup"
     },
     {
       "key": "receiptCode",
