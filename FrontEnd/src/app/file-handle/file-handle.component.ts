@@ -573,7 +573,16 @@ export class FileHandleComponent implements OnInit {
   }
 
   exportRawMasterToExcel(): void {
-    const rows = Array.isArray(this.exportAllRows) ? this.exportAllRows : [];
+    const selectedRows = Array.isArray(this.selectedExportRows)
+      ? this.selectedExportRows.filter((row) => !!row)
+      : [];
+    const rows =
+      selectedRows.length > 0
+        ? selectedRows
+        : Array.isArray(this.exportAllRows)
+          ? this.exportAllRows
+          : [];
+
     if (!rows.length) {
       this.showError('Không có dữ liệu grid để kết xuất.');
       this.showExportOptions = false;
