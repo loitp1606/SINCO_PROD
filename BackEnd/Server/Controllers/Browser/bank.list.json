@@ -1,6 +1,6 @@
 {
 	"id": "bank",
-	"title": "GRID.bank",
+	"title": "Ngân hàng",
 	"headers": [
 		{
 			"key": "bankCode",

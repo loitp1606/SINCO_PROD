@@ -45,7 +45,17 @@
     {
       "key": "status",
       "label": "Trạng thái",
-      "type": "select"
+      "type": "select",
+      "options": [
+        {
+          "label": "Đang làm",
+          "value": "1"
+        },
+        {
+          "label": "Đã nghỉ",
+          "value": "0"
+        }
+      ]
     },
     {
       "key": "email",

@@ -30,7 +30,17 @@
     {
       "key": "status",
       "label": "Trạng thái",
-      "type": "select"
+      "type": "select",
+      "options": [
+        {
+          "label": "Đang hoạt động",
+          "value": "1"
+        },
+        {
+          "label": "Không hoạt động",
+          "value": "0"
+        }
+      ]
     },
     {
       "key": "note",
