@@ -1,46 +1,56 @@
 {
-  "id": "uom",
-  "title": "GRID.UOM",
-  "headers": [
-    {
-      "key": "uomCode",
-      "label": "POPUP.UOM.CODE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "uomName",
-      "label": "POPUP.UOM.NAME_VN",
-      "type": "text"
-    },
-    {
-      "key": "uomName2",
-      "label": "POPUP.UOM.NAME_EN",
-      "type": "text"
-    },
-    {
-      "key": "status",
-      "label": "POPUP.UOM.STATUS",
-      "type": "text"
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "uom.page.json",
-      "formId": "uom",
-      "primaryKey": [
-        "uomCode"
-      ],
-      "type": "list",
-      "action": "loading",
-      "idVC": "",
-      "value": [],
-      "listTable": [
-        "uom"
-      ],
-      "VCDate": ""
-    }
-  },
-  "sort": "uomCode",
-  "actions": []
+	"id": "uom",
+	"title": "GRID.UOM",
+	"headers": [
+		{
+			"key": "uomCode",
+			"label": "POPUP.UOM.CODE",
+			"type": "text",
+			"sortable": true
+		},
+		{
+			"key": "uomName",
+			"label": "POPUP.UOM.NAME_VN",
+			"type": "text"
+		},
+		{
+			"key": "uomName2",
+			"label": "POPUP.UOM.NAME_EN",
+			"type": "text"
+		},
+		{
+			"key": "status",
+			"label": "POPUP.UOM.STATUS",
+			"type": "text",
+			"options": [
+				{
+					"label": "POPUP.UOM.ACTIVE",
+					"value": "1"
+				},
+				{
+					"label": "POPUP.UOM.LOCKED",
+					"value": "0"
+				}
+			]
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "uom.page.json",
+			"formId": "uom",
+			"primaryKey": [
+				"uomCode"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"uom"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "uomCode",
+	"actions": []
 }

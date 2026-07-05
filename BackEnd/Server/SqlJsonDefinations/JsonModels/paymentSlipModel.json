@@ -98,6 +98,17 @@
 				}
 			},
 			{
+				"name": "bank_name",
+				"property": "bank_name",
+				"type": "string",
+				"sqlType": "NVARCHAR(4000)",
+				"foreign": {
+					"table": "bank",
+					"key": "bank_code",
+					"lookup": "bank_name"
+				}
+			},
+			{
 				"name": "employeeCode",
 				"property": "employeeCode",
 				"type": "string",
@@ -274,6 +285,11 @@
 				"fieldName": "reason",
 				"required": false,
 				"clauseForiegn": "select incomeExpenditure_id, incomeExpenditure_Name from Incomeexpenditure where status = '1' and type = '2'"
+			},
+			{
+				"excelColumn": "Ngân hàng",
+				"fieldName": "bank_name",
+				"required": false
 			},
 			{
 				"excelColumn": "Diễn giải",
