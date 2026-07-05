@@ -16,7 +16,17 @@
     {
       "key": "account_type",
       "label": "POPUP.ACCOUNT_SINCO.TYPE",
-      "type": "select"
+      "type": "select",
+	  "options": [
+              {
+                "label": "Tiền mặt",
+                "value": "TM"
+              },
+              {
+                "label": "Chuyển khoản",
+                "value": "NH"
+              }
+            ]
     },
     {
       "key": "bank_name",
@@ -41,7 +51,17 @@
     {
       "key": "status",
       "label": "POPUP.ACCOUNT_SINCO.STATUS",
-      "type": "select"
+      "type": "select",
+	  "options": [
+              {
+                "label": "Hoạt động",
+                "value": "1"
+              },
+              {
+                "label": "Không hoạt động",
+                "value": "0"
+              }
+            ]
     }
   ],
   "query": {

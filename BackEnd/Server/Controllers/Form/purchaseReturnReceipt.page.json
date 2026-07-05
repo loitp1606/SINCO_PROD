@@ -100,7 +100,6 @@
 						"key": "phoneCustomer",
 						"label": "Điện thoại liên hệ",
 						"type": "text",
-						"required": true,
 						"placeholder": ""
 					},
 					{

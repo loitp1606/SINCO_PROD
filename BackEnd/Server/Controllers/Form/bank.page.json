@@ -1,0 +1,71 @@
+{
+  "controller": "bank",
+  "type": "list",
+  "formId": "bank",
+  "primaryKey": [
+    "bankCode"
+  ],
+  "idVC": "",
+  "VCDate": "",
+  "title": "",
+  "class": "onSelectChange()",
+  "tabs": [
+    {
+      "title": "Danh mục ngân hàng",
+      "class": "text-[48px] px-4 py-2 focus:outline-none",
+      "form": {
+        "typeForm": "master",
+        "formId": "bank",
+        "primaryKey": "bankCode",
+        "title": "Danh mục ngân hàng",
+        "fields": [
+          {
+            "key": "bankCode",
+            "label": "Mã code",
+            "type": "text",
+            "required": true,
+            "placeholder": "Mã ngân hàng"
+          },
+          {
+            "key": "bankName",
+            "label": "Tên ngân hàng",
+            "type": "text",
+            "required": true,
+            "placeholder": "Tên ngân hàng"
+          },
+          {
+            "key": "bankName2",
+            "label": "Tên ngân hàng 2",
+            "type": "text",
+            "required": false,
+            "placeholder": "Tên ngân hàng 2"
+          },
+          {
+            "key": "status",
+            "default": "1",
+            "label": "Trạng thái",
+            "type": "select",
+            "required": true,
+            "options": [
+              {
+                "label": "Hoạt động",
+                "value": "1"
+              },
+              {
+                "label": "Không",
+                "value": "0"
+              }
+            ]
+          }
+        ],
+        "initialData": {}
+      }
+    }
+  ],
+  "dataProcessing": {
+    "actions": {
+      "post": []
+    }
+  }
+}
+

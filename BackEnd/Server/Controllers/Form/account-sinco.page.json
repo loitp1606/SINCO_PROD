@@ -53,9 +53,9 @@
             "label": "Ngân hàng",
             "type": "lookup",
             "required": false,
-            "placeholder": "Chọn ngân hàng từ danh mục NCC",
+            "placeholder": "Chọn ngân hàng",
             "default": {
-              "controller": "supplier",
+              "controller": "bank",
               "filter": [
               ]
             }
