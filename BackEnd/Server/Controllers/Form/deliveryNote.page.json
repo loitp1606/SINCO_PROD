@@ -27,6 +27,7 @@
 						"key": "voucherDate",
 						"label": "Ngày tạo",
 						"required": true,
+						"default": "now",
 						"type": "date",
 						"placeholder": "Chọn ngày tạo"
 					},
