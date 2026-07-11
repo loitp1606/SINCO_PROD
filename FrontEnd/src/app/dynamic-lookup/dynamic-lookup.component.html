@@ -8,7 +8,6 @@
         [ngModel]="inlineQuery"
         (ngModelChange)="onInlineQueryChange($event)"
         (keydown.enter)="onInlineEnter($event)"
-        (focus)="onInlineInputFocus()"
         (click)="onInlineInputClick($event)"
         (blur)="onInlineInputBlur()"
         placeholder="Nhập để tìm nhanh..."
@@ -27,27 +26,6 @@
           <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
         </svg>
       </button>
-    </div>
-
-    <div
-      *ngIf="showInlineDropdown && !disable"
-      class="absolute z-40 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-56 overflow-y-auto overflow-x-hidden"
-    >
-      <button
-        type="button"
-        *ngFor="let data of getInlineFilteredData()"
-        (mousedown)="selectInlineData(data)"
-        class="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 border-b border-gray-100 last:border-b-0 whitespace-normal break-words leading-5"
-        [title]="getItemDisplayText(data)"
-      >
-        {{ getItemDisplayText(data) }}
-      </button>
-      <div
-        *ngIf="getInlineFilteredData().length === 0"
-        class="px-3 py-2 text-sm text-gray-500"
-      >
-        Không có dữ liệu phù hợp
-      </div>
     </div>
   </div>
 

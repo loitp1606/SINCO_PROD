@@ -39,7 +39,6 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
   filteredData: any[] = [];
   paginatedData: any[] = [];
   inlineQuery = '';
-  showInlineDropdown = false;
   pageSize = 10;
   currentPage = 0;
   private quickCreateRequestId = '';
@@ -119,15 +118,6 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
   onInlineQueryChange(value: string): void {
     this.inlineQuery = value ?? '';
-    if (!this.disable && !this.multiple) {
-      this.showInlineDropdown = true;
-    }
-  }
-
-  onInlineInputFocus(): void {
-    if (!this.disable && !this.multiple) {
-      this.showInlineDropdown = true;
-    }
   }
 
   onInlineInputClick(event: Event): void {
@@ -135,17 +125,12 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.showInlineDropdown = true;
-
     const input = event.target as HTMLInputElement | null;
     input?.select();
   }
 
   onInlineInputBlur(): void {
     this.commitInlineSelection();
-    setTimeout(() => {
-      this.showInlineDropdown = false;
-    }, 150);
   }
 
   onInlineEnter(event: Event): void {
@@ -161,7 +146,6 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     const key = data[this.response.primaryKey[0]];
     this.selectData(key);
     this.inlineQuery = this.getItemDisplayText(data);
-    this.showInlineDropdown = false;
   }
 
   getInlineFilteredData(): any[] {
