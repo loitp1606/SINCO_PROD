@@ -18,6 +18,35 @@ import { environment } from '../../environments/environment';
     .lookup-selected-row td {
       color: #ffffff !important;
     }
+
+    .lookup-select-frame {
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+      padding: 2px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .lookup-display-input {
+      border-color: transparent !important;
+      color: #0f172a;
+    }
+
+    .lookup-display-input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .lookup-open-button {
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .lookup-open-button:disabled {
+      background: #f1f5f9;
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
   `],
   imports: [CommonModule, FormsModule, DraggableDirective],
 })
@@ -40,6 +69,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
   paginatedData: any[] = [];
   inlineQuery = '';
   showInlineDropdown = false;
+  readonly enableInlineQuickSearch = false;
   pageSize = 10;
   currentPage = 0;
   private quickCreateRequestId = '';
@@ -119,9 +149,56 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
   onInlineQueryChange(value: string): void {
     this.inlineQuery = value ?? '';
-    if (!this.disable && !this.multiple) {
-      this.showInlineDropdown = true;
+    this.showInlineDropdown = false;
+  }
+
+  openPopupFromInlineSearch(event?: Event): void {
+    event?.preventDefault();
+    if (this.disable) {
+      return;
     }
+
+    const query = this.inlineQuery.trim();
+    const exactMatch = this.findExactInlineMatch(query);
+    if (exactMatch) {
+      this.selectInlineData(exactMatch);
+      return;
+    }
+
+    this.openInlineLookupPopup();
+  }
+
+  openInlineLookupPopup(event?: Event): void {
+    event?.preventDefault();
+    if (this.disable) {
+      return;
+    }
+
+    this.searchText = this.inlineQuery.trim();
+    this.searchName = '';
+    this.filterData();
+    this.showInlineDropdown = false;
+    this.showPopup = true;
+  }
+
+  onInlineTab(event: Event): void {
+    if (this.disable) {
+      return;
+    }
+
+    const query = this.inlineQuery.trim();
+    if (!query) {
+      return;
+    }
+
+    const exactMatch = this.findExactInlineMatch(query);
+    if (exactMatch) {
+      this.selectInlineData(exactMatch);
+      return;
+    }
+
+    event.preventDefault();
+    this.openInlineLookupPopup();
   }
 
   onInlineInputFocus(): void {
@@ -159,9 +236,17 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     }
 
     const key = data[this.response.primaryKey[0]];
-    this.selectData(key);
+    if (this.multiple) {
+      this.selectData(key);
+      return;
+    }
+
+    this.selectedItem = key;
+    this.valueChange.emit(this.selectedItem);
+    this.syncInlineQueryWithSelection();
     this.inlineQuery = this.getItemDisplayText(data);
     this.showInlineDropdown = false;
+    this.showPopup = false;
   }
 
   getInlineFilteredData(): any[] {
@@ -243,6 +328,40 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     if (candidates.length === 1) {
       this.selectInlineData(candidates[0]);
     }
+  }
+
+  private findExactInlineMatch(query: string): any | null {
+    if (!query || !this.response?.datas?.length) {
+      return null;
+    }
+
+    const normalizedQuery = this.normalizeLookupText(query);
+    const primaryField = this.response.fields?.[0]?.field;
+    const primaryMatches = this.response.datas.filter(
+      (data) => this.normalizeLookupText(data?.[primaryField]) === normalizedQuery
+    );
+
+    if (primaryMatches.length === 1) {
+      return primaryMatches[0];
+    }
+
+    const exactMatches = this.response.datas.filter((data) => {
+      const displayText = this.normalizeLookupText(this.getItemDisplayText(data));
+      if (displayText === normalizedQuery) {
+        return true;
+      }
+
+      return Object.values(data).some(
+        (value) => this.normalizeLookupText(value) === normalizedQuery
+      );
+    });
+
+    const uniqueMatches = Array.from(new Set(exactMatches));
+    return uniqueMatches.length === 1 ? uniqueMatches[0] : null;
+  }
+
+  private normalizeLookupText(value: any): string {
+    return String(value ?? '').trim().toLowerCase();
   }
 
   canQuickCreate(): boolean {
