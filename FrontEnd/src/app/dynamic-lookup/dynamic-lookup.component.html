@@ -1,29 +1,24 @@
 <div class="relative w-full">
   <div *ngIf="response && !multiple" class="relative">
-    <!--
-      FRAME NOTE:
-      Tạm thời không dùng dropdown tìm nhanh inline cho lookup tên hàng.
-      Lý do: khi focus/blur trong bảng detail, cơ chế auto xổ/auto chọn dễ làm người dùng kích nhầm
-      và đổi tên hàng ngoài ý muốn. Giữ chọn dữ liệu qua popup để thao tác rõ ràng hơn.
-    -->
-    <div class="lookup-select-frame flex items-center gap-1.5">
+    <div class="flex items-center gap-1.5">
       <input
         type="text"
-        class="lookup-display-input w-full h-9 border border-gray-300 rounded-lg px-2 py-1 text-sm"
+        class="w-full h-9 border border-gray-300 rounded-lg px-2 py-1 text-sm"
         [disabled]="disable"
         [ngModel]="inlineQuery"
         (ngModelChange)="onInlineQueryChange($event)"
-        (keydown.enter)="openPopupFromInlineSearch($event)"
-        (keydown.tab)="onInlineTab($event)"
-        placeholder="Nhập tên/mã rồi bấm Enter, Tab hoặc nút tìm..."
-        title="Nhập tên/mã rồi bấm Enter, Tab hoặc nút tìm để chọn từ danh sách"
+        (keydown.enter)="onInlineEnter($event)"
+        (focus)="onInlineInputFocus()"
+        (click)="onInlineInputClick($event)"
+        (blur)="onInlineInputBlur()"
+        placeholder="Nhập để tìm nhanh..."
         [ngClass]="disable ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'"
       />
       <button
         type="button"
-        class="lookup-open-button h-9 w-9 min-w-9 border border-gray-300 rounded-lg text-sm hover:bg-blue-50 hover:border-blue-300 flex items-center justify-center text-slate-600"
+        class="h-9 w-9 min-w-9 border border-gray-300 rounded-lg text-sm hover:bg-blue-50 hover:border-blue-300 flex items-center justify-center text-slate-600"
         [disabled]="disable"
-        (click)="openInlineLookupPopup()"
+        (click)="togglePopup()"
         title="Mở danh sách"
         aria-label="Mở danh sách"
       >
@@ -34,9 +29,8 @@
       </button>
     </div>
 
-    <!-- Inline quick-search dropdown is intentionally framed off. See note above. -->
     <div
-      *ngIf="enableInlineQuickSearch && showInlineDropdown && !disable"
+      *ngIf="showInlineDropdown && !disable"
       class="absolute z-40 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-56 overflow-y-auto overflow-x-hidden"
     >
       <button
