@@ -340,7 +340,7 @@
                     title="Kéo để thay đổi độ rộng, double-click để auto-resize">
                   </div>
                 </th>
-                <th>
+                <th class="hidden">
                   #
                 </th>
 
@@ -380,7 +380,7 @@
 
               <!-- Column Filters Row -->
               <tr class="bg-gray-50">
-                <td class="p-1"></td>
+                <td class="hidden p-1"></td>
                 <td class="p-1"></td>
                 <td *ngFor="let field of getAllDetailFields()" class="p-1" [hidden]="field.type === 'hidden'">
                   <div class="relative" [hidden]="field.disabled">
@@ -449,7 +449,7 @@
                   </div>
                 </td>
                 <!-- Row number -->
-                <td class="text-center text-gray-500">{{ row.line_nbr || (i + 1) }}</td>
+                <td class="hidden text-center text-gray-500">{{ row.line_nbr || (i + 1) }}</td>
 
                 <!-- Detail fields -->
                 <td class="relative" *ngFor="let field of getAllDetailFields()" [hidden]="field.type === 'hidden'">

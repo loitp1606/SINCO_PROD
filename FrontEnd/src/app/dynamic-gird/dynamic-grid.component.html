@@ -848,7 +848,7 @@
               <thead>
                 <tr class="bg-slate-700 text-white">
                   <th
-                    class="px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
+                    class="hidden px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
                   >
                     #
                   </th>
@@ -909,7 +909,7 @@
                 </tr>
 
                 <tr class="bg-slate-100">
-                  <td class="p-0"></td>
+                  <td class="hidden p-0"></td>
                   <td *ngIf="quickEditDetailMode" class="p-0"></td>
                   <td
                     *ngFor="let field of getAllDetailFields()"
@@ -984,7 +984,7 @@
                   [class.bg-sky-100]="i === activeDetailRowIndex"
                   (click)="activeDetailRowIndex = i"
                 >
-                  <td class="text-center text-slate-500 px-2 py-0.5">
+                  <td class="hidden text-center text-slate-500 px-2 py-0.5">
                     {{ row.line_nbr || i + 1 }}
                   </td>
 
