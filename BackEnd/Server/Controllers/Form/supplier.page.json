@@ -23,6 +23,7 @@
 						"key": "supplier_id",
 						"label": "Mã nhà cung cấp",
 						"type": "taxcode",
+						"width": "150px",
 						"required": true,
 						"disabled": false,
 						"placeholder": "Nhập mã nhà cung cấp(Mã số thuế)"
@@ -31,6 +32,7 @@
 						"key": "supplier_name",
 						"label": "Tên nhà cung cấp",
 						"type": "text",
+						"width": "150px",
 						"required": true,
 						"placeholder": "Nhập tên nhà cung cấp"
 					},
@@ -38,6 +40,7 @@
 						"key": "supplier_type_id",
 						"label": "Loại nhà cung cấp",
 						"type": "lookup",
+						"width": "150px",
 						"multiple": false,
 						"required": false,
 						"default": {
@@ -55,6 +58,7 @@
 						"key": "industry_group_id",
 						"label": "Nhóm ngành hàng cung cấp",
 						"type": "lookup",
+						"width": "150px",
 						"multiple": false,
 						"required": false,
 						"default": {
@@ -66,30 +70,35 @@
 						"key": "phone_number",
 						"label": "Số điện thoại",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "email",
 						"label": "Email",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "address",
 						"label": "Địa chỉ",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "province",
 						"label": "Tỉnh/Thành phố",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "district",
 						"label": "Quận/Huyện",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
@@ -97,6 +106,7 @@
 						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -114,6 +124,7 @@
 						"label": "Liên kết khách hàng",
 						"type": "lookup",
 						"multiple": false,
+						"width": "350px",
 						"required": false,
 						"default": {
 							"controller": "customer",
@@ -134,32 +145,38 @@
 							"key": "line_nbr",
 							"label": "STT",
 							"type": "text",
+							"width": "150px",
 							"disabled": true
 						},
 						{
 							"key": "contact_name",
 							"label": "Tên người liên hệ",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "contact_phone",
 							"label": "Số điện thoại liên hệ",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "contact_email",
 							"label": "Email liên hệ",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "contact_position",
 							"label": "Chức vụ",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "note",
 							"label": "Ghi chú",
 							"type": "textarea",
+							"width": "150px",
 							"uiTab": "Ghi chú"
 						}
 					]
@@ -174,42 +191,49 @@
 							"key": "line_nbr",
 							"label": "STT",
 							"type": "text",
+							"width": "150px",
 							"disabled": true
 						},
 						{
 							"key": "bank_info",
 							"label": "Thông tin chuyển khoản",
 							"type": "text",
+							"width": "150px",
 							"required": true
 						},
 						{
 							"key": "bank_name",
 							"label": "Tên ngân hàng",
 							"type": "text",
+							"width": "150px",
 							"required": true
 						},
 						{
 							"key": "bank_account_number",
 							"label": "Số tài khoản",
 							"type": "text",
+							"width": "150px",
 							"required": true
 						},
 						{
 							"key": "beneficiary_name",
 							"label": "Tên người thụ hưởng",
 							"type": "text",
+							"width": "150px",
 							"required": true
 						},
 						{
 							"key": "bank_branch",
 							"label": "Chi nhánh ngân hàng",
 							"type": "text",
+							"width": "150px",
 							"required": true
 						},
 						{
 							"key": "is_default",
 							"label": "Ngân hàng mặc định",
 							"type": "select",
+							"width": "150px",
 							"options": [
 								{
 									"label": "Có",
@@ -236,4 +260,3 @@
 		}
 	}
 }
-

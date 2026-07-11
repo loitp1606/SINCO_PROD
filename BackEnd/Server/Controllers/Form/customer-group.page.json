@@ -1,69 +1,75 @@
 {
-  "controller": "customerGroup",
-  "type": "list",
-  "formId": "customerGroup",
-  "primaryKey": [ "customer_group_id" ],
-  "idVC": "",
-  "VCDate": "",
-  "title": "",
-  "class": "onSelectChange()",
-  "tabs": [
-    {
-      "title": "Nhóm khách hàng",
-      "class": "text-[48px] px-4 py-2 focus:outline-none",
-      "form": {
-        "typeForm": "master",
-        "formId": "customerGroup",
-        "primaryKey": "customer_group_id",
-        "title": "Nhóm khách hàng",
-        "fields": [
-          {
-            "key": "customer_group_id",
-            "label": "Mã nhóm",
-            "type": "text",
-            "required": true,
-            "placeholder": "Nhập mã nhóm"
-          },
-          {
-            "key": "customer_group_name",
-            "label": "Tên nhóm",
-            "type": "text",
-            "required": true,
-            "placeholder": "Nhập tên nhóm"
-          },
-          {
-            "key": "status",
-            "default": "1",
-            "label": "Trạng thái",
-            "type": "select",
-            "required": true,
-            "options": [
-              {
-                "label": "Đang hoạt động",
-                "value": "1"
-              },
-              {
-                "label": "Không hoạt động",
-                "value": "0"
-              }
-            ]
-          },
-          {
-            "key": "note",
-            "label": "Ghi chú",
-            "type": "textarea",
-            "uiTab": "Ghi chú",
-            "required": false,
-            "placeholder": "Ghi chú thêm về nhóm khách hàng"
-          }
-        ],
-        "initialData": {}
-      }
-    }
-  ],
-  "dataProcessing": {
-    "actions": {
-      "post": []
-    }
-  }
+	"controller": "customerGroup",
+	"type": "list",
+	"formId": "customerGroup",
+	"primaryKey": [
+		"customer_group_id"
+	],
+	"idVC": "",
+	"VCDate": "",
+	"title": "",
+	"class": "onSelectChange()",
+	"tabs": [
+		{
+			"title": "Nhóm khách hàng",
+			"class": "text-[48px] px-4 py-2 focus:outline-none",
+			"form": {
+				"typeForm": "master",
+				"formId": "customerGroup",
+				"primaryKey": "customer_group_id",
+				"title": "Nhóm khách hàng",
+				"fields": [
+					{
+						"key": "customer_group_id",
+						"label": "Mã nhóm",
+						"type": "text",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập mã nhóm"
+					},
+					{
+						"key": "customer_group_name",
+						"label": "Tên nhóm",
+						"type": "text",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập tên nhóm"
+					},
+					{
+						"key": "status",
+						"default": "1",
+						"label": "Trạng thái",
+						"type": "select",
+						"width": "150px",
+						"required": true,
+						"options": [
+							{
+								"label": "Đang hoạt động",
+								"value": "1"
+							},
+							{
+								"label": "Không hoạt động",
+								"value": "0"
+							}
+						]
+					},
+					{
+						"key": "note",
+						"label": "Ghi chú",
+						"type": "textarea",
+						"width": "150px",
+						"uiTab": "Ghi chú",
+						"required": false,
+						"placeholder": "Ghi chú thêm về nhóm khách hàng"
+					}
+				],
+				"initialData": {}
+			}
+		}
+	],
+	"dataProcessing": {
+		"actions": {
+			"post": []
+		}
+	}
 }

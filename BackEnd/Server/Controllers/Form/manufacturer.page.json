@@ -1,76 +1,82 @@
 {
-  "controller": "manufacturer",
-  "type": "list",
-  "formId": "nhasanxuat",
-  "primaryKey": [ "ma_nsx" ],
-  "idVC": "",
-  "VCDate": "",
-  "title": "",
-  "class": "onSelectChange()",
-  "tabs": [
-    {
-      "title": "Danh mục nhà sản xuất",
-      "class": "text-[48px] px-4 py-2 focus:outline-none",
-      "form": {
-        "typeForm": "master",
-        "formId": "nhasanxuat",
-        "primaryKey": "ma_nsx",
-        "title": "Thông tin nhà sản xuất",
-        "fields": [
-          {
-            "key": "ma_nsx",
-            "label": "Mã nhà sản xuất",
-            "type": "text",
-            "required": true,
-            "placeholder": "Nhập nhà sản xuất"
-          },
-          {
-            "key": "ten_nsx",
-            "label": "Tên nhà sản xuất",
-            "type": "text",
-            "required": true,
-            "placeholder": "Nhập tên nhà sản xuất"
-          },
-          {
-            "key": "ten_nsx2",
-            "label": "Tên nhà sản xuất",
-            "type": "text",
-            "required": true,
-            "placeholder": "Nhập tên khác"
-          },
-          {
-            "key": "descript",
-            "label": "Diễn giải",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập diễn giải"
-          },
-          {
-            "key": "status",
-            "default": "1",
-            "label": "Trạng thái",
-            "type": "select",
-            "required": true,
-            "options": [
-              {
-                "label": "Đang hoạt động",
-                "value": "1"
-              },
-              {
-                "label": "Bị khóa",
-                "value": "0"
-              }
-            ]
-          }
-        ],
-        "initialData": {}
-      }
-    }
-  ],
-  "dataProcessing": {
-    "actions": {
-      "post": []
-    }
-  }
+	"controller": "manufacturer",
+	"type": "list",
+	"formId": "nhasanxuat",
+	"primaryKey": [
+		"ma_nsx"
+	],
+	"idVC": "",
+	"VCDate": "",
+	"title": "",
+	"class": "onSelectChange()",
+	"tabs": [
+		{
+			"title": "Danh mục nhà sản xuất",
+			"class": "text-[48px] px-4 py-2 focus:outline-none",
+			"form": {
+				"typeForm": "master",
+				"formId": "nhasanxuat",
+				"primaryKey": "ma_nsx",
+				"title": "Thông tin nhà sản xuất",
+				"fields": [
+					{
+						"key": "ma_nsx",
+						"label": "Mã nhà sản xuất",
+						"type": "text",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập nhà sản xuất"
+					},
+					{
+						"key": "ten_nsx",
+						"label": "Tên nhà sản xuất",
+						"type": "text",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập tên nhà sản xuất"
+					},
+					{
+						"key": "ten_nsx2",
+						"label": "Tên nhà sản xuất",
+						"type": "text",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập tên khác"
+					},
+					{
+						"key": "descript",
+						"label": "Diễn giải",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập diễn giải"
+					},
+					{
+						"key": "status",
+						"default": "1",
+						"label": "Trạng thái",
+						"type": "select",
+						"width": "150px",
+						"required": true,
+						"options": [
+							{
+								"label": "Đang hoạt động",
+								"value": "1"
+							},
+							{
+								"label": "Bị khóa",
+								"value": "0"
+							}
+						]
+					}
+				],
+				"initialData": {}
+			}
+		}
+	],
+	"dataProcessing": {
+		"actions": {
+			"post": []
+		}
+	}
 }
-

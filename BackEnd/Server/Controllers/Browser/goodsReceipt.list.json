@@ -12,17 +12,20 @@
 		{
 			"key": "voucherDate",
 			"label": "Ngày nhập hàng",
-			"type": "date"
+			"type": "date",
+			"width": "100px"
 		},
 		{
 			"key": "voucherNumber",
 			"label": "Số phiếu nhập hàng",
-			"type": "text"
+			"type": "text",
+			"width": "100px"
 		},
 		{
 			"key": "supplierCode",
 			"label": "Khách hàng",
-			"type": "lookup"
+			"type": "lookup",
+			"width": "350px"
 		},
 		{
 			"key": "ds_hoa_don",
@@ -33,22 +36,26 @@
 		{
 			"key": "paidAmount",
 			"label": "Đã thanh toán",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "debtAmount",
 			"label": "Còn phải trả",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "totalPayment",
 			"label": "GRID.total_amount",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "status",
 			"label": "Trạng thái",
 			"type": "select",
+			"width": "150px",
 			"options": [
 				{
 					"label": "Đang chờ nhập",
@@ -63,7 +70,8 @@
 		{
 			"key": "note",
 			"label": "Ghi chú",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		}
 	],
 	"query": {

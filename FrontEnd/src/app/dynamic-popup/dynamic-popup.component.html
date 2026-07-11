@@ -563,18 +563,20 @@
 
         <!-- Total Summary -->
         <div class="summary-grid mb-4 summary-card" *ngIf="getSummaryFields().length > 0">
-          <div class="text-lg font-semibold text-gray-800 col-span-2 mb-2 border-b border-gray-300 pb-2">
-            Tổng kết tất cả dữ liệu ({{ currentDetailRows.length }} dòng)
+          <div class="summary-card__title">
+            <span>Tổng kết tất cả dữ liệu</span>
+            <span class="summary-card__count">{{ currentDetailRows.length }} dòng</span>
           </div>
 
           <!-- Dynamically load master fields that should be displayed in summary -->
           <ng-container *ngFor="let field of getSummaryFields()">
             <!-- Only show fields that are disabled (calculated/aggregated) and not hidden -->
 
-            <ng-container *ngIf="field.type !== 'hidden' && field.subtotal">
+            <div *ngIf="field.type !== 'hidden' && field.subtotal" class="summary-card__item"
+              [class.summary-card__item--wide]="field.key === 'amount_in_word'"
+              [class.summary-card__item--total]="field.key === 'final_total'">
               <div class="summary-label">{{ field.label }}:</div>
-              <div class="summary-value" [ngClass]="{'summary-total': field.key === 'final_total'}"
-                style="padding-right: 25px">
+              <div class="summary-value" [ngClass]="{'summary-total': field.key === 'final_total'}">
                 <ng-container [ngSwitch]="field.key">
                   <!-- Format based on field key -->
                   <span *ngIf="field.type === 'number' && isCurrencyField(field.key, field)">
@@ -591,7 +593,7 @@
                   </ng-container>
                 </ng-container>
               </div>
-            </ng-container>
+            </div>
           </ng-container>
         </div>
         <!-- Summary Section -->

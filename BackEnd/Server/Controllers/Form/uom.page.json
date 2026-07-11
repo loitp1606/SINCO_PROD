@@ -1,71 +1,74 @@
 {
-  "controller": "uom",
-  "type": "list",
-  "formId": "uom",
-  "primaryKey": [
-    "uomCode"
-  ],
-  "idVC": "",
-  "VCDate": "",
-  "title": "",
-  "class": "onSelectChange()",
-  "tabs": [
-    {
-      "title": "POPUP.UOM.TITLE",
-      "class": "text-[48px] px-4 py-2 focus:outline-none",
-      "form": {
-        "typeForm": "master",
-        "formId": "uom",
-        "primaryKey": "uomCode",
-        "title": "POPUP.UOM.FORM_TITLE",
-        "fields": [
-          {
-            "key": "uomCode",
-            "label": "POPUP.UOM.CODE",
-            "type": "text",
-            "required": true,
-            "placeholder": "POPUP.UOM.PLACEHOLDER_CODE"
-          },
-          {
-            "key": "uomName",
-            "label": "POPUP.UOM.NAME",
-            "type": "text",
-            "required": true,
-            "placeholder": "POPUP.UOM.PLACEHOLDER_NAME"
-          },
-          {
-            "key": "uomName2",
-            "label": "POPUP.UOM.ALIAS",
-            "type": "text",
-            "required": false,
-            "placeholder": "POPUP.UOM.PLACEHOLDER_ALIAS"
-          },
-          {
-            "key": "status",
-            "default": "1",
-            "label": "POPUP.UOM.STATUS",
-            "type": "select",
-            "required": true,
-            "options": [
-              {
-                "label": "POPUP.UOM.ACTIVE",
-                "value": "1"
-              },
-              {
-                "label": "POPUP.UOM.LOCKED",
-                "value": "0"
-              }
-            ]
-          }
-        ],
-        "initialData": {}
-      }
-    }
-  ],
-  "dataProcessing": {
-    "actions": {
-      "post": []
-    }
-  }
+	"controller": "uom",
+	"type": "list",
+	"formId": "uom",
+	"primaryKey": [
+		"uomCode"
+	],
+	"idVC": "",
+	"VCDate": "",
+	"title": "",
+	"class": "onSelectChange()",
+	"tabs": [
+		{
+			"title": "POPUP.UOM.TITLE",
+			"class": "text-[48px] px-4 py-2 focus:outline-none",
+			"form": {
+				"typeForm": "master",
+				"formId": "uom",
+				"primaryKey": "uomCode",
+				"title": "POPUP.UOM.FORM_TITLE",
+				"fields": [
+					{
+						"key": "uomCode",
+						"label": "POPUP.UOM.CODE",
+						"type": "text",
+						"required": true,
+						"width": "100px",
+						"placeholder": "POPUP.UOM.PLACEHOLDER_CODE"
+					},
+					{
+						"key": "uomName",
+						"label": "POPUP.UOM.NAME",
+						"type": "text",
+						"required": true,
+						"width": "100px",
+						"placeholder": "POPUP.UOM.PLACEHOLDER_NAME"
+					},
+					{
+						"key": "uomName2",
+						"label": "POPUP.UOM.ALIAS",
+						"type": "text",
+						"required": false,
+						"width": "100px",
+						"placeholder": "POPUP.UOM.PLACEHOLDER_ALIAS"
+					},
+					{
+						"key": "status",
+						"default": "1",
+						"label": "POPUP.UOM.STATUS",
+						"type": "select",
+						"width": "150px",
+						"required": true,
+						"options": [
+							{
+								"label": "POPUP.UOM.ACTIVE",
+								"value": "1"
+							},
+							{
+								"label": "POPUP.UOM.LOCKED",
+								"value": "0"
+							}
+						]
+					}
+				],
+				"initialData": {}
+			}
+		}
+	],
+	"dataProcessing": {
+		"actions": {
+			"post": []
+		}
+	}
 }
-

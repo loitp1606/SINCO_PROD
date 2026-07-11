@@ -1,102 +1,115 @@
 {
-  "id": "employee",
-  "title": "Nhân viên",
-  "headers": [
-    {
-      "key": "employee_id",
-      "label": "Mã nhân viên",
-      "type": "text"
-    },
-    {
-      "key": "employee_role_id",
-      "label": "Vai trò",
-      "type": "text"
-    },
-    {
-      "key": "full_name",
-      "label": "Họ và tên",
-      "type": "text"
-    },
-    {
-      "key": "abbreviation",
-      "label": "Tên viết tắt",
-      "type": "text"
-    },
-    {
-      "key": "gender",
-      "label": "Giới tính",
-      "type": "select"
-    },
-    {
-      "key": "birth_date",
-      "label": "Ngày sinh",
-      "type": "date"
-    },
-    {
-      "key": "starting_date",
-      "label": "Ngày bắt đầu làm việc",
-      "type": "date"
-    },
-    {
-      "key": "end_date",
-      "label": "Ngày nghỉ việc",
-      "type": "date"
-    },
-    {
-      "key": "status",
-      "label": "Trạng thái",
-      "type": "select",
-      "options": [
-        {
-          "label": "Đang làm",
-          "value": "1"
-        },
-        {
-          "label": "Đã nghỉ",
-          "value": "0"
-        }
-      ]
-    },
-    {
-      "key": "email",
-      "label": "Email",
-      "type": "text"
-    },
-    {
-      "key": "phone_number",
-      "label": "Số điện thoại",
-      "type": "text"
-    },
-    {
-      "key": "note",
-      "label": "Ghi chú",
-      "type": "text"
-    },
-    {
-      "key": "reason_leave_job",
-      "label": "Lý do nghỉ việc",
-      "type": "text"
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "employee.page.json",
-      "formId": "employee",
-      "primaryKey": [
-        "employee_id"
-      ],
-      "type": "list",
-      "action": "loading",
-      "idVC": "",
-      "value": [],
-      "listTable": [
-        "employee",
-        "employeeAddress",
-        "employeeCollectedInfo"
-      ],
-      "VCDate": ""
-    }
-  },
-  "sort": "employee_id",
-  "actions": []
+	"id": "employee",
+	"title": "Nhân viên",
+	"headers": [
+		{
+			"key": "employee_id",
+			"label": "Mã nhân viên",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "employee_role_id",
+			"label": "Vai trò",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "full_name",
+			"label": "Họ và tên",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "abbreviation",
+			"label": "Tên viết tắt",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "gender",
+			"label": "Giới tính",
+			"type": "select",
+			"width": "150px"
+		},
+		{
+			"key": "birth_date",
+			"label": "Ngày sinh",
+			"type": "date",
+			"width": "150px"
+		},
+		{
+			"key": "starting_date",
+			"label": "Ngày bắt đầu làm việc",
+			"type": "date",
+			"width": "150px"
+		},
+		{
+			"key": "end_date",
+			"label": "Ngày nghỉ việc",
+			"type": "date",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "Trạng thái",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang làm",
+					"value": "1"
+				},
+				{
+					"label": "Đã nghỉ",
+					"value": "0"
+				}
+			]
+		},
+		{
+			"key": "email",
+			"label": "Email",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "phone_number",
+			"label": "Số điện thoại",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "note",
+			"label": "Ghi chú",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "reason_leave_job",
+			"label": "Lý do nghỉ việc",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "employee.page.json",
+			"formId": "employee",
+			"primaryKey": [
+				"employee_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"employee",
+				"employeeAddress",
+				"employeeCollectedInfo"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "employee_id",
+	"actions": []
 }

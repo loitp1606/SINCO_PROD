@@ -12,17 +12,20 @@
 		{
 			"key": "voucherDate",
 			"label": "POPUP.QUOTATION_PAPER.VOUCHER_DATE",
-			"type": "date"
+			"type": "date",
+			"width": "100px"
 		},
 		{
 			"key": "voucherNumber",
 			"label": "POPUP.QUOTATION_PAPER.VOUCHER_NUMBER",
-			"type": "text"
+			"type": "text",
+			"width": "100px"
 		},
 		{
 			"key": "status",
 			"label": "Trạng thái",
 			"type": "select",
+			"width": "150px",
 			"options": [
 				{
 					"label": "Đang báo giá",
@@ -41,22 +44,20 @@
 		{
 			"key": "customerCode",
 			"label": "POPUP.QUOTATION_PAPER.CUSTOMER_CODE",
-			"type": "lookup"
+			"type": "lookup",
+			"width": "350px"
 		},
 		{
 			"key": "contactPerson",
 			"label": "POPUP.QUOTATION_PAPER.CONTACT_PERSON",
-			"type": "text"
-		},
-		{
-			"key": "employeeName",
-			"label": "POPUP.QUOTATION_PAPER.EMPLOYEENAME",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		},
 		{
 			"key": "total_payment",
 			"label": "GRID.total_amount",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		}
 	],
 	"query": {

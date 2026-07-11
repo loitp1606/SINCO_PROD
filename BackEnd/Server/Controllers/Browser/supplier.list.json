@@ -1,78 +1,88 @@
 {
-  "id": "supplier",
-  "title": "Nhà cung cấp",
-  "headers": [
-    {
-      "key": "supplier_id",
-      "label": "Mã nhà cung cấp(Mã số thuế)",
-      "type": "text"
-    },
-    {
-      "key": "supplier_name",
-      "label": "Tên nhà cung cấp",
-      "type": "text"
-    },
-    {
-      "key": "supplier_type_id",
-      "label": "Loại nhà cung cấp",
-      "type": "select"
-    },
-    {
-      "key": "industry_group_id",
-      "label": "Nhóm ngành hàng cung cấp",
-      "type": "select"
-    },
-    {
-      "key": "phone_number",
-      "label": "Số điện thoại",
-      "type": "text"
-    },
-    {
-      "key": "email",
-      "label": "Email",
-      "type": "text"
-    },
-    {
-      "key": "address",
-      "label": "Địa chỉ",
-      "type": "text"
-    },
-    {
-      "key": "province",
-      "label": "Tỉnh/Thành phố",
-      "type": "text"
-    },
-    {
-      "key": "district",
-      "label": "Quận/Huyện",
-      "type": "text"
-    },
-    {
-      "key": "statusname",
-      "label": "Trạng thái",
-      "type": "text"
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "supplier.page.json",
-      "formId": "supplier",
-      "primaryKey": [
-        "supplier_id"
-      ],
-      "type": "list",
-      "action": "loading",
-      "idVC": "",
-      "value": [],
-      "listTable": [
-        "supplier",
-        "supplierContact",
-        "supplierBankAccount"
-      ],
-      "VCDate": "",
-      "isFileHandle": "import"
-    }
-  },
-  "sort": "supplier_id",
-  "actions": []
+	"id": "supplier",
+	"title": "Nhà cung cấp",
+	"headers": [
+		{
+			"key": "supplier_id",
+			"label": "Mã nhà cung cấp(Mã số thuế)",
+			"type": "text",
+			"width": "200px"
+		},
+		{
+			"key": "supplier_name",
+			"label": "Tên nhà cung cấp",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "supplier_type_id",
+			"label": "Loại nhà cung cấp",
+			"type": "select",
+			"width": "150px"
+		},
+		{
+			"key": "industry_group_id",
+			"label": "Nhóm ngành hàng cung cấp",
+			"type": "select",
+			"width": "150px"
+		},
+		{
+			"key": "phone_number",
+			"label": "Số điện thoại",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "email",
+			"label": "Email",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "address",
+			"label": "Địa chỉ",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "province",
+			"label": "Tỉnh/Thành phố",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "district",
+			"label": "Quận/Huyện",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "statusname",
+			"label": "Trạng thái",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "supplier.page.json",
+			"formId": "supplier",
+			"primaryKey": [
+				"supplier_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"supplier",
+				"supplierContact",
+				"supplierBankAccount"
+			],
+			"VCDate": "",
+			"isFileHandle": "import"
+		}
+	},
+	"sort": "supplier_id",
+	"actions": []
 }

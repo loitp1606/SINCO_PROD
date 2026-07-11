@@ -17,6 +17,7 @@ import {
   GridAction,
   ApiResponse,
   FilterCondition,
+  Field,
   PageMetadata,
   LookupApiResponse,
 } from '../models';
@@ -1284,7 +1285,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
-  getFieldWidth(key: string): string {
+  getFieldWidth(fieldOrKey: string | Pick<Field, 'key' | 'type' | 'width'> | GirdHeader): string {
+    const key = typeof fieldOrKey === 'string' ? fieldOrKey : fieldOrKey.key;
+
     if (key === '__selection') {
       return `${this.selectionColumnWidth}px`;
     }
@@ -1293,11 +1296,15 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       return `${this.columnWidths[key]}px`;
     }
 
+    if (typeof fieldOrKey !== 'string' && fieldOrKey.width) {
+      return fieldOrKey.width;
+    }
+
     if (this.isOrderColumnKey(key)) {
       return '70px';
     }
 
-    const header = this.getHeaderByKey(key);
+    const header = typeof fieldOrKey === 'string' ? this.getHeaderByKey(key) : fieldOrKey;
     if (header?.width) {
       return header.width;
     }

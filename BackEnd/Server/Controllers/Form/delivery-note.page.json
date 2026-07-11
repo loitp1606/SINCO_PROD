@@ -31,13 +31,15 @@
 						"required": true,
 						"placeholder": "Số phiếu xuất",
 						"autoIncrement": true,
-						"readonly": true
+						"readonly": true,
+						"width": "100px"
 					},
 					{
 						"key": "invoiceVAT",
 						"label": "Hóa đơn tax",
 						"required": false,
 						"type": "text",
+						"width": "150px",
 						"placeholder": ""
 					},
 					{
@@ -45,12 +47,14 @@
 						"label": "Ngày tạo",
 						"required": true,
 						"type": "date",
-						"placeholder": "Chọn ngày tạo"
+						"placeholder": "Chọn ngày tạo",
+						"width": "100px"
 					},
 					{
 						"key": "number_ddh",
 						"label": "Số ĐĐH",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -58,6 +62,7 @@
 						"key": "number_quotation",
 						"label": "Số báo giá",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -65,6 +70,7 @@
 						"key": "number_contract",
 						"label": "Số hợp đồng",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -73,6 +79,7 @@
 						"label": "Dự án",
 						"required": false,
 						"type": "lookup",
+						"width": "150px",
 						"multiple": false,
 						"default": {
 							"controller": "job",
@@ -90,6 +97,7 @@
 						"label": "Ngày giao",
 						"required": false,
 						"type": "date",
+						"width": "150px",
 						"placeholder": ""
 					},
 					{
@@ -97,6 +105,7 @@
 						"label": "Ngày hẹn",
 						"required": true,
 						"type": "date",
+						"width": "150px",
 						"placeholder": ""
 					},
 					{
@@ -127,12 +136,14 @@
 							"map": {
 								"orderAddress": "orderAddress"
 							}
-						}
+						},
+						"width": "350px"
 					},
 					{
 						"key": "contactPerson",
 						"label": "Người liên hệ giao hàng",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -140,6 +151,7 @@
 						"key": "phonePerson",
 						"label": "Điện thoại",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -147,6 +159,7 @@
 						"key": "orderAddress",
 						"label": "Địa chỉ",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -154,6 +167,7 @@
 						"key": "emailPerson",
 						"label": "Email",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -162,6 +176,7 @@
 						"label": "Nhân viên KD",
 						"required": true,
 						"type": "lookup",
+						"width": "150px",
 						"multiple": false,
 						"default": {
 							"controller": "Employee",
@@ -178,6 +193,7 @@
 						"key": "phonePersonCreate",
 						"label": "Điện thoại người tạo",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -185,6 +201,7 @@
 						"key": "faxPersonCreate",
 						"label": "Số Fax",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -192,6 +209,7 @@
 						"key": "mailFrom",
 						"label": "Mail (Người gửi)",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -199,12 +217,14 @@
 						"key": "term",
 						"label": "Kỳ hạn thanh toán",
 						"type": "number",
+						"width": "100px",
 						"placeholder": ""
 					},
 					{
 						"key": "amoutFare",
 						"label": "Tiền cước",
 						"type": "number",
+						"width": "100px",
 						"currency": "VN",
 						"placeholder": ""
 					},
@@ -213,6 +233,7 @@
 						"label": "Chành xe",
 						"required": false,
 						"type": "lookup",
+						"width": "150px",
 						"multiple": false,
 						"default": {
 							"controller": "DeliveryLocation",
@@ -242,6 +263,7 @@
 						"key": "addresstruck",
 						"label": "Địa chỉ chành",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"placeholder": ""
 					},
@@ -249,6 +271,7 @@
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
+						"width": "150px",
 						"uiTab": "Ghi chú",
 						"required": false,
 						"placeholder": ""
@@ -257,6 +280,7 @@
 						"key": "status",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -273,6 +297,7 @@
 						"key": "ten_trang_thai",
 						"label": "Trạng thái QT phiếu nhập hàng trả lại",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"disabled": true
 					},
@@ -280,6 +305,7 @@
 						"key": "ten_trang_thai2",
 						"label": "Trạng thái QT phiếu phu",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"disabled": true
 					},
@@ -300,7 +326,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					},
 					{
 						"key": "totalAmount",
@@ -319,7 +346,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					},
 					{
 						"key": "totalTax",
@@ -338,7 +366,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					},
 					{
 						"key": "totalPayment",
@@ -357,7 +386,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					}
 				],
 				"initialData": {}
@@ -374,27 +404,27 @@
 							"label": "Stt",
 							"disabled": true,
 							"type": "text",
-							"width": "80px"
+							"width": "40px"
 						},
 						{
 							"key": "itemNameCustomer",
 							"label": "Tên Vật tư KH",
 							"type": "text",
-							"width": "250px"
+							"width": "450px"
 						},
 						{
 							"key": "uomCustomer",
 							"label": "Đvt Vật tư KH",
 							"required": false,
 							"type": "text",
-							"width": "150px"
+							"width": "100px"
 						},
 						{
 							"key": "item_id",
 							"label": "Mã vật tư",
 							"required": true,
 							"type": "lookup",
-							"width": "250px",
+							"width": "450px",
 							"multiple": false,
 							"default": {
 								"controller": "item",
@@ -425,7 +455,7 @@
 							"label": "Đơn vị tính",
 							"required": true,
 							"type": "lookup",
-							"width": "150px",
+							"width": "100px",
 							"multiple": false,
 							"default": {
 								"controller": "uom",
@@ -439,23 +469,23 @@
 							}
 						},
 						{
-						"key": "quantity",
-						"label": "Số lượng",
-						"required": true,
-						"type": "number",
-						"precision": 2,
-						"width": "150px",
+							"key": "quantity",
+							"label": "Số lượng",
+							"required": true,
+							"type": "number",
+							"precision": 2,
+							"width": "100px",
 							"trigger": [
 								"amount",
 								"tax",
 								"payment"
 							]
-						},	
+						},
 						{
 							"key": "price",
 							"label": "Đơn giá",
 							"type": "number",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"trigger": [
 								"amount",
@@ -467,13 +497,13 @@
 							"key": "purchasePrice",
 							"label": "Giá mua",
 							"currency": "VN",
-							"width": "150px",
+							"width": "100px",
 							"type": "number"
 						},
 						{
 							"key": "amount",
 							"label": "Thành tiền",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"type": "number",
 							"trigger": [
@@ -498,7 +528,7 @@
 							"label": "Mã thuế",
 							"required": true,
 							"type": "lookup",
-							"width": "150px",
+							"width": "200px",
 							"multiple": false,
 							"default": {
 								"controller": "tax",
@@ -528,7 +558,7 @@
 							"key": "tax_rate",
 							"label": "Thuế suất",
 							"required": true,
-							"width": "150px",
+							"width": "100px",
 							"type": "number",
 							"trigger": [
 								"tax",
@@ -540,7 +570,7 @@
 							"label": "Thuế tax",
 							"type": "number",
 							"currency": "VN",
-							"width": "150px",
+							"width": "100px",
 							"trigger": [
 								"payment"
 							],
@@ -560,7 +590,7 @@
 						{
 							"key": "payment",
 							"label": "Tổng cộng",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"type": "number",
 							"calculation": {

@@ -1,70 +1,78 @@
 {
-  "id": "location",
-  "title": "GRID.LOCATION",
-  "headers": [
-    {
-      "key": "province_code",
-      "label": "POPUP.LOCATION.PROVINCE_CODE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "province_name",
-      "label": "POPUP.LOCATION.PROVINCE_NAME",
-      "type": "text"
-    },
-    {
-      "key": "district_code",
-      "label": "POPUP.LOCATION.DISTRICT_CODE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "district_name",
-      "label": "POPUP.LOCATION.DISTRICT_NAME",
-      "type": "text"
-    },
-    {
-      "key": "ward_code",
-      "label": "POPUP.LOCATION.WARD_CODE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "ward_name",
-      "label": "POPUP.LOCATION.WARD_NAME",
-      "type": "text"
-    },
-    {
-      "key": "unit_type",
-      "label": "POPUP.LOCATION.UNIT_TYPE",
-      "type": "select"
-    },
-    {
-      "key": "status",
-      "label": "POPUP.LOCATION.STATUS",
-      "type": "select"
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "location.page.json",
-      "formId": "location",
-      "primaryKey": [
-        "province_code",
-        "district_code",
-        "ward_code"
-      ],
-      "type": "list",
-      "action": "loading",
-      "idVC": "",
-      "value": [],
-      "listTable": [
-        "location"
-      ],
-      "VCDate": ""
-    }
-  },
-  "sort": "province_code",
-  "actions": []
+	"id": "location",
+	"title": "GRID.LOCATION",
+	"headers": [
+		{
+			"key": "province_code",
+			"label": "POPUP.LOCATION.PROVINCE_CODE",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "province_name",
+			"label": "POPUP.LOCATION.PROVINCE_NAME",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "district_code",
+			"label": "POPUP.LOCATION.DISTRICT_CODE",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "district_name",
+			"label": "POPUP.LOCATION.DISTRICT_NAME",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "ward_code",
+			"label": "POPUP.LOCATION.WARD_CODE",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "ward_name",
+			"label": "POPUP.LOCATION.WARD_NAME",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "unit_type",
+			"label": "POPUP.LOCATION.UNIT_TYPE",
+			"type": "select",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "POPUP.LOCATION.STATUS",
+			"type": "select",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "location.page.json",
+			"formId": "location",
+			"primaryKey": [
+				"province_code",
+				"district_code",
+				"ward_code"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"location"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "province_code",
+	"actions": []
 }

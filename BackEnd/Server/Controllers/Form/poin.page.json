@@ -31,19 +31,22 @@
 						"required": true,
 						"placeholder": "Số phiếu",
 						"autoGenerate": true,
-						"readonly": true
+						"readonly": true,
+						"width": "100px"
 					},
 					{
 						"key": "voucherDate",
 						"label": "Ngày tạo",
 						"type": "date",
 						"default": "now",
-						"required": true
+						"required": true,
+						"width": "100px"
 					},
 					{
 						"key": "vendorGroupCode",
 						"label": "Nhóm NCC",
 						"type": "lookup",
+						"width": "150px",
 						"required": true,
 						"multiple": false,
 						"default": {
@@ -60,17 +63,20 @@
 					{
 						"key": "expectedDate",
 						"label": "Ngày dự kiến",
-						"type": "date"
+						"type": "date",
+						"width": "150px"
 					},
 					{
 						"key": "approveDate",
 						"label": "Ngày duyệt",
-						"type": "date"
+						"type": "date",
+						"width": "150px"
 					},
 					{
 						"key": "vendorCode",
 						"label": "Mã NCC",
 						"type": "lookup",
+						"width": "150px",
 						"required": true,
 						"multiple": false,
 						"default": {
@@ -103,22 +109,26 @@
 					{
 						"key": "vendorAddress",
 						"label": "Địa chỉ Nhà cung cấp",
-						"type": "text"
+						"type": "text",
+						"width": "150px"
 					},
 					{
 						"key": "vendorName",
 						"label": "Tên cung cấp",
-						"type": "text"
+						"type": "text",
+						"width": "150px"
 					},
 					{
 						"key": "vendorEmail",
 						"label": "Email Nhà cung cấp",
-						"type": "text"
+						"type": "text",
+						"width": "150px"
 					},
 					{
 						"key": "employeeCode",
 						"label": "Nhân viên",
 						"type": "lookup",
+						"width": "150px",
 						"required": true,
 						"multiple": false,
 						"default": {
@@ -136,31 +146,35 @@
 						"key": "payTermCode",
 						"label": "Kỳ hạn thanh toán",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "payTimeDays",
 						"label": "TG thanh toán",
 						"type": "number",
+						"width": "100px",
 						"required": false
 					},
-
 					{
 						"key": "receivePlace",
 						"label": "Nơi nhận hàng",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "receiveAddress",
 						"label": "Địa chỉ nhận hàng",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
+						"width": "150px",
 						"uiTab": "Ghi chú"
 					},
 					{
@@ -168,6 +182,7 @@
 						"default": "0",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -201,7 +216,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					},
 					{
 						"key": "total_amount",
@@ -220,7 +236,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					},
 					{
 						"key": "total_discount",
@@ -239,7 +256,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					},
 					{
 						"key": "total_tax",
@@ -258,7 +276,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					},
 					{
 						"key": "total_payment",
@@ -277,7 +296,8 @@
 									"precision": 2
 								}
 							]
-						}
+						},
+						"width": "100px"
 					}
 				],
 				"initialData": {}
@@ -294,7 +314,7 @@
 							"label": "Stt",
 							"disabled": true,
 							"type": "text",
-							"width": "80px"
+							"width": "40px"
 						},
 						{
 							"key": "itemCode",
@@ -335,7 +355,7 @@
 							"label": "Đơn vị tính",
 							"required": true,
 							"type": "lookup",
-							"width": "150px",
+							"width": "100px",
 							"multiple": false,
 							"default": {
 								"controller": "uom",
@@ -349,12 +369,12 @@
 							}
 						},
 						{
-						"key": "quantity",
-						"label": "Số lượng đặt",
-						"required": true,
-						"type": "number",
-						"precision": 2,
-						"width": "150px",
+							"key": "quantity",
+							"label": "Số lượng đặt",
+							"required": true,
+							"type": "number",
+							"precision": 2,
+							"width": "100px",
 							"trigger": [
 								"amount"
 							]
@@ -363,7 +383,7 @@
 							"key": "price",
 							"label": "Đơn giá",
 							"type": "number",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"precision": 2,
 							"trigger": [
@@ -374,7 +394,7 @@
 							"key": "discountRate",
 							"label": "% Chiết khấu",
 							"type": "number",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"trigger": [
 								"amount",
@@ -386,7 +406,7 @@
 							"key": "discount",
 							"label": "Chiếu khấu",
 							"type": "number",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"trigger": [
 								"amount",
@@ -409,7 +429,7 @@
 						{
 							"key": "amount",
 							"label": "Thành tiền",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"type": "number",
 							"trigger": [
@@ -434,7 +454,7 @@
 							"label": "Mã thuế",
 							"required": true,
 							"type": "lookup",
-							"width": "150px",
+							"width": "200px",
 							"multiple": false,
 							"default": {
 								"controller": "tax",
@@ -464,7 +484,7 @@
 							"key": "taxRate",
 							"label": "Thuế suất",
 							"required": false,
-							"width": "150px",
+							"width": "100px",
 							"type": "number",
 							"trigger": [
 								"tax",
@@ -476,7 +496,7 @@
 							"label": "Thuế tax",
 							"type": "number",
 							"currency": "VN",
-							"width": "150px",
+							"width": "100px",
 							"trigger": [
 								"payment"
 							],
@@ -496,7 +516,7 @@
 						{
 							"key": "payment",
 							"label": "Tổng cộng",
-							"width": "150px",
+							"width": "100px",
 							"currency": "VN",
 							"type": "number",
 							"calculation": {
@@ -519,7 +539,7 @@
 							"disabled": true,
 							"type": "number",
 							"precision": 2,
-							"width": "150px"
+							"width": "100px"
 						},
 						{
 							"key": "note",
@@ -555,4 +575,3 @@
 		}
 	}
 }
-

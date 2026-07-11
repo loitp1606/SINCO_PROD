@@ -1,75 +1,82 @@
 {
-  "id": "customer",
-  "title": "GRID.CUSTOMER",
-  "headers": [
-    {
-      "key": "customer_id",
-      "label": "POPUP.CUSTOMER.CODE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "customer_name",
-      "label": "POPUP.CUSTOMER.NAME",
-      "type": "text",
-      "width": "450px"
-    },
-    {
-      "key": "customer_group_id",
-      "label": "POPUP.CUSTOMER.GROUP",
-      "type": "text"
-    },
-    {
-      "key": "phone_number",
-      "label": "POPUP.CUSTOMER.PHONE",
-      "type": "text"
-    },
-    {
-      "key": "email",
-      "label": "POPUP.CUSTOMER.EMAIL",
-      "type": "text"
-    },
-    {
-      "key": "address",
-      "label": "POPUP.CUSTOMER.ADDRESS",
-      "width": "450px",
-      "type": "text"
-    },
-    {
-      "key": "city",
-      "label": "POPUP.CUSTOMER.CITY",
-      "type": "text"
-    },
-    {
-      "key": "district",
-      "label": "POPUP.CUSTOMER.DISTRICT",
-      "type": "text"
-    },
-    {
-      "key": "statusname",
-      "label": "POPUP.CUSTOMER.STATUS",
-      "type": "text"
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "customer.page.json",
-      "formId": "customer",
-      "primaryKey": [
-        "customer_id"
-      ],
-      "type": "list",
-      "action": "loading",
-      "idVC": "",
-      "value": [],
-      "listTable": [
-        "customer",
-        "customerDetail"
-      ],
-      "VCDate": "",
-      "isFileHandle": "both"
-    }
-  },
-  "sort": "customer_id",
-  "actions": []
+	"id": "customer",
+	"title": "GRID.CUSTOMER",
+	"headers": [
+		{
+			"key": "customer_id",
+			"label": "POPUP.CUSTOMER.CODE",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "customer_name",
+			"label": "POPUP.CUSTOMER.NAME",
+			"type": "text",
+			"width": "350px"
+		},
+		{
+			"key": "customer_group_id",
+			"label": "POPUP.CUSTOMER.GROUP",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "phone_number",
+			"label": "POPUP.CUSTOMER.PHONE",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "email",
+			"label": "POPUP.CUSTOMER.EMAIL",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "address",
+			"label": "POPUP.CUSTOMER.ADDRESS",
+			"width": "450px",
+			"type": "text"
+		},
+		{
+			"key": "city",
+			"label": "POPUP.CUSTOMER.CITY",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "district",
+			"label": "POPUP.CUSTOMER.DISTRICT",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "statusname",
+			"label": "POPUP.CUSTOMER.STATUS",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "customer.page.json",
+			"formId": "customer",
+			"primaryKey": [
+				"customer_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"customer",
+				"customerDetail"
+			],
+			"VCDate": "",
+			"isFileHandle": "both"
+		}
+	},
+	"sort": "customer_id",
+	"actions": []
 }

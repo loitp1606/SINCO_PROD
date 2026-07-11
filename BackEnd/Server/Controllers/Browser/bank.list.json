@@ -6,22 +6,26 @@
 			"key": "bankCode",
 			"label": "Mã ngân hàng",
 			"type": "text",
+			"width": "150px",
 			"sortable": true
 		},
 		{
 			"key": "bankName",
 			"label": "Tên ngân hàng",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		},
 		{
 			"key": "bankName2",
 			"label": "Tên ngân hàng 2",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		},
 		{
 			"key": "status",
 			"label": "Trạng thái",
 			"type": "select",
+			"width": "150px",
 			"options": [
 				{
 					"label": "Hoạt động",

@@ -24,12 +24,14 @@
 						"label": "Mã thuế",
 						"type": "text",
 						"required": true,
+						"width": "200px",
 						"placeholder": "Nhập mã thuế"
 					},
 					{
 						"key": "tax_type",
 						"label": "Loại thuế",
 						"type": "text",
+						"width": "150px",
 						"required": true,
 						"placeholder": "Nhập loại thuế"
 					},
@@ -38,6 +40,7 @@
 						"label": "Mức thuế",
 						"type": "number",
 						"required": false,
+						"width": "100px",
 						"placeholder": "Nhập mức thuế"
 					},
 					{
@@ -45,6 +48,7 @@
 						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -68,4 +72,3 @@
 		}
 	}
 }
-

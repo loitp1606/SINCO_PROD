@@ -1,86 +1,94 @@
 {
-  "id": "account-sinco",
-  "title": "GRID.ACCOUNT_SINCO",
-  "headers": [
-    {
-      "key": "account_sinco_id",
-      "label": "POPUP.ACCOUNT_SINCO.CODE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "account_sinco_name",
-      "label": "POPUP.ACCOUNT_SINCO.NAME",
-      "type": "text"
-    },
-    {
-      "key": "account_type",
-      "label": "POPUP.ACCOUNT_SINCO.TYPE",
-      "type": "select",
-	  "options": [
-              {
-                "label": "Tiền mặt",
-                "value": "TM"
-              },
-              {
-                "label": "Chuyển khoản",
-                "value": "NH"
-              }
-            ]
-    },
-    {
-      "key": "bank_name",
-      "label": "POPUP.ACCOUNT_SINCO.BANK_NAME",
-      "type": "lookup"
-    },
-    {
-      "key": "account_number",
-      "label": "POPUP.ACCOUNT_SINCO.ACCOUNT_NUMBER",
-      "type": "text"
-    },
-    {
-      "key": "bank_branch",
-      "label": "POPUP.ACCOUNT_SINCO.BANK_BRANCH",
-      "type": "text"
-    },
-    {
-      "key": "note",
-      "label": "POPUP.ACCOUNT_SINCO.NOTE",
-      "type": "textarea"
-    },
-    {
-      "key": "status",
-      "label": "POPUP.ACCOUNT_SINCO.STATUS",
-      "type": "select",
-	  "options": [
-              {
-                "label": "Hoạt động",
-                "value": "1"
-              },
-              {
-                "label": "Không hoạt động",
-                "value": "0"
-              }
-            ]
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "account-sinco.page.json",
-      "formId": "accountSinco",
-      "primaryKey": [
-        "account_sinco_id"
-      ],
-      "type": "list",
-      "action": "loading",
-      "idVC": "",
-      "value": [],
-      "listTable": [
-        "accountSinco"
-      ],
-      "VCDate": ""
-    }
-  },
-  "sort": "account_sinco_id",
-  "actions": []
+	"id": "account-sinco",
+	"title": "GRID.ACCOUNT_SINCO",
+	"headers": [
+		{
+			"key": "account_sinco_id",
+			"label": "POPUP.ACCOUNT_SINCO.CODE",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "account_sinco_name",
+			"label": "POPUP.ACCOUNT_SINCO.NAME",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "account_type",
+			"label": "POPUP.ACCOUNT_SINCO.TYPE",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Tiền mặt",
+					"value": "TM"
+				},
+				{
+					"label": "Chuyển khoản",
+					"value": "NH"
+				}
+			]
+		},
+		{
+			"key": "bank_name",
+			"label": "POPUP.ACCOUNT_SINCO.BANK_NAME",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "account_number",
+			"label": "POPUP.ACCOUNT_SINCO.ACCOUNT_NUMBER",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "bank_branch",
+			"label": "POPUP.ACCOUNT_SINCO.BANK_BRANCH",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "note",
+			"label": "POPUP.ACCOUNT_SINCO.NOTE",
+			"type": "textarea",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "POPUP.ACCOUNT_SINCO.STATUS",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Hoạt động",
+					"value": "1"
+				},
+				{
+					"label": "Không hoạt động",
+					"value": "0"
+				}
+			]
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "account-sinco.page.json",
+			"formId": "accountSinco",
+			"primaryKey": [
+				"account_sinco_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"accountSinco"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "account_sinco_id",
+	"actions": []
 }

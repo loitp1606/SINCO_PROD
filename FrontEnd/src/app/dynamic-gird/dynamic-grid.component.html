@@ -503,6 +503,7 @@
               <th
                 *ngIf="!header.hidden"
                 class="px-3 py-0.5 border-r border-sky-100"
+                [ngStyle]="getHeaderCellStyle(header.key)"
               >
                 <select
                   *ngIf="header.type === 'select'; else compactStandardHeaderFilter"
@@ -558,7 +559,11 @@
               </td>
 
               <ng-container *ngFor="let header of girdData.headers">
-                <td *ngIf="!header.hidden" class="px-2 py-0.5 text-xs relative">
+                <td
+                  *ngIf="!header.hidden"
+                  class="px-2 py-0.5 text-xs relative"
+                  [ngStyle]="getHeaderCellStyle(header.key)"
+                >
                   <ng-container *ngIf="isQuickEditEnabledForMasterCell(data, header); else readonlyMasterCell">
                     <input
                       *ngIf="header.type === 'date'"
@@ -865,7 +870,7 @@
                   </th>
                   <th
                     *ngFor="let field of getAllDetailFields()"
-                    [style.width]="getFieldWidth(field.key)"
+                    [style.width]="getFieldWidth(field)"
                     class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group cursor-pointer select-none"
                     [hidden]="field.type === 'hidden'"
                     [attr.data-field-key]="field.key"

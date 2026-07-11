@@ -13,13 +13,13 @@
 			"key": "voucherDate",
 			"label": "Ngày xuất hàng",
 			"type": "date",
-			"width": "150px"
+			"width": "100px"
 		},
 		{
 			"key": "voucherNumber",
 			"label": "Số phiếu",
 			"type": "text",
-			"width": "150px"
+			"width": "100px"
 		},
 		{
 			"key": "number_quotation",
@@ -30,7 +30,8 @@
 		{
 			"key": "customer_id",
 			"label": "Khách hàng",
-			"type": "lookup"
+			"type": "lookup",
+			"width": "350px"
 		},
 		{
 			"key": "ds_hoa_don",
@@ -42,6 +43,7 @@
 			"key": "status",
 			"label": "Trạng thái",
 			"type": "select",
+			"width": "150px",
 			"options": [
 				{
 					"label": "Đang chờ giao",
@@ -63,7 +65,7 @@
 			"key": "debtAmount",
 			"label": "Còn nợ",
 			"type": "number",
-			"width": "120px"
+			"width": "100px"
 		},
 		{
 			"key": "signReceiptStatus",
@@ -74,17 +76,20 @@
 		{
 			"key": "overdueDays",
 			"label": "Ngày quá hạn",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "totalPayment",
 			"label": "GRID.total_amount",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "note",
 			"label": "Ghi chú",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		}
 	],
 	"query": {

@@ -12,22 +12,26 @@
 		{
 			"key": "voucherDate",
 			"label": "Ngày tạo",
-			"type": "date"
+			"type": "date",
+			"width": "100px"
 		},
 		{
 			"key": "voucherNumber",
 			"label": "Số phiếu",
-			"type": "text"
+			"type": "text",
+			"width": "100px"
 		},
 		{
 			"key": "vendorCode",
 			"label": "Mã NCC",
-			"type": "lookup"
+			"type": "lookup",
+			"width": "150px"
 		},
 		{
 			"key": "status",
 			"label": "Trạng thái",
 			"type": "select",
+			"width": "150px",
 			"options": [
 				{
 					"label": "Đặt hàng",
@@ -46,12 +50,14 @@
 		{
 			"key": "note",
 			"label": "Ghi chú",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		},
 		{
 			"key": "total_payment",
 			"label": "GRID.total_amount",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		}
 	],
 	"query": {

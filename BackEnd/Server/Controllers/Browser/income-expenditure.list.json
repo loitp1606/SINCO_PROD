@@ -1,57 +1,63 @@
 {
-  "id": "income-expenditure",
-  "title": "GRID.INCOME_EXPENDITURE",
-  "headers": [
-    {
-      "key": "type",
-      "label": "POPUP.INCOME_EXPENDITURE.TYPE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "incomeExpenditure_id",
-      "label": "POPUP.INCOME_EXPENDITURE.CODE",
-      "type": "text",
-      "sortable": true
-    },
-    {
-      "key": "incomeExpenditure_Name",
-      "label": "POPUP.INCOME_EXPENDITURE.NAME_VN",
-      "type": "text"
-    },
-    {
-      "key": "incomeExpenditure_Name2",
-      "label": "POPUP.INCOME_EXPENDITURE.NAME_EN",
-      "type": "text"
-    },
-    {
-      "key": "serial",
-      "label": "POPUP.INCOME_EXPENDITURE.SERIAL",
-      "type": "number"
-    },
-    {
-      "key": "status",
-      "label": "POPUP.INCOME_EXPENDITURE.STATUS",
-      "type": "text"
-    }
-  ],
-  "query": {
-    "formId": {
-      "controller": "income-expenditure.page.json",
-      "formId": "incomeExpenditure",
-      "primaryKey": [
-        "incomeExpenditure_id"
-      ],
-      "type": "list",
-      "action": "loading",
-      "idVC": "",
-      "value": [],
-      "listTable": [
-        "incomeExpenditure"
-      ],
-      "VCDate": ""
-    }
-  },
-  "sort": "incomeExpenditure_id",
-  "actions": []
+	"id": "income-expenditure",
+	"title": "GRID.INCOME_EXPENDITURE",
+	"headers": [
+		{
+			"key": "type",
+			"label": "POPUP.INCOME_EXPENDITURE.TYPE",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "incomeExpenditure_id",
+			"label": "POPUP.INCOME_EXPENDITURE.CODE",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "incomeExpenditure_Name",
+			"label": "POPUP.INCOME_EXPENDITURE.NAME_VN",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "incomeExpenditure_Name2",
+			"label": "POPUP.INCOME_EXPENDITURE.NAME_EN",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "serial",
+			"label": "POPUP.INCOME_EXPENDITURE.SERIAL",
+			"type": "number",
+			"width": "100px"
+		},
+		{
+			"key": "status",
+			"label": "POPUP.INCOME_EXPENDITURE.STATUS",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "income-expenditure.page.json",
+			"formId": "incomeExpenditure",
+			"primaryKey": [
+				"incomeExpenditure_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"incomeExpenditure"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "incomeExpenditure_id",
+	"actions": []
 }

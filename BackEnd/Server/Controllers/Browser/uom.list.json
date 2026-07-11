@@ -6,22 +6,26 @@
 			"key": "uomCode",
 			"label": "POPUP.UOM.CODE",
 			"type": "text",
-			"sortable": true
+			"sortable": true,
+			"width": "100px"
 		},
 		{
 			"key": "uomName",
 			"label": "POPUP.UOM.NAME_VN",
-			"type": "text"
+			"type": "text",
+			"width": "100px"
 		},
 		{
 			"key": "uomName2",
 			"label": "POPUP.UOM.NAME_EN",
-			"type": "text"
+			"type": "text",
+			"width": "100px"
 		},
 		{
 			"key": "status",
 			"label": "POPUP.UOM.STATUS",
 			"type": "text",
+			"width": "150px",
 			"options": [
 				{
 					"label": "POPUP.UOM.ACTIVE",

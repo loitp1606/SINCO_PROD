@@ -407,16 +407,117 @@
 }
 
 .popup-modernized .summary-card {
-  background: #f8fbff;
-  border: 1px solid #cfe0f3;
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  background: #ffffff;
+  border: 1px solid #bed2e8;
+  border-top: 3px solid #1f5f99;
   border-radius: 8px;
-  padding: 8px 10px;
-  box-shadow: 0 3px 10px rgba(30, 64, 175, 0.08);
+  padding: 0 12px 8px;
+  box-shadow: 0 4px 14px rgba(30, 64, 175, 0.1);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 4px 0;
 }
 
-.popup-modernized .summary-card > div:first-child {
+.popup-modernized .summary-card__title {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   color: #1f3f66;
+  font-size: 1rem;
   font-weight: 700;
+  line-height: 1.25;
+  padding: 7px 12px;
+  margin: 0 -12px 4px;
+  background: #eef5fb;
+  border-bottom: 1px solid #d2e0ee;
+}
+
+.popup-modernized .summary-card__count {
+  flex: 0 0 auto;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #1f5f99;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+}
+
+.popup-modernized .summary-card__item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  padding: 7px 14px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.popup-modernized .summary-card__item--wide {
+  grid-column: span 2;
+}
+
+.popup-modernized .summary-card__item .summary-label,
+.popup-modernized .summary-card__item .summary-value {
+  text-align: left;
+}
+
+.popup-modernized .summary-card__item .summary-label {
+  color: #52667d;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1rem;
+}
+
+.popup-modernized .summary-card__item .summary-value {
+  color: #132f4c;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35rem;
+  overflow-wrap: anywhere;
+}
+
+.popup-modernized .summary-card__item--total {
+  border-left: 3px solid #059669;
+  background: #ecfdf5;
+}
+
+.popup-modernized .summary-card__item--total .summary-label {
+  color: #047857;
+}
+
+.popup-modernized .summary-card__item--total .summary-value {
+  color: #065f46;
+}
+
+.popup-modernized .summary-card__item .summary-total {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+@media (max-width: 640px) {
+  .popup-modernized .summary-card {
+    grid-template-columns: 1fr;
+  }
+
+  .popup-modernized .summary-card__item--wide {
+    grid-column: auto;
+  }
+
+  .popup-modernized .summary-card__item {
+    border-left: 0;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .popup-modernized .summary-card__item--total {
+    border-top: 3px solid #059669;
+  }
 }
 
 .debt-summary-overlay {

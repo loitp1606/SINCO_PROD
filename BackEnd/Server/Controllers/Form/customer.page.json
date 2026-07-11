@@ -24,14 +24,16 @@
 						"label": "Mã khách hàng",
 						"type": "taxcode",
 						"required": true,
-						"placeholder": "Nhập mã khách hàng"
+						"placeholder": "Nhập mã khách hàng",
+						"width": "350px"
 					},
 					{
 						"key": "customer_name",
 						"label": "Tên khách hàng",
 						"type": "text",
 						"required": true,
-						"placeholder": "Nhập tên khách hàng"
+						"placeholder": "Nhập tên khách hàng",
+						"width": "350px"
 					},
 					{
 						"key": "customer_group_id",
@@ -48,12 +50,14 @@
 									"operator": "="
 								}
 							]
-						}
+						},
+						"width": "350px"
 					},
 					{
 						"key": "represent_birthday",
 						"label": "Ngày sinh người đại diện",
 						"type": "date",
+						"width": "150px",
 						"required": false,
 						"placeholder": "Nhập ngày sinh"
 					},
@@ -61,6 +65,7 @@
 						"key": "date_establishment",
 						"label": "Ngày thành lập CTY",
 						"type": "date",
+						"width": "150px",
 						"required": false,
 						"placeholder": "Nhập thành lập"
 					},
@@ -69,6 +74,7 @@
 						"label": "Hạn mức công nợ",
 						"currency": "VN",
 						"type": "number",
+						"width": "100px",
 						"required": false,
 						"placeholder": "Nhập hạn mức"
 					},
@@ -76,6 +82,7 @@
 						"key": "phone_number",
 						"label": "Số điện thoại",
 						"type": "text",
+						"width": "150px",
 						"placeholder": "Nhập số điện thoại",
 						"required": false
 					},
@@ -83,18 +90,21 @@
 						"key": "ma_so_thue",
 						"label": "Mã số thuế",
 						"type": "text",
-						"required": false
+						"required": false,
+						"width": "200px"
 					},
 					{
 						"key": "email",
 						"label": "Email",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "address",
 						"label": "Địa chỉ đăng ký",
 						"type": "text",
+						"width": "150px",
 						"placeholder": "Nhập địa chỉ",
 						"required": false
 					},
@@ -103,12 +113,14 @@
 						"label": "Thành phố",
 						"placeholder": "Thành phố",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "district",
 						"label": "Quận/Huyện",
 						"type": "text",
+						"width": "150px",
 						"placeholder": "Nhập Quận/Huyện",
 						"required": false
 					},
@@ -117,6 +129,7 @@
 						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -133,6 +146,7 @@
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
+						"width": "150px",
 						"uiTab": "Ghi chú",
 						"placeholder": "Nhập ghi chú",
 						"required": false
@@ -141,6 +155,7 @@
 						"key": "supplier_id",
 						"label": "ID nhà cung cấp",
 						"type": "text",
+						"width": "150px",
 						"placeholder": "Nhập ID NCC",
 						"required": false
 					}
@@ -157,32 +172,38 @@
 						{
 							"key": "name",
 							"label": "Tên người liên hệ",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "role",
 							"label": "Chức vụ",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "phone_number",
 							"label": "Số điện thoại",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "email",
 							"label": "Email",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "address",
 							"label": "Địa chỉ liên hệ",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "note",
 							"label": "Ghi chú",
 							"type": "text",
+							"width": "150px",
 							"uiTab": "Ghi chú"
 						}
 					]
@@ -197,6 +218,7 @@
 							"key": "delivery_id",
 							"label": "Thông tin giao hàng",
 							"type": "lookup",
+							"width": "150px",
 							"default": {
 								"controller": "deliveryLocation",
 								"filter": []
@@ -205,22 +227,26 @@
 						{
 							"key": "role",
 							"label": "Người liên hệ giao hàng",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "address",
 							"label": "Địa chỉ giao hàng",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "phone_number",
 							"label": "Số điện thoại giao hàng",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "note",
 							"label": "Ghi chú giao hàng",
 							"type": "text",
+							"width": "150px",
 							"uiTab": "Ghi chú"
 						}
 					]
@@ -244,4 +270,3 @@
 		}
 	}
 }
-

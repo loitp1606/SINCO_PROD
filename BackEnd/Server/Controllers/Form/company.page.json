@@ -1,119 +1,132 @@
 {
-  "controller": "company",
-  "type": "list",
-  "formId": "company",
-  "primaryKey": [ "company_id" ],
-  "idVC": "",
-  "VCDate": "",
-  "title": "",
-  "class": "onSelectChange()",
-  "tabs": [
-    {
-      "title": "Thông tin công ty",
-      "class": "text-[48px] px-4 py-2 focus:outline-none",
-      "form": {
-        "typeForm": "master",
-        "formId": "company",
-        "primaryKey": "company_id",
-        "title": "Thông tin công ty",
-        "fields": [
-          {
-            "key": "company_id",
-            "label": "Mã công ty",
-            "type": "text",
-            "required": true,
-            "placeholder": "Nhập mã công ty"
-          },
-          {
-            "key": "company_name",
-            "label": "Tên công ty",
-            "type": "text",
-            "required": true,
-            "placeholder": "Nhập tên công ty"
-          },
-          {
-            "key": "phone_number",
-            "label": "Số điện thoại",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập số điện thoại"
-          },
-          {
-            "key": "fax_number",
-            "label": "Số fax",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập số fax"
-          },
-          {
-            "key": "address",
-            "label": "Địa chỉ",
-            "type": "textarea",
-            "required": false,
-            "placeholder": "Nhập địa chỉ công ty"
-          },
-          {
-            "key": "mst",
-            "label": "Mã số thuế",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập mã số thuế"
-          },
-          {
-            "key": "bank_number",
-            "label": "STK",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập số tài khoản"
-          },
-          {
-            "key": "bank_name",
-            "label": "Ngân hàng",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập ngân hàng"
-          },
-          {
-            "key": "giam_doc",
-            "label": "Người đại diện",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập người đại diện"
-          },
-          {
-            "key": "email",
-            "label": "Email",
-            "type": "text",
-            "required": false,
-            "placeholder": "Nhập email"
-          },
-          {
-            "key": "status",
-            "default": "1",
-            "label": "Trạng thái",
-            "type": "select",
-            "required": true,
-            "placeholder": "Nhập Trạng thái",
-            "defaultValue": "1",
-            "options": [
-              {
-                "label": "Đang hoạt động",
-                "value": "1"
-              },
-              {
-                "label": "Không hoạt động",
-                "value": "0"
-              }
-            ]
-          }
-        ],
-        "initialData": {}
-      }
-    }
-  ],
-  "dataProcessing": {
-    "actions": {
-      "post": []
-    }
-  }
+	"controller": "company",
+	"type": "list",
+	"formId": "company",
+	"primaryKey": [
+		"company_id"
+	],
+	"idVC": "",
+	"VCDate": "",
+	"title": "",
+	"class": "onSelectChange()",
+	"tabs": [
+		{
+			"title": "Thông tin công ty",
+			"class": "text-[48px] px-4 py-2 focus:outline-none",
+			"form": {
+				"typeForm": "master",
+				"formId": "company",
+				"primaryKey": "company_id",
+				"title": "Thông tin công ty",
+				"fields": [
+					{
+						"key": "company_id",
+						"label": "Mã công ty",
+						"type": "text",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập mã công ty"
+					},
+					{
+						"key": "company_name",
+						"label": "Tên công ty",
+						"type": "text",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập tên công ty"
+					},
+					{
+						"key": "phone_number",
+						"label": "Số điện thoại",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập số điện thoại"
+					},
+					{
+						"key": "fax_number",
+						"label": "Số fax",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập số fax"
+					},
+					{
+						"key": "address",
+						"label": "Địa chỉ",
+						"type": "textarea",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập địa chỉ công ty"
+					},
+					{
+						"key": "mst",
+						"label": "Mã số thuế",
+						"type": "text",
+						"required": false,
+						"placeholder": "Nhập mã số thuế",
+						"width": "200px"
+					},
+					{
+						"key": "bank_number",
+						"label": "STK",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập số tài khoản"
+					},
+					{
+						"key": "bank_name",
+						"label": "Ngân hàng",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập ngân hàng"
+					},
+					{
+						"key": "giam_doc",
+						"label": "Người đại diện",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập người đại diện"
+					},
+					{
+						"key": "email",
+						"label": "Email",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập email"
+					},
+					{
+						"key": "status",
+						"default": "1",
+						"label": "Trạng thái",
+						"type": "select",
+						"width": "150px",
+						"required": true,
+						"placeholder": "Nhập Trạng thái",
+						"defaultValue": "1",
+						"options": [
+							{
+								"label": "Đang hoạt động",
+								"value": "1"
+							},
+							{
+								"label": "Không hoạt động",
+								"value": "0"
+							}
+						]
+					}
+				],
+				"initialData": {}
+			}
+		}
+	],
+	"dataProcessing": {
+		"actions": {
+			"post": []
+		}
+	}
 }
