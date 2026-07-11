@@ -160,7 +160,6 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
     const key = data[this.response.primaryKey[0]];
     this.selectData(key);
-    this.inlineQuery = this.getItemDisplayText(data);
     this.showInlineDropdown = false;
   }
 
@@ -320,8 +319,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       }
       this.valueChange.emit(this.selectedItems);
     } else {
-      this.selectedItem = prikey == this.selectedItem ? null : prikey;
-
+      this.selectedItem = prikey;
       this.valueChange.emit(this.selectedItem);
       this.syncInlineQueryWithSelection();
       this.showPopup = false;
