@@ -345,18 +345,31 @@
                 </th>
 
                 <th *ngFor="let field of getAllDetailFields()" [style.width]="getFieldWidth(field)"
-                  class="resizable-header" [hidden]="field.type === 'hidden'" [attr.data-field-key]="field.key">
+                  class="resizable-header cursor-pointer select-none" [hidden]="field.type === 'hidden'" [attr.data-field-key]="field.key"
+                  (click)="onDetailSortClick(field)"
+                  title="Bấm để sắp xếp">
 
                   <div class="flex items-center justify-between">
-                    <span>
+                    <span class="inline-flex items-center gap-1">
                       {{ field.label | translate}}
                       <span *ngIf="field.required" class="text-red-500">*</span>
+                      <span class="text-[10px] leading-none"
+                        [class.text-cyan-200]="getDetailSortDirection(field.key)"
+                        [class.text-slate-300]="!getDetailSortDirection(field.key)">
+                        {{
+                          getDetailSortDirection(field.key) === 'asc'
+                            ? '▲'
+                            : getDetailSortDirection(field.key) === 'desc'
+                              ? '▼'
+                              : '↕'
+                        }}
+                      </span>
                     </span>
                     <span *ngIf="currentColumnFilters[field.key]" class="ml-2 text-blue-600 text-[10px] font-semibold"
                       title="Đang lọc: {{ currentColumnFilters[field.key] }}">
                       LOC
                     </span>
-                    <div class="resize-handle" (mousedown)="startResize($event, field.key)"
+                    <div class="resize-handle" (click)="$event.stopPropagation()" (mousedown)="startResize($event, field.key)"
                       (dblclick)="autoResizeColumn($event, field.key)"
                       title="Kéo để thay đổi độ rộng, double-click để auto-resize">
                     </div>

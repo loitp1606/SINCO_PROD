@@ -866,16 +866,31 @@
                   <th
                     *ngFor="let field of getAllDetailFields()"
                     [style.width]="getFieldWidth(field.key)"
-                    class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group"
+                    class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group cursor-pointer select-none"
                     [hidden]="field.type === 'hidden'"
                     [attr.data-field-key]="field.key"
+                    (click)="onDetailSortClick(field)"
+                    title="Bấm để sắp xếp"
                   >
                     <div class="flex items-center justify-between">
-                      <span>
+                      <span class="inline-flex items-center gap-1">
                         {{ field.label | translate }}
                         <span *ngIf="field.required" class="text-red-500"
                           >*</span
                         >
+                        <span
+                          class="text-[10px] leading-none"
+                          [class.text-cyan-200]="getDetailSortDirection(field.key)"
+                          [class.text-slate-300]="!getDetailSortDirection(field.key)"
+                        >
+                          {{
+                            getDetailSortDirection(field.key) === 'asc'
+                              ? '▲'
+                              : getDetailSortDirection(field.key) === 'desc'
+                                ? '▼'
+                                : '↕'
+                          }}
+                        </span>
                       </span>
                       <span
                         *ngIf="currentColumnFilters[field.key]"
@@ -887,6 +902,7 @@
                     </div>
                     <div
                       class="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-cyan-300 transition-colors"
+                      (click)="$event.stopPropagation()"
                       (mousedown)="onResizeColumn($event, field)"
                     ></div>
                   </th>

@@ -136,6 +136,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   columnFiltersData: {
     [tabIndex: number]: { [detailIndex: number]: { [key: string]: string } };
   } = {};
+  detailSortData: {
+    [tabIndex: number]: { [detailIndex: number]: { key: string; direction: 'asc' | 'desc' | '' } };
+  } = {};
 
   // loopup map
   lookupMap: Record<string, LookupApiResponse> = {};
@@ -1650,15 +1653,19 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       // Initialize detail data structures
       if (tab.detail && Array.isArray(tab.detail)) {
         const existingTabFilters = this.columnFiltersData[index] || {};
+        const existingTabSort = this.detailSortData[index] || {};
         this.detailRowsData[index] = {};
         this.filteredDetailRowsData[index] = {};
         this.columnFiltersData[index] = this.columnFiltersData[index] || {};
+        this.detailSortData[index] = this.detailSortData[index] || {};
 
         tab.detail.forEach((_, detailIndex) => {
           this.detailRowsData[index][detailIndex] = [];
           this.filteredDetailRowsData[index][detailIndex] = [];
           this.columnFiltersData[index][detailIndex] =
             existingTabFilters[detailIndex] || {};
+          this.detailSortData[index][detailIndex] =
+            existingTabSort[detailIndex] || { key: '', direction: '' };
         });
       }
     }
@@ -1758,13 +1765,13 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
     if (activeFilters.length === 0) {
       this.filteredDetailRowsData[this.selectedTab][this.selectedDetailIndex] =
-        [...currentRows];
+        this.applyDetailSort([...currentRows]);
       this.syncActiveDetailRowIndex();
       return;
     }
 
     this.filteredDetailRowsData[this.selectedTab][this.selectedDetailIndex] =
-      currentRows.filter((row) => {
+      this.applyDetailSort(currentRows.filter((row) => {
         const matches = activeFilters.map((fieldKey) => {
           const filterValue = filters[fieldKey].toLowerCase();
           const rawRowValue = row[fieldKey];
@@ -1797,8 +1804,86 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
         return this.filterMode === 'all'
           ? matches.every((match) => match)
           : matches.some((match) => match);
-      });
+      }));
     this.syncActiveDetailRowIndex();
+  }
+
+  onDetailSortClick(field: any): void {
+    if (!field?.key || field.type === 'hidden') {
+      return;
+    }
+
+    if (!this.detailSortData[this.selectedTab]) {
+      this.detailSortData[this.selectedTab] = {};
+    }
+    const currentSort =
+      this.detailSortData[this.selectedTab][this.selectedDetailIndex] ||
+      { key: '', direction: '' as 'asc' | 'desc' | '' };
+    let nextDirection: 'asc' | 'desc' | '' = 'asc';
+
+    if (currentSort.key === field.key) {
+      nextDirection =
+        currentSort.direction === 'asc'
+          ? 'desc'
+          : currentSort.direction === 'desc'
+            ? ''
+            : 'asc';
+    }
+
+    this.detailSortData[this.selectedTab][this.selectedDetailIndex] = {
+      key: nextDirection ? field.key : '',
+      direction: nextDirection,
+    };
+    this.applyFilters();
+  }
+
+  getDetailSortDirection(fieldKey: string): 'asc' | 'desc' | '' {
+    const sort = this.detailSortData[this.selectedTab]?.[this.selectedDetailIndex];
+    return sort?.key === fieldKey ? sort.direction : '';
+  }
+
+  private applyDetailSort(rows: any[]): any[] {
+    const sort = this.detailSortData[this.selectedTab]?.[this.selectedDetailIndex];
+    if (!sort?.key || !sort.direction) {
+      return rows;
+    }
+
+    const field = this.getAllDetailFields()?.find((f) => f.key === sort.key);
+    const direction = sort.direction === 'asc' ? 1 : -1;
+
+    return [...rows].sort((a, b) => {
+      const aValue = this.getDetailSortValue(a, sort.key, field);
+      const bValue = this.getDetailSortValue(b, sort.key, field);
+
+      if (aValue === bValue) return 0;
+      if (aValue === null || aValue === undefined || aValue === '') return 1;
+      if (bValue === null || bValue === undefined || bValue === '') return -1;
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return (aValue - bValue) * direction;
+      }
+
+      return `${aValue}`.localeCompare(`${bValue}`, undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      }) * direction;
+    });
+  }
+
+  private getDetailSortValue(row: any, fieldKey: string, field: any): any {
+    const rawValue = row?.[fieldKey];
+    if (field?.type === 'lookup') {
+      return this.getLookupDisplayValue(fieldKey, rawValue);
+    }
+    if (field?.type === 'number') {
+      const numericValue = Number(`${rawValue ?? ''}`.replace(/,/g, ''));
+      return Number.isNaN(numericValue) ? rawValue : numericValue;
+    }
+    if (field?.type === 'date' || field?.type === 'datetime') {
+      const time = new Date(rawValue).getTime();
+      return Number.isNaN(time) ? rawValue : time;
+    }
+    return rawValue;
   }
 
   private getLookupDisplayValue(fieldKey: string, rawValue: any): string {

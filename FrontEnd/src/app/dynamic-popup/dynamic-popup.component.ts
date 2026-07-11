@@ -86,6 +86,9 @@ export class DynamicPopupComponent implements OnInit {
     columnFiltersData: {
         [tabIndex: number]: { [detailIndex: number]: { [key: string]: string } }
     } = {};
+    detailSortData: {
+        [tabIndex: number]: { [detailIndex: number]: { key: string; direction: 'asc' | 'desc' | '' } }
+    } = {};
     filterMode: 'all' | 'any' = 'all';
 
     masterAggregates: { [key: string]: any } = {};
@@ -726,6 +729,9 @@ export class DynamicPopupComponent implements OnInit {
         if (!this.columnFiltersData[tabIndex]) {
             this.columnFiltersData[tabIndex] = {}
         }
+        if (!this.detailSortData[tabIndex]) {
+            this.detailSortData[tabIndex] = {}
+        }
 
         if (!Array.isArray(this.detailRowsData[tabIndex][detailIndex])) {
             this.detailRowsData[tabIndex][detailIndex] = []
@@ -735,6 +741,9 @@ export class DynamicPopupComponent implements OnInit {
         }
         if (!this.columnFiltersData[tabIndex][detailIndex]) {
             this.columnFiltersData[tabIndex][detailIndex] = {}
+        }
+        if (!this.detailSortData[tabIndex][detailIndex]) {
+            this.detailSortData[tabIndex][detailIndex] = { key: '', direction: '' }
         }
     }
 
@@ -2273,12 +2282,12 @@ export class DynamicPopupComponent implements OnInit {
 
         if (activeFilters.length === 0) {
             this.filteredDetailRowsData[this.selectedTab][this.selectedDetailIndex] =
-                [...currentRows]
+                this.applyDetailSort([...currentRows])
             return
         }
 
         this.filteredDetailRowsData[this.selectedTab][this.selectedDetailIndex] =
-            currentRows.filter((row) => {
+            this.applyDetailSort(currentRows.filter((row) => {
                 const matches = activeFilters.map((fieldKey) => {
                     const filterValue = filters[fieldKey].toLowerCase()
                     const rawRowValue = row[fieldKey]
@@ -2315,7 +2324,81 @@ export class DynamicPopupComponent implements OnInit {
                 return this.filterMode === 'all'
                     ? matches.every((match) => match)
                     : matches.some((match) => match)
-            })
+            }))
+    }
+
+    onDetailSortClick(field: any): void {
+        if (!field?.key || field.type === 'hidden') {
+            return
+        }
+
+        this.ensureDetailState()
+        const currentSort = this.detailSortData[this.selectedTab][this.selectedDetailIndex]
+        let nextDirection: 'asc' | 'desc' | '' = 'asc'
+
+        if (currentSort.key === field.key) {
+            nextDirection =
+                currentSort.direction === 'asc'
+                    ? 'desc'
+                    : currentSort.direction === 'desc'
+                        ? ''
+                        : 'asc'
+        }
+
+        this.detailSortData[this.selectedTab][this.selectedDetailIndex] = {
+            key: nextDirection ? field.key : '',
+            direction: nextDirection,
+        }
+        this.applyFilters()
+    }
+
+    getDetailSortDirection(fieldKey: string): 'asc' | 'desc' | '' {
+        const sort = this.detailSortData[this.selectedTab]?.[this.selectedDetailIndex]
+        return sort?.key === fieldKey ? sort.direction : ''
+    }
+
+    private applyDetailSort(rows: any[]): any[] {
+        const sort = this.detailSortData[this.selectedTab]?.[this.selectedDetailIndex]
+        if (!sort?.key || !sort.direction) {
+            return rows
+        }
+
+        const field = this.getAllDetailFields()?.find((f) => f.key === sort.key)
+        const direction = sort.direction === 'asc' ? 1 : -1
+
+        return [...rows].sort((a, b) => {
+            const aValue = this.getDetailSortValue(a, sort.key, field)
+            const bValue = this.getDetailSortValue(b, sort.key, field)
+
+            if (aValue === bValue) return 0
+            if (aValue === null || aValue === undefined || aValue === '') return 1
+            if (bValue === null || bValue === undefined || bValue === '') return -1
+
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return (aValue - bValue) * direction
+            }
+
+            return `${aValue}`.localeCompare(`${bValue}`, undefined, {
+                numeric: true,
+                sensitivity: 'base',
+            }) * direction
+        })
+    }
+
+    private getDetailSortValue(row: any, fieldKey: string, field: any): any {
+        const rawValue = row?.[fieldKey]
+        if (field?.type === 'lookup') {
+            return this.getLookupDisplayValue(fieldKey, rawValue)
+        }
+        if (field?.type === 'number') {
+            const numericValue = Number(`${rawValue ?? ''}`.replace(/,/g, ''))
+            return Number.isNaN(numericValue) ? rawValue : numericValue
+        }
+        if (field?.type === 'date' || field?.type === 'datetime') {
+            const time = new Date(rawValue).getTime()
+            return Number.isNaN(time) ? rawValue : time
+        }
+        return rawValue
     }
 
     private getLookupDisplayValue(fieldKey: string, rawValue: any): string {
