@@ -338,13 +338,13 @@
 							"key": "itemNameCustomer",
 							"label": "Tên Vật tư KH",
 							"type": "text",
-							"width": "450px"
+							"width": "250px"
 						},
 						{
 							"key": "uomCust",
 							"label": "Đơn vị tính KH",
 							"required": true,
-							"width": "100px",
+							"width": "130px",
 							"type": "lookup",
 							"multiple": false,
 							"default": {
@@ -383,9 +383,12 @@
 								"dataType": [
 									"String"
 								],
-								"query": "select uom from item where item_id = @itemCode",
+								"query": "select uom, uom as uomCust, item_name as itemNameCustomer from item where item_id = @itemCode",
 								"map": {
-									"uom": "uom"
+									"uom": "uom",
+									"uomCust": "uomCust",
+									"itemNameCustomer": "itemNameCustomer"
+									
 								}
 							}
 						},
@@ -394,7 +397,7 @@
 							"label": "Đơn vị tính",
 							"required": true,
 							"type": "lookup",
-							"width": "100px",
+							"width": "130px",
 							"multiple": false,
 							"default": {
 								"controller": "uom",
