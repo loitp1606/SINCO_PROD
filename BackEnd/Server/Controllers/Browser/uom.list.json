@@ -1,0 +1,60 @@
+{
+	"id": "uom",
+	"title": "GRID.UOM",
+	"headers": [
+		{
+			"key": "uomCode",
+			"label": "POPUP.UOM.CODE",
+			"type": "text",
+			"sortable": true,
+			"width": "100px"
+		},
+		{
+			"key": "uomName",
+			"label": "POPUP.UOM.NAME_VN",
+			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "uomName2",
+			"label": "POPUP.UOM.NAME_EN",
+			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "status",
+			"label": "POPUP.UOM.STATUS",
+			"type": "text",
+			"width": "150px",
+			"options": [
+				{
+					"label": "POPUP.UOM.ACTIVE",
+					"value": "1"
+				},
+				{
+					"label": "POPUP.UOM.LOCKED",
+					"value": "0"
+				}
+			]
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "uom.page.json",
+			"formId": "uom",
+			"primaryKey": [
+				"uomCode"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"uom"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "uomCode",
+	"actions": []
+}

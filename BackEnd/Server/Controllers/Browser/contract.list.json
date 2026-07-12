@@ -12,37 +12,44 @@
 		{
 			"key": "voucherDate",
 			"label": "Ngày tạo",
-			"type": "date"
+			"type": "date",
+			"width": "100px"
 		},
 		{
 			"key": "voucherNumber",
 			"label": "Số hợp đồng",
-			"type": "text"
+			"type": "text",
+			"width": "100px"
 		},
 		{
 			"key": "customer_id",
 			"label": "Mã khách hàng",
-			"type": "lookup"
+			"type": "lookup",
+			"width": "350px"
 		},
 		{
 			"key": "number_ddh",
 			"label": "Số ĐĐH",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		},
 		{
 			"key": "quotationCode",
 			"label": "Số báo giá",
-			"type": "text"
+			"type": "text",
+			"width": "150px"
 		},
 		{
 			"key": "total_payment",
 			"label": "GRID.total_amount",
-			"type": "number"
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "isReceived",
 			"label": "Đã nhận",
 			"type": "checkbox",
+			"width": "150px",
 			"quickEditable": true
 		}
 	],

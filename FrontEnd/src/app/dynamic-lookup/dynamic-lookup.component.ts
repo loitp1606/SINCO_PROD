@@ -42,6 +42,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
   showInlineDropdown = false;
   pageSize = 10;
   currentPage = 0;
+  private quickCreateRequestId = '';
   private readonly quickCreateStorageKey = 'sinco_quick_create_result';
   private readonly quickCreateRouteMap: Record<string, string> = {
     customer: 'customer/popup',
@@ -101,14 +102,19 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       if (!controller || controller !== this.getLookupController()) {
         return;
       }
+      const requestId = typeof payload?.requestId === 'string' ? payload.requestId : '';
+      if (requestId && requestId !== this.quickCreateRequestId) {
+        return;
+      }
 
-      this.reloadLookupData();
+      this.reloadLookupData(payload);
     } catch (error) {
       console.warn('Unable to parse quick create payload:', error);
     }
   }
 
   togglePopup() {
+    this.showInlineDropdown = false;
     this.showPopup = !this.showPopup;
   }
 
@@ -146,6 +152,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
   onInlineEnter(event: Event): void {
     event.preventDefault();
     this.commitInlineSelection();
+    this.showInlineDropdown = false;
   }
 
   selectInlineData(data: any): void {
@@ -155,7 +162,6 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
     const key = data[this.response.primaryKey[0]];
     this.selectData(key);
-    this.inlineQuery = this.getItemDisplayText(data);
     this.showInlineDropdown = false;
   }
 
@@ -193,9 +199,9 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       return '';
     }
 
-    const primaryField = this.response.fields?.[0]?.field;
+    const primaryField = this.getPrimaryField();
     const foundItem = this.response.datas.find(
-      (data) => data?.[primaryField] == this.selectedItem
+      (data) => this.lookupValuesEqual(data?.[primaryField], this.selectedItem)
     );
 
     return foundItem ? this.getItemDisplayText(foundItem).trim() : '';
@@ -212,11 +218,12 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
         this.selectedItem = null;
         this.valueChange.emit(null);
       }
+      this.syncInlineQueryWithSelection();
       return;
     }
 
     const lowerQuery = query.toLowerCase();
-    const primaryField = this.response.fields?.[0]?.field;
+    const primaryField = this.getPrimaryField();
 
     const exactPrimary = this.response.datas.find(
       (data) => String(data?.[primaryField] ?? '').toLowerCase() === lowerQuery
@@ -237,7 +244,10 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     const candidates = this.getInlineFilteredData();
     if (candidates.length === 1) {
       this.selectInlineData(candidates[0]);
+      return;
     }
+
+    this.syncInlineQueryWithSelection();
   }
 
   canQuickCreate(): boolean {
@@ -256,7 +266,8 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       return;
     }
 
-    const popupUrl = `${window.location.origin}/${popupRoute}?quickCreate=1&controller=${encodeURIComponent(controller)}`;
+    this.quickCreateRequestId = `${controller}_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const popupUrl = `${window.location.origin}/${popupRoute}?quickCreate=1&controller=${encodeURIComponent(controller)}&requestId=${encodeURIComponent(this.quickCreateRequestId)}`;
     const quickCreateWindow = window.open(
       popupUrl,
       '_blank',
@@ -302,21 +313,25 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     if (this.currentPage > 0) this.setPage(this.currentPage - 1);
   }
 
-  selectData(prikey: string) {
+  selectData(prikey: any) {
     if (this.multiple) {
-      const exists = this.selectedItems.some((item) => item === prikey);
+      const exists = this.selectedItems.some((item) =>
+        this.lookupValuesEqual(item, prikey)
+      );
       if (exists) {
         this.selectedItems = this.selectedItems.filter(
-          (item) => item !== prikey
+          (item) => !this.lookupValuesEqual(item, prikey)
         );
       } else {
         this.selectedItems.push(prikey);
       }
       this.valueChange.emit(this.selectedItems);
     } else {
-      this.selectedItem = prikey == this.selectedItem ? null : prikey;
-
-      this.valueChange.emit(this.selectedItem);
+      const changed = !this.lookupValuesEqual(this.selectedItem, prikey);
+      this.selectedItem = prikey;
+      if (changed) {
+        this.valueChange.emit(this.selectedItem);
+      }
       this.syncInlineQueryWithSelection();
       this.showPopup = false;
     }
@@ -324,8 +339,8 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
   isSelected(data: any): boolean {
     return this.multiple
-      ? this.selectedItems.includes(data)
-      : this.selectedItem === data;
+      ? this.selectedItems.some((item) => this.lookupValuesEqual(item, data))
+      : this.lookupValuesEqual(this.selectedItem, data);
   }
 
   getDisplayText(): string {
@@ -336,9 +351,12 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
 
     if (this.multiple) {
+      const primaryField = this.getPrimaryField();
       const displayText = this.response.datas
         .filter((data) =>
-          this.selectedItems.includes(data[this.response.fields[0].field])
+          this.selectedItems.some((item) =>
+            this.lookupValuesEqual(item, data?.[primaryField])
+          )
         )
         .map((item) =>
           this.response.fields.map((f) => item[f.field]).join(' - ')
@@ -347,8 +365,9 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
       return displayText;
     } else {
+      const primaryField = this.getPrimaryField();
       const foundItem = this.response.datas.find(
-        (data) => data[this.response.fields[0].field] == this.selectedItem
+        (data) => this.lookupValuesEqual(data?.[primaryField], this.selectedItem)
       );
 
 
@@ -403,10 +422,23 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       return;
     }
 
+    const primaryField = this.getPrimaryField();
     const foundItem = this.response.datas.find(
-      (data) => data[this.response.fields[0].field] == this.selectedItem
+      (data) => this.lookupValuesEqual(data?.[primaryField], this.selectedItem)
     );
     this.inlineQuery = foundItem ? this.getItemDisplayText(foundItem) : '';
+  }
+
+  private getPrimaryField(): string {
+    return this.response?.primaryKey?.[0] || this.response?.fields?.[0]?.field || '';
+  }
+
+  private lookupValuesEqual(left: any, right: any): boolean {
+    if (left === null || left === undefined || right === null || right === undefined) {
+      return left === right;
+    }
+
+    return String(left) === String(right);
   }
 
   getItemDisplayText(item: any): string {
@@ -419,7 +451,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       : '';
   }
 
-  private reloadLookupData(): void {
+  private reloadLookupData(quickCreatePayload?: any): void {
     if (!this.lookupQuery) {
       return;
     }
@@ -427,7 +459,45 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     this.http.post<any>(`${environment.apiUrl}/api/Lookup`, this.lookupQuery)
       .subscribe((res) => {
         this.response = res.data as LookupApiResponse;
+        this.selectQuickCreatedRecord(quickCreatePayload);
         this.syncResponseData();
       });
+  }
+
+  private selectQuickCreatedRecord(payload?: any): void {
+    if (!payload || !this.response?.primaryKey?.length) {
+      return;
+    }
+
+    const primaryField = this.response.primaryKey[0];
+    const primaryValue =
+      payload?.primaryKeyValues?.[primaryField] ??
+      payload?.record?.[primaryField];
+
+    if (primaryValue === null || primaryValue === undefined || primaryValue === '') {
+      return;
+    }
+
+    const found = this.response.datas?.some(
+      (item) => `${item?.[primaryField] ?? ''}` === `${primaryValue}`,
+    );
+
+    if (!found && payload.record) {
+      this.response.datas = [...(this.response.datas || []), payload.record];
+    }
+
+    if (this.multiple) {
+      const exists = this.selectedItems.some((item) => `${item}` === `${primaryValue}`);
+      if (!exists) {
+        this.selectedItems = [...this.selectedItems, primaryValue];
+        this.valueChange.emit(this.selectedItems);
+      }
+    } else {
+      this.selectedItem = primaryValue;
+      this.valueChange.emit(this.selectedItem);
+      this.showPopup = false;
+    }
+
+    this.syncInlineQueryWithSelection();
   }
 }

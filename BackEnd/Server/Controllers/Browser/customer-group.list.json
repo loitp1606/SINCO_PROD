@@ -1,0 +1,50 @@
+{
+	"id": "customer-group",
+	"title": "GRID.CUSTOMER_GROUP",
+	"headers": [
+		{
+			"key": "customer_group_id",
+			"label": "POPUP.CUSTOMER_GROUP.ID",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "customer_group_name",
+			"label": "POPUP.CUSTOMER_GROUP.NAME",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "note",
+			"label": "POPUP.CUSTOMER_GROUP.NOTE",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "POPUP.CUSTOMER_GROUP.STATUS",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "customer-group.page.json",
+			"formId": "customerGroup",
+			"primaryKey": [
+				"customer_group_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"customerGroup"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "customer_group_id",
+	"actions": []
+}

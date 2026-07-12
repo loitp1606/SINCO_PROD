@@ -1,0 +1,59 @@
+{
+	"id": "note",
+	"title": "Ghi chú",
+	"headers": [
+		{
+			"key": "note_id",
+			"label": "Mã ghi chú",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "note_content",
+			"label": "Ghi chú default",
+			"type": "textarea",
+			"width": "150px"
+		},
+		{
+			"key": "feature_code",
+			"label": "Tính năng",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "Trạng thái",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang hoạt động",
+					"value": "0"
+				},
+				{
+					"label": "Không hoạt động",
+					"value": "1"
+				}
+			]
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "note.page.json",
+			"formId": "note",
+			"primaryKey": [
+				"note_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"note"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "note_id",
+	"actions": []
+}

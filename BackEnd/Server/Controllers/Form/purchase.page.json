@@ -21,6 +21,7 @@
 						"key": "purchase_id",
 						"label": "Mã bảng giá mua",
 						"type": "text",
+						"width": "150px",
 						"required": true,
 						"disabled": false,
 						"placeholder": "Nhập mã bảng giá mua"
@@ -29,6 +30,7 @@
 						"key": "purchase_name",
 						"label": "Tên bảng giá mua",
 						"type": "text",
+						"width": "150px",
 						"required": true,
 						"placeholder": "Nhập tên bảng giá mua (tối đa 100 ký tự)",
 						"maxLength": 100
@@ -37,6 +39,7 @@
 						"key": "supplier_id",
 						"label": "Nhà cung cấp",
 						"type": "lookup",
+						"width": "150px",
 						"required": true,
 						"default": {
 							"controller": "supplier",
@@ -47,26 +50,31 @@
 						"key": "start_date",
 						"label": "Ngày hiệu lực",
 						"type": "date",
+						"width": "150px",
 						"required": true
 					},
 					{
 						"key": "end_date",
 						"label": "Ngày hết hiệu lực",
 						"type": "date",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
+						"width": "150px",
 						"uiTab": "Ghi chú",
 						"required": false,
 						"maxLength": 1000
 					},
 					{
 						"key": "status",
+						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -92,6 +100,7 @@
 							"key": "line_nbr",
 							"label": "STT",
 							"type": "text",
+							"width": "40px",
 							"disabled": true
 						},
 						{
@@ -129,6 +138,7 @@
 							"key": "unit_id",
 							"label": "Đơn vị tính",
 							"type": "lookup",
+							"width": "150px",
 							"multiple": false,
 							"required": true,
 							"default": {
@@ -148,18 +158,21 @@
 							"type": "number",
 							"required": true,
 							"min": 0.01,
-							"precision": 2
+							"precision": 2,
+							"width": "100px"
 						},
 						{
 							"key": "apply_date",
 							"label": "Ngày áp dụng giá",
 							"type": "date",
+							"width": "150px",
 							"required": false
 						},
 						{
 							"key": "note",
 							"label": "Ghi chú",
 							"type": "text",
+							"width": "150px",
 							"uiTab": "Ghi chú",
 							"required": false,
 							"maxLength": 1000

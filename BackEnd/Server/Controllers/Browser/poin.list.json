@@ -1,0 +1,100 @@
+{
+	"id": "poin",
+	"title": "Đơn đặt nhập hàng",
+	"headers": [
+		{
+			"key": "idGui",
+			"label": "ID",
+			"type": "text",
+			"hidden": true,
+			"sortable": true
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày tạo",
+			"type": "date",
+			"width": "100px"
+		},
+		{
+			"key": "voucherNumber",
+			"label": "Số phiếu",
+			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "vendorCode",
+			"label": "Mã NCC",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "Trạng thái",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đặt hàng",
+					"value": "0"
+				},
+				{
+					"label": "Chuyển phiếu nhập 1 phần",
+					"value": "1"
+				},
+				{
+					"label": "Đã nhập hàng",
+					"value": "2"
+				}
+			]
+		},
+		{
+			"key": "note",
+			"label": "Ghi chú",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "total_payment",
+			"label": "GRID.total_amount",
+			"type": "number",
+			"width": "100px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "poin.page.json",
+			"formId": "poin",
+			"primaryKey": [
+				"idGui"
+			],
+			"type": "voucher",
+			"action": "loading",
+			"idVC": "Z03",
+			"value": [],
+			"listTable": [
+				"poin",
+				"poindetail"
+			],
+			"VCDate": "",
+			"isFileHandle": "export",
+			"enableTaxExcelExport": true
+		}
+	},
+	"sort": "voucherDate desc, voucherNumber desc",
+	"ui": {
+		"summary": {
+			"field": "total_payment",
+			"label": "Tổng tiền",
+			"format": "number"
+		}
+	},
+	"actions": [
+		{
+			"controller": "goodsReceipt",
+			"id": "goodsReceipt.page.json",
+			"label": "Tạo phiếu nhập hàng",
+			"target": "goodsReceipt/popup",
+			"color": "orange"
+		}
+	]
+}

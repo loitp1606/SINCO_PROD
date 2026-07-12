@@ -13,127 +13,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
 })
 
 export class DeliveryNoteGridComponent {
-  initData: GirdInitData = {
-    id: "deliveryNote",
-    title:"Phiếu xuất hàng",
-    headers: [
-      {
-        "key": "idGui",
-        "label": "ID",
-        "type": "text",
-        hidden: true,
-        "sortable": true
-      },
-      {
-        "key": "voucherDate",
-        "label": "Ngày xuất hàng",
-        "type": "date",
-        "width": "150px"
-      },
-      {
-        "key": "voucherNumber",
-        "label": "Số phiếu",
-        "type": "text",
-        "width": "150px"
-      },
-      {
-        "key": "number_quotation",
-        "label": "Số báo giá",
-        "type": "text",
-        "width": "150px"
-      },
-      {
-        "key": "customer_id",
-        "label": "Khách hàng",
-        "type": "lookup"
-      },
-      {
-        "key": "ds_hoa_don",
-        "label": "Danh sách hóa đơn",
-        "type": "text",
-        "width": "150px"
-      },
-      {
-        "key": "status_name",
-        "label": "Trạng thái",
-        "type": "text",
-        "width": "180px"
-      },
-      {
-        "key": "paymentStatus",
-        "label": "TT thanh toán",
-        "type": "text",
-        "width": "160px"
-      },
-      {
-        "key": "debtAmount",
-        "label": "Còn nợ",
-        "type": "number",
-        "width": "120px"
-      },
-      {
-        "key": "signReceiptStatus",
-        "label": "TT ký nhận",
-        "type": "text",
-        "width": "170px"
-      },
-      {
-        "key": "overdueDays",
-        "label": "Ngày quá hạn",
-        "type": "number"
-      },
-      {
-        "key":"totalPayment",
-        "label": "GRID.total_amount",
-        "type": "number"
-      },
-      {
-        "key": "note",
-        "label": "Ghi chú",
-        "type": "text"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/deliveryNote.list.json
+  initData = {
+    id: 'deliveryNote',
+    headers: [],
     query: {
-        formId: {
-        controller: "deliveryNote.page.json",
-        formId: "deliveryNote",
-        primaryKey: ["idGui"],
-        type: "voucher",
-        action: "loading",
-        language: localStorage.getItem("language") ?? "vn",
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: "Z05",
-        userId: localStorage.getItem("userId") ?? "",
+      formId: {
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ["deliveryNote", "deliveryNoteDetail"],
-        VCDate: "",
-          isFileHandle: "export",//"import" | "export" | "both"
-          enableTaxExcelExport: true,
-        },
-      },
-    sort: 'voucherDate desc, voucherNumber desc',
-    ui: {
-      summary: {
-        field: 'totalPayment',
-        label: 'Tổng tiền',
-        format: 'number',
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
+        VCDate: '',
+        listTable: [],
       },
     },
-    actions: [
-      {
-        controller: "receiptV2",
-        id: "receiptV2.page.json",
-        label: "Tạo phiếu thu",
-        target: "receiptV2/popup",
-        color: "orange"
-      },
-      {
-        controller: "PurchaseReturnReceipt",
-        id: "purchaseReturnReceipt.page.json",
-        label: "Tạo nhập hàng trả lại",
-        target: "purchaseReturnReceipt/popup",
-        color: "orange"
-      }
-    ]
-  }
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

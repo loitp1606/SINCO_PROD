@@ -12,59 +12,27 @@ import { GirdInitData } from '../models';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class DeliveryLocationGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/delivery-location.list.json
+  initData = {
     id: 'delivery-location',
-    title:"Giao hàng",
-    headers: [
-      {
-        key: 'delivery_id',
-        label: 'Mã nơi giao hàng',
-        type: 'text',
-        sortable: true,
-      },
-      {
-        key: 'delivery_name',
-        label: 'Tên nơi giao hàng',
-        type: 'text',
-      },
-      {
-        key: 'address',
-        label: 'Địa chỉ',
-        type: 'text',
-      },
-      {
-        key: 'phone_number',
-        label: 'Điện thoại',
-        type: 'text',
-      },
-      {
-        key: 'location',
-        label: 'Khu vực giao hàng',
-        type: 'text',
-      },
-      {
-        key: 'note',
-        label: 'Ghi chú',
-        type: 'text',
-      },
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'delivery-location.page.json',
-        formId: 'deliveryLocation',
-        primaryKey: ['delivery_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['deliveryLocation'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'delivery_id',
-    actions: []
-  };
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

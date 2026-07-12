@@ -1,0 +1,45 @@
+{
+	"id": "industry-group",
+	"title": "Ngành hàng",
+	"headers": [
+		{
+			"key": "industry_group_id",
+			"label": "Mã ngành",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "industry_group_name",
+			"label": "Tên ngành",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "note",
+			"label": "Ghi chú",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "industry-group.page.json",
+			"formId": "industryGroup",
+			"primaryKey": [
+				"industry_group_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"industryGroup",
+				"itemGroup"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "industry_group_id",
+	"actions": []
+}

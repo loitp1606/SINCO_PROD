@@ -13,106 +13,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
 })
 
 export class DeliveryNoteGridComponent {
-  initData: GirdInitData = {
-    id: "delivery-note",
-    title:"Phiếu xuất hàng",
-    headers: [
-      {
-        "key": "idGui",
-        "label": "ID",
-        "type": "text",
-        hidden: true,
-        "sortable": true
-      },
-      {
-        "key": "voucherDate",
-        "label": "Ngày xuất hàng",
-        "type": "date"
-      },
-      {
-        "key": "voucherNumber",
-        "label": "Số phiếu",
-        "type": "text"
-      },
-      {
-        "key": "number_quotation",
-        "label": "Số báo giá",
-        "type": "text"
-      },
-      {
-        "key": "customer_id",
-        "label": "Khách hàng",
-        "type": "text"
-      },
-      {
-        "key": "jobCode",
-        "label": "Dự án",
-        "type": "text"
-      },
-      {
-        "key": "contactPerson",
-        "label": "Người liên hệ",
-        "type": "text"
-      },
-      {
-        "key": "phonePerson",
-        "label": "Điện thoại",
-        "type": "text"
-      },
-      {
-        "key": "emailPerson",
-        "label": "Email",
-        "type": "text"
-      },
-      {
-        "key": "status",
-        "label": "Trạng thái",
-        "type": "text"
-      },
-      {
-        "key": "ten_trang_thai2",
-        "label": "Trạng thái QT phiếu thu",
-        "type": "text"
-      },
-      {
-        "key": "ten_trang_thai",
-        "label": "Trạng thái nhập hàng trả lại",
-        "type": "text"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/delivery-note.list.json
+  initData = {
+    id: 'delivery-note',
+    headers: [],
     query: {
       formId: {
-        controller: "delivery-note.page.json",
-        formId: "deliveryNote",
-        primaryKey: ["idGui"],
-        type: "voucher",
-        action: "loading",
-        language: localStorage.getItem("language") ?? "vn",
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: "Z05",
-        userId: localStorage.getItem("userId") ?? "",
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ["deliveryNote", "deliveryNoteDetail"],
-        VCDate: "",
-        isFileHandle: "both",//"import" | "export" | "both"
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
+        VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'voucherDate desc, voucherNumber desc',
-    actions: [
-      {
-        controller: "receipt",
-        id: "receipt.page.json",
-        label: "Tạo phiếu thu",
-        target: "receipt/popup",
-        color: "orange"
-      },
-      {
-        controller: "PurchaseReturnReceipt",
-        id: "purchaseReturnReceipt.page.json",
-        label: "Tạo nhập hàng trả lại",
-        target: "purchaseReturnReceipt/popup",
-        color: "orange"
-      }
-    ]
-  }
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

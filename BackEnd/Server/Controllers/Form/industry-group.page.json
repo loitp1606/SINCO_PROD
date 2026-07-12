@@ -23,6 +23,7 @@
 						"key": "industry_group_id",
 						"label": "Mã ngành",
 						"type": "text",
+						"width": "150px",
 						"required": true,
 						"placeholder": "Nhập mã ngành"
 					},
@@ -30,6 +31,7 @@
 						"key": "industry_group_name",
 						"label": "Tên ngành",
 						"type": "text",
+						"width": "150px",
 						"required": true,
 						"placeholder": "Nhập tên ngành"
 					},
@@ -37,14 +39,17 @@
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
+						"width": "150px",
 						"uiTab": "Ghi chú",
 						"required": false,
 						"placeholder": "Nhập ghi chú"
 					},
 					{
 						"key": "status",
+						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"defaultValue": "1",
 						"options": [
@@ -71,27 +76,32 @@
 						{
 							"key": "item_group_id",
 							"label": "Mã nhóm",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "item_group_name",
 							"label": "Tên nhóm hàng",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "industry_group_id",
 							"label": "Ngành hàng",
-							"type": "text"
+							"type": "text",
+							"width": "150px"
 						},
 						{
 							"key": "group_index",
 							"label": "Thứ tự hiển thị",
-							"type": "number"
+							"type": "number",
+							"width": "100px"
 						},
 						{
 							"key": "note",
 							"label": "Ghi chú",
 							"type": "text",
+							"width": "150px",
 							"uiTab": "Ghi chú"
 						}
 					],
@@ -106,4 +116,3 @@
 		}
 	}
 }
-

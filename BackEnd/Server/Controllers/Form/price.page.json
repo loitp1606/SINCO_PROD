@@ -22,12 +22,14 @@
 						"key": "price_id",
 						"label": "Mã bảng giá bán",
 						"type": "text",
+						"width": "150px",
 						"required": true
 					},
 					{
 						"key": "price_name",
 						"label": "Tên bảng giá bán",
 						"type": "text",
+						"width": "150px",
 						"required": true
 					},
 					{
@@ -58,34 +60,41 @@
 							"map": {
 								"customer_group_id": "customer_group_id"
 							}
-						}
+						},
+						"width": "350px"
 					},
 					{
 						"key": "customer_group_id",
 						"label": "Nhóm khách hàng",
-						"type": "text"
+						"type": "text",
+						"width": "350px"
 					},
 					{
 						"key": "effective_date",
 						"label": "Ngày hiệu lực",
 						"type": "date",
+						"width": "150px",
 						"required": true
 					},
 					{
 						"key": "expired_date",
 						"label": "Ngày hết hiệu lực",
-						"type": "date"
+						"type": "date",
+						"width": "150px"
 					},
 					{
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
+						"width": "150px",
 						"uiTab": "Ghi chú"
 					},
 					{
 						"key": "status",
+						"default": "1",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"defaultValue": "1",
 						"options": [
@@ -112,7 +121,8 @@
 							"key": "line_nbr",
 							"label": "Stt",
 							"disabled": true,
-							"type": "text"
+							"type": "text",
+							"width": "40px"
 						},
 						{
 							"key": "item_id",
@@ -160,7 +170,8 @@
 										"operator": "="
 									}
 								]
-							}
+							},
+							"width": "100px"
 						},
 						{
 							"key": "price",
@@ -168,17 +179,20 @@
 							"currency": "VN",
 							"type": "number",
 							"required": true,
-							"precision": 2
+							"precision": 2,
+							"width": "100px"
 						},
 						{
 							"key": "apply_date",
 							"label": "Ngày áp dụng giá",
-							"type": "date"
+							"type": "date",
+							"width": "150px"
 						},
 						{
 							"key": "note",
 							"label": "Ghi chú",
 							"type": "text",
+							"width": "150px",
 							"uiTab": "Ghi chú"
 						}
 					],
@@ -193,4 +207,3 @@
 		}
 	}
 }
-

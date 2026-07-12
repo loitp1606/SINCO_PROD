@@ -13,60 +13,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
 })
 
 export class IncomeExpenditureComponent {
-  initData: GirdInitData = {
-    id: "income-expenditure",
-    title: "GRID.INCOME_EXPENDITURE",
-    headers: [
-      {
-        key: "type",
-        label: "POPUP.INCOME_EXPENDITURE.TYPE",
-        type: "text",
-        sortable: true
-      },
-      {
-        key: "incomeExpenditure_id",
-        label: "POPUP.INCOME_EXPENDITURE.CODE",
-        type: "text",
-        sortable: true
-      },
-      {
-        key: "incomeExpenditure_Name",
-        label: "POPUP.INCOME_EXPENDITURE.NAME_VN",
-        type: "text"
-      },
-      {
-        key: "incomeExpenditure_Name2",
-        label: "POPUP.INCOME_EXPENDITURE.NAME_EN",
-        type: "text"
-      },
-      {
-        key: "serial",
-        label: "POPUP.INCOME_EXPENDITURE.SERIAL",
-        type: "number"
-      },
-      {
-        key: "status",
-        label: "POPUP.INCOME_EXPENDITURE.STATUS",
-        type: "text"
-      }
-    ],
+  // Fully driven by BackEnd/Server/Controllers/Browser/income-expenditure.list.json
+  initData = {
+    id: 'income-expenditure',
+    headers: [],
     query: {
       formId: {
-        controller: "income-expenditure.page.json",
-        formId: "incomeExpenditure",
-        primaryKey: ["incomeExpenditure_id"],
-        type: "list",
-        action: "loading",
-        language: localStorage.getItem("language") ?? "vn",
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: "",
-        userId: localStorage.getItem("userId") ?? "",
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ["incomeExpenditure"],
-        VCDate: ""
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
+        VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'incomeExpenditure_id',
-    actions: []
-  }
+    sort: '',
+    actions: [],
+  } as GirdInitData;
 }

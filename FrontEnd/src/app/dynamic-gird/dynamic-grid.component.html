@@ -177,6 +177,7 @@
         [user]="userData"
         [controll]="controll"
         [exportData]="exportData"
+        [selectedExportRows]="getSelectedExportRows()"
         [exportAllRows]="filteredData"
         [rawExportHeaders]="getRawExportHeaders()"
         (importCompleted)="ngOnInit()"
@@ -306,12 +307,24 @@
             <th class="px-3 py-2"></th>
             <ng-container *ngFor="let header of girdData.headers">
               <th *ngIf="!header.hidden" class="px-3 py-2 border-r border-slate-200">
-                <input
-                  [type]="header.type === 'date' ? 'date' : 'text'"
+                <select
+                  *ngIf="header.type === 'select'; else standardHeaderFilter"
                   [(ngModel)]="filterColumns[header.key]"
                   (ngModelChange)="onColumnFilterChange()"
-                  class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  [placeholder]="header.type === 'date' ? '' : 'Filter...'" />
+                  class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <option value="">Filter...</option>
+                  <option *ngFor="let option of header.options || []" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+                <ng-template #standardHeaderFilter>
+                  <input
+                    [type]="header.type === 'date' ? 'date' : 'text'"
+                    [(ngModel)]="filterColumns[header.key]"
+                    (ngModelChange)="onColumnFilterChange()"
+                    class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    [placeholder]="header.type === 'date' ? '' : 'Filter...'" />
+                </ng-template>
               </th>
             </ng-container>
           </tr>
@@ -418,7 +431,7 @@
         [class.master-scroll-zone-full]="!isVoucherType() || !isDetailPanelVisible()"
         [style.height.px]="isDetailPanelVisible() ? masterPaneHeight : null"
         [style.max-height.px]="isDetailPanelVisible() ? masterPaneHeight : null"
-        [style.min-height.px]="isDetailPanelVisible() ? paneMinHeight : null"
+        [style.min-height.px]="isDetailPanelVisible() ? getMasterPaneMinHeight() : null"
         tabindex="0"
       >
         <table
@@ -436,7 +449,7 @@
                 [indeterminate]="isSomeMasterRowsSelected()"
                 (click)="$event.stopPropagation()"
                 (change)="toggleSelectAllMaster($event)"
-                title="Chọn tất cả"
+                title="Chọn tất cả dòng theo bộ lọc hiện tại"
               />
               <div
                 class="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-cyan-400 transition-colors"
@@ -490,14 +503,27 @@
               <th
                 *ngIf="!header.hidden"
                 class="px-3 py-0.5 border-r border-sky-100"
+                [ngStyle]="getHeaderCellStyle(header.key)"
               >
-                <input
-                  [type]="header.type === 'date' ? 'date' : 'text'"
+                <select
+                  *ngIf="header.type === 'select'; else compactStandardHeaderFilter"
                   [(ngModel)]="filterColumns[header.key]"
                   (ngModelChange)="onColumnFilterChange()"
-                  class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                  [placeholder]="header.type === 'date' ? '' : 'Filter...'"
-                />
+                  class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                  <option value="">Filter...</option>
+                  <option *ngFor="let option of header.options || []" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+                <ng-template #compactStandardHeaderFilter>
+                  <input
+                    [type]="header.type === 'date' ? 'date' : 'text'"
+                    [(ngModel)]="filterColumns[header.key]"
+                    (ngModelChange)="onColumnFilterChange()"
+                    class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    [placeholder]="header.type === 'date' ? '' : 'Filter...'"
+                  />
+                </ng-template>
               </th>
             </ng-container>
           </tr>
@@ -533,7 +559,11 @@
               </td>
 
               <ng-container *ngFor="let header of girdData.headers">
-                <td *ngIf="!header.hidden" class="px-2 py-0.5 text-xs relative">
+                <td
+                  *ngIf="!header.hidden"
+                  class="px-2 py-0.5 text-xs relative"
+                  [ngStyle]="getHeaderCellStyle(header.key)"
+                >
                   <ng-container *ngIf="isQuickEditEnabledForMasterCell(data, header); else readonlyMasterCell">
                     <input
                       *ngIf="header.type === 'date'"
@@ -727,6 +757,87 @@
         </div>
 
         <div
+          *ngIf="quickEditDetailMode && getQuickEditableDetailFields().length > 0"
+          class="border-b border-sky-100 bg-sky-50 px-4 py-3"
+        >
+          <div class="flex flex-wrap items-end gap-3">
+            <div class="text-xs font-semibold text-sky-800">
+              Đã chọn {{ getQuickBulkSelectedCount() }} dòng
+            </div>
+
+            <ng-container *ngFor="let field of getQuickEditableDetailFields()">
+              <div class="flex flex-col gap-1 rounded border border-sky-100 bg-white px-2 py-1.5">
+                <label class="flex items-center gap-1 text-[11px] font-semibold text-slate-700">
+                  <input
+                    type="checkbox"
+                    class="h-3.5 w-3.5"
+                    [(ngModel)]="quickBulkEnabled[field.key]"
+                  />
+                  {{ field.label | translate }}
+                </label>
+
+                <input
+                  *ngIf="field.type === 'text'"
+                  type="text"
+                  class="w-40 rounded border border-slate-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  [ngModel]="quickBulkValues[field.key]"
+                  (ngModelChange)="onQuickBulkValueChange(field, $event)"
+                />
+
+                <input
+                  *ngIf="field.type === 'date' || field.type === 'datetime'"
+                  type="date"
+                  class="w-36 rounded border border-slate-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  [ngModel]="quickBulkValues[field.key]"
+                  (ngModelChange)="onQuickBulkValueChange(field, $event)"
+                />
+
+                <label
+                  *ngIf="field.type === 'checkbox'"
+                  class="flex items-center gap-2 rounded border border-slate-200 px-2 py-1 text-xs text-slate-700"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4"
+                    [checked]="quickBulkValues[field.key] == 1 || quickBulkValues[field.key] === true"
+                    (change)="onQuickBulkValueChange(field, $any($event.target).checked)"
+                  />
+                  Có
+                </label>
+
+                <select
+                  *ngIf="field.type === 'select'"
+                  class="w-40 rounded border border-slate-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  [ngModel]="quickBulkValues[field.key]"
+                  (ngModelChange)="onQuickBulkValueChange(field, $event)"
+                >
+                  <option value="">--</option>
+                  <option *ngFor="let opt of field.options || []" [value]="opt.value">
+                    {{ opt.label | translate }}
+                  </option>
+                </select>
+              </div>
+            </ng-container>
+
+            <button
+              type="button"
+              class="inline-flex items-center rounded-md border border-sky-200 bg-white px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-100 transition"
+              (click)="toggleAllVisibleQuickBulkRows()"
+            >
+              {{ areAllVisibleQuickBulkRowsSelected() ? 'Bỏ chọn all' : 'Chọn all' }}
+            </button>
+
+            <button
+              type="button"
+              class="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition"
+              (click)="applyQuickBulkToSelectedRows()"
+            >
+              Áp dụng cho dòng đã chọn
+            </button>
+          </div>
+        </div>
+
+        <div
           class="detail-table-container detail-scroll-zone detail-fixed-zone"
           *ngIf="getAllDetailFields().length > 0"
           [style.height.px]="detailPaneHeight"
@@ -742,23 +853,49 @@
               <thead>
                 <tr class="bg-slate-700 text-white">
                   <th
-                    class="px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
+                    class="hidden px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
                   >
                     #
                   </th>
                   <th
+                    *ngIf="quickEditDetailMode"
+                    class="px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="areAllVisibleQuickBulkRowsSelected()"
+                      (change)="toggleAllVisibleQuickBulkRows($event)"
+                    />
+                  </th>
+                  <th
                     *ngFor="let field of getAllDetailFields()"
-                    [style.width]="getFieldWidth(field.key)"
-                    class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group"
+                    [style.width]="getFieldWidth(field)"
+                    class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group cursor-pointer select-none"
                     [hidden]="field.type === 'hidden'"
                     [attr.data-field-key]="field.key"
+                    (click)="onDetailSortClick(field)"
+                    title="Bấm để sắp xếp"
                   >
                     <div class="flex items-center justify-between">
-                      <span>
+                      <span class="inline-flex items-center gap-1">
                         {{ field.label | translate }}
                         <span *ngIf="field.required" class="text-red-500"
                           >*</span
                         >
+                        <span
+                          class="text-[10px] leading-none"
+                          [class.text-cyan-200]="getDetailSortDirection(field.key)"
+                          [class.text-slate-300]="!getDetailSortDirection(field.key)"
+                        >
+                          {{
+                            getDetailSortDirection(field.key) === 'asc'
+                              ? '▲'
+                              : getDetailSortDirection(field.key) === 'desc'
+                                ? '▼'
+                                : '↕'
+                          }}
+                        </span>
                       </span>
                       <span
                         *ngIf="currentColumnFilters[field.key]"
@@ -770,13 +907,15 @@
                     </div>
                     <div
                       class="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-cyan-300 transition-colors"
+                      (click)="$event.stopPropagation()"
                       (mousedown)="onResizeColumn($event, field)"
                     ></div>
                   </th>
                 </tr>
 
                 <tr class="bg-slate-100">
-                  <td class="p-0"></td>
+                  <td class="hidden p-0"></td>
+                  <td *ngIf="quickEditDetailMode" class="p-0"></td>
                   <td
                     *ngFor="let field of getAllDetailFields()"
                     class="p-0"
@@ -850,8 +989,21 @@
                   [class.bg-sky-100]="i === activeDetailRowIndex"
                   (click)="activeDetailRowIndex = i"
                 >
-                  <td class="text-center text-slate-500 px-2 py-0.5">
+                  <td class="hidden text-center text-slate-500 px-2 py-0.5">
                     {{ row.line_nbr || i + 1 }}
+                  </td>
+
+                  <td
+                    *ngIf="quickEditDetailMode"
+                    class="text-center px-2 py-0.5"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="isQuickBulkRowSelected(row)"
+                      (change)="onQuickBulkRowToggle(row, $event)"
+                    />
                   </td>
 
                   <td

@@ -12,73 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class OrderReturnGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/OrderReturn.list.json
+  initData = {
     id: 'OrderReturn',
-    title: 'Phiếu xuất trả hàng',
-    headers: [
-      {
-        key: 'idGui',
-        label: 'ID',
-        type: 'text',
-        hidden: true,
-        sortable: true,
-      },
-      {
-        key: 'voucherDate',
-        label: 'Ngày xuất',
-        type: 'date',
-      },
-      {
-        key: 'voucherNumber',
-        label: 'Số phiếu xuất trả',
-        type: 'text',
-      },
-      {
-        key: 'customerCode',
-        label: 'Khách hàng',
-        type: 'lookup',
-      },
-      {
-        key: 'status',
-        label: 'Trạng thái',
-        type: 'text',
-      },
-      {
-        key: 'note',
-        label: 'Ghi chú',
-        type: 'text',
-      },
-      {
-        "key":"totalPayment",
-        "label": "GRID.total_amount",
-        "type": "number"
-      }
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'orderReturn.page.json',
-        formId: 'orderReturn',
-        primaryKey: ['idGui'],
-        type: 'voucher',
-        action: 'loading',
-        language: localStorage.getItem('language') ?? 'vn',
-        unit: localStorage.getItem('unit') ?? 'CTY',
-        idVC: 'Z09',
-        userId: localStorage.getItem('userId') ?? '',
+        controller: '',
+        formId: '',
+        primaryKey: [],
         value: [],
-        listTable: ['orderReturn', 'orderReturnDetail'],
+        type: '',
+        action: '',
+        language: localStorage.getItem('language') ?? 'vi',
+        unit: localStorage.getItem('unit') ?? 'CTY',
+        idVC: '',
+        userId: localStorage.getItem('userId') ?? '',
         VCDate: '',
-        isFileHandle: 'export',
+        listTable: [],
       },
     },
-    sort: 'voucherDate desc, voucherNumber desc',
-     ui: {
-      summary: {
-        field: 'totalPayment',
-        label: 'Tổng tiền',
-        format: 'number',
-      },
-    },
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

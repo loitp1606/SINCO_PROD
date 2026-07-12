@@ -1,0 +1,87 @@
+{
+	"id": "item",
+	"title": "GRID.ITEM",
+	"headers": [
+		{
+			"key": "item_id",
+			"label": "POPUP.ITEM.ID",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "item_name",
+			"label": "POPUP.ITEM.NAME",
+			"type": "text",
+			"width": "450px"
+		},
+		{
+			"key": "group_item_id",
+			"label": "POPUP.ITEM.GROUP_ID",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "uom",
+			"label": "POPUP.ITEM.UOM",
+			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "purchase_price",
+			"label": "POPUP.ITEM.PURCHASE_PRICE",
+			"type": "number",
+			"width": "100px"
+		},
+		{
+			"key": "sale_price",
+			"label": "POPUP.ITEM.SALE_PRICE",
+			"type": "number",
+			"width": "100px"
+		},
+		{
+			"key": "min_inventory",
+			"label": "POPUP.ITEM.MIN_INVENTORY",
+			"type": "number",
+			"width": "100px"
+		},
+		{
+			"key": "max_inventory",
+			"label": "POPUP.ITEM.MAX_INVENTORY",
+			"type": "number",
+			"width": "100px"
+		},
+		{
+			"key": "manufacturer",
+			"label": "POPUP.ITEM.MANUFACTURER",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "POPUP.ITEM.STATUS",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "item.page.json",
+			"formId": "item",
+			"primaryKey": [
+				"item_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"item"
+			],
+			"VCDate": "",
+			"isFileHandle": "both"
+		}
+	},
+	"sort": "item_id",
+	"actions": []
+}

@@ -12,43 +12,27 @@ import { DynamicGridComponent } from '../dynamic-gird/dynamic-grid.component';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class TaxGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/tax.list.json
+  initData = {
     id: 'tax',
-    title: 'Thuế suất',
-    headers: [
-      {
-        key: 'tax_id',
-        label: 'Mã thuế',
-        type: 'text',
-      },
-      {
-        key: 'tax_type',
-        label: 'Loại thuế',
-        type: 'text',
-      },
-      {
-        key: 'tax_number',
-        label: 'Mức thuế %',
-        type: 'number',
-      },
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'tax.page.json',
-        formId: 'tax',
-        primaryKey: ['tax_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
         unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['tax'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'tax_id',
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

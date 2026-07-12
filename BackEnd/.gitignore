@@ -1,0 +1,50 @@
+# =========================
+# Visual Studio & .NET
+# =========================
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =========================
+# Angular / Node.js
+# =========================
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+package-lock.json
+.pnp/
+.pnp.js
+
+# =========================
+# Build Output
+# =========================
+dist/
+build/
+out/
+tmp/
+temp/
+*.log
+
+# =========================
+# Environment & Config
+# =========================
+.env
+.env.*.local
+
+# =========================
+# Custom Sensitive Files
+# =========================
+license.enc
+public.key
+
+# =========================
+# Others
+# =========================
+*.swp
+.DS_Store
+Thumbs.db

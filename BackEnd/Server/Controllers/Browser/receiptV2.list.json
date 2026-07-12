@@ -1,0 +1,111 @@
+{
+	"id": "receiptV2",
+	"title": "Phiếu thu tiền",
+	"headers": [
+		{
+			"key": "idGui",
+			"label": "ID",
+			"type": "text",
+			"hidden": true,
+			"sortable": true
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày",
+			"type": "date",
+			"width": "100px"
+		},
+		{
+			"key": "voucherNumber",
+			"label": "Số phiếu",
+			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "customerCode",
+			"label": "Khách hàng",
+			"type": "lookup",
+			"width": "350px"
+		},
+		{
+			"key": "isReceived",
+			"label": "Đã thu tiền",
+			"quickEditable": true,
+			"type": "checkbox",
+			"width": "150px"
+		},
+		{
+			"key": "reason",
+			"label": "Lý do thu",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "dien_giai",
+			"label": "Diễn giải",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "paymentType",
+			"label": "Loại thanh toán",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Tiền mặt",
+					"value": "TM"
+				},
+				{
+					"label": "Chuyển khoản",
+					"value": "CK"
+				},
+				{
+					"label": "TM/CK",
+					"value": "TM/CK"
+				}
+			]
+		},
+		{
+			"key": "collectorCode",
+			"label": "Nhân viên thu",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "accountReceiveCode",
+			"label": "Số tài khoản",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "total_amount",
+			"label": "Số tiền thu",
+			"type": "number",
+			"currency": "VN",
+			"width": "100px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "receiptV2.page.json",
+			"formId": "receiptV2",
+			"primaryKey": [
+				"idGui"
+			],
+			"type": "voucher",
+			"action": "loading",
+			"idVC": "Z07",
+			"value": [],
+			"listTable": [
+				"receiptV2",
+				"receiptdetailV2"
+			],
+			"VCDate": "voucherDate",
+			"isFileHandle": "both",
+			"enableTaxExcelExport": true
+		}
+	},
+	"sort": "voucherDate desc, voucherNumber desc",
+	"actions": []
+}

@@ -1,0 +1,125 @@
+{
+	"id": "delivery-note",
+	"title": "Phiếu xuất hàng",
+	"headers": [
+		{
+			"key": "idGui",
+			"label": "ID",
+			"type": "text",
+			"hidden": true,
+			"sortable": true
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày xuất hàng",
+			"type": "date",
+			"width": "100px"
+		},
+		{
+			"key": "voucherNumber",
+			"label": "Số phiếu",
+			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "number_quotation",
+			"label": "Số báo giá",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "customer_id",
+			"label": "Khách hàng",
+			"type": "text",
+			"width": "350px"
+		},
+		{
+			"key": "jobCode",
+			"label": "Dự án",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "contactPerson",
+			"label": "Người liên hệ",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "phonePerson",
+			"label": "Điện thoại",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "emailPerson",
+			"label": "Email",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "Trạng thái",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Lập chứng từ",
+					"value": "0"
+				},
+				{
+					"label": "Xuất hàng",
+					"value": "1"
+				}
+			]
+		},
+		{
+			"key": "ten_trang_thai2",
+			"label": "Trạng thái QT phiếu thu",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "ten_trang_thai",
+			"label": "Trạng thái nhập hàng trả lại",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "delivery-note.page.json",
+			"formId": "deliveryNote",
+			"primaryKey": [
+				"idGui"
+			],
+			"type": "voucher",
+			"action": "loading",
+			"idVC": "Z05",
+			"value": [],
+			"listTable": [
+				"deliveryNote",
+				"deliveryNoteDetail"
+			],
+			"VCDate": "",
+			"isFileHandle": "both"
+		}
+	},
+	"sort": "voucherDate desc, voucherNumber desc",
+	"actions": [
+		{
+			"controller": "receipt",
+			"id": "receipt.page.json",
+			"label": "Tạo phiếu thu",
+			"target": "receipt/popup",
+			"color": "orange"
+		},
+		{
+			"controller": "PurchaseReturnReceipt",
+			"id": "purchaseReturnReceipt.page.json",
+			"label": "Tạo nhập hàng trả lại",
+			"target": "purchaseReturnReceipt/popup",
+			"color": "orange"
+		}
+	]
+}

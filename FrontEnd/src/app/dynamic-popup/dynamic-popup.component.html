@@ -340,23 +340,36 @@
                     title="Kéo để thay đổi độ rộng, double-click để auto-resize">
                   </div>
                 </th>
-                <th>
+                <th class="hidden">
                   #
                 </th>
 
                 <th *ngFor="let field of getAllDetailFields()" [style.width]="getFieldWidth(field)"
-                  class="resizable-header" [hidden]="field.type === 'hidden'" [attr.data-field-key]="field.key">
+                  class="resizable-header cursor-pointer select-none" [hidden]="field.type === 'hidden'" [attr.data-field-key]="field.key"
+                  (click)="onDetailSortClick(field)"
+                  title="Bấm để sắp xếp">
 
                   <div class="flex items-center justify-between">
-                    <span>
+                    <span class="inline-flex items-center gap-1">
                       {{ field.label | translate}}
                       <span *ngIf="field.required" class="text-red-500">*</span>
+                      <span class="text-[10px] leading-none"
+                        [class.text-cyan-200]="getDetailSortDirection(field.key)"
+                        [class.text-slate-300]="!getDetailSortDirection(field.key)">
+                        {{
+                          getDetailSortDirection(field.key) === 'asc'
+                            ? '▲'
+                            : getDetailSortDirection(field.key) === 'desc'
+                              ? '▼'
+                              : '↕'
+                        }}
+                      </span>
                     </span>
                     <span *ngIf="currentColumnFilters[field.key]" class="ml-2 text-blue-600 text-[10px] font-semibold"
                       title="Đang lọc: {{ currentColumnFilters[field.key] }}">
                       LOC
                     </span>
-                    <div class="resize-handle" (mousedown)="startResize($event, field.key)"
+                    <div class="resize-handle" (click)="$event.stopPropagation()" (mousedown)="startResize($event, field.key)"
                       (dblclick)="autoResizeColumn($event, field.key)"
                       title="Kéo để thay đổi độ rộng, double-click để auto-resize">
                     </div>
@@ -367,7 +380,7 @@
 
               <!-- Column Filters Row -->
               <tr class="bg-gray-50">
-                <td class="p-1"></td>
+                <td class="hidden p-1"></td>
                 <td class="p-1"></td>
                 <td *ngFor="let field of getAllDetailFields()" class="p-1" [hidden]="field.type === 'hidden'">
                   <div class="relative" [hidden]="field.disabled">
@@ -436,7 +449,7 @@
                   </div>
                 </td>
                 <!-- Row number -->
-                <td class="text-center text-gray-500">{{ row.line_nbr || (i + 1) }}</td>
+                <td class="hidden text-center text-gray-500">{{ row.line_nbr || (i + 1) }}</td>
 
                 <!-- Detail fields -->
                 <td class="relative" *ngFor="let field of getAllDetailFields()" [hidden]="field.type === 'hidden'">
@@ -550,18 +563,20 @@
 
         <!-- Total Summary -->
         <div class="summary-grid mb-4 summary-card" *ngIf="getSummaryFields().length > 0">
-          <div class="text-lg font-semibold text-gray-800 col-span-2 mb-2 border-b border-gray-300 pb-2">
-            Tổng kết tất cả dữ liệu ({{ currentDetailRows.length }} dòng)
+          <div class="summary-card__title">
+            <span>Tổng kết tất cả dữ liệu</span>
+            <span class="summary-card__count">{{ currentDetailRows.length }} dòng</span>
           </div>
 
           <!-- Dynamically load master fields that should be displayed in summary -->
           <ng-container *ngFor="let field of getSummaryFields()">
             <!-- Only show fields that are disabled (calculated/aggregated) and not hidden -->
 
-            <ng-container *ngIf="field.type !== 'hidden' && field.subtotal">
+            <div *ngIf="field.type !== 'hidden' && field.subtotal" class="summary-card__item"
+              [class.summary-card__item--wide]="field.key === 'amount_in_word'"
+              [class.summary-card__item--total]="field.key === 'final_total'">
               <div class="summary-label">{{ field.label }}:</div>
-              <div class="summary-value" [ngClass]="{'summary-total': field.key === 'final_total'}"
-                style="padding-right: 25px">
+              <div class="summary-value" [ngClass]="{'summary-total': field.key === 'final_total'}">
                 <ng-container [ngSwitch]="field.key">
                   <!-- Format based on field key -->
                   <span *ngIf="field.type === 'number' && isCurrencyField(field.key, field)">
@@ -578,7 +593,7 @@
                   </ng-container>
                 </ng-container>
               </div>
-            </ng-container>
+            </div>
           </ng-container>
         </div>
         <!-- Summary Section -->

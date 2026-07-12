@@ -62,6 +62,7 @@ export class FileHandleComponent implements OnInit {
   @Input() minimalMode = false;
   @Input() controll: string = '';
   @Input() exportData: { [key: string]: any[] } = {};
+  @Input() selectedExportRows: any[] = [];
   @Input() exportAllRows: any[] = [];
   @Input() rawExportHeaders: Array<{ key: string; label: string }> = [];
   @Input() user: { [key: string]: string } = {};
@@ -549,6 +550,10 @@ export class FileHandleComponent implements OnInit {
     const key = (controller || this.controll || '').toLowerCase();
     if (!key) return null;
 
+    if (Array.isArray(this.selectedExportRows) && this.selectedExportRows.length > 0) {
+      return { [key]: this.selectedExportRows };
+    }
+
     if (Array.isArray(this.exportAllRows) && this.exportAllRows.length > 0) {
       return { [key]: this.exportAllRows };
     }
@@ -568,7 +573,16 @@ export class FileHandleComponent implements OnInit {
   }
 
   exportRawMasterToExcel(): void {
-    const rows = Array.isArray(this.exportAllRows) ? this.exportAllRows : [];
+    const selectedRows = Array.isArray(this.selectedExportRows)
+      ? this.selectedExportRows.filter((row) => !!row)
+      : [];
+    const rows =
+      selectedRows.length > 0
+        ? selectedRows
+        : Array.isArray(this.exportAllRows)
+          ? this.exportAllRows
+          : [];
+
     if (!rows.length) {
       this.showError('Không có dữ liệu grid để kết xuất.');
       this.showExportOptions = false;

@@ -1,0 +1,146 @@
+{
+	"id": "paymentSlip",
+	"title": "Phiếu chi",
+	"headers": [
+		{
+			"key": "idGui",
+			"label": "ID",
+			"type": "text",
+			"hidden": true,
+			"sortable": true
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày phiếu chi",
+			"type": "date",
+			"width": "100px"
+		},
+		{
+			"key": "voucherNumber",
+			"label": "Số phiếu",
+			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "supplierCode",
+			"label": "Mã NCC",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "paymentType",
+			"label": "Loại chi",
+			"quickEditable": true,
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Chi tiền nhà cung cấp",
+					"value": "SUPPLIER"
+				},
+				{
+					"label": "Chi theo hóa đơn",
+					"value": "INVOICE"
+				}
+			]
+		},
+		{
+			"key": "dien_giai",
+			"label": "Diễn giải",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "spentMoney",
+			"label": "Đã chi tiền",
+			"quickEditable": true,
+			"type": "checkbox",
+			"width": "150px"
+		},
+		{
+			"key": "htttType",
+			"label": "Loại thanh toán",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Tiền mặt",
+					"value": "TM"
+				},
+				{
+					"label": "Chuyển khoản",
+					"value": "CK"
+				},
+				{
+					"label": "TM/CK",
+					"value": "TM/CK"
+				}
+			]
+		},
+		{
+			"key": "employeeCode",
+			"label": "Nhân viên nhận tiền",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "cashier",
+			"label": "Nhân viên chi",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "reason",
+			"label": "Lý do chi",
+			"type": "lookup",
+			"width": "150px"
+		},
+		{
+			"key": "receiptCode",
+			"label": "Phiếu nhập hàng",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "invoiceNumber",
+			"label": "Số hóa đơn",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "total_amount",
+			"label": "Số tiền chi",
+			"type": "number",
+			"currency": "VN",
+			"width": "100px"
+		},
+		{
+			"key": "note",
+			"label": "Ghi chú",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "paymentSlip.page.json",
+			"formId": "paymentSlip",
+			"primaryKey": [
+				"idGui"
+			],
+			"type": "voucher",
+			"action": "loading",
+			"idVC": "Z06",
+			"value": [],
+			"listTable": [
+				"paymentslip",
+				"paymentslipDetail"
+			],
+			"VCDate": "",
+			"isFileHandle": "both",
+			"enableTaxExcelExport": true
+		}
+	},
+	"sort": "voucherDate desc, voucherNumber desc",
+	"actions": []
+}

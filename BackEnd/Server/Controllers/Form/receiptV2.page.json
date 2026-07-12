@@ -27,19 +27,22 @@
 						"required": true,
 						"autoIncrement": true,
 						"autoGenerate": true,
-						"readonly": true
+						"readonly": true,
+						"width": "100px"
 					},
 					{
 						"key": "voucherDate",
 						"label": "Ngày",
 						"type": "date",
 						"required": true,
-						"default": "now"
+						"default": "now",
+						"width": "100px"
 					},
 					{
 						"key": "receiptType",
 						"label": "Loại thu",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"default": "CUSTOMER",
 						"quickEditable": true,
@@ -67,6 +70,7 @@
 						"label": "Khách hàng",
 						"type": "lookup",
 						"required": true,
+						"width": "350px",
 						"multiple": false,
 						"default": {
 							"controller": "customer",
@@ -96,12 +100,14 @@
 						"key": "deliveryNoteNo",
 						"label": "Mã tham chiếu",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "depositReceiptNo",
 						"label": "Phiếu thu cọc tham chiếu",
 						"type": "text",
+						"width": "150px",
 						"required": false,
 						"visibleWhen": {
 							"field": "receiptType",
@@ -113,6 +119,7 @@
 						"key": "reason",
 						"label": "Lý do thu",
 						"type": "lookup",
+						"width": "150px",
 						"required": true,
 						"multiple": false,
 						"default": {
@@ -135,12 +142,14 @@
 						"key": "customerAddress",
 						"label": "Địa chỉ - Điện thoại",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "collectorCode",
 						"label": "Nhân viên thu",
 						"type": "lookup",
+						"width": "150px",
 						"required": true,
 						"multiple": false,
 						"default": {
@@ -158,6 +167,7 @@
 						"key": "accountReceiveCode",
 						"label": "Số tài khoản (*)",
 						"type": "lookup",
+						"width": "150px",
 						"required": false,
 						"multiple": false,
 						"default": {
@@ -175,12 +185,14 @@
 						"key": "invoiceNumber",
 						"label": "Số biên thu",
 						"type": "text",
+						"width": "150px",
 						"required": false
 					},
 					{
 						"key": "paymentType",
 						"label": "Loại thanh toán",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -203,6 +215,7 @@
 						"type": "number",
 						"currency": "VN",
 						"disabled": false,
+						"width": "100px",
 						"subtotal": true,
 						"calculation": {
 							"calculations": [
@@ -220,6 +233,7 @@
 						"key": "dien_giai",
 						"label": "Diễn giải",
 						"type": "textarea",
+						"width": "150px",
 						"required": false,
 						"placeholder": "Nhập diễn giải"
 					},
@@ -227,6 +241,7 @@
 						"key": "status",
 						"label": "Trạng thái",
 						"type": "select",
+						"width": "150px",
 						"required": true,
 						"options": [
 							{
@@ -249,6 +264,7 @@
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
+						"width": "150px",
 						"uiTab": "Ghi chú",
 						"required": false
 					}
@@ -295,7 +311,7 @@
 							"type": "number",
 							"currency": "VN",
 							"required": false,
-							"width": "140px",
+							"width": "100px",
 							"trigger": [
 								"debtAmount"
 							]
@@ -306,7 +322,7 @@
 							"type": "number",
 							"currency": "VN",
 							"required": false,
-							"width": "140px",
+							"width": "100px",
 							"trigger": [
 								"debtAmount"
 							]
@@ -317,7 +333,7 @@
 							"type": "number",
 							"currency": "VN",
 							"disabled": true,
-							"width": "150px",
+							"width": "100px",
 							"calculation": {
 								"calculations": [
 									{
@@ -337,7 +353,7 @@
 							"type": "number",
 							"currency": "VN",
 							"required": true,
-							"width": "150px"
+							"width": "100px"
 						},
 						{
 							"key": "note",

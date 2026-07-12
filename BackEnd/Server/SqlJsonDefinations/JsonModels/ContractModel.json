@@ -316,6 +316,12 @@
         "hide": true
       },
       {
+        "excelColumn": "total_payment",
+        "fieldName": "total_payment",
+        "required": false,
+        "hide": true
+      },
+      {
         "excelColumn": "amount_in_word",
         "fieldName": "amount_in_word",
         "required": false,

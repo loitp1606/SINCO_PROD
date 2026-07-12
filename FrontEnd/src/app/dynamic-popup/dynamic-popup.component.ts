@@ -86,6 +86,9 @@ export class DynamicPopupComponent implements OnInit {
     columnFiltersData: {
         [tabIndex: number]: { [detailIndex: number]: { [key: string]: string } }
     } = {};
+    detailSortData: {
+        [tabIndex: number]: { [detailIndex: number]: { key: string; direction: 'asc' | 'desc' | '' } }
+    } = {};
     filterMode: 'all' | 'any' = 'all';
 
     masterAggregates: { [key: string]: any } = {};
@@ -181,18 +184,18 @@ export class DynamicPopupComponent implements OnInit {
         (window as any).debugUIAfterChange = (rowIndex: number) => this.debugUIAfterChange(rowIndex);
         (window as any).debugAutoGenerate = () => this.debugAutoGenerateFields();
 
-        const actionStr = localStorage.getItem(`action_${this.id}`);
-        // Thử cả 2 format key để tương thích
-        let copyActionStr = localStorage.getItem(`action_${this.id}_copy`);
+        const isQuickCreate = this.isQuickCreateWindow();
+        const storageIds = this.getPopupStorageIds();
+        const actionStorage = isQuickCreate ? null : this.getFirstLocalStorageItem(storageIds.map(id => `action_${id}`));
+        const copyActionStorage = isQuickCreate ? null : this.getFirstLocalStorageItem(storageIds.map(id => `action_${id}_copy`));
+        const actionStr = actionStorage?.value ?? null;
+        const copyActionStr = copyActionStorage?.value ?? null;
 
-        if (!copyActionStr) {
-            // Thử với format từ grid: QuotationPaper thay vì quotationPaper
-            const capitalizedId = this.id.charAt(0).toUpperCase() + this.id.slice(1);
-            copyActionStr = localStorage.getItem(`action_${capitalizedId}_copy`);
+        if (actionStr) {
+            this.removePopupStorageItems(storageIds.map(id => `param_${id}`));
         }
-
-        if (actionStr) localStorage.removeItem(`param_${this.id}`)
-        const girdDataStr = localStorage.getItem(`param_${this.id}`)
+        const girdDataStorage = isQuickCreate ? null : this.getFirstLocalStorageItem(storageIds.map(id => `param_${id}`));
+        const girdDataStr = girdDataStorage?.value ?? null;
 
 
         this.girdData = girdDataStr
@@ -217,9 +220,7 @@ export class DynamicPopupComponent implements OnInit {
         } else if (copyActionStr) {
             // Xử lý copy mode với dữ liệu từ SyncData API
             // Xóa cả 2 key có thể có
-            localStorage.removeItem(`action_${this.id}_copy`);
-            const capitalizedId = this.id.charAt(0).toUpperCase() + this.id.slice(1);
-            localStorage.removeItem(`action_${capitalizedId}_copy`);
+            this.removePopupStorageItems(storageIds.map(id => `action_${id}_copy`));
             this.metadata = JSON.parse(copyActionStr) as PageMetadata;
             this.mode = 'copy';
             this.updatePageTitle();
@@ -235,7 +236,7 @@ export class DynamicPopupComponent implements OnInit {
             // }, 500);
 
         } else if (actionStr) {
-            localStorage.removeItem(`action_${this.id}`)
+            this.removePopupStorageItems(storageIds.map(id => `action_${id}`));
 
             this.metadata = JSON.parse(actionStr) as PageMetadata;
             this.updatePageTitle();
@@ -272,6 +273,31 @@ export class DynamicPopupComponent implements OnInit {
             '';
 
         this.pageTitleService.setTitle(pageTitle);
+    }
+
+    private getPopupStorageIds(): string[] {
+        const id = (this.id || '').trim();
+        if (!id) return [];
+
+        const lowerId = id.charAt(0).toLowerCase() + id.slice(1);
+        const capitalizedId = id.charAt(0).toUpperCase() + id.slice(1);
+
+        return Array.from(new Set([id, lowerId, capitalizedId]));
+    }
+
+    private getFirstLocalStorageItem(keys: string[]): { key: string; value: string } | null {
+        for (const key of keys) {
+            const value = localStorage.getItem(key);
+            if (value !== null) {
+                return { key, value };
+            }
+        }
+
+        return null;
+    }
+
+    private removePopupStorageItems(keys: string[]): void {
+        keys.forEach(key => localStorage.removeItem(key));
     }
 
 
@@ -703,6 +729,9 @@ export class DynamicPopupComponent implements OnInit {
         if (!this.columnFiltersData[tabIndex]) {
             this.columnFiltersData[tabIndex] = {}
         }
+        if (!this.detailSortData[tabIndex]) {
+            this.detailSortData[tabIndex] = {}
+        }
 
         if (!Array.isArray(this.detailRowsData[tabIndex][detailIndex])) {
             this.detailRowsData[tabIndex][detailIndex] = []
@@ -712,6 +741,9 @@ export class DynamicPopupComponent implements OnInit {
         }
         if (!this.columnFiltersData[tabIndex][detailIndex]) {
             this.columnFiltersData[tabIndex][detailIndex] = {}
+        }
+        if (!this.detailSortData[tabIndex][detailIndex]) {
+            this.detailSortData[tabIndex][detailIndex] = { key: '', direction: '' }
         }
     }
 
@@ -1443,11 +1475,23 @@ export class DynamicPopupComponent implements OnInit {
         if (!controller) {
             return;
         }
+        const requestId = this.route.snapshot.queryParamMap.get('requestId')?.trim() || '';
+
+        const record = this.normalizeValues(this.mergeFormData());
+        const primaryKeys = this.metadata?.primaryKey || [];
+        const primaryKeyValues = primaryKeys.reduce((acc: Record<string, any>, key: string) => {
+            acc[key] = record?.[key];
+            return acc;
+        }, {});
 
         localStorage.setItem(
             this.quickCreateStorageKey,
             JSON.stringify({
                 controller,
+                requestId,
+                primaryKeys,
+                primaryKeyValues,
+                record,
                 updatedAt: Date.now(),
             })
         );
@@ -1546,6 +1590,9 @@ export class DynamicPopupComponent implements OnInit {
 
     // Check if primary key values have changed
     hasPrimaryKeyChanged(): boolean {
+        if (this.isQuickCreateWindow() || this.mode === 'insert' || this.mode === 'copy') {
+            return false
+        }
         if (!this.girdData || !this.metadata?.primaryKey) {
             return false // New record or no primary key defined
         }
@@ -2235,12 +2282,12 @@ export class DynamicPopupComponent implements OnInit {
 
         if (activeFilters.length === 0) {
             this.filteredDetailRowsData[this.selectedTab][this.selectedDetailIndex] =
-                [...currentRows]
+                this.applyDetailSort([...currentRows])
             return
         }
 
         this.filteredDetailRowsData[this.selectedTab][this.selectedDetailIndex] =
-            currentRows.filter((row) => {
+            this.applyDetailSort(currentRows.filter((row) => {
                 const matches = activeFilters.map((fieldKey) => {
                     const filterValue = filters[fieldKey].toLowerCase()
                     const rawRowValue = row[fieldKey]
@@ -2277,7 +2324,81 @@ export class DynamicPopupComponent implements OnInit {
                 return this.filterMode === 'all'
                     ? matches.every((match) => match)
                     : matches.some((match) => match)
-            })
+            }))
+    }
+
+    onDetailSortClick(field: any): void {
+        if (!field?.key || field.type === 'hidden') {
+            return
+        }
+
+        this.ensureDetailState()
+        const currentSort = this.detailSortData[this.selectedTab][this.selectedDetailIndex]
+        let nextDirection: 'asc' | 'desc' | '' = 'asc'
+
+        if (currentSort.key === field.key) {
+            nextDirection =
+                currentSort.direction === 'asc'
+                    ? 'desc'
+                    : currentSort.direction === 'desc'
+                        ? ''
+                        : 'asc'
+        }
+
+        this.detailSortData[this.selectedTab][this.selectedDetailIndex] = {
+            key: nextDirection ? field.key : '',
+            direction: nextDirection,
+        }
+        this.applyFilters()
+    }
+
+    getDetailSortDirection(fieldKey: string): 'asc' | 'desc' | '' {
+        const sort = this.detailSortData[this.selectedTab]?.[this.selectedDetailIndex]
+        return sort?.key === fieldKey ? sort.direction : ''
+    }
+
+    private applyDetailSort(rows: any[]): any[] {
+        const sort = this.detailSortData[this.selectedTab]?.[this.selectedDetailIndex]
+        if (!sort?.key || !sort.direction) {
+            return rows
+        }
+
+        const field = this.getAllDetailFields()?.find((f) => f.key === sort.key)
+        const direction = sort.direction === 'asc' ? 1 : -1
+
+        return [...rows].sort((a, b) => {
+            const aValue = this.getDetailSortValue(a, sort.key, field)
+            const bValue = this.getDetailSortValue(b, sort.key, field)
+
+            if (aValue === bValue) return 0
+            if (aValue === null || aValue === undefined || aValue === '') return 1
+            if (bValue === null || bValue === undefined || bValue === '') return -1
+
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return (aValue - bValue) * direction
+            }
+
+            return `${aValue}`.localeCompare(`${bValue}`, undefined, {
+                numeric: true,
+                sensitivity: 'base',
+            }) * direction
+        })
+    }
+
+    private getDetailSortValue(row: any, fieldKey: string, field: any): any {
+        const rawValue = row?.[fieldKey]
+        if (field?.type === 'lookup') {
+            return this.getLookupDisplayValue(fieldKey, rawValue)
+        }
+        if (field?.type === 'number') {
+            const numericValue = Number(`${rawValue ?? ''}`.replace(/,/g, ''))
+            return Number.isNaN(numericValue) ? rawValue : numericValue
+        }
+        if (field?.type === 'date' || field?.type === 'datetime') {
+            const time = new Date(rawValue).getTime()
+            return Number.isNaN(time) ? rawValue : time
+        }
+        return rawValue
     }
 
     private getLookupDisplayValue(fieldKey: string, rawValue: any): string {

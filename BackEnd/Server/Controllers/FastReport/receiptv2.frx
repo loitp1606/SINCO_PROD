@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="10/11/2025 17:22:35" ReportInfo.Modified="04/15/2026 22:57:40" ReportInfo.CreatorVersion="2025.1.10.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="10/11/2025 17:22:35" ReportInfo.Modified="06/27/2026 09:48:34" ReportInfo.CreatorVersion="2025.1.10.0">
   <Dictionary>
     <TableDataSource Name="receiptV2" ReferenceName="ReportData.receiptV2" DataType="System.Int32" Enabled="true" TableName="receiptV2">
       <Column Name="idGui" DataType="System.String"/>
@@ -68,8 +68,8 @@
       <TextObject Name="Text115" Left="132.3" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.customerCode]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
       <TextObject Name="Text116" Top="170.1" Width="718.2" Height="37.8" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
       <TextObject Name="Text117" Left="538.65" Top="207.9" Width="179.55" Height="18.9" CanGrow="true" Text="[receiptV2.ngay_in]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
-      <TextObject Name="Text118" Left="359.1" Width="132.3" Height="18.9" CanGrow="true" Text="Số hóa đơn: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-      <TextObject Name="Text119" Left="491.4" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.invoiceNumber]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text118" Left="359.1" Width="132.3" Height="18.9" CanGrow="true" Text="Số phiếu: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text119" Left="491.4" Width="226.8" Height="18.9" CanGrow="true" Text="[receiptV2.voucherNumber]" Format="Custom" Format.Format="(000) 000-0000" VertAlign="Center" Font="Arial, 10pt"/>
     </DataBand>
   </ReportPage>
 </Report>

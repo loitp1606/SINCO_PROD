@@ -1,0 +1,62 @@
+{
+	"id": "delivery-location",
+	"title": "Giao hàng",
+	"headers": [
+		{
+			"key": "delivery_id",
+			"label": "Mã nơi giao hàng",
+			"type": "text",
+			"width": "150px",
+			"sortable": true
+		},
+		{
+			"key": "delivery_name",
+			"label": "Tên nơi giao hàng",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "address",
+			"label": "Địa chỉ",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "phone_number",
+			"label": "Điện thoại",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "location",
+			"label": "Khu vực giao hàng",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "note",
+			"label": "Ghi chú",
+			"type": "text",
+			"width": "150px"
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "delivery-location.page.json",
+			"formId": "deliveryLocation",
+			"primaryKey": [
+				"delivery_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "",
+			"value": [],
+			"listTable": [
+				"deliveryLocation"
+			],
+			"VCDate": ""
+		}
+	},
+	"sort": "delivery_id",
+	"actions": []
+}

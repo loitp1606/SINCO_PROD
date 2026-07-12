@@ -12,44 +12,27 @@ import { GirdInitData } from '../models';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class RoleEmployeeGridComponent {
-  initData: GirdInitData = {
+  // Fully driven by BackEnd/Server/Controllers/Browser/employeeRole.list.json
+  initData = {
     id: 'employeeRole',
-    title: 'GRID.EMPLOYEE_ROLE',
-    headers: [
-      {
-        key: "employee_role_id",
-        label: "POPUP.EMPLOYEE_ROLE.CODE",
-        type: "text",
-        sortable: true
-      },
-      {
-        key: "role_name",
-        label: "POPUP.EMPLOYEE_ROLE.NAME",
-        type: "text",
-      },
-      {
-        key: "status",
-        label: "POPUP.EMPLOYEE_ROLE.STATUS",
-        type: "select"
-      }
-    ],
+    headers: [],
     query: {
       formId: {
-        controller: 'role-employee.page.json',
-        formId: 'employeeRole',
-        primaryKey: ['employee_role_id'],
-        type: 'list',
-        action: 'loading',
+        controller: '',
+        formId: '',
+        primaryKey: [],
+        value: [],
+        type: '',
+        action: '',
         language: localStorage.getItem('language') ?? 'vi',
-        unit: 'CTY',
+        unit: localStorage.getItem('unit') ?? 'CTY',
         idVC: '',
         userId: localStorage.getItem('userId') ?? '',
-        value: [],
-        listTable: ['employeeRole'],
         VCDate: '',
+        listTable: [],
       },
     },
-    sort: 'employee_role_id',
+    sort: '',
     actions: [],
-  };
+  } as GirdInitData;
 }

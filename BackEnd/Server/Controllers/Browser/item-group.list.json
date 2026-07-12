@@ -1,0 +1,73 @@
+{
+	"id": "item-group",
+	"title": "Nhóm vật tư",
+	"headers": [
+		{
+			"key": "item_group_id",
+			"label": "Mã nhóm",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "item_group_name",
+			"label": "Tên nhóm",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "group_index",
+			"label": "Thứ tự hiển thị",
+			"type": "number",
+			"width": "100px"
+		},
+		{
+			"key": "industry_group_id",
+			"label": "Nhóm ngành hàng",
+			"type": "select",
+			"width": "150px"
+		},
+		{
+			"key": "note",
+			"label": "Ghi chú",
+			"type": "text",
+			"width": "150px"
+		},
+		{
+			"key": "status",
+			"label": "Trạng thái",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang hoạt động",
+					"value": "1"
+				},
+				{
+					"label": "Không hoạt động",
+					"value": "0"
+				}
+			]
+		}
+	],
+	"query": {
+		"formId": {
+			"controller": "item-group.page.json",
+			"formId": "itemGroup",
+			"primaryKey": [
+				"item_group_id"
+			],
+			"type": "list",
+			"action": "loading",
+			"idVC": "Z02",
+			"value": [],
+			"listTable": [
+				"itemGroup",
+				"industryGroup"
+			],
+			"VCDate": "",
+			"isFileHandle": "both"
+		}
+	},
+	"sort": "item_group_id",
+	"actions": []
+}
