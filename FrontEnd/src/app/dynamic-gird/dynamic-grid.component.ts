@@ -59,6 +59,8 @@ import { ShortcutHelpService } from '../services/shortcut-help.service';
   templateUrl: './dynamic-grid.component.html',
 })
 export class DynamicGridComponent implements OnInit, OnDestroy {
+  readonly pageSizeOptions = [10, 20, 50, 100, 200];
+  private readonly defaultPageSize = 200;
   private readonly selectionColumnWidth = 44;
   filterColumns: { [key: string]: string } = {};
   filteredData: any[] = [];
@@ -233,7 +235,8 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe((p) => {
       this.girdData.query.page = +p['page'] || 1;
-      this.girdData.query.pageSize = +p['pageSize'] || this.girdData.query.pageSize || 10;
+      this.girdData.query.pageSize =
+        +p['pageSize'] || this.girdData.query.pageSize || this.defaultPageSize;
       this.loadData();
     });
 
@@ -472,7 +475,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       .set('formId', JSON.stringify(this.girdData.query.formId || {}))
       .set('filter', JSON.stringify(this.girdData.query.filter))
       .set('page', (this.girdData.query.page ?? 1).toString())
-      .set('pageSize', (this.girdData.query.pageSize ?? 10).toString())
+      .set('pageSize', (this.girdData.query.pageSize ?? this.defaultPageSize).toString())
       .set('sort', this.girdData.sort || '');
   }
 
@@ -487,14 +490,17 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     if (newPage !== this.girdData.query.page) {
       this.router.navigate([], {
         relativeTo: this.route,
-        queryParams: { page: newPage, pageSize: this.girdData.query.pageSize || 10 },
+        queryParams: {
+          page: newPage,
+          pageSize: this.girdData.query.pageSize || this.defaultPageSize,
+        },
         queryParamsHandling: 'merge',
       });
     }
   }
 
   onItemsPerPageChange(newPageSize: number): void {
-    if (newPageSize === (this.girdData.query.pageSize || 10)) {
+    if (newPageSize === (this.girdData.query.pageSize || this.defaultPageSize)) {
       return;
     }
 

@@ -169,11 +169,6 @@
           class="bg-gradient-to-r from-blue-100 to-blue-50 text-blue-900 text-sm uppercase tracking-wider sticky top-0 z-20 shadow-md"
         >
           <tr>
-            <th
-              class="px-4 py-3 text-left text-xs font-bold border-b border-blue-300 uppercase w-10"
-            >
-              #
-            </th>
             <ng-container *ngFor="let header of response.header">
               <th
                 [ngStyle]="{ 'width.px': header.width }"
@@ -185,7 +180,6 @@
             </ng-container>
           </tr>
           <tr class="bg-white">
-            <th class="px-2 py-2 border-b border-blue-200"></th>
             <ng-container *ngFor="let header of response.header">
               <th [ngStyle]="{ 'width.px': header.width }" class="px-2 py-2 border-b border-blue-200">
                 <input
@@ -219,7 +213,6 @@
                 : 'bg-blue-50 hover:bg-green-500'
             "
           >
-            <td class="px-4 py-3 text-sm">{{ i + 1 }}</td>
             <ng-container *ngFor="let header of response.header">
               <td
                 [ngStyle]="{ 'width.px': header.width }"
@@ -233,7 +226,7 @@
 
           <tr *ngIf="filteredData.length === 0">
             <td
-              [attr.colspan]="response.header.length + 1"
+              [attr.colspan]="response.header.length"
               class="px-4 py-8 text-center text-gray-500"
             >
               <div class="flex flex-col items-center">

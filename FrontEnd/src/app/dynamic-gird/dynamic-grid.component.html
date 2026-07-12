@@ -237,7 +237,7 @@
         class="block"
         [totalItems]="getPaginationTotalItems()"
         [itemsPerPage]="response.pageSize"
-        [pageSizeOptions]="[10, 20, 50, 100, 200]"
+        [pageSizeOptions]="pageSizeOptions"
         [currentPage]="getPaginationCurrentPage()"
         (pageChange)="onPageChange($event)"
         (itemsPerPageChange)="onItemsPerPageChange($event)"

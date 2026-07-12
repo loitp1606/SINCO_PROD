@@ -65,8 +65,8 @@ export class DynamicReportComponent implements OnInit {
   isFileHandle: string | undefined = "export";
   userData: { [key: string]: string } = {};
   exportData: { [key: string]: any[] } = {};
-  pageSize: number = 10;
-  pageSizeOptions: number[] = [10, 20, 50, 100, 500];
+  pageSize: number = 200;
+  readonly pageSizeOptions: number[] = [10, 20, 50, 100, 200];
   showFilter: boolean = true;
   constructor(private http: HttpClient, private fb: FormBuilder) { }
   lookupMap: Record<string, LookupApiResponse> = {};
@@ -149,10 +149,6 @@ export class DynamicReportComponent implements OnInit {
         if (this.response) {
           this.response.total = meta.data.total;
         }
-        if (this.response?.pageSize) {
-          this.pageSize = this.response.pageSize;
-        }
-
       });
   }
 
