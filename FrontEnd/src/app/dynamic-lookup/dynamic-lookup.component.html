@@ -37,7 +37,7 @@
         type="button"
         *ngFor="let data of getInlineFilteredData()"
         (mousedown)="selectInlineData(data)"
-        class="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 border-b border-gray-100 last:border-b-0 whitespace-normal break-words leading-5"
+        class="lookup-inline-option w-full text-left px-3 py-2 text-sm hover:bg-blue-50 border-b border-gray-100 last:border-b-0 whitespace-normal break-words leading-5"
         [title]="getItemDisplayText(data)"
       >
         {{ getItemDisplayText(data) }}

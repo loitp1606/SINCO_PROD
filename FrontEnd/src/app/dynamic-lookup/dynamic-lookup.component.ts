@@ -18,6 +18,12 @@ import { environment } from '../../environments/environment';
     .lookup-selected-row td {
       color: #ffffff !important;
     }
+
+    .lookup-inline-option {
+      display: block;
+      height: auto !important;
+      min-height: 36px;
+    }
   `],
   imports: [CommonModule, FormsModule, DraggableDirective],
 })
@@ -172,25 +178,22 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
     const query = this.inlineQuery.trim().toLowerCase();
     const selectedDisplayText = this.getSelectedSingleDisplayText().toLowerCase();
+    const searchableFields = this.getInlineSearchFields();
+    const displayableData = this.response.datas.filter(
+      (data) => this.getItemDisplayText(data).trim().length > 0
+    );
 
     // Khi input đang hiển thị đúng giá trị đã chọn, vẫn nên xổ full list thay vì tự lọc còn 1 dòng.
     if (!query || (selectedDisplayText && query === selectedDisplayText)) {
-      return this.response.datas.slice(0, 8);
+      return displayableData.slice(0, 8);
     }
 
-    const nameFields = this.getNameSearchFields();
-    return this.response.datas
-      .filter((data) => {
-        const allFieldsMatch = Object.values(data).some((val) =>
-          String(val ?? '').toLowerCase().includes(query)
-        );
-
-        const nameFieldMatch = nameFields.some((field) =>
+    return displayableData
+      .filter((data) =>
+        searchableFields.some((field) =>
           String(data?.[field] ?? '').toLowerCase().includes(query)
-        );
-
-        return allFieldsMatch || nameFieldMatch;
-      })
+        )
+      )
       .slice(0, 8);
   }
 
@@ -233,8 +236,11 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       return;
     }
 
+    const searchableFields = this.getInlineSearchFields();
     const exactAnyField = this.response.datas.find((data) =>
-      Object.values(data).some((val) => String(val ?? '').toLowerCase() === lowerQuery)
+      searchableFields.some(
+        (field) => String(data?.[field] ?? '').trim().toLowerCase() === lowerQuery
+      )
     );
     if (exactAnyField) {
       this.selectInlineData(exactAnyField);
@@ -433,6 +439,12 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
     return this.response?.primaryKey?.[0] || this.response?.fields?.[0]?.field || '';
   }
 
+  private getInlineSearchFields(): string[] {
+    const fields = this.response?.fields?.map((field) => field.field) ?? [];
+    const primaryField = this.getPrimaryField();
+    return Array.from(new Set(primaryField ? [primaryField, ...fields] : fields));
+  }
+
   private lookupValuesEqual(left: any, right: any): boolean {
     if (left === null || left === undefined || right === null || right === undefined) {
       return left === right;
@@ -442,7 +454,10 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
   }
 
   getItemDisplayText(item: any): string {
-    return this.response.fields.map((f) => item?.[f.field]).join(' - ');
+    return this.response.fields
+      .map((field) => String(item?.[field.field] ?? '').trim())
+      .filter((value) => value.length > 0)
+      .join(' - ');
   }
 
   private getLookupController(): string {
