@@ -380,6 +380,14 @@
 							]
 						},
 						{
+							"key": "sl_gR",
+							"label": "Số lượng nhập",
+							"disabled": true,
+							"type": "number",
+							"precision": 2,
+							"width": "100px"
+						},
+						{
 							"key": "price",
 							"label": "Đơn giá",
 							"type": "number",
@@ -532,14 +540,6 @@
 									}
 								]
 							}
-						},
-						{
-							"key": "sl_gR",
-							"label": "Số lượng nhập",
-							"disabled": true,
-							"type": "number",
-							"precision": 2,
-							"width": "100px"
 						},
 						{
 							"key": "note",

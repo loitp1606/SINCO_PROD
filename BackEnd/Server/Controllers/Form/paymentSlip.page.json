@@ -64,6 +64,14 @@
 							{
 								"label": "Chi theo hóa đơn",
 								"value": "INVOICE"
+							},
+							{
+								"label": "Chi tiền đặt cọc",
+								"value": "DEPOSIT"
+							},
+							{
+								"label": "Chi từ tiền đặt cọc",
+								"value": "DEPOSIT_OFFSET"
 							}
 						]
 					},

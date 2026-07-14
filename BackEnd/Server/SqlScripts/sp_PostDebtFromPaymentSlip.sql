@@ -1,4 +1,4 @@
-﻿ALTER   PROCEDURE [dbo].[sp_PostDebtFromPaymentSlip]
+ALTER PROCEDURE [dbo].[sp_PostDebtFromPaymentSlip]
     @idGui NVARCHAR(50),
     @unitCode NVARCHAR(50) = NULL,
     @userId NVARCHAR(50) = NULL
@@ -104,11 +104,12 @@ BEGIN
 
         SET @receiptType = CASE
             WHEN @paymentType = N'DEPOSIT' THEN N'PAYMENT_DEPOSIT'
+            WHEN @paymentType = N'DEPOSIT_OFFSET' THEN N'PAYMENT_DEPOSIT_OFFSET'
             WHEN @paymentType = N'INVOICE' THEN N'PAYMENT_INVOICE'
             ELSE N'PAYMENT_SUPPLIER'
         END;
 
-        -- DEPOSIT / SUPPLIER: ghi nhận theo tổng master, không phụ thuộc detail
+        -- DEPOSIT / DEPOSIT_OFFSET / SUPPLIER: ghi nhận theo tổng master, không phụ thuộc detail
         IF @paymentType <> N'INVOICE'
         BEGIN
             IF ISNULL(@masterAmount, 0) <= 0
@@ -147,13 +148,21 @@ BEGIN
                 @receiptType,
                 0,
                 0,
-                CASE WHEN @receiptType = N'PAYMENT_DEPOSIT' THEN @masterAmount ELSE 0 END,
+                CASE
+                    WHEN @receiptType = N'PAYMENT_DEPOSIT' THEN @masterAmount
+                    WHEN @receiptType = N'PAYMENT_DEPOSIT_OFFSET' THEN -@masterAmount
+                    ELSE 0
+                END,
                 CASE WHEN @receiptType = N'PAYMENT_DEPOSIT' THEN 0 ELSE @masterAmount END,
                 0,
                 N'paymentSlip',
                 @idGui,
                 NULL,
-                N'Giảm phải trả NCC từ phiếu chi',
+                CASE
+                    WHEN @receiptType = N'PAYMENT_DEPOSIT' THEN N'Chi tiền đặt cọc cho NCC'
+                    WHEN @receiptType = N'PAYMENT_DEPOSIT_OFFSET' THEN N'Cấn trừ công nợ từ tiền đặt cọc NCC'
+                    ELSE N'Giảm phải trả NCC từ phiếu chi'
+                END,
                 @userId,
                 SYSDATETIME()
             );
@@ -257,4 +266,4 @@ BEGIN
         RAISERROR(@err, 16, 1);
     END CATCH
 END
-go
+GO

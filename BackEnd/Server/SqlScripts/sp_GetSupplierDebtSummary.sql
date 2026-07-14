@@ -1,4 +1,4 @@
-CREATE OR ALTER PROCEDURE dbo.sp_GetSupplierDebtSummary
+ALTER PROCEDURE [dbo].[sp_GetSupplierDebtSummary]
     @supplierCode NVARCHAR(50),
     @unitCode NVARCHAR(50) = NULL
 AS
@@ -29,19 +29,19 @@ BEGIN
         )
         SELECT
             @depositAmount = ISNULL(SUM(CASE
-                WHEN ReceiptType IN (N'SUPPLIER_ADVANCE', N'PAYMENT_DEPOSIT')
+                WHEN ReceiptType IN (N'SUPPLIER_ADVANCE', N'PAYMENT_DEPOSIT', N'PAYMENT_DEPOSIT_OFFSET', N'GOODS_RECEIPT')
                   OR (IsLegacy = 1 AND RefController = N'paymentSlip' AND AdvanceAmount > 0)
-                THEN AdvanceAmount
+                THEN AdvanceAmount + PayableAmount
                 ELSE 0
             END), 0),
             @paidAmount = ISNULL(SUM(CASE
-                WHEN ReceiptType IN (N'PAYMENT_SUPPLIER', N'PAYMENT_INVOICE', N'SUPPLIER_PAYMENT')
+                WHEN ReceiptType IN (N'PAYMENT_SUPPLIER', N'PAYMENT_INVOICE', N'PAYMENT_DEPOSIT_OFFSET', N'SUPPLIER_PAYMENT')
                   OR (IsLegacy = 1 AND RefController = N'paymentSlip' AND PaidAmount > 0)
                 THEN PaidAmount
                 ELSE 0
             END), 0),
             @payableAmount = ISNULL(SUM(CASE
-                WHEN ReceiptType IN (N'GOODS_RECEIPT', N'PAYMENT_SUPPLIER', N'PAYMENT_INVOICE', N'SUPPLIER_PAYMENT')
+                WHEN ReceiptType IN (N'GOODS_RECEIPT', N'PAYMENT_SUPPLIER', N'PAYMENT_INVOICE', N'PAYMENT_DEPOSIT_OFFSET', N'SUPPLIER_PAYMENT')
                   OR (IsLegacy = 1 AND RefController IN (N'goodsReceipt', N'paymentSlip'))
                 THEN (PayableAmount + DebitAmount - CreditAmount - PaidAmount)
                 ELSE 0

@@ -1,4 +1,4 @@
-﻿CREATE OR ALTER PROCEDURE dbo.sp_ApplySupplierPaymentAllocationFromPaymentSlip
+ALTER PROCEDURE [dbo].[sp_ApplySupplierPaymentAllocationFromPaymentSlip]
     @idGui NVARCHAR(50),
     @unitCode NVARCHAR(50) = NULL,
     @userId NVARCHAR(50) = NULL
