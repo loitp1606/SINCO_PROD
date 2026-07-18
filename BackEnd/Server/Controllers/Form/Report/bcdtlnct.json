@@ -60,7 +60,7 @@
 			"type": "number",
 			"width": 120,
 			"align": "text-left",
-			"format": ""
+			"format": "decimal-2"
 		},
 		{
 			"label": "Giá vốn kỳ trước",
@@ -68,7 +68,7 @@
 			"type": "number",
 			"width": 120,
 			"align": "text-left",
-			"format": ""
+			"format": "decimal-2"
 		},
 		{
 			"label": "Tỷ lệ",

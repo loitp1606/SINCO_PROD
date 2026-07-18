@@ -391,6 +391,7 @@
 							"key": "discount",
 							"label": "Tiền chiết khấu",
 							"type": "number",
+							"precision": 2,
 							"currency": "VN",
 							"width": "100px",
 							"trigger": [
@@ -404,7 +405,7 @@
 											"amount",
 											"ratioDiscount"
 										],
-										"precision": 0
+										"precision": 2
 									}
 								]
 							}

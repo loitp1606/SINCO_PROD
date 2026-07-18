@@ -76,7 +76,7 @@
       "type": "number",
       "width": 120,
       "align": "text-left",
-      "format": ""
+      "format": "decimal-2"
     },
     {
       "label": "Ghi chú",

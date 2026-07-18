@@ -414,6 +414,7 @@
 							"key": "discount",
 							"label": "Chiếu khấu",
 							"type": "number",
+							"precision": 2,
 							"width": "100px",
 							"currency": "VN",
 							"trigger": [
@@ -429,7 +430,7 @@
 											"price",
 											"discountRate"
 										],
-										"precision": 0
+										"precision": 2
 									}
 								]
 							}
