@@ -139,6 +139,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   activeDetailRowIndex: number = 0;
   paneMinHeight = 140;
   masterPaneHeight = 360;
+  masterOnlyPaneHeight = 540;
   detailPaneHeight = 240;
   private paneUserResized = false;
   private quickEditPaneSnapshot: { master: number; detail: number } | null = null;
@@ -252,6 +253,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.loadData();
   }
   async ngOnInit(): Promise<void> {
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('dynamic-grid-viewport-lock');
+    }
     await this.loadGridConfigFromBrowser();
     this.pageTitleService.setTitle(this.girdData?.title ?? '');
     this.initializePaneHeights();
@@ -579,6 +583,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       window.cancelAnimationFrame(this.stickyHeaderOffsetFrame);
     }
     document.removeEventListener('keydown', this.documentShortcutListener, true);
+    document.body.classList.remove('dynamic-grid-viewport-lock');
     this.pageTitleService.clearTitle();
   }
 
@@ -607,8 +612,49 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       `${controlsBottom}px`,
     );
 
-    this.setScrollZoneHeaderOffset(this.masterScrollZoneElement, controlsBottom, 62);
+    this.setScrollZoneHeaderOffset(this.masterScrollZoneElement, controlsBottom, 54);
     this.setScrollZoneHeaderOffset(this.detailScrollZoneElement, controlsBottom, 54);
+    this.fitGridToViewport();
+  }
+
+  private fitGridToViewport(): void {
+    const page = this.hostElement.nativeElement.querySelector<HTMLElement>('.dynamic-grid-page');
+    const content = this.hostElement.nativeElement.querySelector<HTMLElement>('.dynamic-grid-content');
+    const masterZone = this.masterScrollZoneElement;
+    if (!page || !content || !masterZone || typeof window === 'undefined') {
+      return;
+    }
+
+    const pageTop = Math.max(0, page.getBoundingClientRect().top);
+    const viewportHeight = Math.max(320, Math.floor(window.innerHeight - pageTop));
+    page.style.height = `${viewportHeight}px`;
+    page.style.maxHeight = `${viewportHeight}px`;
+
+    const detailZone = this.detailScrollZoneElement;
+    const currentPaneHeight = masterZone.offsetHeight + (detailZone?.offsetHeight ?? 0);
+    const pageStyle = window.getComputedStyle(page);
+    const pageVerticalPadding =
+      (Number.parseFloat(pageStyle.paddingTop) || 0) +
+      (Number.parseFloat(pageStyle.paddingBottom) || 0);
+    const fixedHeight = Math.max(0, content.scrollHeight - currentPaneHeight);
+    const availablePaneHeight = Math.max(
+      detailZone ? this.paneMinHeight * 2 : this.paneMinHeight,
+      Math.floor(page.clientHeight - pageVerticalPadding - fixedHeight - 2),
+    );
+
+    if (!detailZone) {
+      this.masterOnlyPaneHeight = availablePaneHeight;
+      return;
+    }
+
+    const currentTotal = Math.max(1, this.masterPaneHeight + this.detailPaneHeight);
+    const masterRatio = this.masterPaneHeight / currentTotal;
+    const nextMaster = Math.min(
+      Math.max(Math.round(availablePaneHeight * masterRatio), this.getMasterPaneMinHeight()),
+      availablePaneHeight - this.paneMinHeight,
+    );
+    this.masterPaneHeight = nextMaster;
+    this.detailPaneHeight = availablePaneHeight - nextMaster;
   }
 
   private setScrollZoneHeaderOffset(
@@ -1453,13 +1499,13 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     event.stopPropagation();
 
     const startY = event.pageY;
-    const startHeight = this.rowHeights[index] || 38;
+    const startHeight = this.rowHeights[index] || 30;
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const deltaY = moveEvent.pageY - startY;
       const newHeight = startHeight + deltaY;
 
-      this.rowHeights[index] = newHeight > 30 ? newHeight : 30;
+      this.rowHeights[index] = newHeight > 26 ? newHeight : 26;
     };
 
     const onMouseUp = () => {

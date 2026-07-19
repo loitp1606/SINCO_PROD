@@ -1,4 +1,4 @@
-<div class="p-4 pt-[52px] md:pt-[54px]">
+<div class="dynamic-grid-page p-2">
   <!-- Loading/Error -->
   <div *ngIf="!response" class="space-y-4 animate-pulse">
     <div class="bg-white rounded-xl border border-gray-100 p-4">
@@ -33,7 +33,7 @@
     </button>
   </div>-->
   <!-- Table -->
-    <div *ngIf="response">
+    <div *ngIf="response" class="dynamic-grid-content">
       <div #stickyControls class="master-grid-sticky-controls">
       <div class="toolbar-actions flex flex-wrap items-center gap-2">
       <button
@@ -432,9 +432,9 @@
         #masterScrollZone
         class="master-scroll-zone"
         [class.master-scroll-zone-full]="!isVoucherType() || !isDetailPanelVisible()"
-        [style.height.px]="isDetailPanelVisible() ? masterPaneHeight : null"
-        [style.max-height.px]="isDetailPanelVisible() ? masterPaneHeight : null"
-        [style.min-height.px]="isDetailPanelVisible() ? getMasterPaneMinHeight() : null"
+        [style.height.px]="isDetailPanelVisible() ? masterPaneHeight : masterOnlyPaneHeight"
+        [style.max-height.px]="isDetailPanelVisible() ? masterPaneHeight : masterOnlyPaneHeight"
+        [style.min-height.px]="isDetailPanelVisible() ? getMasterPaneMinHeight() : paneMinHeight"
         tabindex="0"
       >
         <table
@@ -545,7 +545,7 @@
                 isVoucherType() &&
                 expandedRowId === data[girdData.query.formId.primaryKey[0]]
               "
-              [style.height.px]="rowHeights[i] || 38"
+              [style.height.px]="rowHeights[i] || 30"
               (click)="onMasterRowClick(data)"
             >
               <td class="px-2 py-0.5 text-xs text-gray-500 relative">
@@ -642,7 +642,7 @@
 
       <div
         *ngIf="hasGridSummary()"
-        class="flex items-center justify-end gap-3 px-4 py-2 border-t border-slate-200 bg-slate-50 text-sm"
+        class="grid-summary-bar flex items-center justify-end gap-3 px-4 py-2 border-t border-slate-200 bg-slate-50 text-sm"
       >
         <span class="text-slate-600 font-medium">{{ getGridSummaryLabel() }}:</span>
         <span class="font-bold text-slate-900 whitespace-nowrap">
@@ -657,7 +657,7 @@
     <div *ngIf="isVoucherType()" class="my-1">
       <div
         *ngIf="isDetailPanelVisible(); else hiddenDetailToggle"
-        class="h-2 rounded bg-slate-200 hover:bg-cyan-200 cursor-row-resize transition-colors flex items-center justify-center"
+        class="pane-resize-handle h-2 rounded bg-slate-200 hover:bg-cyan-200 cursor-row-resize transition-colors flex items-center justify-center"
         (mousedown)="startPaneResize($event)"
         title="Kéo để thay đổi chiều cao Master/Detail"
       >
