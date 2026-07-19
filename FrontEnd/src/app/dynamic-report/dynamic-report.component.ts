@@ -40,20 +40,9 @@ const localeMap: { [key: string]: string } = {
     TranslateModule,
     ReactiveFormsModule,
     FileHandleComponent
-],
+  ],
   templateUrl: './dynamic-report.component.html',
-  styles: [`
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  `]
+  styleUrl: './dynamic-report.component.scss'
 })
 export class DynamicReportComponent implements OnInit {
   response?: ReportListResponse;
@@ -111,7 +100,7 @@ export class DynamicReportComponent implements OnInit {
         formControls[field.key] = ['', validators];
         continue;
       }
-      formControls[field.key] = [field.default ?? '', validators];
+      formControls[field.key] = [this.getInitialFilterValue(field), validators];
     }
     formControls['userId'] = localStorage.getItem('userId');
     formControls['language'] = localStorage.getItem('language') ?? 'vi';
@@ -198,7 +187,15 @@ export class DynamicReportComponent implements OnInit {
   }
 
   resetFilter(): void {
-    this.filterForm.reset();
+    const values: Record<string, any> = {};
+    for (const field of this.response?.filters || []) {
+      values[field.key] = field.type === 'lookup'
+        ? ''
+        : this.getInitialFilterValue(field);
+    }
+    values['userId'] = localStorage.getItem('userId');
+    values['language'] = localStorage.getItem('language') ?? 'vi';
+    this.filterForm.reset(values);
   }
 
   onFieldValueChange(value: any, field: any) {
@@ -291,6 +288,44 @@ export class DynamicReportComponent implements OnInit {
       this.columnFilters[header.key] = '';
     }
     this.applyColumnFilters();
+  }
+
+  private getInitialFilterValue(field: any): any {
+    if (field.default !== null && field.default !== undefined && field.default !== '') {
+      return field.default;
+    }
+
+    if (field.type !== 'date') {
+      return '';
+    }
+
+    const key = String(field.key || '').toLowerCase();
+    const label = String(field.label || '').toLowerCase();
+    const today = new Date();
+
+    if (key === 'datefrom' || label.includes('từ') || label.includes('bắt đầu')) {
+      return this.formatDateInput(this.addMonthsClamped(today, -2));
+    }
+
+    if (key === 'dateto' || label.includes('đến') || label.includes('kết thúc')) {
+      return this.formatDateInput(today);
+    }
+
+    return '';
+  }
+
+  private addMonthsClamped(value: Date, months: number): Date {
+    const target = new Date(value.getFullYear(), value.getMonth() + months, 1);
+    const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+    target.setDate(Math.min(value.getDate(), lastDay));
+    return target;
+  }
+
+  private formatDateInput(value: Date): string {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private applyColumnFilters(): void {
