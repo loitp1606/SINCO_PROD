@@ -20,6 +20,7 @@ import { environment } from '../../environments/environment';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { FileHandleComponent } from "../file-handle/file-handle.component";
+import { PageTitleService } from '../services/page-title.service';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
 const localeMap: { [key: string]: string } = {
@@ -57,7 +58,11 @@ export class DynamicReportComponent implements OnInit {
   pageSize: number = 200;
   readonly pageSizeOptions: number[] = [10, 20, 50, 100, 200];
   showFilter: boolean = true;
-  constructor(private http: HttpClient, private fb: FormBuilder) { }
+  constructor(
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private pageTitleService: PageTitleService,
+  ) { }
   lookupMap: Record<string, LookupApiResponse> = {};
   @Input({ required: true }) controller!: string;
   ngOnInit(): void {
@@ -79,6 +84,7 @@ export class DynamicReportComponent implements OnInit {
       )
       .subscribe(async (meta) => {
         this.response = meta.data;
+        this.pageTitleService.setTitle(this.response?.title ?? '');
         this.initFilterForm();
         this.initColumnFilters();
       });
