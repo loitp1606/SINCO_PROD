@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   HostListener,
   Input,
   OnDestroy,
@@ -66,6 +67,30 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   filteredData: any[] = [];
   @Input({ required: true }) girdData!: GirdInitData;
   @ViewChild('fileHandler') fileHandler!: FileHandleComponent;
+  @ViewChild('stickyControls')
+  set stickyControls(ref: ElementRef<HTMLElement> | undefined) {
+    this.stickyControlsResizeObserver?.disconnect();
+    this.stickyControlsElement = ref?.nativeElement;
+
+    if (this.stickyControlsElement && typeof ResizeObserver !== 'undefined') {
+      this.stickyControlsResizeObserver = new ResizeObserver(() =>
+        this.scheduleStickyHeaderOffsetUpdate(),
+      );
+      this.stickyControlsResizeObserver.observe(this.stickyControlsElement);
+    }
+
+    this.scheduleStickyHeaderOffsetUpdate();
+  }
+  @ViewChild('masterScrollZone')
+  set masterScrollZone(ref: ElementRef<HTMLElement> | undefined) {
+    this.masterScrollZoneElement = ref?.nativeElement;
+    this.scheduleStickyHeaderOffsetUpdate();
+  }
+  @ViewChild('detailScrollZone')
+  set detailScrollZone(ref: ElementRef<HTMLElement> | undefined) {
+    this.detailScrollZoneElement = ref?.nativeElement;
+    this.scheduleStickyHeaderOffsetUpdate();
+  }
   response?: ListApiResponse;
   showFilter: boolean = false;
   selectedTab = 0;
@@ -130,6 +155,11 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   private headerFilterDebounceTimer: ReturnType<typeof setTimeout> | null = null;
   private lookupControllerMap: Record<string, string> = {};
   private shortcutHelpSubscription?: Subscription;
+  private stickyControlsElement?: HTMLElement;
+  private masterScrollZoneElement?: HTMLElement;
+  private detailScrollZoneElement?: HTMLElement;
+  private stickyControlsResizeObserver?: ResizeObserver;
+  private stickyHeaderOffsetFrame: number | null = null;
 
   // Detail
   detailRowsData: { [tabIndex: number]: { [detailIndex: number]: any[] } } = {};
@@ -171,6 +201,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private pageTitleService: PageTitleService,
     private shortcutHelpService: ShortcutHelpService,
+    private hostElement: ElementRef<HTMLElement>,
   ) {
     this.currentLanguage = localStorage.getItem('language') ?? 'vi';
     this.translate.setDefaultLang(this.currentLanguage);
@@ -179,6 +210,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   toggleFilter() {
     this.showFilter = !this.showFilter;
+    this.scheduleStickyHeaderOffsetUpdate();
   }
 
   isVoucherType(): boolean {
@@ -542,8 +574,59 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       clearTimeout(this.headerFilterDebounceTimer);
     }
     this.shortcutHelpSubscription?.unsubscribe();
+    this.stickyControlsResizeObserver?.disconnect();
+    if (this.stickyHeaderOffsetFrame !== null && typeof window !== 'undefined') {
+      window.cancelAnimationFrame(this.stickyHeaderOffsetFrame);
+    }
     document.removeEventListener('keydown', this.documentShortcutListener, true);
     this.pageTitleService.clearTitle();
+  }
+
+  private scheduleStickyHeaderOffsetUpdate(): void {
+    if (typeof window === 'undefined' || this.stickyHeaderOffsetFrame !== null) {
+      return;
+    }
+
+    this.stickyHeaderOffsetFrame = window.requestAnimationFrame(() => {
+      this.stickyHeaderOffsetFrame = null;
+      this.updateStickyHeaderOffsets();
+    });
+  }
+
+  private updateStickyHeaderOffsets(): void {
+    if (!this.stickyControlsElement) {
+      return;
+    }
+
+    const controlsBottom = Math.max(
+      0,
+      Math.ceil(this.stickyControlsElement.getBoundingClientRect().bottom),
+    );
+    this.hostElement.nativeElement.style.setProperty(
+      '--grid-sticky-controls-bottom',
+      `${controlsBottom}px`,
+    );
+
+    this.setScrollZoneHeaderOffset(this.masterScrollZoneElement, controlsBottom, 62);
+    this.setScrollZoneHeaderOffset(this.detailScrollZoneElement, controlsBottom, 54);
+  }
+
+  private setScrollZoneHeaderOffset(
+    element: HTMLElement | undefined,
+    controlsBottom: number,
+    headerHeight: number,
+  ): void {
+    if (!element) {
+      return;
+    }
+
+    const zoneTop = element.getBoundingClientRect().top;
+    const availableOffset = Math.max(0, element.clientHeight - headerHeight);
+    const overlap = Math.min(
+      Math.max(0, controlsBottom - zoneTop),
+      availableOffset,
+    );
+    element.style.setProperty('--grid-header-page-overlap', `${Math.ceil(overlap)}px`);
   }
 
   getAdvancedFilterFields(): GirdHeader[] {
@@ -639,6 +722,12 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     if (!this.paneUserResized) {
       this.initializePaneHeights();
     }
+    this.scheduleStickyHeaderOffsetUpdate();
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.scheduleStickyHeaderOffsetUpdate();
   }
 
   private initializePaneHeights(): void {

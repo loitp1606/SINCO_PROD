@@ -34,7 +34,8 @@
   </div>-->
   <!-- Table -->
     <div *ngIf="response">
-      <div class="toolbar-actions mb-2 flex flex-wrap items-center gap-2">
+      <div #stickyControls class="master-grid-sticky-controls">
+      <div class="toolbar-actions flex flex-wrap items-center gap-2">
       <button
         (click)="toggleFilter()"
         class="inline-flex items-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-1.5 text-sm font-medium text-sky-800 hover:bg-sky-50 transition"
@@ -200,6 +201,56 @@
 
       </div>
 
+      <div class="master-grid-pagination flex flex-wrap items-center justify-between gap-2">
+        <app-dynamic-pagination
+          *ngIf="shouldShowPagination()"
+          class="block"
+          [totalItems]="getPaginationTotalItems()"
+          [itemsPerPage]="response.pageSize"
+          [pageSizeOptions]="pageSizeOptions"
+          [currentPage]="getPaginationCurrentPage()"
+          (pageChange)="onPageChange($event)"
+          (itemsPerPageChange)="onItemsPerPageChange($event)"
+        >
+        </app-dynamic-pagination>
+
+        <div
+          *ngIf="hasQuickEditableMasterFields()"
+          class="flex flex-wrap items-center gap-1.5"
+        >
+          <button
+            *ngIf="!quickEditMasterMode"
+            type="button"
+            (click)="startQuickEditMaster()"
+            [disabled]="!getToolbarTargetRow()"
+            class="inline-flex items-center rounded border border-sky-200 bg-white px-2 py-1 text-xs font-medium text-sky-700 hover:bg-sky-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Sửa nhanh
+          </button>
+
+          <button
+            *ngIf="quickEditMasterMode"
+            type="button"
+            (click)="saveQuickEditMaster()"
+            [disabled]="quickEditMasterSaving"
+            class="inline-flex items-center rounded border border-emerald-200 bg-white px-2 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ quickEditMasterSaving ? 'Đang lưu...' : 'Lưu nhanh' }}
+          </button>
+
+          <button
+            *ngIf="quickEditMasterMode"
+            type="button"
+            (click)="cancelQuickEditMaster()"
+            [disabled]="quickEditMasterSaving"
+            class="inline-flex items-center rounded border border-rose-200 bg-white px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Hủy nhanh
+          </button>
+        </div>
+      </div>
+      </div>
+
       <div
         *ngIf="showShortcutHelp"
         class="mb-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
@@ -230,55 +281,6 @@
     </app-advanced-filter>
     <!-- Advanced Filter Component -->
     <div class="my-2"></div>
-
-    <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
-      <app-dynamic-pagination
-        *ngIf="shouldShowPagination()"
-        class="block"
-        [totalItems]="getPaginationTotalItems()"
-        [itemsPerPage]="response.pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        [currentPage]="getPaginationCurrentPage()"
-        (pageChange)="onPageChange($event)"
-        (itemsPerPageChange)="onItemsPerPageChange($event)"
-      >
-      </app-dynamic-pagination>
-
-      <div
-        *ngIf="hasQuickEditableMasterFields()"
-        class="flex flex-wrap items-center gap-1.5"
-      >
-        <button
-          *ngIf="!quickEditMasterMode"
-          type="button"
-          (click)="startQuickEditMaster()"
-          [disabled]="!getToolbarTargetRow()"
-          class="inline-flex items-center rounded border border-sky-200 bg-white px-2 py-1 text-xs font-medium text-sky-700 hover:bg-sky-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Sửa nhanh
-        </button>
-
-        <button
-          *ngIf="quickEditMasterMode"
-          type="button"
-          (click)="saveQuickEditMaster()"
-          [disabled]="quickEditMasterSaving"
-          class="inline-flex items-center rounded border border-emerald-200 bg-white px-2 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ quickEditMasterSaving ? 'Đang lưu...' : 'Lưu nhanh' }}
-        </button>
-
-        <button
-          *ngIf="quickEditMasterMode"
-          type="button"
-          (click)="cancelQuickEditMaster()"
-          [disabled]="quickEditMasterSaving"
-          class="inline-flex items-center rounded border border-rose-200 bg-white px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Hủy nhanh
-        </button>
-      </div>
-    </div>
     <!-- Dynamic Buttons
 
     <div class="overflow-x-auto rounded-lg shadow">
@@ -427,6 +429,7 @@
       class="bg-white rounded-xl shadow-md border border-sky-100 overflow-hidden"
     >
       <div
+        #masterScrollZone
         class="master-scroll-zone"
         [class.master-scroll-zone-full]="!isVoucherType() || !isDetailPanelVisible()"
         [style.height.px]="isDetailPanelVisible() ? masterPaneHeight : null"
@@ -437,7 +440,7 @@
         <table
           [class]="getGridTableClasses()"
         >
-          <thead class="bg-sky-900 text-white sticky top-0 z-5">
+          <thead class="master-table-header bg-sky-900 text-white">
           <tr>
             <th
               class="relative px-2 py-1 text-center text-[11px] font-bold uppercase"
@@ -838,6 +841,7 @@
         </div>
 
         <div
+          #detailScrollZone
           class="detail-table-container detail-scroll-zone detail-fixed-zone"
           *ngIf="getAllDetailFields().length > 0"
           [style.height.px]="detailPaneHeight"
@@ -850,7 +854,7 @@
               appArrowNavigation
               class="detail-table text-xs"
             >
-              <thead>
+              <thead class="detail-table-header">
                 <tr class="bg-slate-700 text-white">
                   <th
                     class="px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
