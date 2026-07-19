@@ -448,6 +448,7 @@
             >
               <input
                 type="checkbox"
+                class="block mx-auto"
                 [checked]="isAllMasterRowsSelected()"
                 [indeterminate]="isSomeMasterRowsSelected()"
                 (click)="$event.stopPropagation()"
@@ -548,9 +549,10 @@
               [style.height.px]="rowHeights[i] || 21"
               (click)="onMasterRowClick(data)"
             >
-              <td class="px-2 py-0.5 text-xs text-gray-500 relative">
+              <td class="px-2 py-0.5 text-xs text-center text-gray-500 relative">
                 <input
                   type="checkbox"
+                  class="block mx-auto"
                   [checked]="isMasterRowSelected(data)"
                   (click)="$event.stopPropagation()"
                   (change)="handleSelection($event, data)"

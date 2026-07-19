@@ -1043,6 +1043,15 @@
   min-height: 280px;
   overflow: auto;
   scrollbar-gutter: stable both-edges;
+  scroll-padding-top: calc(var(--grid-header-page-overlap, 0px) + 43px);
+}
+
+/*
+ * The sticky toolbar can overlap the grid scroll zone. The header uses the
+ * same dynamic offset, so reserve that space in normal table flow as well.
+ */
+.master-scroll-zone > table {
+  margin-top: var(--grid-header-page-overlap, 0px);
 }
 
 .master-scroll-zone.master-scroll-zone-full {
@@ -1092,6 +1101,11 @@
   max-height: 32vh;
   overflow: auto !important;
   scrollbar-gutter: stable both-edges;
+  scroll-padding-top: calc(var(--grid-header-page-overlap, 0px) + 41px);
+}
+
+.detail-fixed-zone > .detail-scroll-content {
+  margin-top: var(--grid-header-page-overlap, 0px);
 }
 
 .detail-equal-width {
