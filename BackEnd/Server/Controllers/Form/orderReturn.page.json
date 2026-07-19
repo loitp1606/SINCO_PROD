@@ -344,6 +344,14 @@
 							]
 						},
 						{
+							"key": "sl_tl",
+							"label": "SL trả lại",
+							"required": true,
+							"type": "number",
+							"precision": 2,
+							"width": "100px"
+						},
+						{
 							"key": "price",
 							"label": "Đơn giá",
 							"type": "number",
