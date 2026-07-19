@@ -264,7 +264,7 @@
 				{
 					"step": "afterUpdate",
 					"type": "sql02",
-					"query": "update customer set statusname = case when status = '1' then  N'Đang hoạt động' else N'Bị khóa' end where customer_id = N'@customer_id';"
+					"query": "update customer set statusname = case when status = '1' then  N'Đang hoạt động' else N'Bị khóa' end where customer_id = N'@customer_id';exec syncCustomer N'@customer_id';"
 				}
 			]
 		}

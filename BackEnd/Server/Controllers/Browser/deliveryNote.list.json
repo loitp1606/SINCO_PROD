@@ -37,7 +37,7 @@
 			"key": "ds_hoa_don",
 			"label": "Danh sách hóa đơn",
 			"type": "text",
-			"width": "150px"
+			"width": "100px"
 		},
 		{
 			"key": "status",

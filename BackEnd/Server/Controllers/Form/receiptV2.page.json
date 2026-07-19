@@ -183,7 +183,7 @@
 					},
 					{
 						"key": "invoiceNumber",
-						"label": "Số biên thu",
+						"label": "Số hoá đơn thu",
 						"type": "text",
 						"width": "150px",
 						"required": false

@@ -50,7 +50,7 @@
 						"required": true,
 						"multiple": false,
 						"default": {
-							"controller": "customerGroup",
+							"controller": "industryGroup",
 							"filter": [
 								{
 									"field": "status",
