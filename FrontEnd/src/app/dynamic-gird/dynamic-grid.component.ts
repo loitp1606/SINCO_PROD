@@ -612,8 +612,8 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       `${controlsBottom}px`,
     );
 
-    this.setScrollZoneHeaderOffset(this.masterScrollZoneElement, controlsBottom, 54);
-    this.setScrollZoneHeaderOffset(this.detailScrollZoneElement, controlsBottom, 54);
+    this.setScrollZoneHeaderOffset(this.masterScrollZoneElement, controlsBottom, 43);
+    this.setScrollZoneHeaderOffset(this.detailScrollZoneElement, controlsBottom, 41);
     this.fitGridToViewport();
   }
 
@@ -1499,13 +1499,13 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     event.stopPropagation();
 
     const startY = event.pageY;
-    const startHeight = this.rowHeights[index] || 30;
+    const startHeight = this.rowHeights[index] || 21;
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const deltaY = moveEvent.pageY - startY;
       const newHeight = startHeight + deltaY;
 
-      this.rowHeights[index] = newHeight > 26 ? newHeight : 26;
+      this.rowHeights[index] = newHeight > 18 ? newHeight : 18;
     };
 
     const onMouseUp = () => {

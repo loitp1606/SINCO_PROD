@@ -1055,7 +1055,7 @@
   position: sticky;
   top: var(--grid-header-page-overlap, 0px);
   z-index: 32;
-  height: 32px;
+  height: 22px;
   background: #0c4a6e;
   color: #ffffff;
   vertical-align: middle;
@@ -1064,9 +1064,9 @@
 
 .master-scroll-zone .master-table-header tr:nth-child(2) th {
   position: sticky;
-  top: calc(var(--grid-header-page-overlap, 0px) + 32px);
+  top: calc(var(--grid-header-page-overlap, 0px) + 22px);
   z-index: 31;
-  height: 30px;
+  height: 21px;
   background: #f0f9ff;
   color: #334155;
   vertical-align: middle;
@@ -1196,7 +1196,7 @@
 .detail-professional .detail-table-header tr:nth-child(2) th,
 .detail-professional .detail-table-header tr:nth-child(2) td {
   position: sticky;
-  top: calc(var(--grid-header-page-overlap, 0px) + 27px);
+  top: calc(var(--grid-header-page-overlap, 0px) + 22px);
   z-index: 25;
   background: #f1f5f9;
 }
@@ -1311,4 +1311,148 @@
   justify-content: center;
   vertical-align: middle;
   flex: 0 0 16px;
+}
+
+/* Dynamic grid font scale: text only, keep controls and layout dimensions unchanged. */
+.dynamic-grid-page .text-lg {
+  font-size: 12.6px !important;
+}
+
+.dynamic-grid-page .text-base:not(.mat-icon) {
+  font-size: 11.2px !important;
+}
+
+.dynamic-grid-page .text-sm {
+  font-size: 9.8px !important;
+}
+
+.dynamic-grid-page .text-xs,
+.dynamic-grid-page app-dynamic-pagination {
+  font-size: 8.4px !important;
+}
+
+.dynamic-grid-page [class~="text-[11px]"] {
+  font-size: 7.7px !important;
+}
+
+.dynamic-grid-page [class~="text-[10px]"] {
+  font-size: 7px !important;
+}
+
+.dynamic-grid-page .panel-title,
+.dynamic-grid-page .panel-subtitle,
+.dynamic-grid-page .detail-professional,
+.dynamic-grid-page .detail-professional .detail-table th,
+.dynamic-grid-page .detail-professional .detail-table td,
+.dynamic-grid-page .detail-professional .detail-table .form-input,
+.dynamic-grid-page .detail-professional .detail-table .form-select,
+.dynamic-grid-page .detail-professional .detail-table input,
+.dynamic-grid-page .detail-professional .detail-table select,
+.dynamic-grid-page .detail-professional app-lookup textarea {
+  font-size: 7.7px !important;
+}
+
+.dynamic-grid-page app-advanced-filter .advanced-filter-container,
+.dynamic-grid-page app-advanced-filter .btn-logical-operator,
+.dynamic-grid-page app-advanced-filter .btn-add-filter,
+.dynamic-grid-page app-advanced-filter .btn-clear-all,
+.dynamic-grid-page app-advanced-filter .btn-export,
+.dynamic-grid-page app-advanced-filter .filter-select,
+.dynamic-grid-page app-advanced-filter .filter-input,
+.dynamic-grid-page app-advanced-filter .filter-checkbox-label,
+.dynamic-grid-page app-advanced-filter .filter-summary-text {
+  font-size: 9.8px !important;
+}
+
+.dynamic-grid-page app-advanced-filter .filter-title {
+  font-size: 12.6px !important;
+}
+
+.dynamic-grid-page app-advanced-filter .stat-badge,
+.dynamic-grid-page app-advanced-filter .operator-text,
+.dynamic-grid-page app-advanced-filter .logical-operator-badge,
+.dynamic-grid-page app-advanced-filter .filter-label,
+.dynamic-grid-page app-advanced-filter .disabled-message,
+.dynamic-grid-page app-advanced-filter .result-label {
+  font-size: 8.4px !important;
+}
+
+.dynamic-grid-page app-advanced-filter .operator-description {
+  font-size: 7px !important;
+}
+
+/* Dynamic grid row scale: reduce table rows by 30% without changing column widths. */
+.dynamic-grid-page .master-table-header tr:first-child th {
+  height: 22px;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+
+.dynamic-grid-page .master-table-header tr:nth-child(2) th {
+  height: 21px;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+
+.dynamic-grid-page .master-table-header input:not([type="checkbox"]),
+.dynamic-grid-page .master-table-header select {
+  height: 17px;
+  min-height: 17px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1;
+}
+
+.dynamic-grid-page .master-scroll-zone tbody input:not([type="checkbox"]),
+.dynamic-grid-page .master-scroll-zone tbody select {
+  height: 18px;
+  min-height: 18px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.dynamic-grid-page .detail-professional .detail-table-header tr:first-child th {
+  height: 22px;
+  padding: 2px 6px !important;
+}
+
+.dynamic-grid-page .detail-professional .detail-table-header tr:nth-child(2) th,
+.dynamic-grid-page .detail-professional .detail-table-header tr:nth-child(2) td {
+  height: 19px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.dynamic-grid-page .detail-professional .detail-table-header tr:nth-child(2) input,
+.dynamic-grid-page .detail-professional .detail-table-header tr:nth-child(2) select {
+  height: 17px !important;
+  min-height: 17px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1 !important;
+}
+
+.dynamic-grid-page .detail-professional .detail-table tbody tr {
+  height: 25px;
+}
+
+.dynamic-grid-page .detail-professional .detail-table tbody td {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.dynamic-grid-page .detail-professional .detail-table tbody .form-input,
+.dynamic-grid-page .detail-professional .detail-table tbody .form-select,
+.dynamic-grid-page .detail-professional .detail-table tbody input:not([type="checkbox"]):not(.h-9),
+.dynamic-grid-page .detail-professional .detail-table tbody select,
+.dynamic-grid-page .detail-professional .detail-table tbody textarea {
+  height: 17px !important;
+  min-height: 17px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.dynamic-grid-page .detail-professional .detail-table tbody app-lookup .h-9 {
+  height: 25px !important;
+  min-height: 25px !important;
 }
