@@ -294,6 +294,16 @@
   gap: 6px;
   min-height: 42px;
   margin: 0 6px 4px;
+  position: sticky;
+  top: 54px;
+  z-index: 40;
+  background: #f4f8ff;
+}
+
+@media (max-width: 767px) {
+  .popup-modernized .popup-actions {
+    top: 52px;
+  }
 }
 
 .popup-modernized .popup-actions .btn-modern {
