@@ -8,6 +8,7 @@ Frontend đã có route động:
 
 - List: `/screen/<screenId>`
 - Popup: `/screen/<screenId>/popup`
+- Report: `/screen/<screenId>/report`
 
 Vì vậy khi thêm màn mới, chỉ cần thêm cấu hình ở backend và trỏ URL menu đúng chuẩn.
 
@@ -66,17 +67,27 @@ Ví dụ:
 
 File này quyết định form popup (tabs, fields, detail, lookup, dataProcessing...).
 
-## 2.3. Trỏ Menu về route động
+## 2.3. Thêm file cấu hình Report
+
+Với màn hình report, tạo file:
+
+- `BackEnd/Server/Controllers/Form/Report/<screenId>.json`
+
+Route report tự truyền `<screenId>.json` vào Dynamic Report, không cần tạo component hoặc route riêng ở frontend.
+
+## 2.4. Trỏ Menu về route động
 
 Trong dữ liệu menu (DB hoặc nguồn menu backend), cấu hình URL:
 
 - URL List: `/screen/<screenId>`
 - URL Popup: `/screen/<screenId>/popup`
+- URL Report: `/screen/<screenId>/report`
 
 Ví dụ với `screenId = contract`:
 
 - `/screen/contract`
 - `/screen/contract/popup`
+- `/screen/contract/report`
 
 ## 3. Quy ước đặt tên
 

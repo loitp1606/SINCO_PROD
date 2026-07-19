@@ -125,12 +125,28 @@
           }
         ]
       }
-    }
+    },
+	{
+		"key": "item_group",
+		"label": "Nhóm vật tư",
+		"type": "lookup",
+		"placeholder": "",
+		"default": {
+			"controller": "ItemGroup",
+			"filter": [
+				{
+					"field": "status",
+					"value": "1",
+					"operator": "="
+				}
+			]
+		}
+	}
   ],
   "dataProcessing": {
     "report": [
       {
-        "query": "exec rp_bcthnxt95 N'@dateFrom', N'@dateTo', N'@Item', N'@userId';"
+        "query": "exec rp_bcthnxt95 N'@dateFrom', N'@dateTo', N'@Item', N'@item_group', N'@userId';"
       }
     ]
   }

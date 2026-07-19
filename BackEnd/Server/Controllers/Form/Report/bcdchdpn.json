@@ -53,8 +53,104 @@
 			"width": 220,
 			"align": "text-left",
 			"format": ""
+		},
+		{
+			"label": "Đã nhận",
+			"key": "isReceived",
+			"type": "text",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Mã vật tư",
+			"key": "item_id",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Tên vật tư",
+			"key": "item_name",
+			"type": "text",
+			"width": 220,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Đơn vị tính",
+			"key": "uom",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+		  "label": "Số lượng",
+		  "key": "quantity",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Giá",
+		  "key": "price",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Tiền",
+		  "key": "invoice_amount",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Thuế suất",
+		  "key": "tax_rate",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Thuế",
+		  "key": "tax",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Tỉ lệ chiết khấu",
+		  "key": "ratioDiscount",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Chiết khấu",
+		  "key": "discount",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Thanh toán",
+		  "key": "receipt_amount",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
 		}
-	],
+],
 	"total": 0,
 	"page": 1,
 	"pageSize": 100,

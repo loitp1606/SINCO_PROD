@@ -475,6 +475,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'screen/:screenId/report',
+    loadComponent: () =>
+      import('./dynamic-screen/dynamic-screen-report.component').then(
+        (m) => m.DynamicScreenReportComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'screen/:screenId',
     loadComponent: () =>
       import('./dynamic-screen/dynamic-screen-list.component').then(

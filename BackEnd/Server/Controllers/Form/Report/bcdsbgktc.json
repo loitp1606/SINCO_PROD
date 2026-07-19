@@ -53,15 +53,7 @@
       "width": 300,
       "align": "text-left",
       "format": ""
-    },
-    {
-      "label": "Trạng thái hiện tại",
-      "key": "statusName",
-      "type": "text",
-      "width": 150,
-      "align": "text-left",
-      "format": ""
-    },
+    },  
     {
       "label": "Ngày chờ(Số ngày)",
       "key": "waitNumberDay",
@@ -76,7 +68,7 @@
       "type": "number",
       "width": 120,
       "align": "text-left",
-      "format": "decimal-2"
+      "format": ""
     },
     {
       "label": "Ghi chú",
