@@ -853,9 +853,9 @@
               <thead>
                 <tr class="bg-slate-700 text-white">
                   <th
-                    class="hidden px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
+                    class="px-2 py-1 text-center text-[11px] font-semibold uppercase w-10 whitespace-nowrap"
                   >
-                    #
+                    STT
                   </th>
                   <th
                     *ngIf="quickEditDetailMode"
@@ -872,7 +872,7 @@
                     *ngFor="let field of getAllDetailFields()"
                     [style.width]="getFieldWidth(field)"
                     class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group cursor-pointer select-none"
-                    [hidden]="field.type === 'hidden'"
+                    [hidden]="field.type === 'hidden' || field.key === 'line_nbr'"
                     [attr.data-field-key]="field.key"
                     (click)="onDetailSortClick(field)"
                     title="Bấm để sắp xếp"
@@ -914,12 +914,12 @@
                 </tr>
 
                 <tr class="bg-slate-100">
-                  <td class="hidden p-0"></td>
+                  <td class="p-0"></td>
                   <td *ngIf="quickEditDetailMode" class="p-0"></td>
                   <td
                     *ngFor="let field of getAllDetailFields()"
                     class="p-0"
-                    [hidden]="field.type === 'hidden'"
+                    [hidden]="field.type === 'hidden' || field.key === 'line_nbr'"
                   >
                     <div class="relative" [hidden]="field.disabled">
                       <input
@@ -989,8 +989,8 @@
                   [class.bg-sky-100]="i === activeDetailRowIndex"
                   (click)="activeDetailRowIndex = i"
                 >
-                  <td class="hidden text-center text-slate-500 px-2 py-0.5">
-                    {{ row.line_nbr || i + 1 }}
+                  <td class="text-center text-slate-500 px-2 py-0.5">
+                    {{ i + 1 }}
                   </td>
 
                   <td
@@ -1009,7 +1009,7 @@
                   <td
                     class="relative px-2 py-0.5"
                     *ngFor="let field of getAllDetailFields()"
-                    [hidden]="field.type === 'hidden'"
+                    [hidden]="field.type === 'hidden' || field.key === 'line_nbr'"
                   >
                     <input
                       *ngIf="

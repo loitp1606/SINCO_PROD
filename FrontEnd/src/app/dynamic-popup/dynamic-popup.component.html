@@ -340,12 +340,12 @@
                     title="Kéo để thay đổi độ rộng, double-click để auto-resize">
                   </div>
                 </th>
-                <th class="hidden">
-                  #
+                <th style="width: 40px; min-width: 40px;" class="text-center">
+                  STT
                 </th>
 
                 <th *ngFor="let field of getAllDetailFields()" [style.width]="getFieldWidth(field)"
-                  class="resizable-header cursor-pointer select-none" [hidden]="field.type === 'hidden'" [attr.data-field-key]="field.key"
+                  class="resizable-header cursor-pointer select-none" [hidden]="field.type === 'hidden' || field.key === 'line_nbr'" [attr.data-field-key]="field.key"
                   (click)="onDetailSortClick(field)"
                   title="Bấm để sắp xếp">
 
@@ -380,9 +380,9 @@
 
               <!-- Column Filters Row -->
               <tr class="bg-gray-50">
-                <td class="hidden p-1"></td>
                 <td class="p-1"></td>
-                <td *ngFor="let field of getAllDetailFields()" class="p-1" [hidden]="field.type === 'hidden'">
+                <td class="p-1"></td>
+                <td *ngFor="let field of getAllDetailFields()" class="p-1" [hidden]="field.type === 'hidden' || field.key === 'line_nbr'">
                   <div class="relative" [hidden]="field.disabled">
 
                     <!-- Currency Filter Input -->
@@ -449,10 +449,10 @@
                   </div>
                 </td>
                 <!-- Row number -->
-                <td class="hidden text-center text-gray-500">{{ row.line_nbr || (i + 1) }}</td>
+                <td class="text-center text-gray-500">{{ i + 1 }}</td>
 
                 <!-- Detail fields -->
-                <td class="relative" *ngFor="let field of getAllDetailFields()" [hidden]="field.type === 'hidden'">
+                <td class="relative" *ngFor="let field of getAllDetailFields()" [hidden]="field.type === 'hidden' || field.key === 'line_nbr'">
                   <div *ngIf="detailErrors[i]?.[field.key]"
                     class="absolute -top-8 left-0 bg-red-500 text-white text-xs rounded px-2 py-1 shadow z-10 animate-fadeIn">
                     {{ detailErrors[i][field.key] }}
@@ -615,7 +615,7 @@
             <div class="mt-2 flex flex-wrap gap-2">
               <span *ngFor="let field of getAllDetailFields()"
                 class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
-                [hidden]="!currentColumnFilters[field.key] || field.type === 'hidden'">
+                [hidden]="!currentColumnFilters[field.key] || field.type === 'hidden' || field.key === 'line_nbr'">
                 <strong>{{ field.label }}:</strong>
                 <span>{{ currentColumnFilters[field.key] }}</span>
                 <button type="button" class="ml-1 text-blue-500 hover:text-red-500" (click)="clearFilter(field.key)">
