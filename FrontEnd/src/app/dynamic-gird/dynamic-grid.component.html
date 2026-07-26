@@ -38,7 +38,7 @@
       <div class="toolbar-actions flex flex-wrap items-center gap-2">
       <button
         (click)="toggleFilter()"
-        class="inline-flex items-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-1.5 text-sm font-medium text-sky-800 hover:bg-sky-50 transition"
+        class="erp-toolbar-btn erp-toolbar-secondary inline-flex items-center gap-2 rounded-md border bg-white px-3 py-1.5 text-sm transition"
       >
         <svg
           class="h-4 w-4"
@@ -53,12 +53,12 @@
             d="M3 4h18M7 12h10m-7 8h4"
           />
         </svg>
-        {{ showFilter ? "Hide filter" : "Show filter" }}
+        {{ showFilter ? "Ẩn bộ lọc" : "Hiện bộ lọc" }}
       </button>
 
       <button
         (click)="handleClickAdd()"
-        class="inline-flex items-center gap-2 rounded-md border border-emerald-200 bg-white px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition"
+        class="erp-toolbar-btn erp-toolbar-primary inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition"
       >
         <svg
           class="h-4 w-4"
@@ -79,7 +79,7 @@
       <button
         (click)="handleToolbarDelete()"
         title="Xóa dòng đang chọn (F8 / Ctrl+Shift+D)"
-        class="inline-flex items-center gap-2 rounded-md border border-rose-200 bg-white px-3 py-1.5 text-sm font-medium text-rose-700 hover:bg-rose-50 transition"
+        class="erp-toolbar-btn erp-toolbar-danger inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition"
       >
         <svg
           class="h-4 w-4"
@@ -101,7 +101,7 @@
         (click)="handleToolbarView()"
         [disabled]="!getToolbarTargetRow()"
         title="Xem dòng đang chọn (F4 / Ctrl+Shift+V)"
-        class="inline-flex items-center gap-2 rounded-md border border-cyan-200 bg-white px-3 py-1.5 text-sm font-medium text-cyan-700 hover:bg-cyan-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        class="erp-toolbar-btn erp-toolbar-secondary inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg
           class="h-4 w-4"
@@ -124,7 +124,7 @@
         (click)="handleToolbarUpdate()"
         [disabled]="!getToolbarTargetRow()"
         title="Sửa dòng đang chọn (F2 / Ctrl+Shift+E)"
-        class="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        class="erp-toolbar-btn erp-toolbar-secondary inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg
           class="h-4 w-4"
@@ -150,8 +150,8 @@
       <button
         (click)="handleToolbarRefresh()"
         title="Làm tươi dữ liệu"
-        aria-label="Refresh data"
-        class="inline-flex items-center justify-center rounded-md border border-indigo-200 bg-white px-2.5 py-1.5 text-indigo-700 hover:bg-indigo-50 transition"
+        aria-label="Làm mới dữ liệu"
+        class="erp-toolbar-btn erp-toolbar-secondary inline-flex items-center justify-center rounded-md border px-2.5 py-1.5 transition"
       >
         <svg
           class="h-4 w-4"
@@ -191,7 +191,7 @@
         >
         <ng-container *ngFor="let btn of girdData.actions">
           <button
-            class="inline-flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition w-full sm:w-auto"
+            class="erp-toolbar-btn inline-flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-sm transition w-full sm:w-auto"
             [ngClass]="getButtonClasses(btn.color)"
             (click)="btn.isCopy ? onCopyDataClick(btn) : onGridButtonClick(btn)"
           >
@@ -315,7 +315,7 @@
                   [(ngModel)]="filterColumns[header.key]"
                   (ngModelChange)="onColumnFilterChange()"
                   class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
-                  <option value="">Filter...</option>
+                  <option value="">Lọc...</option>
                   <option *ngFor="let option of header.options || []" [value]="option.value">
                     {{ option.label }}
                   </option>
@@ -326,7 +326,7 @@
                     [(ngModel)]="filterColumns[header.key]"
                     (ngModelChange)="onColumnFilterChange()"
                     class="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    [placeholder]="header.type === 'date' ? '' : 'Filter...'" />
+                    [placeholder]="header.type === 'date' ? '' : 'Lọc...'" />
                 </ng-template>
               </th>
             </ng-container>
@@ -433,8 +433,8 @@
         #masterScrollZone
         class="master-scroll-zone"
         [class.master-scroll-zone-full]="!isVoucherGrid || !isDetailPanelVisible()"
-        [style.height.px]="isDetailPanelVisible() ? masterPaneHeight : masterOnlyPaneHeight"
-        [style.max-height.px]="isDetailPanelVisible() ? masterPaneHeight : masterOnlyPaneHeight"
+        [style.height.px]="isDetailPanelVisible() ? getMasterPanelHeight() : masterOnlyPaneHeight"
+        [style.max-height.px]="isDetailPanelVisible() ? getMasterPanelHeight() : masterOnlyPaneHeight"
         [style.min-height.px]="isDetailPanelVisible() ? getMasterPaneMinHeight() : paneMinHeight"
         tabindex="0"
       >
@@ -515,7 +515,7 @@
                   [(ngModel)]="filterColumns[header.key]"
                   (ngModelChange)="onColumnFilterChange()"
                   class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
-                  <option value="">Filter...</option>
+                  <option value="">Lọc...</option>
                   <option *ngFor="let option of header.options || []" [value]="option.value">
                     {{ option.label }}
                   </option>
@@ -526,7 +526,7 @@
                     [(ngModel)]="filterColumns[header.key]"
                     (ngModelChange)="onColumnFilterChange()"
                     class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                    [placeholder]="header.type === 'date' ? '' : 'Filter...'"
+                    [placeholder]="header.type === 'date' ? '' : 'Lọc...'"
                   />
                 </ng-template>
               </th>
@@ -545,10 +545,6 @@
               class="hover:bg-sky-50 transition-colors group/row"
               [attr.data-master-index]="i"
               [class.cursor-pointer]="isVoucherGrid"
-              [class.bg-sky-100]="
-                isVoucherGrid &&
-                expandedRowId === data[girdData.query.formId.primaryKey[0]]
-              "
               [class.master-row-active]="
                 isVoucherGrid &&
                 expandedRowId === data[girdData.query.formId.primaryKey[0]]
@@ -635,7 +631,16 @@
                       {{ data[header.key] | date: "dd-MM-yyyy" }}
                     </span>
                     <ng-template #normalDisplay>
-                      {{ masterCellDisplayRows[i]?.[header.key] || "" }}
+                      <span
+                        *ngIf="statusHeaderKeys[header.key]; else regularMasterDisplay"
+                        class="grid-status-badge"
+                        [ngClass]="masterCellStatusClasses[i]?.[header.key]"
+                      >
+                        {{ masterCellDisplayRows[i]?.[header.key] || "" }}
+                      </span>
+                      <ng-template #regularMasterDisplay>
+                        {{ masterCellDisplayRows[i]?.[header.key] || "" }}
+                      </ng-template>
                     </ng-template>
                     </ng-template>
                   </ng-template>
@@ -859,9 +864,9 @@
           #detailScrollZone
           class="detail-table-container detail-scroll-zone detail-fixed-zone"
           *ngIf="getAllDetailFields().length > 0"
-          [style.height.px]="detailPaneHeight"
-          [style.max-height.px]="detailPaneHeight"
-          [style.min-height.px]="paneMinHeight"
+          [style.height.px]="getDetailPanelHeight()"
+          [style.max-height.px]="getDetailPanelHeight()"
+          [style.min-height.px]="getDetailPaneMinHeight()"
           tabindex="0"
         >
           <div class="detail-scroll-content">
@@ -1005,7 +1010,7 @@
                   "
                   class="hover:bg-sky-50"
                   [attr.data-detail-index]="i"
-                  [class.bg-sky-100]="i === activeDetailRowIndex"
+                  [class.detail-row-active]="i === activeDetailRowIndex"
                   (click)="activeDetailRowIndex = i"
                 >
                   <td class="text-center text-slate-500 px-2 py-0.5">

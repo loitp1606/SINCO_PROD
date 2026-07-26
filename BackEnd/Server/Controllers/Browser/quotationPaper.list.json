@@ -100,7 +100,7 @@
 			"id": "QuotationPaper.page.json",
 			"label": "Chép dữ liệu",
 			"target": "quotationPaper/popup",
-			"color": "orange",
+			"color": "white",
 			"isCopy": true
 		}
 	]

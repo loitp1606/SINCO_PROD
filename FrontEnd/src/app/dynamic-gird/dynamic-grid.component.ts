@@ -166,6 +166,8 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   gridTableClasses = 'min-w-full border-collapse hidden md:table break-words text-[11px]';
   headerCellStyles: Record<string, Record<string, string | null>> = {};
   masterCellDisplayRows: Record<string, string>[] = [];
+  masterCellStatusClasses: Record<string, string>[] = [];
+  statusHeaderKeys: Record<string, boolean> = {};
 
   // Detail
   detailRowsData: { [tabIndex: number]: { [detailIndex: number]: any[] } } = {};
@@ -824,13 +826,15 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
     event.preventDefault();
     event.stopPropagation();
-    this.paneUserResized = true;
 
     const startY = event.clientY;
-    const startMaster = this.masterPaneHeight;
-    const startDetail = this.detailPaneHeight;
+    const startMaster = this.getMasterPanelHeight();
+    const startDetail = this.getDetailPanelHeight();
     const total = startMaster + startDetail;
     const min = this.getMasterPaneMinHeight();
+    this.masterPaneHeight = startMaster;
+    this.detailPaneHeight = startDetail;
+    this.paneUserResized = true;
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const delta = moveEvent.clientY - startY;
@@ -1376,15 +1380,15 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   getButtonClasses(color: string): string {
     switch (color) {
       case 'orange':
-        return 'border-amber-200 bg-white text-amber-700 hover:bg-amber-50';
+        return 'erp-toolbar-primary';
       case 'green':
-        return 'border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50';
+        return 'erp-toolbar-primary';
       case 'red':
-        return 'border-rose-200 bg-white text-rose-700 hover:bg-rose-50';
+        return 'erp-toolbar-danger';
       case 'white':
-        return 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50';
+        return 'erp-toolbar-secondary';
       default:
-        return 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50';
+        return 'erp-toolbar-secondary';
     }
   }
   async handleMultiDeleted(): Promise<void> {
@@ -1497,10 +1501,19 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     const styles: Record<string, Record<string, string | null>> = {
       __selection: this.getHeaderCellStyle('__selection', true),
     };
+    const statusHeaders: Record<string, boolean> = {};
     (this.girdData?.headers || []).forEach((header) => {
       styles[header.key] = this.getHeaderCellStyle(header.key);
+      const normalizedKey = (header.key || '').replace(/[_\s]/g, '').toLowerCase();
+      const normalizedLabel = (header.label || '').toLowerCase();
+      statusHeaders[header.key] =
+        normalizedKey.includes('status') ||
+        normalizedKey.includes('state') ||
+        normalizedLabel.includes('trạng thái') ||
+        normalizedLabel === 'status';
     });
     this.headerCellStyles = styles;
+    this.statusHeaderKeys = statusHeaders;
   }
 
   private rebuildMasterCellDisplayCache(): void {
@@ -1508,13 +1521,27 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       (header) => !header.hidden && header.type !== 'date' && header.type !== 'checkbox',
     );
 
+    const statusRows: Record<string, string>[] = [];
     this.masterCellDisplayRows = (this.filteredData || []).map((row) => {
       const displayRow: Record<string, string> = {};
+      const statusRow: Record<string, string> = {};
       headers.forEach((header) => {
         displayRow[header.key] = this.getGridCellDisplayValue(row, header);
+        if (this.statusHeaderKeys[header.key]) {
+          statusRow[header.key] = this.getStatusBadgeClass(row?.[header.key]);
+        }
       });
+      statusRows.push(statusRow);
       return displayRow;
     });
+    this.masterCellStatusClasses = statusRows;
+  }
+
+  private getStatusBadgeClass(value: any): string {
+    const statusCode = String(value ?? '').trim();
+    return /^[0-5]$/.test(statusCode)
+      ? `grid-status-${statusCode}`
+      : 'grid-status-neutral';
   }
 
   getHeaderCellStyle(key: string, isSelection: boolean = false): Record<string, string | null> {
@@ -2674,12 +2701,28 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   }
 
   getDetailPanelHeight(): number {
+    if (this.paneUserResized || this.quickEditDetailMode) {
+      return this.detailPaneHeight;
+    }
+
     const rows = this.currentFilteredDetailRows?.length ?? 0;
-    const visibleRows = Math.min(Math.max(rows, 1), 10);
-    const headerAndFilterHeight = 64;
-    const rowHeight = 24;
-    const bottomPadding = 6;
-    return headerAndFilterHeight + visibleRows * rowHeight + bottomPadding;
+    const visibleRows = Math.min(Math.max(rows, 1), 8);
+    const hasWrappedFields = this.getAllDetailFields().some((field) => field?.wrap === true);
+    const headerAndFilterHeight = 45;
+    const rowHeight = hasWrappedFields ? 50 : 25;
+    const desiredHeight = headerAndFilterHeight + visibleRows * rowHeight + 8;
+    return Math.min(this.detailPaneHeight, Math.max(78, desiredHeight));
+  }
+
+  getMasterPanelHeight(): number {
+    if (this.paneUserResized || this.quickEditDetailMode || !this.isDetailPanelVisible()) {
+      return this.masterPaneHeight;
+    }
+    return this.masterPaneHeight + Math.max(0, this.detailPaneHeight - this.getDetailPanelHeight());
+  }
+
+  getDetailPaneMinHeight(): number {
+    return this.paneUserResized || this.quickEditDetailMode ? this.paneMinHeight : 78;
   }
 
   getExpandedRowData(): Record<string, any> | null {

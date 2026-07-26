@@ -1156,7 +1156,15 @@
 }
 
 .master-row-active {
-  box-shadow: inset 3px 0 0 #0ea5e9;
+  background-color: #f2f7fd !important;
+  box-shadow:
+    inset 3px 0 0 #3b82f6,
+    inset 0 -1px 0 #dbeafe;
+}
+
+.detail-row-active {
+  background-color: #f2f7fd !important;
+  box-shadow: inset 3px 0 0 #60a5fa;
 }
 
 .detail-empty-state {
@@ -1327,6 +1335,85 @@
   flex: 0 0 16px;
 }
 
+.dynamic-grid-page .erp-toolbar-btn,
+.dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn {
+  min-height: 34px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.dynamic-grid-page .erp-toolbar-btn:hover,
+.dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn:hover {
+  transform: translateY(-1px);
+}
+
+.dynamic-grid-page .erp-toolbar-btn:active,
+.dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.dynamic-grid-page .erp-toolbar-btn:focus-visible,
+.dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.dynamic-grid-page .erp-toolbar-primary {
+  border-color: #1d4ed8 !important;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 2px 5px rgba(37, 99, 235, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dynamic-grid-page .erp-toolbar-primary:hover {
+  border-color: #1e40af !important;
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%) !important;
+  box-shadow:
+    0 4px 10px rgba(37, 99, 235, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.dynamic-grid-page .erp-toolbar-secondary,
+.dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn {
+  border-color: #cbd5e1 !important;
+  background-color: #ffffff !important;
+  color: #1e3a5f !important;
+}
+
+.dynamic-grid-page .erp-toolbar-secondary:hover,
+.dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn:hover {
+  border-color: #7dd3fc !important;
+  background-color: #f0f9ff !important;
+  color: #0369a1 !important;
+  box-shadow: 0 3px 8px rgba(14, 116, 144, 0.14);
+}
+
+.dynamic-grid-page .erp-toolbar-danger {
+  border-color: #fda4af !important;
+  background: linear-gradient(180deg, #fff7f7 0%, #fff1f2 100%) !important;
+  color: #be123c !important;
+}
+
+.dynamic-grid-page .erp-toolbar-danger:hover {
+  border-color: #e11d48 !important;
+  background: linear-gradient(180deg, #f43f5e 0%, #e11d48 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.24);
+}
+
 /* Dynamic grid font scale: text only, keep controls and layout dimensions unchanged. */
 .dynamic-grid-page {
   font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -1362,28 +1449,28 @@
 }
 
 .dynamic-grid-page .text-lg {
-  font-size: 12.6px !important;
+  font-size: 14px !important;
 }
 
 .dynamic-grid-page .text-base:not(.mat-icon) {
-  font-size: 11.2px !important;
+  font-size: 13px !important;
 }
 
 .dynamic-grid-page .text-sm {
-  font-size: 9.8px !important;
+  font-size: 12px !important;
 }
 
 .dynamic-grid-page .text-xs,
 .dynamic-grid-page app-dynamic-pagination {
-  font-size: 8.4px !important;
+  font-size: 11px !important;
 }
 
 .dynamic-grid-page [class~="text-[11px]"] {
-  font-size: 7.7px !important;
+  font-size: 10px !important;
 }
 
 .dynamic-grid-page [class~="text-[10px]"] {
-  font-size: 7px !important;
+  font-size: 9px !important;
 }
 
 .dynamic-grid-page .panel-title,
@@ -1396,7 +1483,7 @@
 .dynamic-grid-page .detail-professional .detail-table input,
 .dynamic-grid-page .detail-professional .detail-table select,
 .dynamic-grid-page .detail-professional app-lookup textarea {
-  font-size: 7.7px !important;
+  font-size: 10px !important;
 }
 
 .dynamic-grid-page app-advanced-filter .advanced-filter-container,
@@ -1408,11 +1495,11 @@
 .dynamic-grid-page app-advanced-filter .filter-input,
 .dynamic-grid-page app-advanced-filter .filter-checkbox-label,
 .dynamic-grid-page app-advanced-filter .filter-summary-text {
-  font-size: 9.8px !important;
+  font-size: 12px !important;
 }
 
 .dynamic-grid-page app-advanced-filter .filter-title {
-  font-size: 12.6px !important;
+  font-size: 14px !important;
 }
 
 .dynamic-grid-page app-advanced-filter .stat-badge,
@@ -1421,11 +1508,11 @@
 .dynamic-grid-page app-advanced-filter .filter-label,
 .dynamic-grid-page app-advanced-filter .disabled-message,
 .dynamic-grid-page app-advanced-filter .result-label {
-  font-size: 8.4px !important;
+  font-size: 11px !important;
 }
 
 .dynamic-grid-page app-advanced-filter .operator-description {
-  font-size: 7px !important;
+  font-size: 10px !important;
 }
 
 /* Dynamic grid row scale: reduce table rows by 30% without changing column widths. */
@@ -1538,4 +1625,64 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
   line-height: 1.3 !important;
+}
+
+.dynamic-grid-page .detail-professional app-lookup .lookup-trigger {
+  width: 26px !important;
+  min-width: 26px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 0 !important;
+  border-radius: 6px;
+}
+
+.dynamic-grid-page .grid-status-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 18px;
+  padding: 2px 7px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.dynamic-grid-page .grid-status-0,
+.dynamic-grid-page .grid-status-neutral {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  color: #475569;
+}
+
+.dynamic-grid-page .grid-status-1 {
+  border-color: #a7f3d0;
+  background-color: #ecfdf5;
+  color: #047857;
+}
+
+.dynamic-grid-page .grid-status-2 {
+  border-color: #bfdbfe;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.dynamic-grid-page .grid-status-3 {
+  border-color: #fde68a;
+  background-color: #fffbeb;
+  color: #a16207;
+}
+
+.dynamic-grid-page .grid-status-4 {
+  border-color: #ddd6fe;
+  background-color: #f5f3ff;
+  color: #6d28d9;
+}
+
+.dynamic-grid-page .grid-status-5 {
+  border-color: #fecaca;
+  background-color: #fff1f2;
+  color: #be123c;
 }
