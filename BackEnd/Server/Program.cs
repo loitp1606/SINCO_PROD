@@ -3,6 +3,7 @@ using FastReport.DataVisualization.Charting;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -180,6 +182,23 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<CustomQueryRepository>();
 
 builder.Services.AddAuthorization();
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/json" }
+    );
+});
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -237,6 +256,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+app.UseResponseCompression();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();

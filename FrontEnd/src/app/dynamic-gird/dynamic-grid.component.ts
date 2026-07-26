@@ -161,6 +161,11 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   private detailScrollZoneElement?: HTMLElement;
   private stickyControlsResizeObserver?: ResizeObserver;
   private stickyHeaderOffsetFrame: number | null = null;
+  isVoucherGrid = false;
+  masterPrimaryKeyField = '';
+  gridTableClasses = 'min-w-full border-collapse hidden md:table break-words text-[11px]';
+  headerCellStyles: Record<string, Record<string, string | null>> = {};
+  masterCellDisplayRows: Record<string, string>[] = [];
 
   // Detail
   detailRowsData: { [tabIndex: number]: { [detailIndex: number]: any[] } } = {};
@@ -257,6 +262,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       document.body.classList.add('dynamic-grid-viewport-lock');
     }
     await this.loadGridConfigFromBrowser();
+    this.rebuildGridLayoutCache();
     this.pageTitleService.setTitle(this.girdData?.title ?? '');
     this.initializePaneHeights();
     this.translate.onLangChange.subscribe((event) => {
@@ -390,6 +396,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
           if (this.controll == 'QuotationPaper') this.isListNotSuccess = true;
           this.preloadHeaderLookupFromFirstRow();
           this.filteredData = this.response.data ? [...this.response.data] : [];
+          this.rebuildMasterCellDisplayCache();
           this.activeMasterRow = this.filteredData.length ? this.filteredData[0] : null;
           this.refreshGridSummary();
         },
@@ -1460,6 +1467,41 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       : `${baseClasses} w-max table-fixed`;
   }
 
+  trackByMasterRow = (index: number, row: any): any => {
+    if (!this.masterPrimaryKeyField) return index;
+    const key = row?.[this.masterPrimaryKeyField];
+    return key === undefined || key === null || key === '' ? index : key;
+  };
+
+  private rebuildGridLayoutCache(): void {
+    this.isVoucherGrid = this.isVoucherType();
+    this.masterPrimaryKeyField =
+      this.girdData?.query?.formId?.primaryKey?.[0] || '';
+    this.gridTableClasses = this.getGridTableClasses();
+
+    const styles: Record<string, Record<string, string | null>> = {
+      __selection: this.getHeaderCellStyle('__selection', true),
+    };
+    (this.girdData?.headers || []).forEach((header) => {
+      styles[header.key] = this.getHeaderCellStyle(header.key);
+    });
+    this.headerCellStyles = styles;
+  }
+
+  private rebuildMasterCellDisplayCache(): void {
+    const headers = (this.girdData?.headers || []).filter(
+      (header) => !header.hidden && header.type !== 'date' && header.type !== 'checkbox',
+    );
+
+    this.masterCellDisplayRows = (this.filteredData || []).map((row) => {
+      const displayRow: Record<string, string> = {};
+      headers.forEach((header) => {
+        displayRow[header.key] = this.getGridCellDisplayValue(row, header);
+      });
+      return displayRow;
+    });
+  }
+
   getHeaderCellStyle(key: string, isSelection: boolean = false): Record<string, string | null> {
     if (isSelection) {
       return { width: this.getFieldWidth('__selection') };
@@ -1519,6 +1561,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   updateColumnWidth(key: string, width: number) {
     this.columnWidths[key] = width;
+    this.rebuildGridLayoutCache();
   }
 
   private getDefaultColumnWidth(key: string, type?: string): number {
@@ -1790,6 +1833,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       .post<any>(`${environment.apiUrl}/api/Lookup`, lookupDefault)
       .subscribe((res) => {
         this.lookupMap[fieldKey] = res.data as LookupApiResponse;
+        this.rebuildMasterCellDisplayCache();
       });
   }
 
@@ -2663,6 +2707,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     const row = this.getRowByPrimaryKey(primaryKeyValue);
     if (row) {
       Object.assign(row, JSON.parse(JSON.stringify(patchValue)));
+      this.rebuildMasterCellDisplayCache();
     }
   }
 
@@ -2985,9 +3030,11 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   onQuickMasterFieldChange(row: any, fieldKey: string, value: any, type?: string): void {
     if (type === 'checkbox') {
       row[fieldKey] = value ? 1 : 0;
+      this.rebuildMasterCellDisplayCache();
       return;
     }
     row[fieldKey] = value;
+    this.rebuildMasterCellDisplayCache();
   }
 
   hasQuickEditableDetailFields(): boolean {

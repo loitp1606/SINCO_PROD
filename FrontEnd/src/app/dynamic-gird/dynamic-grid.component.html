@@ -432,20 +432,20 @@
       <div
         #masterScrollZone
         class="master-scroll-zone"
-        [class.master-scroll-zone-full]="!isVoucherType() || !isDetailPanelVisible()"
+        [class.master-scroll-zone-full]="!isVoucherGrid || !isDetailPanelVisible()"
         [style.height.px]="isDetailPanelVisible() ? masterPaneHeight : masterOnlyPaneHeight"
         [style.max-height.px]="isDetailPanelVisible() ? masterPaneHeight : masterOnlyPaneHeight"
         [style.min-height.px]="isDetailPanelVisible() ? getMasterPaneMinHeight() : paneMinHeight"
         tabindex="0"
       >
         <table
-          [class]="getGridTableClasses()"
+          [class]="gridTableClasses"
         >
           <thead class="master-table-header bg-sky-900 text-white">
           <tr>
             <th
               class="relative px-2 py-1 text-center text-[11px] font-bold uppercase"
-              [ngStyle]="getHeaderCellStyle('__selection', true)"
+              [ngStyle]="headerCellStyles['__selection']"
             >
               <input
                 type="checkbox"
@@ -466,7 +466,7 @@
                 *ngIf="!header.hidden"
                 class="relative px-3 py-1 text-left text-[11px] font-bold uppercase tracking-wider group border-r border-sky-800"
                 [class.cursor-pointer]="isHeaderSortable(header)"
-                [ngStyle]="getHeaderCellStyle(header.key)"
+                [ngStyle]="headerCellStyles[header.key]"
                 (click)="onHeaderSortClick(header)"
               >
                 <div class="flex items-center gap-1">
@@ -508,7 +508,7 @@
               <th
                 *ngIf="!header.hidden"
                 class="px-3 py-0.5 border-r border-sky-100"
-                [ngStyle]="getHeaderCellStyle(header.key)"
+                [ngStyle]="headerCellStyles[header.key]"
               >
                 <select
                   *ngIf="header.type === 'select'; else compactStandardHeaderFilter"
@@ -534,17 +534,23 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <ng-container *ngFor="let data of filteredData; let i = index">
+          <ng-container
+            *ngFor="
+              let data of filteredData;
+              let i = index;
+              trackBy: trackByMasterRow
+            "
+          >
             <tr
               class="hover:bg-sky-50 transition-colors group/row"
               [attr.data-master-index]="i"
-              [class.cursor-pointer]="isVoucherType()"
+              [class.cursor-pointer]="isVoucherGrid"
               [class.bg-sky-100]="
-                isVoucherType() &&
+                isVoucherGrid &&
                 expandedRowId === data[girdData.query.formId.primaryKey[0]]
               "
               [class.master-row-active]="
-                isVoucherType() &&
+                isVoucherGrid &&
                 expandedRowId === data[girdData.query.formId.primaryKey[0]]
               "
               [style.height.px]="rowHeights[i] || 21"
@@ -554,7 +560,7 @@
                 <input
                   type="checkbox"
                   class="block mx-auto"
-                  [checked]="isMasterRowSelected(data)"
+                  [checked]="selectedOptions[data[masterPrimaryKeyField]] !== undefined"
                   (click)="$event.stopPropagation()"
                   (change)="handleSelection($event, data)"
                 />
@@ -568,9 +574,15 @@
                 <td
                   *ngIf="!header.hidden"
                   class="px-2 py-0.5 text-xs relative"
-                  [ngStyle]="getHeaderCellStyle(header.key)"
+                  [ngStyle]="headerCellStyles[header.key]"
                 >
-                  <ng-container *ngIf="isQuickEditEnabledForMasterCell(data, header); else readonlyMasterCell">
+                  <ng-container
+                    *ngIf="
+                      quickEditMasterMode &&
+                      isQuickEditEnabledForMasterCell(data, header);
+                      else readonlyMasterCell
+                    "
+                  >
                     <input
                       *ngIf="header.type === 'date'"
                       type="date"
@@ -623,7 +635,7 @@
                       {{ data[header.key] | date: "dd-MM-yyyy" }}
                     </span>
                     <ng-template #normalDisplay>
-                      {{ getGridCellDisplayValue(data, header) }}
+                      {{ masterCellDisplayRows[i]?.[header.key] || "" }}
                     </ng-template>
                     </ng-template>
                   </ng-template>
@@ -657,7 +669,7 @@
       </div>
     </div>
 
-    <div *ngIf="isVoucherType()" class="my-1">
+    <div *ngIf="isVoucherGrid" class="my-1">
       <div
         *ngIf="isDetailPanelVisible(); else hiddenDetailToggle"
         class="pane-resize-handle h-2 rounded bg-slate-200 hover:bg-cyan-200 cursor-row-resize transition-colors flex items-center justify-center"

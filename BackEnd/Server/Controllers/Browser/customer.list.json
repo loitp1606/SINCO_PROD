@@ -78,5 +78,13 @@
 		}
 	},
 	"sort": "customer_id",
-	"actions": []
+	"actions": [
+		{
+			"controller": "supplier",
+			"id": "supplier.page.json",
+			"label": "Tạo nhà cung cấp",
+			"target": "supplier/popup",
+			"color": "orange"
+		}
+	]
 }
