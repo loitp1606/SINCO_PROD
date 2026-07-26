@@ -1,0 +1,50 @@
+{
+  "code": "goodsReceipt",
+  "controller": "goodsReceipt",
+  "storeProcedure": "oot$exportVatGoodsReceipt",
+  "templateFile": "Mau_Phieunhapmua.xlsx",
+  "filePrefix": "goodsReceipt_tax",
+  "groupBy": "idGui",
+  "sheets": [
+    {
+      "name": "PH",
+      "startRow": 2,
+      "rowMode": "firstOfGroup",
+      "columns": [
+        { "column": "A", "sources": ["voucherDate"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "B", "sources": ["voucherNumber"] },
+        { "column": "C", "sources": ["vendorCode"] },
+        { "column": "D", "value": "" },
+        { "column": "E", "sources": ["note"] },
+        { "column": "F", "sources": ["totalAmount", "total_amount", "total_payment", "totalAmountMaster"], "type": "decimal" },
+        { "column": "G", "sources": ["taxRate", "tax_rate", "taxPercent"], "type": "decimal", "valueMode": "firstNonZeroInGroup" },
+        { "column": "H", "sources": ["totalTax", "total_tax", "taxAmountMaster"], "type": "decimal" },
+        { "column": "I", "sources": ["paymentMethod"] },
+        { "column": "J", "value": 1, "type": "integer" },
+        { "column": "K", "sources": ["invoiceForm"] },
+        { "column": "L", "sources": ["invoiceSerial"] },
+        { "column": "M", "sources": ["invoiceDate"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "N", "sources": ["invoiceNumber"] },
+        { "column": "O", "sources": ["vendorCode"] },
+        { "column": "P", "sources": ["vendorName"] },
+        { "column": "Q", "sources": ["vendorAddress"] },
+        { "column": "R", "sources": ["taxCode"] }
+      ]
+    },
+    {
+      "name": "CT",
+      "startRow": 2,
+      "rowMode": "allRows",
+      "orderBy": ["idGui", "line_nbr"],
+      "columns": [
+        { "column": "A", "sources": ["voucherNumber"] },
+        { "column": "B", "sources": ["itemCode", "item_id"] },
+        { "column": "C", "sources": ["itemName", "itemNameVAT", "item_name"] },
+        { "column": "D", "sources": ["quantity"], "type": "decimal" },
+        { "column": "E", "sources": ["price", "unitPrice"], "type": "decimal" },
+        { "column": "F", "sources": ["amount", "lineAmount"], "type": "decimal" },
+        { "column": "G", "sources": ["warehouseCode", "locationCode", "warehouse"] }
+      ]
+    }
+  ]
+}

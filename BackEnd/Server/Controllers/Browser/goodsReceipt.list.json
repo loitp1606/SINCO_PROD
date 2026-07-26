@@ -96,7 +96,9 @@
 				"goodsReceiptDetail"
 			],
 			"VCDate": "",
-			"isFileHandle": "export"
+			"isFileHandle": "export",
+			"enableTaxExcelExport": true,
+			"taxExcelExportConfig": "goodsReceipt"
 		}
 	},
 	"sort": "voucherDate desc, voucherNumber desc",
