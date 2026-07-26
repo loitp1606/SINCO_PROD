@@ -80,7 +80,7 @@
 				"supplierBankAccount"
 			],
 			"VCDate": "",
-			"isFileHandle": "import"
+			"isFileHandle": "both"
 		}
 	},
 	"sort": "supplier_id",

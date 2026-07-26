@@ -54,14 +54,6 @@
 						"width": "350px"
 					},
 					{
-						"key": "represent_birthday",
-						"label": "Ngày sinh người đại diện",
-						"type": "date",
-						"width": "150px",
-						"required": false,
-						"placeholder": "Nhập ngày sinh"
-					},
-					{
 						"key": "date_establishment",
 						"label": "Ngày thành lập CTY",
 						"type": "date",
@@ -169,6 +161,24 @@
 					"formId": "customerDetail",
 					"foreignKey": "customer_id",
 					"fields": [
+						{
+							"key": "represent_name",
+							"label": "Người đại diện",
+							"type": "text",
+							"width": "150px"
+						},
+						{
+							"key": "represent_role",
+							"label": "Chức vụ người DD",
+							"type": "text",
+							"width": "150px"
+						},
+						{
+							"key": "represent_birthday",
+							"label": "Ngày sinh người đại diện",
+							"type": "date",
+							"width": "150px"
+						},
 						{
 							"key": "name",
 							"label": "Tên người liên hệ",

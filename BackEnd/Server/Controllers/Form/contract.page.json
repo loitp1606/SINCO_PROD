@@ -67,12 +67,14 @@
 							"dataType": [
 								"String"
 							],
-							"query": "select isnull (address, '') as address, isnull (phone_number, '') as phone , isnull (email, '') as email, isnull (customer_group_id, '') as customer_group_id from customer where customer_id = @customerCode",
+							"query": "select isnull (a.address, '') as address, isnull (a.phone_number, '') as phone , isnull (a.email, '') as email, isnull (a.customer_group_id, '') as customer_group_id, isnull(b.represent_name, '') representative, isnull(b.represent_role, '') position from customer a left join customerDetail b on a.customer_id = b.customer_id and b.line_nbr = 1 where a.customer_id = @customerCode",
 							"map": {
 								"address": "address",
 								"phone": "phone",
 								"customer_group_id": "customer_group_id",
-								"email": "email"
+								"email": "email",
+								"representative": "representative",
+								"position": "position"
 							}
 						},
 						"width": "350px"

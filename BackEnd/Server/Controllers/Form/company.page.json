@@ -92,6 +92,22 @@
 						"placeholder": "Nhập người đại diện"
 					},
 					{
+						"key": "represent2",
+						"label": "Người đại diện 2",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập người đại diện 2"
+					},
+					{
+						"key": "represent3",
+						"label": "Người đại diện 3",
+						"type": "text",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập người đại diện 3"
+					},
+					{
 						"key": "email",
 						"label": "Email",
 						"type": "text",

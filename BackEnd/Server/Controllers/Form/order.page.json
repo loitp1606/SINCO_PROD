@@ -442,6 +442,14 @@
 							"width": "100px"
 						},
 						{
+							"key": "sl_gr",
+							"label": "Số lượng chuyển ĐHM",
+							"disabled": true,
+							"type": "number",
+							"precision": 2,
+							"width": "100px"
+						},
+						{
 							"key": "priceCur",
 							"label": "Đơn giá ",
 							"type": "hidden",

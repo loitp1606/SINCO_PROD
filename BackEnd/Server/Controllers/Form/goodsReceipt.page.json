@@ -31,16 +31,34 @@
 						"required": true,
 						"placeholder": "Số phiếu",
 						"autoGenerate": true,
-						"readonly": true,
+						"width": "100px"
+					},
+					{
+						"key": "poin_number",
+						"label": "Số ĐHN",
+						"type": "text",
+						"placeholder": "Số ĐHN",
 						"width": "100px"
 					},
 					{
 						"key": "receiveStatus",
 						"label": "TT nhận hàng",
-						"type": "text",
+						"type": "select",
 						"width": "150px",
-						"required": false,
-						"disabled": true
+						"options": [
+							{
+								"label": "Chưa nhận hàng",
+								"value": "NOT_RECEIVED"
+							},
+							{
+								"label": "Chưa nhận một phần",
+								"value": "PARTIAL"
+							},
+							{
+								"label": "Đã nhận hàng",
+								"value": "RECEIVED"
+							}
+						]
 					},
 					{
 						"key": "voucherDate",
@@ -182,7 +200,7 @@
 						"label": "TT thanh toán",
 						"type": "select",
 						"width": "150px",
-						"disabled": true,
+						"disabled": false,
 						"options": [
 							{
 								"label": "Chưa chi",

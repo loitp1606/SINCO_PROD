@@ -95,6 +95,14 @@
 			"label": "Tạo phiếu nhập hàng",
 			"target": "goodsReceipt/popup",
 			"color": "orange"
+		},
+		{
+			"controller": "poin",
+			"id": "poin.page.json",
+			"label": "Chép dữ liệu",
+			"target": "poin/popup",
+			"color": "orange",
+			"isCopy": true
 		}
 	]
 }

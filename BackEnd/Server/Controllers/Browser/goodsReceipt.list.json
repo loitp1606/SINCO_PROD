@@ -22,6 +22,12 @@
 			"width": "100px"
 		},
 		{
+			"key": "poin_number",
+			"label": "Số ĐHN",
+			"type": "text",
+			"width": "100px"
+		},
+		{
 			"key": "supplierCode",
 			"label": "Khách hàng",
 			"type": "lookup",
