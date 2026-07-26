@@ -1328,6 +1328,39 @@
 }
 
 /* Dynamic grid font scale: text only, keep controls and layout dimensions unchanged. */
+.dynamic-grid-page {
+  font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.dynamic-grid-page .master-scroll-zone tbody td,
+.dynamic-grid-page .detail-professional .detail-table tbody td {
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.dynamic-grid-page .master-scroll-zone tbody input:not([type="checkbox"]),
+.dynamic-grid-page .master-scroll-zone tbody select,
+.dynamic-grid-page .detail-professional .detail-table tbody input:not([type="checkbox"]),
+.dynamic-grid-page .detail-professional .detail-table tbody select,
+.dynamic-grid-page .detail-professional .detail-table tbody textarea {
+  color: #0f172a;
+  font-family: inherit !important;
+  font-weight: 500;
+}
+
+.dynamic-grid-page .master-table-header th,
+.dynamic-grid-page .detail-professional .detail-table-header th {
+  font-weight: 700;
+}
+
+.dynamic-grid-page .toolbar-actions > button,
+.dynamic-grid-page .master-grid-pagination {
+  font-weight: 600;
+}
+
 .dynamic-grid-page .text-lg {
   font-size: 12.6px !important;
 }
