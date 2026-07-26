@@ -850,6 +850,16 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     document.addEventListener('mouseup', onMouseUp);
   }
 
+  private getSelectedActionIds(selection: Record<string, any>): string[] {
+    const primaryKey = this.girdData?.query?.formId?.primaryKey?.[0];
+    if (!primaryKey) return [];
+
+    return Object.values(selection || {})
+      .map((item: any) => item?.[primaryKey])
+      .filter((value) => value !== undefined && value !== null && value !== '')
+      .map((value) => String(value));
+  }
+
   onGridButtonClick(action: GridAction): void {
     localStorage.removeItem(`param_${this.girdData.id}`);
 
@@ -860,10 +870,15 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     if (dataSelectStr) {
       try {
         const data = JSON.parse(dataSelectStr);
-        payload = Object.values(data).map((item: any) => item.idGui);
+        payload = this.getSelectedActionIds(data);
       } catch (err) {
         console.error('❌ Lỗi parse JSON:', err);
       }
+    }
+
+    if (payload.length === 0) {
+      alert('Không xác định được khóa chính của bản ghi đã chọn.');
+      return;
     }
 
     const formId: any = {
@@ -929,7 +944,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     let payload: string[] = [];
     try {
       const data = JSON.parse(dataSelectStr);
-      payload = Object.values(data).map((item: any) => item.idGui);
+      payload = this.getSelectedActionIds(data);
     } catch (err) {
       alert('Dữ liệu selection không hợp lệ!');
       return;
