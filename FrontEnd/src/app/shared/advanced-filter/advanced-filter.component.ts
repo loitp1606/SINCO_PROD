@@ -228,6 +228,13 @@ export interface FilterResult {
         >
           <div class="text-center space-y-2 text-sm">
             <p class="text-gray-600">🔍 {{ 'FILTER.NO_FILTERS_APPLIED' | translate }}</p>
+            <button
+              type="button"
+              class="btn-add-filter"
+              (click)="addFilterCondition()">
+              <span class="btn-icon">+</span>
+              <span class="btn-text">Thêm điều kiện lọc</span>
+            </button>
           </div>
         </div>
       </div>
@@ -347,6 +354,8 @@ export class AdvancedFilterComponent implements OnInit, OnChanges, OnDestroy {
 
     if (this.initialFilters && this.initialFilters.length > 0) {
       this.loadInitialFilters();
+    } else if (this.filterGroup.conditions.length === 0) {
+      this.filterGroup.conditions.push(this.createEmptyCondition());
     }
   }
 
@@ -371,16 +380,18 @@ export class AdvancedFilterComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const newCondition: FilterCondition = {
+    this.filterGroup.conditions.push(this.createEmptyCondition());
+    this.emitFilterChange();
+  }
+
+  private createEmptyCondition(): FilterCondition {
+    return {
       id: this.generateFilterId(),
       field: '',
       operator: '',
       value: '',
       columnType: ''
     };
-
-    this.filterGroup.conditions.push(newCondition);
-    this.emitFilterChange();
   }
 
   removeFilterCondition(conditionId: string): void {

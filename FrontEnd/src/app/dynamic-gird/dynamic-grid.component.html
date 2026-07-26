@@ -37,6 +37,7 @@
       <div #stickyControls class="master-grid-sticky-controls">
       <div class="toolbar-actions flex flex-wrap items-center gap-2">
       <button
+        type="button"
         (click)="toggleFilter()"
         class="erp-toolbar-btn erp-toolbar-secondary inline-flex items-center gap-2 rounded-md border bg-white px-3 py-1.5 text-sm transition"
       >
@@ -268,7 +269,7 @@
       </div>
 
     <app-advanced-filter
-      [class.hidden]="!showFilter"
+      *ngIf="showFilter"
       [fields]="getAdvancedFilterFields()"
       [autoApply]="true"
       [applyDebounceMs]="600"
