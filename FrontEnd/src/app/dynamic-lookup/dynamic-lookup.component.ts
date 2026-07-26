@@ -24,6 +24,16 @@ import { environment } from '../../environments/environment';
       height: auto !important;
       min-height: 36px;
     }
+
+    .lookup-wrap-value {
+      field-sizing: content;
+      height: auto !important;
+      min-height: 36px !important;
+      max-height: 96px !important;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      line-height: 1.3;
+    }
   `],
   imports: [CommonModule, FormsModule, DraggableDirective],
 })
@@ -32,6 +42,7 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
   @Input() value: any;
   @Input() response!: LookupApiResponse;
   @Input() disable: boolean = false;
+  @Input() wrap: boolean = false;
   @Input() lookupQuery?: any;
   @Output() valueChange = new EventEmitter<any>();
 

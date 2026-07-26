@@ -109,6 +109,7 @@
 							"required": true,
 							"width": "450px",
 							"type": "lookup",
+							"wrap": true,
 							"multiple": false,
 							"default": {
 								"controller": "item",

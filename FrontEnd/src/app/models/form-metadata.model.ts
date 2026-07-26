@@ -137,6 +137,7 @@ export interface Field {
   aggregation?: AggregateConfig; // Config cho tính toán tổng hợp
   aggregateValidation?: AggregateConfig; // Validation tổng hợp
   width?: string;
+  wrap?: boolean; // Cho phép nội dung dài tự xuống dòng
   subtotal?: boolean; // Có hiển thị subtotal không
   masterSubtotalConfig?: FieldCalculation; // Config cho master subtotal
   uiTab?: string; // Nhóm hiển thị theo tab con trong cùng form master

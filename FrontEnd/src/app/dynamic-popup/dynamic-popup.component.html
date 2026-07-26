@@ -452,7 +452,9 @@
                 <td class="text-center text-gray-500">{{ i + 1 }}</td>
 
                 <!-- Detail fields -->
-                <td class="relative" *ngFor="let field of getAllDetailFields()" [hidden]="field.type === 'hidden' || field.key === 'line_nbr'">
+                <td class="relative" *ngFor="let field of getAllDetailFields()"
+                  [class.detail-wrap-cell]="field.wrap === true"
+                  [hidden]="field.type === 'hidden' || field.key === 'line_nbr'">
                   <div *ngIf="detailErrors[i]?.[field.key]"
                     class="absolute -top-8 left-0 bg-red-500 text-white text-xs rounded px-2 py-1 shadow z-10 animate-fadeIn">
                     {{ detailErrors[i][field.key] }}
@@ -469,7 +471,13 @@
                     class="form-input w-full text-sm text-right" placeholder="0" [disabled]="isInputDisabled(field)" />
 
                   <!-- Text inputs -->
-                  <input *ngIf="field.type === 'text' && !field.disabled" [type]="field.type" [name]="field.key"
+                  <textarea *ngIf="field.type === 'text' && !field.disabled && field.wrap === true"
+                    [name]="field.key" [rows]="field.rows || 2"
+                    class="form-input detail-wrap-textarea w-full text-sm"
+                    [(ngModel)]="row[field.key]" (ngModelChange)="onDetailFieldChange(i, field.key, $event)"
+                    [disabled]="isInputDisabled(field)"></textarea>
+
+                  <input *ngIf="field.type === 'text' && !field.disabled && field.wrap !== true" [type]="field.type" [name]="field.key"
                     [min]="field.min" [max]="field.max" [step]="field.step" class="form-input w-full text-sm"
                     [(ngModel)]="row[field.key]" (ngModelChange)="onDetailFieldChange(i, field.key, $event)"
                     [disabled]="isInputDisabled(field)" />
@@ -503,7 +511,10 @@
 
                   <!-- Readonly/calculated fields -->
                   <span *ngIf="field.disabled && field.type !== 'select' && field.type !== 'number'" class="text-right block text-sm"
-                    [ngClass]="{'text-green-600 font-bold': field.key === 'total'}">
+                    [ngClass]="{
+                      'text-green-600 font-bold': field.key === 'total',
+                      'detail-wrap-content': field.wrap === true
+                    }">
                     {{ formatFieldValue(row, field) }}
                   </span>
 
@@ -516,6 +527,7 @@
                   <div *ngIf="field.type === 'lookup' && lookupMap[field.key]">
                     <app-lookup [multiple]="field.multiple ? true : false"
                       [value]="row[field.key]" [response]="lookupMap[field.key]" [disable]="isInputDisabled(field)"
+                      [wrap]="field.wrap === true"
                       [lookupQuery]="field.default" (valueChange)="onDetailLookupChange(i, field.key,$event)">
                     </app-lookup>
                   </div>

@@ -286,6 +286,7 @@
 							"label": "Mã vật tư",
 							"required": true,
 							"type": "lookup",
+							"wrap": true,
 							"width": "450px",
 							"multiple": false,
 							"default": {

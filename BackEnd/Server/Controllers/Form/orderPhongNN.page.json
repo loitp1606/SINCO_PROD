@@ -115,6 +115,7 @@
 						"key": "itemID",
 						"label": "Vật tư",
 						"type": "text",
+						"wrap": true,
 						"width": "150px"
 					},
 					{

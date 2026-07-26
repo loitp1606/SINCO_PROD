@@ -1028,8 +1028,18 @@
                   <td
                     class="relative px-2 py-0.5"
                     *ngFor="let field of getAllDetailFields()"
+                    [class.detail-wrap-cell]="field.wrap === true"
                     [hidden]="field.type === 'hidden' || field.key === 'line_nbr'"
                   >
+                    <textarea
+                      *ngIf="field.type === 'text' && !field.disabled && field.wrap === true"
+                      [name]="field.key"
+                      [rows]="field.rows || 2"
+                      class="form-input detail-wrap-textarea w-full text-xs"
+                      [(ngModel)]="row[field.key]"
+                      [disabled]="!isQuickEditEnabledForField(field)"
+                    ></textarea>
+
                     <input
                       *ngIf="
                         field.type === 'number' &&
@@ -1066,7 +1076,11 @@
                     />
 
                     <input
-                      *ngIf="field.type === 'text' && !field.disabled"
+                      *ngIf="
+                        field.type === 'text' &&
+                        !field.disabled &&
+                        field.wrap !== true
+                      "
                       [type]="field.type"
                       [name]="field.key"
                       [min]="field.min"
@@ -1121,7 +1135,8 @@
                       "
                       class="text-right block text-sm"
                       [ngClass]="{
-                        'text-green-600 font-bold': field.key === 'total'
+                        'text-green-600 font-bold': field.key === 'total',
+                        'detail-wrap-content': field.wrap === true
                       }"
                     >
                       {{ formatFieldValue(row, field) }}
@@ -1143,6 +1158,7 @@
                       [value]="row[field.key]"
                       [response]="lookupMap[field.key]"
                       [disable]="true"
+                      [wrap]="field.wrap === true"
                     >
                     </app-lookup>
 

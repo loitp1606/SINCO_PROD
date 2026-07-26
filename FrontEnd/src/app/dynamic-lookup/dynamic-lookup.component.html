@@ -1,7 +1,21 @@
 <div class="relative w-full">
   <div *ngIf="response && !multiple" class="relative">
     <div class="flex items-center gap-1.5">
+      <textarea
+        *ngIf="wrap"
+        class="lookup-wrap-value w-full min-h-9 max-h-24 overflow-y-auto border border-gray-300 rounded-lg px-2 py-1 text-sm resize-y"
+        [disabled]="disable"
+        [ngModel]="inlineQuery"
+        (ngModelChange)="onInlineQueryChange($event)"
+        (keydown.enter)="onInlineEnter($event)"
+        (focus)="onInlineInputFocus()"
+        (click)="onInlineInputClick($event)"
+        (blur)="onInlineInputBlur()"
+        placeholder="Nhập để tìm nhanh..."
+        [ngClass]="disable ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'"
+      ></textarea>
       <input
+        *ngIf="!wrap"
         type="text"
         class="w-full h-9 border border-gray-300 rounded-lg px-2 py-1 text-sm"
         [disabled]="disable"

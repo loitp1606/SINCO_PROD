@@ -328,6 +328,7 @@
 							"key": "itemNameCustomer",
 							"label": "Tên Vật tư KH",
 							"type": "text",
+							"wrap": true,
 							"width": "250px"
 						},
 						{
@@ -352,6 +353,7 @@
 							"label": "Mã vật tư",
 							"required": true,
 							"type": "lookup",
+							"wrap": true,
 							"width": "450px",
 							"multiple": false,
 							"default": {
