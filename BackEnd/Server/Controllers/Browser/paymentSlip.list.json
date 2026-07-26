@@ -146,7 +146,8 @@
 			],
 			"VCDate": "",
 			"isFileHandle": "both",
-			"enableTaxExcelExport": true
+			"enableTaxExcelExport": true,
+			"taxExcelExportConfig": "paymentslip"
 		}
 	},
 	"sort": "voucherDate desc, voucherNumber desc",

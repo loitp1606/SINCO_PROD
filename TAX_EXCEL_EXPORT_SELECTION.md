@@ -7,7 +7,8 @@ Tài liệu này mô tả luồng xuất **Excel PM Thuế** trên `dynamic-grid
 Nút **Excel PM Thuế** chỉ hiển thị khi browser config bật:
 
 ```json
-"enableTaxExcelExport": true
+"enableTaxExcelExport": true,
+"taxExcelExportConfig": "deliverynote"
 ```
 
 Hiện đang thấy bật ở:
@@ -152,14 +153,20 @@ Sau đó gọi store tương ứng để lấy dữ liệu chuẩn cho mẫu PM 
 Frontend gọi:
 
 ```text
-POST /api/Files/export-deliverynote-tax
+POST /api/Files/export-tax-excel
 ```
 
 Backend đi vào:
 
-- `FilesController.ExportDeliveryNoteTax`
-- `FileService.ExportDeliveryNoteTaxExcelAsync`
+- `FilesController.ExportTaxExcel`
+- `FileService.ExportTaxExcelAsync`
 - `TaxExcelExportService.ExportTaxExcelAsync`
+
+Store, template, sheet và mapping cột được khai báo trong:
+
+```text
+BackEnd/Server/Controllers/FastReport/TaxExportConfigs
+```
 
 Các controller đang được cấu hình:
 
@@ -176,4 +183,3 @@ Các controller đang được cấu hình:
 - Nếu đang filter, chọn all chỉ chọn dữ liệu sau filter.
 - Nếu không filter, chọn all sẽ chọn toàn bộ dữ liệu của màn hình đó.
 - Excel PM Thuế ưu tiên dòng đã chọn, nên user có thể xuất một phần hoặc toàn bộ tùy selection.
-

@@ -1,0 +1,43 @@
+{
+  "code": "deliverynote",
+  "controller": "deliverynote",
+  "storeProcedure": "oot$exportVat",
+  "templateFile": "XHD_Mau.xlsx",
+  "filePrefix": "deliverynote_tax",
+  "sheets": [
+    {
+      "name": "",
+      "startRow": 2,
+      "headerRow": 1,
+      "rowMode": "allRows",
+      "columns": [
+        { "column": "A", "header": "MaHD", "sources": ["MaHD"] },
+        { "column": "B", "header": "NgayHoaDon", "sources": ["NgayHoaDon"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "C", "header": "MaKhachHang", "sources": ["MaKhachHang"] },
+        { "column": "D", "header": "TenNguoiMua", "sources": ["TenNguoiMua"] },
+        { "column": "E", "header": "TenDonVi", "sources": ["TenDonVi"] },
+        { "column": "F", "header": "MaSoThue", "sources": ["MaSoThue"] },
+        { "column": "G", "header": "DiaChiKhachHang", "sources": ["DiaChiKhachHang"] },
+        { "column": "H", "header": "SoDienThoai", "sources": ["SoDienThoai"] },
+        { "column": "I", "header": "SoBangKe", "sources": ["SoBangKe"] },
+        { "column": "J", "header": "NgayBangKe", "sources": ["NgayBangKe"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "K", "header": "SOTKKHACH", "sources": ["SOTKKHACH"] },
+        { "column": "L", "header": "TENNHKHACH", "sources": ["TENNHKHACH"] },
+        { "column": "M", "header": "HinhThucThanhToan", "sources": ["HinhThucThanhToan"] },
+        { "column": "N", "header": "ThueSuat", "sources": ["ThueSuat"], "type": "decimal" },
+        { "column": "O", "header": "ThueSuatKhac", "sources": ["ThueSuatKhac"], "type": "decimal" },
+        { "column": "P", "header": "MaHang", "sources": ["MaHang"] },
+        { "column": "Q", "header": "TenHangHoa", "sources": ["TenHangHoa"] },
+        { "column": "R", "header": "DVT", "sources": ["DVT"] },
+        { "column": "S", "header": "SoLuong", "sources": ["SoLuong"], "type": "decimal" },
+        { "column": "T", "header": "DonGia", "sources": ["DonGia"], "type": "decimal" },
+        { "column": "U", "header": "ThanhTien", "sources": ["ThanhTien"], "type": "decimal" },
+        { "column": "V", "header": "TienTe", "sources": ["TienTe"] },
+        { "column": "W", "header": "SoTT", "sources": ["SoTT"], "type": "integer" },
+        { "column": "X", "header": "TinhChat", "sources": ["TinhChat"] },
+        { "column": "Y", "header": "Email", "sources": ["Email"] },
+        { "column": "Z", "header": "Ghichu", "sources": ["Ghichu"] }
+      ]
+    }
+  ]
+}

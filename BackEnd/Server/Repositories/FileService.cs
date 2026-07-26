@@ -66,13 +66,14 @@ namespace Sinco.Server.Repositories
         public string? NoteEdited { get; set; }
         public bool? IsEdit { get; set; }
         public bool? IsReport { get; set; }
+        public string? TaxExcelExportConfig { get; set; }
     }
 
     public interface IFileService
     {
         Task<ServiceResponse<object>> ImportFileAsync(FileRequest fileRequest);
         Task<ServiceResponse<MemoryStream>> ExportPdfAsync(ReportRequest request);
-        Task<ServiceResponse<MemoryStream>> ExportDeliveryNoteTaxExcelAsync(ReportRequest request);
+        Task<ServiceResponse<MemoryStream>> ExportTaxExcelAsync(ReportRequest request);
     }
     public class FileService : IFileService
     {
@@ -582,7 +583,7 @@ namespace Sinco.Server.Repositories
             return (response);
         }
 
-        public async Task<ServiceResponse<MemoryStream>> ExportDeliveryNoteTaxExcelAsync(ReportRequest request)
+        public async Task<ServiceResponse<MemoryStream>> ExportTaxExcelAsync(ReportRequest request)
         {
             return await _taxExcelExportService.ExportTaxExcelAsync(request);
         }

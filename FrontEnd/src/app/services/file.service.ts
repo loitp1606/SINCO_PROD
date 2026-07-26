@@ -137,8 +137,8 @@ export class FileService {
     });
   }
 
-  exportDeliveryNoteTaxFile(formData: any): Observable<HttpResponse<Blob>> {
-    return this.http.post(this.apiUrl + '/export-deliverynote-tax', formData, {
+  exportTaxExcelFile(formData: any): Observable<HttpResponse<Blob>> {
+    return this.http.post(this.apiUrl + '/export-tax-excel', formData, {
       observe: 'response',
       responseType: 'blob',
     });

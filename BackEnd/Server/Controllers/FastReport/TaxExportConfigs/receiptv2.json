@@ -1,0 +1,31 @@
+{
+  "code": "receiptv2",
+  "controller": "receiptv2",
+  "storeProcedure": "oot$exportVatReceiptV2",
+  "templateFile": "Mau_Phieu_thu.xlsx",
+  "filePrefix": "receiptv2_tax",
+  "sheets": [
+    {
+      "name": "CT",
+      "startRow": 2,
+      "rowMode": "allRows",
+      "orderBy": ["idGui", "line_nbr"],
+      "columns": [
+        { "column": "A", "sources": ["voucherDate"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "B", "sources": ["voucherNumber"] },
+        { "column": "C", "sources": ["customerCode"] },
+        { "column": "D", "sources": ["collectorName"] },
+        { "column": "E", "sources": ["reason"] },
+        { "column": "F", "sources": ["detailNote", "note"] },
+        { "column": "G", "sources": ["cashAccount"] },
+        { "column": "H", "sources": ["offsetAccount"] },
+        { "column": "I", "sources": ["amountVnd", "amount"], "type": "decimal" },
+        { "column": "J", "sources": ["amountCur"], "type": "decimal" },
+        { "column": "K", "sources": ["exchangeRate"], "type": "decimal" },
+        { "column": "L", "sources": ["costCode"] },
+        { "column": "M", "sources": ["unitCode"] },
+        { "column": "N", "sources": ["currencyCode"] }
+      ]
+    }
+  ]
+}

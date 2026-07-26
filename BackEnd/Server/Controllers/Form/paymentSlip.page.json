@@ -320,6 +320,7 @@
 							"currency": "VN",
 							"disabled": true,
 							"width": "100px",
+							"precision": 0,
 							"calculation": {
 								"calculations": [
 									{

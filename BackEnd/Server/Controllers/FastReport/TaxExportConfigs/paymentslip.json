@@ -1,0 +1,40 @@
+{
+  "code": "paymentslip",
+  "controller": "paymentslip",
+  "storeProcedure": "oot$exportVatPaymentSlip",
+  "templateFile": "Mau_Phieu_chi_tvt.xlsx",
+  "filePrefix": "paymentslip_tax",
+  "sheets": [
+    {
+      "name": "CT",
+      "startRow": 2,
+      "rowMode": "allRows",
+      "orderBy": ["idGui", "line_nbr"],
+      "columns": [
+        { "column": "A", "sources": ["voucherDate"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "B", "sources": ["voucherNumber"] },
+        { "column": "C", "sources": ["supplierCode"] },
+        { "column": "D", "value": "" },
+        { "column": "E", "sources": ["reason"] },
+        { "column": "F", "sources": ["detailNote", "note"] },
+        { "column": "G", "value": "" },
+        { "column": "H", "value": "" },
+        { "column": "I", "sources": ["amountVnd", "amount"], "type": "decimal" },
+        { "column": "J", "value": "" },
+        { "column": "K", "value": "" },
+        { "column": "L", "value": "" },
+        { "column": "M", "value": "" },
+        { "column": "N", "sources": ["invoiceSerial"] },
+        { "column": "O", "sources": ["invoiceNumber"] },
+        { "column": "P", "sources": ["invoiceDate"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "Q", "sources": ["maKhVat", "supplierCode"] },
+        { "column": "R", "sources": ["supplierName"] },
+        { "column": "S", "sources": ["supplierAddress"] },
+        { "column": "T", "sources": ["taxCode"] },
+        { "column": "U", "sources": ["tienVndVat", "amountVnd"], "type": "decimal" },
+        { "column": "V", "sources": ["taxRate", "tax_rate"], "type": "decimal" },
+        { "column": "W", "sources": ["taxAmount", "tax"], "type": "decimal" }
+      ]
+    }
+  ]
+}

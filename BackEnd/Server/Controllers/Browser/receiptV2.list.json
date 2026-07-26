@@ -103,7 +103,8 @@
 			],
 			"VCDate": "voucherDate",
 			"isFileHandle": "both",
-			"enableTaxExcelExport": true
+			"enableTaxExcelExport": true,
+			"taxExcelExportConfig": "receiptv2"
 		}
 	},
 	"sort": "voucherDate desc, voucherNumber desc",

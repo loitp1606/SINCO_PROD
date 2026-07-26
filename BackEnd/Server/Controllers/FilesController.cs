@@ -105,15 +105,16 @@ namespace Sinco.Server.Controllers
 			}
 		}
 
+        [HttpPost("export-tax-excel")]
         [HttpPost("export-deliverynote-tax")]
-        public async Task<IActionResult> ExportDeliveryNoteTax([FromBody] ReportRequest request)
+        public async Task<IActionResult> ExportTaxExcel([FromBody] ReportRequest request)
         {
             if (string.IsNullOrEmpty(request.Controll))
             {
                 return BadRequest("Table name is required");
             }
 
-            var result = await _fileService.ExportDeliveryNoteTaxExcelAsync(request);
+            var result = await _fileService.ExportTaxExcelAsync(request);
             if (result.Success && result.Data != null)
             {
                 var fileName = string.IsNullOrWhiteSpace(result.Message)

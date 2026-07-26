@@ -77,6 +77,7 @@ export class FileHandleComponent implements OnInit {
   @Input() nameExport : string = 'Xuất dữ liệu';
   @Input() IsReport : boolean = false;
   @Input() enableTaxExcelExport: boolean = false;
+  @Input() taxExcelExportConfig: string = '';
   constructor(
     private fileService: FileService,
     private snackBar: MatSnackBar,
@@ -344,6 +345,7 @@ export class FileHandleComponent implements OnInit {
       unit: this.user?.['unit0'] ?? '',
       language: localStorage.getItem('language') ?? 'vi',
       isReport : this.IsReport,
+      taxExcelExportConfig: this.taxExcelExportConfig || cleanControll,
       noteEdited: '',
       isEdit: false
     };
@@ -567,7 +569,7 @@ export class FileHandleComponent implements OnInit {
 
   private getExportRequest(type: 'pdf' | 'excel' | 'word' | 'excel-tax', payload: any): Observable<HttpResponse<Blob>> {
     if (type === 'excel-tax') {
-      return this.fileService.exportDeliveryNoteTaxFile(payload);
+      return this.fileService.exportTaxExcelFile(payload);
     }
     return this.fileService.exportFile(payload);
   }

@@ -77,7 +77,8 @@
 			],
 			"VCDate": "",
 			"isFileHandle": "export",
-			"enableTaxExcelExport": true
+			"enableTaxExcelExport": true,
+			"taxExcelExportConfig": "poin"
 		}
 	},
 	"sort": "voucherDate desc, voucherNumber desc",

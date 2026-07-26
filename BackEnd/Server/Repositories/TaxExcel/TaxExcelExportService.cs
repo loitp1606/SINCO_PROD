@@ -1,76 +1,75 @@
 using OfficeOpenXml;
 using reportSystem01.Shared;
 using Sinco.Server.Repositories.Report;
+using System.Globalization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Sinco.Server.Repositories
 {
     public class TaxExcelExportService : ITaxExcelExportService
     {
+        private const string ConfigDirectory = "Controllers/FastReport/TaxExportConfigs";
+        private const string TemplateDirectory = "Controllers/FastReport/TaxTemplates";
+
         private sealed class TaxExcelExportConfig
         {
+            public string Code { get; set; } = string.Empty;
+            public string Controller { get; set; } = string.Empty;
             public string StoreProcedure { get; set; } = string.Empty;
             public string TemplateFile { get; set; } = string.Empty;
             public string FilePrefix { get; set; } = string.Empty;
-            public bool UseStoreProcedure { get; set; } = true;
+            public string GroupBy { get; set; } = string.Empty;
+            public List<TaxExcelSheetConfig> Sheets { get; set; } = [];
+        }
+
+        private sealed class TaxExcelSheetConfig
+        {
+            public string Name { get; set; } = string.Empty;
+            public int StartRow { get; set; } = 2;
+            public int HeaderRow { get; set; }
+            public string RowMode { get; set; } = "allRows";
+            public List<string> OrderBy { get; set; } = [];
+            public List<TaxExcelColumnConfig> Columns { get; set; } = [];
+        }
+
+        private sealed class TaxExcelColumnConfig
+        {
+            public string Column { get; set; } = string.Empty;
+            public string Header { get; set; } = string.Empty;
+            public List<string> Sources { get; set; } = [];
+            public JsonElement? Value { get; set; }
+            public string Type { get; set; } = "string";
+            public string Format { get; set; } = string.Empty;
+            public string ValueMode { get; set; } = string.Empty;
         }
 
         private sealed class TaxExportItem
         {
             public string IdGui { get; set; } = string.Empty;
-            public string PeriodSuffix { get; set; } = string.Empty; // dạng: $yyyyMM
             public string? VoucherDateRaw { get; set; }
         }
 
-        private static readonly Dictionary<string, TaxExcelExportConfig> TaxExcelExportConfigs =
-            new(StringComparer.OrdinalIgnoreCase)
-            {
-                {
-                    "deliverynote",
-                    new TaxExcelExportConfig
-                    {
-                        StoreProcedure = "oot$exportVat",
-                        TemplateFile = "XHD_Mau.xlsx",
-                        FilePrefix = "deliverynote_tax"
-                    }
-                },
-                {
-                    "poin",
-                    new TaxExcelExportConfig
-                    {
-                        StoreProcedure = "oot$exportVatPoin",
-                        TemplateFile = "Mau_Phieunhapmua.xlsx",
-                        FilePrefix = "poin_tax",
-                        UseStoreProcedure = true
-                    }
-                },
-                {
-                    "receiptv2",
-                    new TaxExcelExportConfig
-                    {
-                        StoreProcedure = "oot$exportVatReceiptV2",
-                        TemplateFile = "Mau_Phieu_thu.xlsx",
-                        FilePrefix = "receiptv2_tax",
-                        UseStoreProcedure = true
-                    }
-                },
-                {
-                    "paymentslip",
-                    new TaxExcelExportConfig
-                    {
-                        StoreProcedure = "oot$exportVatPaymentSlip",
-                        TemplateFile = "Mau_Phieu_chi_tvt.xlsx",
-                        FilePrefix = "paymentslip_tax",
-                        UseStoreProcedure = true
-                    }
-                }
-            };
+        private sealed class RowContext
+        {
+            public Dictionary<string, object> Row { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+            public List<Dictionary<string, object>> GroupRows { get; init; } = [];
+        }
 
         private readonly IDynamicReportService _dynamicReport;
+        private readonly IWebHostEnvironment _environment;
+        private readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
-        public TaxExcelExportService(IDynamicReportService dynamicReport)
+        public TaxExcelExportService(
+            IDynamicReportService dynamicReport,
+            IWebHostEnvironment environment
+        )
         {
             _dynamicReport = dynamicReport;
+            _environment = environment;
         }
 
         public async Task<ServiceResponse<MemoryStream>> ExportTaxExcelAsync(ReportRequest request)
@@ -79,452 +78,584 @@ namespace Sinco.Server.Repositories
 
             try
             {
-                var controllerName = (request.Controll ?? string.Empty).Trim().ToLower();
-                if (!TaxExcelExportConfigs.TryGetValue(controllerName, out var taxConfig))
+                var controllerName = NormalizeKey(request.Controll);
+                var configCode = NormalizeKey(request.TaxExcelExportConfig);
+                if (string.IsNullOrWhiteSpace(configCode))
                 {
-                    response.Success = false;
-                    response.Message = $"Loại export 'excel-tax' chưa cấu hình cho controller '{controllerName}'.";
-                    return response;
+                    configCode = controllerName;
                 }
+
+                var config = LoadConfig(configCode);
+                ValidateConfig(config, configCode, controllerName);
 
                 if (request.Tables == null || request.Tables.Count == 0)
                 {
-                    response.Success = false;
-                    response.Message = "Không có dữ liệu để export mẫu PM Thuế.";
-                    return response;
+                    return Failure("Không có dữ liệu để export mẫu PM Thuế.");
                 }
 
                 var exportItems = ExtractTaxExportItems(controllerName, request.Tables);
                 if (exportItems.Count == 0)
                 {
-                    response.Success = false;
-                    response.Message = $"Không xác định được dữ liệu '{controllerName}' để export.";
-                    return response;
-                }
-
-                if (!taxConfig.UseStoreProcedure)
-                {
-                    response.Success = false;
-                    response.Message = $"Controller '{controllerName}' chưa cấu hình xuất theo store.";
-                    return response;
+                    return Failure($"Không xác định được dữ liệu '{controllerName}' để export.");
                 }
 
                 var listGuiId = string.Join(",", exportItems.Select(x => x.IdGui));
                 var listVoucherDate = string.Join(",", exportItems.Select(x => x.VoucherDateRaw ?? string.Empty));
-                var userID = request.UserID ?? string.Empty;
-                var unit = request.Unit ?? string.Empty;
-                var language = request.Language ?? "vi";
-
                 var spQuery =
-                    $"exec {taxConfig.StoreProcedure} N'{EscapeSqlLiteral(listGuiId)}', " +
+                    $"exec {config.StoreProcedure} N'{EscapeSqlLiteral(listGuiId)}', " +
                     $"N'{EscapeSqlLiteral(listVoucherDate)}', " +
-                    $"N'{EscapeSqlLiteral(userID)}', " +
-                    $"N'{EscapeSqlLiteral(unit)}', " +
-                    $"N'{EscapeSqlLiteral(language)}'";
+                    $"N'{EscapeSqlLiteral(request.UserID ?? string.Empty)}', " +
+                    $"N'{EscapeSqlLiteral(request.Unit ?? string.Empty)}', " +
+                    $"N'{EscapeSqlLiteral(request.Language ?? "vi")}'";
+
                 var spRows = await _dynamicReport.ExecuteQueryAsync(spQuery);
                 if (spRows == null || spRows.Count == 0)
                 {
-                    response.Success = false;
-                    response.Message = $"Store {taxConfig.StoreProcedure} không trả về dữ liệu.";
-                    return response;
+                    return Failure($"Store {config.StoreProcedure} không trả về dữ liệu.");
                 }
 
-                if (controllerName == "poin")
+                return ExportFromConfig(config, spRows);
+            }
+            catch (Exception ex)
+            {
+                return Failure($"Lỗi export Excel PM Thuế: {ex.Message}");
+            }
+        }
+
+        private TaxExcelExportConfig LoadConfig(string configCode)
+        {
+            if (string.IsNullOrWhiteSpace(configCode)
+                || !Regex.IsMatch(configCode, "^[a-z0-9_-]+$", RegexOptions.IgnoreCase))
+            {
+                throw new InvalidOperationException($"Mã cấu hình export '{configCode}' không hợp lệ.");
+            }
+
+            var configPath = Path.Combine(
+                _environment.ContentRootPath,
+                ConfigDirectory.Replace('/', Path.DirectorySeparatorChar),
+                $"{configCode}.json"
+            );
+
+            if (!File.Exists(configPath))
+            {
+                throw new FileNotFoundException(
+                    $"Chưa khai báo cấu hình Excel PM Thuế '{configCode}'.",
+                    configPath
+                );
+            }
+
+            var config = JsonSerializer.Deserialize<TaxExcelExportConfig>(
+                File.ReadAllText(configPath),
+                _jsonOptions
+            );
+
+            return config
+                ?? throw new InvalidOperationException($"Không đọc được cấu hình '{configCode}'.");
+        }
+
+        private static void ValidateConfig(
+            TaxExcelExportConfig config,
+            string configCode,
+            string controllerName
+        )
+        {
+            if (!config.Code.Equals(configCode, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"Mã trong cấu hình '{config.Code}' không khớp file '{configCode}'."
+                );
+            }
+
+            if (!config.Controller.Equals(controllerName, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"Cấu hình '{configCode}' không áp dụng cho controller '{controllerName}'."
+                );
+            }
+
+            if (string.IsNullOrWhiteSpace(config.StoreProcedure)
+                || !Regex.IsMatch(config.StoreProcedure, @"^[a-z0-9_$.\[\]]+$", RegexOptions.IgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"Store procedure trong cấu hình '{configCode}' không hợp lệ."
+                );
+            }
+
+            if (string.IsNullOrWhiteSpace(config.TemplateFile)
+                || !Path.GetFileName(config.TemplateFile).Equals(
+                    config.TemplateFile,
+                    StringComparison.Ordinal
+                ))
+            {
+                throw new InvalidOperationException(
+                    $"Tên template trong cấu hình '{configCode}' không hợp lệ."
+                );
+            }
+
+            if (config.Sheets.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"Cấu hình '{configCode}' chưa khai báo sheet."
+                );
+            }
+
+            foreach (var sheet in config.Sheets)
+            {
+                if (sheet.StartRow < 1)
                 {
-                    return ExportPoinTaxExcelFromStoreRows(taxConfig, spRows);
-                }
-                if (controllerName == "receiptv2")
-                {
-                    return ExportReceiptV2TaxExcelFromStoreRows(taxConfig, spRows);
-                }
-                if (controllerName == "paymentslip")
-                {
-                    return ExportPaymentSlipTaxExcelFromStoreRows(taxConfig, spRows);
+                    throw new InvalidOperationException(
+                        $"Sheet '{sheet.Name}' có startRow không hợp lệ."
+                    );
                 }
 
-                ExcelPackage.License.SetNonCommercialPersonal("SaiGonSinco");
-                var templatePath = Path.Combine("Controllers", "FastReport", "TaxTemplates", taxConfig.TemplateFile);
-                using var package = File.Exists(templatePath)
-                    ? new ExcelPackage(new FileInfo(templatePath))
-                    : new ExcelPackage();
-
-                var ws = package.Workbook.Worksheets.FirstOrDefault() ?? package.Workbook.Worksheets.Add("Sheet1");
-                EnsureTaxHeader(ws);
-                var headers = GetTaxHeaders();
-
-                int rowIndex = 2;
-                foreach (var row in spRows)
+                if (!sheet.RowMode.Equals("allRows", StringComparison.OrdinalIgnoreCase)
+                    && !sheet.RowMode.Equals("firstOfGroup", StringComparison.OrdinalIgnoreCase))
                 {
-                    for (int colIndex = 0; colIndex < headers.Length; colIndex++)
+                    throw new InvalidOperationException(
+                        $"Sheet '{sheet.Name}' có rowMode '{sheet.RowMode}' không được hỗ trợ."
+                    );
+                }
+
+                foreach (var column in sheet.Columns)
+                {
+                    ParseColumnNumber(column.Column);
+                    var type = column.Type.ToLowerInvariant();
+                    if (type is not ("string" or "decimal" or "date" or "integer"))
                     {
-                        var header = headers[colIndex];
-                        if (row.TryGetValue(header, out var value))
+                        throw new InvalidOperationException(
+                            $"Sheet '{sheet.Name}', cột '{column.Column}' có type '{column.Type}' không hợp lệ."
+                        );
+                    }
+
+                    if (!column.Value.HasValue && column.Sources.Count == 0)
+                    {
+                        throw new InvalidOperationException(
+                            $"Sheet '{sheet.Name}', cột '{column.Column}' chưa khai source hoặc value."
+                        );
+                    }
+                }
+            }
+        }
+
+        private ServiceResponse<MemoryStream> ExportFromConfig(
+            TaxExcelExportConfig config,
+            List<Dictionary<string, object>> spRows
+        )
+        {
+            ExcelPackage.License.SetNonCommercialPersonal("SaiGonSinco");
+
+            var templatePath = Path.Combine(
+                _environment.ContentRootPath,
+                TemplateDirectory.Replace('/', Path.DirectorySeparatorChar),
+                config.TemplateFile
+            );
+
+            using var package = File.Exists(templatePath)
+                ? new ExcelPackage(new FileInfo(templatePath))
+                : new ExcelPackage();
+
+            foreach (var sheetConfig in config.Sheets)
+            {
+                var worksheet = ResolveWorksheet(package, sheetConfig.Name);
+                WriteHeaders(worksheet, sheetConfig);
+
+                var contexts = BuildRowContexts(config, sheetConfig, spRows);
+                SortRows(contexts, sheetConfig.OrderBy);
+
+                var rowNumber = sheetConfig.StartRow;
+                foreach (var context in contexts)
+                {
+                    foreach (var columnConfig in sheetConfig.Columns)
+                    {
+                        var columnNumber = ParseColumnNumber(columnConfig.Column);
+                        var cell = worksheet.Cells[rowNumber, columnNumber];
+                        cell.Value = ResolveColumnValue(columnConfig, context);
+                        if (!string.IsNullOrWhiteSpace(columnConfig.Format))
                         {
-                            ws.Cells[rowIndex, colIndex + 1].Value = value;
+                            cell.Style.Numberformat.Format = columnConfig.Format;
                         }
                     }
-                    rowIndex++;
+
+                    rowNumber++;
                 }
-
-                var finalMs = new MemoryStream(package.GetAsByteArray());
-                finalMs.Position = 0;
-
-                response.Success = true;
-                response.Data = finalMs;
-                response.Message = $"{taxConfig.FilePrefix}_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
-                return response;
             }
-            catch (Exception ex)
+
+            var stream = new MemoryStream(package.GetAsByteArray());
+            stream.Position = 0;
+            return new ServiceResponse<MemoryStream>
             {
-                response.Success = false;
-                response.Message = $"Lỗi export Excel PM Thuế: {ex.Message}";
-                return response;
+                Success = true,
+                Data = stream,
+                Message = $"{config.FilePrefix}_{DateTime.Now:yyyyMMddHHmmss}.xlsx"
+            };
+        }
+
+        private static ExcelWorksheet ResolveWorksheet(ExcelPackage package, string sheetName)
+        {
+            if (!string.IsNullOrWhiteSpace(sheetName))
+            {
+                return package.Workbook.Worksheets[sheetName]
+                    ?? package.Workbook.Worksheets.Add(sheetName);
+            }
+
+            return package.Workbook.Worksheets.FirstOrDefault()
+                ?? package.Workbook.Worksheets.Add("Sheet1");
+        }
+
+        private static void WriteHeaders(
+            ExcelWorksheet worksheet,
+            TaxExcelSheetConfig sheetConfig
+        )
+        {
+            if (sheetConfig.HeaderRow < 1) return;
+
+            foreach (var column in sheetConfig.Columns.Where(c => !string.IsNullOrWhiteSpace(c.Header)))
+            {
+                var cell = worksheet.Cells[
+                    sheetConfig.HeaderRow,
+                    ParseColumnNumber(column.Column)
+                ];
+                if (cell.Value == null)
+                {
+                    cell.Value = column.Header;
+                }
             }
         }
 
-        private ServiceResponse<MemoryStream> ExportPoinTaxExcelFromStoreRows(
-            TaxExcelExportConfig taxConfig,
-            List<Dictionary<string, object>> spRows
+        private static List<RowContext> BuildRowContexts(
+            TaxExcelExportConfig config,
+            TaxExcelSheetConfig sheet,
+            List<Dictionary<string, object>> rows
         )
         {
-            var response = new ServiceResponse<MemoryStream>();
-            try
+            if (string.IsNullOrWhiteSpace(config.GroupBy))
             {
-                ExcelPackage.License.SetNonCommercialPersonal("SaiGonSinco");
-                var templatePath = Path.Combine("Controllers", "FastReport", "TaxTemplates", taxConfig.TemplateFile);
-                using var package = File.Exists(templatePath)
-                    ? new ExcelPackage(new FileInfo(templatePath))
-                    : new ExcelPackage();
-
-                var wsCt = package.Workbook.Worksheets["CT"]
-                           ?? package.Workbook.Worksheets.FirstOrDefault()
-                           ?? package.Workbook.Worksheets.Add("CT");
-                var wsPh = package.Workbook.Worksheets["PH"]
-                           ?? package.Workbook.Worksheets.Skip(1).FirstOrDefault()
-                           ?? package.Workbook.Worksheets.Add("PH");
-
-                int rowPh = 2;
-                int rowCt = 2;
-                var grouped = spRows
-                    .GroupBy(r => GetStringAny(r, "idGui", "IdGui"), StringComparer.OrdinalIgnoreCase)
+                return rows
+                    .Select(row => new RowContext { Row = row, GroupRows = [row] })
                     .ToList();
-
-                foreach (var group in grouped)
-                {
-                    var master = group.FirstOrDefault();
-                    if (master == null) continue;
-
-                    var voucherDate = GetDateStringAny(master, "voucherDate");
-                    var voucherNumber = GetStringAny(master, "voucherNumber");
-                    var vendorCode = GetStringAny(master, "vendorCode");
-                    var vendorName = GetStringAny(master, "vendorName");
-                    var vendorAddress = GetStringAny(master, "vendorAddress");
-                    var note = GetStringAny(master, "note");
-                    var paymentMethod = GetStringAny(master, "paymentMethod");
-                    var invoiceForm = GetStringAny(master, "invoiceForm");
-                    var invoiceSerial = GetStringAny(master, "invoiceSerial");
-                    var invoiceDate = GetDateStringAny(master, "invoiceDate");
-                    var invoiceNumber = GetStringAny(master, "invoiceNumber");
-                    var taxCode = GetStringAny(master, "taxCode");
-
-                    var totalAmount = GetDecimalAny(master, "totalAmount", "total_amount", "total_payment", "totalAmountMaster");
-                    var totalTax = GetDecimalAny(master, "totalTax", "total_tax", "taxAmountMaster");
-                    var taxRate = GetDecimalAny(master, "taxRate", "tax_rate", "taxPercent");
-                    if (taxRate == 0m)
-                    {
-                        taxRate = group
-                            .Select(d => GetDecimalAny(d, "taxRate", "tax_rate", "taxPercent"))
-                            .FirstOrDefault(v => v != 0m);
-                    }
-
-                    wsPh.Cells[rowPh, 1].Value = voucherDate;
-                    wsPh.Cells[rowPh, 2].Value = voucherNumber;
-                    wsPh.Cells[rowPh, 3].Value = vendorCode;
-                    wsPh.Cells[rowPh, 4].Value = string.Empty;
-                    wsPh.Cells[rowPh, 5].Value = note;
-                    wsPh.Cells[rowPh, 6].Value = totalAmount;
-                    wsPh.Cells[rowPh, 7].Value = taxRate;
-                    wsPh.Cells[rowPh, 8].Value = totalTax;
-                    wsPh.Cells[rowPh, 9].Value = paymentMethod;
-                    wsPh.Cells[rowPh, 10].Value = 1;
-                    wsPh.Cells[rowPh, 11].Value = invoiceForm;
-                    wsPh.Cells[rowPh, 12].Value = invoiceSerial;
-                    wsPh.Cells[rowPh, 13].Value = invoiceDate;
-                    wsPh.Cells[rowPh, 14].Value = invoiceNumber;
-                    wsPh.Cells[rowPh, 15].Value = vendorCode;
-                    wsPh.Cells[rowPh, 16].Value = vendorName;
-                    wsPh.Cells[rowPh, 17].Value = vendorAddress;
-                    wsPh.Cells[rowPh, 18].Value = taxCode;
-                    rowPh++;
-
-                    foreach (var detail in group.OrderBy(d => GetDecimalAny(d, "line_nbr", "lineNbr", "soTT")))
-                    {
-                        wsCt.Cells[rowCt, 1].Value = voucherNumber;
-                        wsCt.Cells[rowCt, 2].Value = GetStringAny(detail, "itemCode", "item_id");
-                        wsCt.Cells[rowCt, 3].Value = GetStringAny(detail, "itemName", "itemNameVAT", "item_name");
-                        wsCt.Cells[rowCt, 4].Value = GetDecimalAny(detail, "quantity");
-                        wsCt.Cells[rowCt, 5].Value = GetDecimalAny(detail, "price", "unitPrice");
-                        wsCt.Cells[rowCt, 6].Value = GetDecimalAny(detail, "amount", "lineAmount");
-                        wsCt.Cells[rowCt, 7].Value = GetStringAny(detail, "warehouseCode", "locationCode", "warehouse");
-                        rowCt++;
-                    }
-                }
-
-                var finalMs = new MemoryStream(package.GetAsByteArray());
-                finalMs.Position = 0;
-
-                response.Success = true;
-                response.Data = finalMs;
-                response.Message = $"{taxConfig.FilePrefix}_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
-                return response;
             }
-            catch (Exception ex)
+
+            var groups = rows
+                .GroupBy(
+                    row => GetString(row, config.GroupBy),
+                    StringComparer.OrdinalIgnoreCase
+                )
+                .Select(group => group.ToList())
+                .ToList();
+
+            if (sheet.RowMode.Equals("firstOfGroup", StringComparison.OrdinalIgnoreCase))
             {
-                response.Success = false;
-                response.Message = $"Lỗi export Excel PM Thuế (poin): {ex.Message}";
-                return response;
+                return groups
+                    .Where(group => group.Count > 0)
+                    .Select(group => new RowContext
+                    {
+                        Row = group[0],
+                        GroupRows = group
+                    })
+                    .ToList();
             }
+
+            return groups
+                .SelectMany(group => group.Select(row => new RowContext
+                {
+                    Row = row,
+                    GroupRows = group
+                }))
+                .ToList();
         }
 
-        private ServiceResponse<MemoryStream> ExportReceiptV2TaxExcelFromStoreRows(
-            TaxExcelExportConfig taxConfig,
-            List<Dictionary<string, object>> spRows
+        private static void SortRows(List<RowContext> contexts, List<string> orderBy)
+        {
+            if (orderBy.Count == 0) return;
+
+            contexts.Sort((left, right) =>
+            {
+                foreach (var key in orderBy)
+                {
+                    var comparison = CompareValues(
+                        GetValue(left.Row, key),
+                        GetValue(right.Row, key)
+                    );
+                    if (comparison != 0) return comparison;
+                }
+
+                return 0;
+            });
+        }
+
+        private static int CompareValues(object? left, object? right)
+        {
+            if (left == null || left == DBNull.Value)
+            {
+                return right == null || right == DBNull.Value ? 0 : -1;
+            }
+            if (right == null || right == DBNull.Value) return 1;
+
+            if (decimal.TryParse(left.ToString(), out var leftNumber)
+                && decimal.TryParse(right.ToString(), out var rightNumber))
+            {
+                return leftNumber.CompareTo(rightNumber);
+            }
+
+            if (DateTime.TryParse(left.ToString(), out var leftDate)
+                && DateTime.TryParse(right.ToString(), out var rightDate))
+            {
+                return leftDate.CompareTo(rightDate);
+            }
+
+            return string.Compare(
+                left.ToString(),
+                right.ToString(),
+                StringComparison.OrdinalIgnoreCase
+            );
+        }
+
+        private static object ResolveColumnValue(
+            TaxExcelColumnConfig column,
+            RowContext context
         )
         {
-            var response = new ServiceResponse<MemoryStream>();
-            try
+            if (column.Value.HasValue)
             {
-                ExcelPackage.License.SetNonCommercialPersonal("SaiGonSinco");
-                var templatePath = Path.Combine("Controllers", "FastReport", "TaxTemplates", taxConfig.TemplateFile);
-                using var package = File.Exists(templatePath)
-                    ? new ExcelPackage(new FileInfo(templatePath))
-                    : new ExcelPackage();
+                return ConvertJsonValue(column.Value.Value);
+            }
 
-                var wsCt = package.Workbook.Worksheets["CT"]
-                           ?? package.Workbook.Worksheets.FirstOrDefault()
-                           ?? package.Workbook.Worksheets.Add("CT");
-
-                int rowCt = 2;
-                foreach (var row in spRows.OrderBy(d => GetStringAny(d, "idGui")).ThenBy(d => GetDecimalAny(d, "line_nbr")))
+            if (column.ValueMode.Equals("firstNonZeroInGroup", StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (var row in context.GroupRows)
                 {
-                    wsCt.Cells[rowCt, 1].Value = GetDateStringAny(row, "voucherDate"); // Ngày CT
-                    wsCt.Cells[rowCt, 2].Value = GetStringAny(row, "voucherNumber"); // Số phiếu Thu
-                    wsCt.Cells[rowCt, 3].Value = GetStringAny(row, "customerCode"); // Mã khách
-                    wsCt.Cells[rowCt, 4].Value = GetStringAny(row, "collectorName"); // Người nhận
-                    wsCt.Cells[rowCt, 5].Value = GetStringAny(row, "reason"); // Diễn giải phiếu
-                    wsCt.Cells[rowCt, 6].Value = GetStringAny(row, "detailNote", "note"); // Diễn giải chi tiết phiếu
-                    wsCt.Cells[rowCt, 7].Value = GetStringAny(row, "cashAccount"); // TK Tiền mặt
-                    wsCt.Cells[rowCt, 8].Value = GetStringAny(row, "offsetAccount"); // TK đối ứng
-                    wsCt.Cells[rowCt, 9].Value = GetDecimalAny(row, "amountVnd", "amount"); // Tiền VND
-                    wsCt.Cells[rowCt, 10].Value = GetDecimalAny(row, "amountCur"); // Tiền NT
-                    wsCt.Cells[rowCt, 11].Value = GetDecimalAny(row, "exchangeRate"); // Tỷ giá
-                    wsCt.Cells[rowCt, 12].Value = GetStringAny(row, "costCode"); // Mã vụ việc
-                    wsCt.Cells[rowCt, 13].Value = GetStringAny(row, "unitCode"); // Mã đơn vị cơ sở
-                    wsCt.Cells[rowCt, 14].Value = GetStringAny(row, "currencyCode"); // Mã ngoại tệ
-                    rowCt++;
+                    var groupValue = ResolveFromSources(column, row);
+                    if (TryConvertDecimal(groupValue, out var number) && number != 0m)
+                    {
+                        return number;
+                    }
                 }
 
-                var finalMs = new MemoryStream(package.GetAsByteArray());
-                finalMs.Position = 0;
+                return 0m;
+            }
 
-                response.Success = true;
-                response.Data = finalMs;
-                response.Message = $"{taxConfig.FilePrefix}_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.Message = $"Lỗi export Excel PM Thuế (receiptv2): {ex.Message}";
-                return response;
-            }
+            return ConvertByType(
+                ResolveFromSources(column, context.Row),
+                column.Type,
+                column.Format
+            );
         }
 
-        private ServiceResponse<MemoryStream> ExportPaymentSlipTaxExcelFromStoreRows(
-            TaxExcelExportConfig taxConfig,
-            List<Dictionary<string, object>> spRows
+        private static object? ResolveFromSources(
+            TaxExcelColumnConfig column,
+            Dictionary<string, object> row
         )
         {
-            var response = new ServiceResponse<MemoryStream>();
-            try
+            foreach (var source in column.Sources)
             {
-                ExcelPackage.License.SetNonCommercialPersonal("SaiGonSinco");
-                var templatePath = Path.Combine("Controllers", "FastReport", "TaxTemplates", taxConfig.TemplateFile);
-                using var package = File.Exists(templatePath)
-                    ? new ExcelPackage(new FileInfo(templatePath))
-                    : new ExcelPackage();
+                var value = GetValue(row, source);
+                if (value == null || value == DBNull.Value) continue;
 
-                var wsCt = package.Workbook.Worksheets["CT"]
-                           ?? package.Workbook.Worksheets.FirstOrDefault()
-                           ?? package.Workbook.Worksheets.Add("CT");
-
-                int rowCt = 2;
-                foreach (var row in spRows.OrderBy(d => GetStringAny(d, "idGui")).ThenBy(d => GetDecimalAny(d, "line_nbr")))
+                if (column.Type.Equals("string", StringComparison.OrdinalIgnoreCase)
+                    && string.IsNullOrWhiteSpace(value.ToString()))
                 {
-                    // Chỉ đổ cột đỏ theo yêu cầu mẫu PM Thuế; cột đen để trống.
-                    wsCt.Cells[rowCt, 1].Value = GetDateStringAny(row, "voucherDate"); // Ngày CT (đỏ)
-                    wsCt.Cells[rowCt, 2].Value = string.Empty; // Số phiếu chi (đen)
-                    wsCt.Cells[rowCt, 3].Value = GetStringAny(row, "supplierCode"); // Mã khách (đỏ)
-                    wsCt.Cells[rowCt, 4].Value = string.Empty; // Người nhận (đen)
-                    wsCt.Cells[rowCt, 5].Value = GetStringAny(row, "reason"); // Diễn giải phiếu (đỏ)
-                    wsCt.Cells[rowCt, 6].Value = GetStringAny(row, "detailNote", "note"); // Diễn giải chi tiết phiếu (đỏ)
-                    wsCt.Cells[rowCt, 7].Value = string.Empty; // TK Tiền mặt (đen)
-                    wsCt.Cells[rowCt, 8].Value = string.Empty; // TK đối ứng (đen)
-                    wsCt.Cells[rowCt, 9].Value = GetDecimalAny(row, "amountVnd", "amount"); // Tiền VND (đỏ)
-                    wsCt.Cells[rowCt, 10].Value = string.Empty; // Mã vụ việc (đen)
-                    wsCt.Cells[rowCt, 11].Value = string.Empty; // Mã đơn vị cơ sở (đen)
-                    wsCt.Cells[rowCt, 12].Value = string.Empty; // Kèm theo HĐ (đen)
-                    wsCt.Cells[rowCt, 13].Value = string.Empty; // TK Thuế GTGT (đen)
-                    wsCt.Cells[rowCt, 14].Value = GetStringAny(row, "invoiceSerial"); // Số seri (đỏ)
-                    wsCt.Cells[rowCt, 15].Value = GetStringAny(row, "invoiceNumber"); // Số HĐ (đỏ)
-                    wsCt.Cells[rowCt, 16].Value = GetDateStringAny(row, "invoiceDate"); // Ngày HĐ (đỏ)
-                    wsCt.Cells[rowCt, 17].Value = GetStringAny(row, "maKhVat", "supplierCode"); // Mã KH VAT (đỏ)
-                    wsCt.Cells[rowCt, 18].Value = GetStringAny(row, "supplierName"); // Tên (đỏ)
-                    wsCt.Cells[rowCt, 19].Value = GetStringAny(row, "supplierAddress"); // Địa chỉ (đỏ)
-                    wsCt.Cells[rowCt, 20].Value = GetStringAny(row, "taxCode"); // MST (đỏ)
-                    wsCt.Cells[rowCt, 21].Value = GetDecimalAny(row, "tienVndVat", "amountVnd"); // Tiền VND (đỏ)
-                    wsCt.Cells[rowCt, 22].Value = GetDecimalAny(row, "taxRate", "tax_rate"); // Thuế suất (đỏ)
-                    wsCt.Cells[rowCt, 23].Value = GetDecimalAny(row, "taxAmount", "tax"); // Thuế (đỏ)
-                    rowCt++;
+                    continue;
                 }
 
-                var finalMs = new MemoryStream(package.GetAsByteArray());
-                finalMs.Position = 0;
+                if (column.Type.Equals("decimal", StringComparison.OrdinalIgnoreCase)
+                    || column.Type.Equals("integer", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (TryConvertDecimal(value, out _)) return value;
+                    continue;
+                }
 
-                response.Success = true;
-                response.Data = finalMs;
-                response.Message = $"{taxConfig.FilePrefix}_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
-                return response;
+                return value;
             }
-            catch (Exception ex)
+
+            return null;
+        }
+
+        private static object ConvertByType(object? value, string type, string format)
+        {
+            if (value == null || value == DBNull.Value)
             {
-                response.Success = false;
-                response.Message = $"Lỗi export Excel PM Thuế (paymentslip): {ex.Message}";
-                return response;
+                return type.Equals("decimal", StringComparison.OrdinalIgnoreCase)
+                    || type.Equals("integer", StringComparison.OrdinalIgnoreCase)
+                        ? 0m
+                        : string.Empty;
+            }
+
+            switch (type.ToLowerInvariant())
+            {
+                case "decimal":
+                    return TryConvertDecimal(value, out var number) ? number : 0m;
+                case "integer":
+                    return TryConvertDecimal(value, out var integer)
+                        ? decimal.Truncate(integer)
+                        : 0m;
+                case "date":
+                    if (value is DateTime dateTime) return dateTime;
+                    return DateTime.TryParse(value.ToString(), out var parsedDate)
+                        ? parsedDate
+                        : value.ToString() ?? string.Empty;
+                default:
+                    return value.ToString() ?? string.Empty;
             }
         }
 
-        private List<TaxExportItem> ExtractTaxExportItems(
+        private static bool TryConvertDecimal(object? value, out decimal number)
+        {
+            if (value is decimal decimalValue)
+            {
+                number = decimalValue;
+                return true;
+            }
+
+            return decimal.TryParse(
+                value?.ToString(),
+                NumberStyles.Any,
+                CultureInfo.InvariantCulture,
+                out number
+            ) || decimal.TryParse(value?.ToString(), out number);
+        }
+
+        private static object ConvertJsonValue(JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.String => element.GetString() ?? string.Empty,
+                JsonValueKind.Number when element.TryGetInt64(out var integer) => integer,
+                JsonValueKind.Number when element.TryGetDecimal(out var number) => number,
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Null => string.Empty,
+                _ => element.ToString()
+            };
+        }
+
+        private static int ParseColumnNumber(string column)
+        {
+            if (string.IsNullOrWhiteSpace(column))
+            {
+                throw new InvalidOperationException("Tên cột Excel không được để trống.");
+            }
+
+            var result = 0;
+            foreach (var character in column.Trim().ToUpperInvariant())
+            {
+                if (character < 'A' || character > 'Z')
+                {
+                    throw new InvalidOperationException($"Cột Excel '{column}' không hợp lệ.");
+                }
+
+                result = checked(result * 26 + character - 'A' + 1);
+            }
+
+            return result;
+        }
+
+        private static List<TaxExportItem> ExtractTaxExportItems(
             string controllerName,
             Dictionary<string, object> tables
         )
         {
-            return controllerName switch
-            {
-                "deliverynote" => ExtractVoucherExportItems(tables, "deliverynote"),
-                "poin" => ExtractVoucherExportItems(tables, "poin"),
-                "receiptv2" => ExtractVoucherExportItems(tables, "receiptv2"),
-                "paymentslip" => ExtractVoucherExportItems(tables, "paymentslip"),
-                _ => new List<TaxExportItem>()
-            };
-        }
-
-        private static List<TaxExportItem> ExtractVoucherExportItems(
-            Dictionary<string, object> tables,
-            string tablePrefix
-        )
-        {
             var items = new List<TaxExportItem>();
-
-            foreach (var kv in tables)
+            foreach (var table in tables)
             {
-                var key = (kv.Key ?? string.Empty).ToLower();
-                if (!key.StartsWith(tablePrefix)) continue;
-
-                var value = kv.Value;
-                if (value == null) continue;
-
-                if (value is JsonElement element)
+                if (!table.Key.StartsWith(controllerName, StringComparison.OrdinalIgnoreCase)
+                    || table.Value == null)
                 {
-                    if (element.ValueKind == JsonValueKind.String)
-                    {
-                        var text = element.GetString();
-                        if (!string.IsNullOrWhiteSpace(text))
-                        {
-                            items.Add(new TaxExportItem
-                            {
-                                IdGui = text,
-                                PeriodSuffix = ExtractPeriodSuffixFromTableKey(key)
-                            });
-                        }
-                    }
-                    else if (element.ValueKind == JsonValueKind.Array)
-                    {
-                        foreach (var item in element.EnumerateArray())
-                        {
-                            if (item.ValueKind != JsonValueKind.Object) continue;
-                            if (!item.TryGetProperty("idGui", out var idProp)) continue;
-
-                            var text = idProp.GetString();
-                            if (string.IsNullOrWhiteSpace(text)) continue;
-
-                            var suffix = GetVoucherPeriodSuffix(item);
-                            if (string.IsNullOrWhiteSpace(suffix))
-                            {
-                                suffix = ExtractPeriodSuffixFromTableKey(key);
-                            }
-
-                            items.Add(new TaxExportItem
-                            {
-                                IdGui = text,
-                                PeriodSuffix = suffix,
-                                VoucherDateRaw = item.TryGetProperty("voucherDate", out var vcDate) ? vcDate.ToString() : null
-                            });
-                        }
-                    }
                     continue;
                 }
 
-                var raw = value.ToString();
+                if (table.Value is JsonElement element)
+                {
+                    ExtractItemsFromJsonElement(element, items);
+                    continue;
+                }
+
+                var raw = table.Value.ToString();
                 if (!string.IsNullOrWhiteSpace(raw) && !raw.TrimStart().StartsWith("["))
                 {
-                    items.Add(new TaxExportItem
-                    {
-                        IdGui = raw,
-                        PeriodSuffix = ExtractPeriodSuffixFromTableKey(key)
-                    });
+                    items.Add(new TaxExportItem { IdGui = raw });
                 }
             }
 
             return items
-                .Where(v => !string.IsNullOrWhiteSpace(v.IdGui))
-                .GroupBy(v => v.IdGui, StringComparer.OrdinalIgnoreCase)
-                .Select(g =>
-                {
-                    var firstWithPeriod = g.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.PeriodSuffix));
-                    return firstWithPeriod ?? g.First();
-                })
+                .Where(item => !string.IsNullOrWhiteSpace(item.IdGui))
+                .GroupBy(item => item.IdGui, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First())
                 .ToList();
         }
 
-        private static string ExtractPeriodSuffixFromTableKey(string key)
+        private static void ExtractItemsFromJsonElement(
+            JsonElement element,
+            List<TaxExportItem> items
+        )
         {
-            if (string.IsNullOrWhiteSpace(key)) return string.Empty;
+            if (element.ValueKind == JsonValueKind.String)
+            {
+                var id = element.GetString();
+                if (!string.IsNullOrWhiteSpace(id))
+                {
+                    items.Add(new TaxExportItem { IdGui = id });
+                }
+                return;
+            }
 
-            var parts = key.Split('$', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length < 2) return string.Empty;
+            if (element.ValueKind != JsonValueKind.Array) return;
+            foreach (var row in element.EnumerateArray())
+            {
+                if (row.ValueKind != JsonValueKind.Object) continue;
+                var id = GetJsonProperty(row, "idGui")?.ToString();
+                if (string.IsNullOrWhiteSpace(id)) continue;
 
-            var period = parts[1];
-            return period.Length == 6 && period.All(char.IsDigit)
-                ? "$" + period
-                : string.Empty;
+                items.Add(new TaxExportItem
+                {
+                    IdGui = id,
+                    VoucherDateRaw = GetJsonProperty(row, "voucherDate")?.ToString()
+                });
+            }
         }
 
-        private static string GetVoucherPeriodSuffix(JsonElement item)
+        private static JsonElement? GetJsonProperty(JsonElement element, string propertyName)
         {
-            if (item.ValueKind != JsonValueKind.Object) return string.Empty;
-
-            if (item.TryGetProperty("voucherDate", out var voucherDate)
-                && voucherDate.ValueKind == JsonValueKind.String)
+            foreach (var property in element.EnumerateObject())
             {
-                var raw = voucherDate.GetString();
-                if (!string.IsNullOrWhiteSpace(raw) && DateTime.TryParse(raw, out var dt))
+                if (property.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
                 {
-                    return "$" + dt.ToString("yyyyMM");
+                    return property.Value;
                 }
             }
 
-            return string.Empty;
+            return null;
+        }
+
+        private static string GetString(Dictionary<string, object> row, string key)
+        {
+            var value = GetValue(row, key);
+            return value == null || value == DBNull.Value
+                ? string.Empty
+                : value.ToString() ?? string.Empty;
+        }
+
+        private static object? GetValue(Dictionary<string, object> row, string key)
+        {
+            foreach (var item in row)
+            {
+                if (item.Key.Equals(key, StringComparison.OrdinalIgnoreCase))
+                {
+                    return item.Value;
+                }
+            }
+
+            return null;
+        }
+
+        private static string NormalizeKey(string? value)
+        {
+            var normalized = (value ?? string.Empty).Trim();
+            if (normalized.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                normalized = normalized[..^5];
+            }
+
+            return normalized.ToLowerInvariant();
         }
 
         private static string EscapeSqlLiteral(string input)
@@ -532,98 +663,13 @@ namespace Sinco.Server.Repositories
             return (input ?? string.Empty).Replace("'", "''");
         }
 
-        private static string[] GetTaxHeaders()
+        private static ServiceResponse<MemoryStream> Failure(string message)
         {
-            return
-            [
-                "MaHD","NgayHoaDon","MaKhachHang","TenNguoiMua","TenDonVi","MaSoThue","DiaChiKhachHang","SoDienThoai",
-                "SoBangKe","NgayBangKe","SOTKKHACH","TENNHKHACH","HinhThucThanhToan","ThueSuat","ThueSuatKhac","MaHang",
-                "TenHangHoa","DVT","SoLuong","DonGia","ThanhTien","TienTe","SoTT","TinhChat","Email","Ghichu"
-            ];
-        }
-
-        private static void EnsureTaxHeader(ExcelWorksheet ws)
-        {
-            if (ws.Cells[1, 1].Value != null) return;
-
-            var headers = GetTaxHeaders();
-            for (int i = 0; i < headers.Length; i++)
+            return new ServiceResponse<MemoryStream>
             {
-                ws.Cells[1, i + 1].Value = headers[i];
-            }
-        }
-
-        private static string GetStringAny(Dictionary<string, object> row, params string[] keys)
-        {
-            foreach (var key in keys)
-            {
-                var value = GetValue(row, key);
-                if (value != null && value != DBNull.Value)
-                {
-                    var text = value.ToString();
-                    if (!string.IsNullOrWhiteSpace(text))
-                    {
-                        return text;
-                    }
-                }
-            }
-
-            return string.Empty;
-        }
-
-        private static decimal GetDecimalAny(Dictionary<string, object> row, params string[] keys)
-        {
-            foreach (var key in keys)
-            {
-                var value = GetValue(row, key);
-                if (value == null || value == DBNull.Value) continue;
-                if (decimal.TryParse(value.ToString(), out var result))
-                {
-                    return result;
-                }
-            }
-
-            return 0m;
-        }
-
-        private static string GetDateStringAny(Dictionary<string, object> row, params string[] keys)
-        {
-            foreach (var key in keys)
-            {
-                var value = GetValue(row, key);
-                if (value == null || value == DBNull.Value) continue;
-
-                if (value is DateTime dt)
-                {
-                    return dt.ToString("dd/MM/yyyy");
-                }
-
-                if (DateTime.TryParse(value.ToString(), out var parsed))
-                {
-                    return parsed.ToString("dd/MM/yyyy");
-                }
-
-                var raw = value.ToString();
-                if (!string.IsNullOrWhiteSpace(raw))
-                {
-                    return raw;
-                }
-            }
-
-            return string.Empty;
-        }
-
-        private static object? GetValue(Dictionary<string, object> row, string key)
-        {
-            foreach (var kv in row)
-            {
-                if (kv.Key.Equals(key, StringComparison.OrdinalIgnoreCase))
-                {
-                    return kv.Value;
-                }
-            }
-
-            return null;
+                Success = false,
+                Message = message
+            };
         }
     }
 }
