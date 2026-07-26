@@ -137,13 +137,15 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
 
   onInlineQueryChange(value: string): void {
     this.inlineQuery = value ?? '';
-    if (!this.disable && !this.multiple) {
+    if (!this.disable && !this.multiple && this.isInlineSuggestionEnabled()) {
       this.showInlineDropdown = true;
+    } else {
+      this.showInlineDropdown = false;
     }
   }
 
   onInlineInputFocus(): void {
-    if (!this.disable && !this.multiple) {
+    if (!this.disable && !this.multiple && this.isInlineSuggestionEnabled()) {
       this.showInlineDropdown = true;
     }
   }
@@ -153,10 +155,14 @@ export class DynamicLookupComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.showInlineDropdown = true;
+    this.showInlineDropdown = this.isInlineSuggestionEnabled();
 
-    const input = event.target as HTMLInputElement | null;
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement | null;
     input?.select();
+  }
+
+  isInlineSuggestionEnabled(): boolean {
+    return this.getLookupController().toLowerCase() !== 'item';
   }
 
   onInlineInputBlur(): void {

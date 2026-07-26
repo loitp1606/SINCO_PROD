@@ -44,7 +44,7 @@
     </div>
 
     <div
-      *ngIf="showInlineDropdown && !disable"
+      *ngIf="showInlineDropdown && !disable && isInlineSuggestionEnabled()"
       class="absolute z-40 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-56 overflow-y-auto overflow-x-hidden"
     >
       <button
