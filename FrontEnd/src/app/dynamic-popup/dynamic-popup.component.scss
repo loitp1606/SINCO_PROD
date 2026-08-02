@@ -255,6 +255,16 @@
   padding: 1px 5px !important;
 }
 
+.popup-modernized .detail-table input.detail-row-selector {
+  width: 14px !important;
+  min-width: 14px !important;
+  height: 14px !important;
+  min-height: 14px !important;
+  padding: 0 !important;
+  margin: 0;
+  flex: 0 0 14px;
+}
+
 /* Keep lookup controls balanced with compact inputs in popup */
 .popup-modernized ::ng-deep app-lookup textarea {
   min-height: 28px !important;

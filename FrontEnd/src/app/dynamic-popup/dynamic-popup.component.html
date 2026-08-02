@@ -341,7 +341,7 @@
               <tr>
                 <th style="width: 110px; min-width: 110px;">
                   <div class="flex items-center justify-center gap-2">
-                    <input type="checkbox" aria-label="Chọn tất cả dòng đang hiển thị"
+                    <input type="checkbox" class="detail-row-selector" aria-label="Chọn tất cả dòng đang hiển thị"
                       [checked]="areAllVisibleDetailRowsSelected()"
                       [indeterminate]="areSomeVisibleDetailRowsSelected()"
                       [disabled]="currentFilteredDetailRows.length === 0"
@@ -441,7 +441,7 @@
                 <!-- Row actions -->
                 <td>
                   <div class="row-actions flex justify-center gap-1">
-                    <input type="checkbox" aria-label="Chọn dòng"
+                    <input type="checkbox" class="detail-row-selector" aria-label="Chọn dòng"
                       [checked]="isDetailRowSelected(row)"
                       (change)="toggleDetailRowSelection(row, $event)" />
 
