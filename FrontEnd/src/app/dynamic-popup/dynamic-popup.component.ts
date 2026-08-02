@@ -89,6 +89,7 @@ export class DynamicPopupComponent implements OnInit {
     detailSortData: {
         [tabIndex: number]: { [detailIndex: number]: { key: string; direction: 'asc' | 'desc' | '' } }
     } = {};
+    selectedDetailRows = new Set<any>();
     filterMode: 'all' | 'any' = 'all';
 
     masterAggregates: { [key: string]: any } = {};
@@ -886,6 +887,7 @@ export class DynamicPopupComponent implements OnInit {
     }
 
     onSelectChange(): void {
+        this.selectedDetailRows.clear()
         this.selectedDetailIndex = 0
         this.clearHiddenDetailRowsForTab(this.selectedTab)
         this.ensureSelectedDetailSectionVisible()
@@ -893,6 +895,7 @@ export class DynamicPopupComponent implements OnInit {
     }
 
     onDetailSectionChange(detailIndex: number): void {
+        this.selectedDetailRows.clear()
         this.selectedDetailIndex = detailIndex
         this.applyFilters()
     }
@@ -1799,6 +1802,7 @@ export class DynamicPopupComponent implements OnInit {
         )
 
         if (actualIndex > -1) {
+            this.selectedDetailRows.delete(rowToRemove)
             this.detailRowsData[this.selectedTab][this.selectedDetailIndex].splice(
                 actualIndex,
                 1
@@ -1806,6 +1810,68 @@ export class DynamicPopupComponent implements OnInit {
             this.applyFilters()
         }
         this.updateMasterCalculations()
+    }
+
+    isDetailRowSelected(row: any): boolean {
+        return this.selectedDetailRows.has(row)
+    }
+
+    toggleDetailRowSelection(row: any, event: Event): void {
+        const checked = (event.target as HTMLInputElement | null)?.checked ?? false
+        if (checked) {
+            this.selectedDetailRows.add(row)
+        } else {
+            this.selectedDetailRows.delete(row)
+        }
+    }
+
+    areAllVisibleDetailRowsSelected(): boolean {
+        return this.currentFilteredDetailRows.length > 0 &&
+            this.currentFilteredDetailRows.every((row) => this.selectedDetailRows.has(row))
+    }
+
+    areSomeVisibleDetailRowsSelected(): boolean {
+        const selectedVisibleCount = this.currentFilteredDetailRows.filter(
+            (row) => this.selectedDetailRows.has(row)
+        ).length
+
+        return selectedVisibleCount > 0 && selectedVisibleCount < this.currentFilteredDetailRows.length
+    }
+
+    toggleAllVisibleDetailRows(event: Event): void {
+        const checked = (event.target as HTMLInputElement | null)?.checked ?? false
+        this.currentFilteredDetailRows.forEach((row) => {
+            if (checked) {
+                this.selectedDetailRows.add(row)
+            } else {
+                this.selectedDetailRows.delete(row)
+            }
+        })
+    }
+
+    removeSelectedDetailRows(): void {
+        const rowsToRemove = this.currentDetailRows.filter(
+            (row) => this.selectedDetailRows.has(row)
+        )
+        if (rowsToRemove.length === 0) return
+
+        const confirmed = confirm(`Bạn có chắc chắn muốn xóa ${rowsToRemove.length} dòng đã chọn không?`)
+        if (!confirmed) return
+
+        const rowsToRemoveSet = new Set(rowsToRemove)
+        const remainingRows = this.currentDetailRows.filter(
+            (row) => !rowsToRemoveSet.has(row)
+        )
+        remainingRows.forEach((row, index) => {
+            row.line_nbr = index + 1
+        })
+
+        this.detailRowsData[this.selectedTab][this.selectedDetailIndex] = remainingRows
+        this.selectedDetailRows.clear()
+        this.detailErrors = {}
+        this.applyFilters()
+        this.updateMasterCalculations()
+        this.calculateAggregateValues()
     }
     /////////
 

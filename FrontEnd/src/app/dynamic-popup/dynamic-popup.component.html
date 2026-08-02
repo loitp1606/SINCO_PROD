@@ -325,6 +325,11 @@
             <button type="button" class="btn-modern btn-success btn-small w-full sm:w-auto" (click)="addDetailRow()">
               {{ "FILTER.ADD_ROW" | translate }}
             </button>
+
+            <button type="button" class="btn-modern btn-danger btn-small w-full sm:w-auto"
+              [disabled]="selectedDetailRows.size === 0" (click)="removeSelectedDetailRows()">
+              Xóa dòng đã chọn ({{ selectedDetailRows.size }})
+            </button>
           </div>
         </div>
 
@@ -334,8 +339,15 @@
             <thead>
               <!-- Column Headers -->
               <tr>
-                <th style="width: 80px;">
-                  {{ "FILTER.ACTION" | translate }}
+                <th style="width: 110px; min-width: 110px;">
+                  <div class="flex items-center justify-center gap-2">
+                    <input type="checkbox" aria-label="Chọn tất cả dòng đang hiển thị"
+                      [checked]="areAllVisibleDetailRowsSelected()"
+                      [indeterminate]="areSomeVisibleDetailRowsSelected()"
+                      [disabled]="currentFilteredDetailRows.length === 0"
+                      (change)="toggleAllVisibleDetailRows($event)" />
+                    <span>{{ "FILTER.ACTION" | translate }}</span>
+                  </div>
                   <div class="resize-handle" (mousedown)="startResize($event, 'actions')"
                     (dblclick)="autoResizeColumn($event, 'actions')"
                     title="Kéo để thay đổi độ rộng, double-click để auto-resize">
@@ -429,6 +441,10 @@
                 <!-- Row actions -->
                 <td>
                   <div class="row-actions flex justify-center gap-1">
+                    <input type="checkbox" aria-label="Chọn dòng"
+                      [checked]="isDetailRowSelected(row)"
+                      (change)="toggleDetailRowSelection(row, $event)" />
+
                     <!-- Move Up -->
                     <button type="button" class="btn-modern btn-info btn-xs" [disabled]="!canMoveUp(i)"
                       (click)="moveRowUp(i)" title="Chuyển lên" style="min-width: 22px; height: 22px; padding: 1px;">
