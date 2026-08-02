@@ -10,15 +10,15 @@
 			"sortable": true
 		},
 		{
-			"key": "voucherDate",
-			"label": "Ngày tạo",
-			"type": "date",
-			"width": "100px"
-		},
-		{
 			"key": "voucherNumber",
 			"label": "Số phiếu",
 			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày tạo",
+			"type": "date",
 			"width": "100px"
 		},
 		{
@@ -26,6 +26,12 @@
 			"label": "Mã NCC",
 			"type": "lookup",
 			"width": "150px"
+		},
+		{
+			"key": "total_payment",
+			"label": "GRID.total_amount",
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "status",
@@ -52,12 +58,6 @@
 			"label": "Ghi chú",
 			"type": "text",
 			"width": "150px"
-		},
-		{
-			"key": "total_payment",
-			"label": "GRID.total_amount",
-			"type": "number",
-			"width": "100px"
 		}
 	],
 	"query": {

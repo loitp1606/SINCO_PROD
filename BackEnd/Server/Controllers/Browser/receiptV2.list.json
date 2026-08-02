@@ -10,15 +10,15 @@
 			"sortable": true
 		},
 		{
-			"key": "voucherDate",
-			"label": "Ngày",
-			"type": "date",
-			"width": "100px"
-		},
-		{
 			"key": "voucherNumber",
 			"label": "Số phiếu",
 			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày",
+			"type": "date",
 			"width": "100px"
 		},
 		{
@@ -26,6 +26,13 @@
 			"label": "Khách hàng",
 			"type": "lookup",
 			"width": "350px"
+		},
+		{
+			"key": "total_amount",
+			"label": "Số tiền thu",
+			"type": "number",
+			"currency": "VN",
+			"width": "100px"
 		},
 		{
 			"key": "isReceived",
@@ -77,13 +84,6 @@
 			"label": "Số tài khoản",
 			"type": "lookup",
 			"width": "150px"
-		},
-		{
-			"key": "total_amount",
-			"label": "Số tiền thu",
-			"type": "number",
-			"currency": "VN",
-			"width": "100px"
 		}
 	],
 	"query": {

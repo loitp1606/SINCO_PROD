@@ -10,15 +10,15 @@
 			"sortable": true
 		},
 		{
-			"key": "voucherDate",
-			"label": "Ngày tạo",
-			"type": "date",
-			"width": "100px"
-		},
-		{
 			"key": "voucherNumber",
 			"label": "Số hợp đồng",
 			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày tạo",
+			"type": "date",
 			"width": "100px"
 		},
 		{
@@ -26,6 +26,12 @@
 			"label": "Mã khách hàng",
 			"type": "lookup",
 			"width": "350px"
+		},
+		{
+			"key": "total_payment",
+			"label": "GRID.total_amount",
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "number_ddh",
@@ -38,12 +44,6 @@
 			"label": "Số báo giá",
 			"type": "text",
 			"width": "150px"
-		},
-		{
-			"key": "total_payment",
-			"label": "GRID.total_amount",
-			"type": "number",
-			"width": "100px"
 		},
 		{
 			"key": "isReceived",

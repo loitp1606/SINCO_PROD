@@ -10,15 +10,27 @@
 			"sortable": true
 		},
 		{
+			"key": "voucherNumber",
+			"label": "Số phiếu",
+			"type": "text",
+			"width": "100px"
+		},
+		{
 			"key": "voucherDate",
 			"label": "Ngày xuất hàng",
 			"type": "date",
 			"width": "100px"
 		},
 		{
-			"key": "voucherNumber",
-			"label": "Số phiếu",
-			"type": "text",
+			"key": "customer_id",
+			"label": "Khách hàng",
+			"type": "lookup",
+			"width": "350px"
+		},
+		{
+			"key": "totalPayment",
+			"label": "GRID.total_amount",
+			"type": "number",
 			"width": "100px"
 		},
 		{
@@ -26,12 +38,6 @@
 			"label": "Số báo giá",
 			"type": "text",
 			"width": "150px"
-		},
-		{
-			"key": "customer_id",
-			"label": "Khách hàng",
-			"type": "lookup",
-			"width": "350px"
 		},
 		{
 			"key": "customerVAT",
@@ -82,12 +88,6 @@
 		{
 			"key": "overdueDays",
 			"label": "Ngày quá hạn",
-			"type": "number",
-			"width": "100px"
-		},
-		{
-			"key": "totalPayment",
-			"label": "GRID.total_amount",
 			"type": "number",
 			"width": "100px"
 		},

@@ -10,15 +10,27 @@
 			"sortable": true
 		},
 		{
+			"key": "voucherNumber",
+			"label": "POPUP.QUOTATION_PAPER.VOUCHER_NUMBER",
+			"type": "text",
+			"width": "100px"
+		},
+		{
 			"key": "voucherDate",
 			"label": "POPUP.QUOTATION_PAPER.VOUCHER_DATE",
 			"type": "date",
 			"width": "100px"
 		},
 		{
-			"key": "voucherNumber",
-			"label": "POPUP.QUOTATION_PAPER.VOUCHER_NUMBER",
-			"type": "text",
+			"key": "customerCode",
+			"label": "POPUP.QUOTATION_PAPER.CUSTOMER_CODE",
+			"type": "lookup",
+			"width": "350px"
+		},
+		{
+			"key": "total_payment",
+			"label": "GRID.total_amount",
+			"type": "number",
 			"width": "100px"
 		},
 		{
@@ -42,22 +54,10 @@
 			]
 		},
 		{
-			"key": "customerCode",
-			"label": "POPUP.QUOTATION_PAPER.CUSTOMER_CODE",
-			"type": "lookup",
-			"width": "350px"
-		},
-		{
 			"key": "contactPerson",
 			"label": "POPUP.QUOTATION_PAPER.CONTACT_PERSON",
 			"type": "text",
 			"width": "150px"
-		},
-		{
-			"key": "total_payment",
-			"label": "GRID.total_amount",
-			"type": "number",
-			"width": "100px"
 		}
 	],
 	"query": {

@@ -10,28 +10,28 @@
 			"sortable": true
 		},
 		{
-			"key": "voucherDate",
-			"label": "Ngày xuất hàng",
-			"type": "date",
-			"width": "100px"
-		},
-		{
 			"key": "voucherNumber",
 			"label": "Số phiếu",
 			"type": "text",
 			"width": "100px"
 		},
 		{
-			"key": "number_quotation",
-			"label": "Số báo giá",
-			"type": "text",
-			"width": "150px"
+			"key": "voucherDate",
+			"label": "Ngày xuất hàng",
+			"type": "date",
+			"width": "100px"
 		},
 		{
 			"key": "customer_id",
 			"label": "Khách hàng",
 			"type": "text",
 			"width": "350px"
+		},
+		{
+			"key": "number_quotation",
+			"label": "Số báo giá",
+			"type": "text",
+			"width": "150px"
 		},
 		{
 			"key": "jobCode",

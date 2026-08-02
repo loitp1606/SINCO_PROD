@@ -10,15 +10,15 @@
 			"sortable": true
 		},
 		{
-			"key": "voucherDate",
-			"label": "Ngày xuất",
-			"type": "date",
-			"width": "100px"
-		},
-		{
 			"key": "voucherNumber",
 			"label": "Số phiếu xuất trả",
 			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày xuất",
+			"type": "date",
 			"width": "100px"
 		},
 		{
@@ -26,6 +26,12 @@
 			"label": "Khách hàng",
 			"type": "lookup",
 			"width": "350px"
+		},
+		{
+			"key": "totalPayment",
+			"label": "GRID.total_amount",
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "status",
@@ -48,12 +54,6 @@
 			"label": "Ghi chú",
 			"type": "text",
 			"width": "150px"
-		},
-		{
-			"key": "totalPayment",
-			"label": "GRID.total_amount",
-			"type": "number",
-			"width": "100px"
 		}
 	],
 	"query": {

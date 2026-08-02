@@ -10,21 +10,15 @@
 			"sortable": true
 		},
 		{
-			"key": "voucherDate",
-			"label": "Ngày nhập hàng",
-			"type": "date",
-			"width": "100px"
-		},
-		{
 			"key": "voucherNumber",
 			"label": "Số phiếu nhập hàng",
 			"type": "text",
 			"width": "100px"
 		},
 		{
-			"key": "poin_number",
-			"label": "Số ĐHN",
-			"type": "text",
+			"key": "voucherDate",
+			"label": "Ngày nhập hàng",
+			"type": "date",
 			"width": "100px"
 		},
 		{
@@ -32,6 +26,18 @@
 			"label": "Khách hàng",
 			"type": "lookup",
 			"width": "350px"
+		},
+		{
+			"key": "totalPayment",
+			"label": "GRID.total_amount",
+			"type": "number",
+			"width": "100px"
+		},
+		{
+			"key": "poin_number",
+			"label": "Số ĐHN",
+			"type": "text",
+			"width": "100px"
 		},
 		{
 			"key": "ds_hoa_don",
@@ -48,12 +54,6 @@
 		{
 			"key": "debtAmount",
 			"label": "Còn phải trả",
-			"type": "number",
-			"width": "100px"
-		},
-		{
-			"key": "totalPayment",
-			"label": "GRID.total_amount",
 			"type": "number",
 			"width": "100px"
 		},

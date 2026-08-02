@@ -10,15 +10,15 @@
 			"sortable": true
 		},
 		{
-			"key": "voucherDate",
-			"label": "Ngày phiếu chi",
-			"type": "date",
-			"width": "100px"
-		},
-		{
 			"key": "voucherNumber",
 			"label": "Số phiếu",
 			"type": "text",
+			"width": "100px"
+		},
+		{
+			"key": "voucherDate",
+			"label": "Ngày phiếu chi",
+			"type": "date",
 			"width": "100px"
 		},
 		{
@@ -26,6 +26,13 @@
 			"label": "Mã NCC",
 			"type": "lookup",
 			"width": "150px"
+		},
+		{
+			"key": "total_amount",
+			"label": "Số tiền chi",
+			"type": "number",
+			"currency": "VN",
+			"width": "100px"
 		},
 		{
 			"key": "paymentType",
@@ -114,13 +121,6 @@
 			"label": "Số hóa đơn",
 			"type": "text",
 			"width": "150px"
-		},
-		{
-			"key": "total_amount",
-			"label": "Số tiền chi",
-			"type": "number",
-			"currency": "VN",
-			"width": "100px"
 		},
 		{
 			"key": "note",
