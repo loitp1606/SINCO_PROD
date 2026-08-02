@@ -45,6 +45,7 @@ public.key
 # =========================
 # Others
 # =========================
+QC-Evidence/
 *.swp
 .DS_Store
 Thumbs.db
