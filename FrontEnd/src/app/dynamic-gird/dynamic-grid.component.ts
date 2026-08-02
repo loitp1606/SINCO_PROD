@@ -433,7 +433,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
           this.preloadHeaderLookupFromFirstRow();
           this.filteredData = this.response.data ? [...this.response.data] : [];
           this.rebuildMasterCellDisplayCache();
-          this.activeMasterRow = this.filteredData.length ? this.filteredData[0] : null;
+          if (!this.restoreReturnRowState()) {
+            this.activeMasterRow = this.filteredData.length ? this.filteredData[0] : null;
+          }
           this.refreshGridSummary();
         },
         error: (error) => {
@@ -771,6 +773,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   }
 
   handleClickUpdate(data: Record<string, string>): void {
+    this.rememberReturnRowState(data);
     this.selectedRefresh();
     this.setValue(data);
 
@@ -789,6 +792,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   }
 
   handleClickView(data: Record<string, string>): void {
+    this.rememberReturnRowState(data);
     this.selectedRefresh();
     this.setValue(data);
 
@@ -2780,6 +2784,83 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     const primaryKey = this.girdData?.query?.formId?.primaryKey?.[0];
     if (!primaryKey) return null;
     return row[primaryKey];
+  }
+
+  isMasterRowActive(row: Record<string, any>): boolean {
+    if (!row) return false;
+
+    const primaryKeys = this.girdData?.query?.formId?.primaryKey || [];
+    if (primaryKeys.length === 0) return row === this.activeMasterRow;
+
+    if (this.expandedRowId !== null && this.expandedRowId !== undefined) {
+      const firstPrimaryKey = primaryKeys[0];
+      if (`${row[firstPrimaryKey] ?? ''}` === `${this.expandedRowId ?? ''}`) {
+        return true;
+      }
+    }
+
+    return !!this.activeMasterRow && primaryKeys.every(
+      (key) => `${row[key] ?? ''}` === `${this.activeMasterRow?.[key] ?? ''}`
+    );
+  }
+
+  private getReturnRowStorageKey(): string {
+    return `gridReturnRow_${this.girdData?.id || 'default'}`;
+  }
+
+  private rememberReturnRowState(row: Record<string, any>): void {
+    if (typeof sessionStorage === 'undefined') return;
+
+    const primaryKeys = this.girdData?.query?.formId?.primaryKey || [];
+    if (
+      primaryKeys.length === 0 ||
+      primaryKeys.some((key) => row?.[key] === null || row?.[key] === undefined)
+    ) return;
+
+    const values = primaryKeys.reduce<Record<string, any>>((result, key) => {
+      result[key] = row?.[key];
+      return result;
+    }, {});
+
+    sessionStorage.setItem(this.getReturnRowStorageKey(), JSON.stringify({
+      values,
+      savedAt: Date.now(),
+    }));
+  }
+
+  private restoreReturnRowState(): boolean {
+    if (typeof sessionStorage === 'undefined') return false;
+
+    const storageKey = this.getReturnRowStorageKey();
+    const rawState = sessionStorage.getItem(storageKey);
+    if (!rawState) return false;
+
+    sessionStorage.removeItem(storageKey);
+
+    try {
+      const state = JSON.parse(rawState) as {
+        values?: Record<string, any>;
+        savedAt?: number;
+      };
+      if (!state.values || !state.savedAt || Date.now() - state.savedAt > 30 * 60 * 1000) {
+        return false;
+      }
+
+      const primaryKeys = this.girdData?.query?.formId?.primaryKey || [];
+      if (primaryKeys.length === 0) return false;
+      const rowIndex = this.filteredData.findIndex((row) =>
+        primaryKeys.every(
+          (key) => `${row?.[key] ?? ''}` === `${state.values?.[key] ?? ''}`
+        )
+      );
+      if (rowIndex < 0) return false;
+
+      this.activeMasterRow = this.filteredData[rowIndex];
+      this.scrollMasterRowIntoView(rowIndex);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   private getRowByPrimaryKey(primaryKeyValue: any): Record<string, any> | null {

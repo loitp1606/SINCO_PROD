@@ -546,10 +546,7 @@
               class="hover:bg-sky-50 transition-colors group/row"
               [attr.data-master-index]="i"
               [class.cursor-pointer]="isVoucherGrid"
-              [class.master-row-active]="
-                isVoucherGrid &&
-                expandedRowId === data[girdData.query.formId.primaryKey[0]]
-              "
+              [class.master-row-active]="isMasterRowActive(data)"
               [style.height.px]="rowHeights[i] || 21"
               (click)="onMasterRowClick(data)"
             >
