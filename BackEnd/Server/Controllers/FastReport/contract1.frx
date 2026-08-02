@@ -194,13 +194,13 @@
         <TableColumn Name="Column9" Width="110"/>
         <TableRow Name="Row1" AutoSize="true">
           <TableCell Name="Cell10" Border.Lines="All" CanGrow="true" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 12pt"/>
-          <TableCell Name="Cell12" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" VertAlign="Center" Font="Times New Roman, 12pt"/>
+          <TableCell Name="Cell12" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" HorzAlign="Left" VertAlign="Center" Font="Times New Roman, 12pt"/>
           <TableCell Name="Cell13" Border.Lines="All" CanGrow="true" Text="[contractDetail.uomCode]" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 12pt"/>
           <TableCell Name="Cell14" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.quantity])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt"/>
           <TableCell Name="Cell15" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.price])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt"/>
           <TableCell Name="Cell41" Text="[ToDecimal([contractDetail.tax_rate])]%" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt"/>
           <TableCell Name="Cell17" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.payment])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 12pt"/>
-          <TableCell Name="Cell18" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" VertAlign="Center" Font="Times New Roman, 12pt"/>
+          <TableCell Name="Cell18" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" HorzAlign="Left" VertAlign="Center" Font="Times New Roman, 12pt"/>
         </TableRow>
       </TableObject>
     </DataBand>

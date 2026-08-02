@@ -169,13 +169,13 @@
         <TableColumn Name="Column9" Width="110"/>
         <TableRow Name="Row1" AutoSize="true">
           <TableCell Name="Cell10" Border.Lines="All" CanGrow="true" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
-          <TableCell Name="Cell12" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell12" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" HorzAlign="Left" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell13" Border.Lines="All" CanGrow="true" Text="[contractDetail.uomCode]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell14" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.quantity])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell15" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.price])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell41" Text="[ToDecimal([contractDetail.tax_rate])]%" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell17" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.payment])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
-          <TableCell Name="Cell18" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell18" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" HorzAlign="Left" VertAlign="Center" Font="Arial, 10pt"/>
         </TableRow>
       </TableObject>
     </DataBand>
@@ -299,13 +299,13 @@
         <TableColumn Name="Column50" Width="110"/>
         <TableRow Name="Row7" AutoSize="true">
           <TableCell Name="Cell58" Border.Lines="All" CanGrow="true" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
-          <TableCell Name="Cell59" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell59" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" HorzAlign="Left" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell60" Border.Lines="All" CanGrow="true" Text="[contractDetail.uomCode]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell61" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.quantity])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell62" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.price])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell63" Text="[ToDecimal([contractDetail.tax_rate])]%" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell64" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.payment])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
-          <TableCell Name="Cell65" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell65" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" HorzAlign="Left" VertAlign="Center" Font="Arial, 10pt"/>
         </TableRow>
       </TableObject>
     </DataBand>
@@ -429,13 +429,13 @@
         <TableColumn Name="Column74" Width="110"/>
         <TableRow Name="Row10" AutoSize="true">
           <TableCell Name="Cell82" Border.Lines="All" CanGrow="true" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
-          <TableCell Name="Cell83" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell83" Border.Lines="All" CanGrow="true" Text="[contractDetail.item_name]" HorzAlign="Left" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell84" Border.Lines="All" CanGrow="true" Text="[contractDetail.uomCode]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell85" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.quantity])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell86" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.price])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell87" Text="[ToDecimal([contractDetail.tax_rate])]%" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
           <TableCell Name="Cell88" Border.Lines="All" CanGrow="true" Text="[ToDecimal([contractDetail.payment])]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator="." Format.NegativePattern="2" HorzAlign="Right" VertAlign="Center" Font="Arial, 10pt"/>
-          <TableCell Name="Cell89" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell89" Border.Lines="All" CanGrow="true" Text="[contractDetail.note]" HorzAlign="Left" VertAlign="Center" Font="Arial, 10pt"/>
         </TableRow>
       </TableObject>
     </DataBand>
