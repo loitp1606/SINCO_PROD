@@ -264,7 +264,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       document.body.classList.add('dynamic-grid-viewport-lock');
     }
     await this.loadGridConfigFromBrowser();
-    this.normalizeVoucherHeaderOrder();
     this.rebuildGridLayoutCache();
     this.pageTitleService.setTitle(this.girdData?.title ?? '');
     this.initializePaneHeights();
@@ -336,39 +335,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     } catch {
       // Keep existing hardcoded initData as fallback when browser config is not provided.
     }
-  }
-
-  private normalizeVoucherHeaderOrder(): void {
-    if (!this.isVoucherType() || !Array.isArray(this.girdData?.headers)) return;
-
-    const primaryNumberKeys = new Set(['vouchernumber']);
-    const dateKeys = new Set(['voucherdate']);
-    const partyKeys = new Set([
-      'customercode',
-      'customerid',
-      'suppliercode',
-      'vendorcode',
-    ]);
-    const amountKeys = new Set([
-      'totalpayment',
-      'totalamount',
-    ]);
-
-    const getHeaderRank = (header: GirdHeader): number => {
-      if (header.hidden) return -1;
-
-      const normalizedKey = (header.key || '').replace(/[_\s-]/g, '').toLowerCase();
-      if (primaryNumberKeys.has(normalizedKey)) return 0;
-      if (dateKeys.has(normalizedKey)) return 1;
-      if (partyKeys.has(normalizedKey)) return 2;
-      if (amountKeys.has(normalizedKey)) return 3;
-      return 4;
-    };
-
-    this.girdData.headers = this.girdData.headers
-      .map((header, index) => ({ header, index }))
-      .sort((a, b) => getHeaderRank(a.header) - getHeaderRank(b.header) || a.index - b.index)
-      .map(({ header }) => header);
   }
 
   // Method to switch language
