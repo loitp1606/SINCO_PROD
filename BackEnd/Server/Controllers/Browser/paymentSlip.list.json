@@ -35,6 +35,13 @@
 			"width": "100px"
 		},
 		{
+			"key": "spentMoney",
+			"label": "Đã chi tiền",
+			"quickEditable": true,
+			"type": "checkbox",
+			"width": "150px"
+		},
+		{
 			"key": "paymentType",
 			"label": "Loại chi",
 			"quickEditable": true,
@@ -63,13 +70,6 @@
 			"key": "dien_giai",
 			"label": "Diễn giải",
 			"type": "text",
-			"width": "150px"
-		},
-		{
-			"key": "spentMoney",
-			"label": "Đã chi tiền",
-			"quickEditable": true,
-			"type": "checkbox",
 			"width": "150px"
 		},
 		{

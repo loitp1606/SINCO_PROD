@@ -34,6 +34,22 @@
 			"width": "100px"
 		},
 		{
+			"key": "status",
+			"label": "Trạng thái",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang chờ nhập",
+					"value": "0"
+				},
+				{
+					"label": "Đã nhập hàng",
+					"value": "1"
+				}
+			]
+		},
+		{
 			"key": "poin_number",
 			"label": "Số ĐHN",
 			"type": "text",
@@ -56,22 +72,6 @@
 			"label": "Còn phải trả",
 			"type": "number",
 			"width": "100px"
-		},
-		{
-			"key": "status",
-			"label": "Trạng thái",
-			"type": "select",
-			"width": "150px",
-			"options": [
-				{
-					"label": "Đang chờ nhập",
-					"value": "0"
-				},
-				{
-					"label": "Đã nhập hàng",
-					"value": "1"
-				}
-			]
 		},
 		{
 			"key": "note",

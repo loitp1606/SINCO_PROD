@@ -34,6 +34,13 @@
 			"width": "100px"
 		},
 		{
+			"key": "isReceived",
+			"label": "Đã nhận",
+			"type": "checkbox",
+			"width": "150px",
+			"quickEditable": true
+		},
+		{
 			"key": "number_ddh",
 			"label": "Số ĐĐH",
 			"type": "text",
@@ -44,13 +51,6 @@
 			"label": "Số báo giá",
 			"type": "text",
 			"width": "150px"
-		},
-		{
-			"key": "isReceived",
-			"label": "Đã nhận",
-			"type": "checkbox",
-			"width": "150px",
-			"quickEditable": true
 		}
 	],
 	"query": {

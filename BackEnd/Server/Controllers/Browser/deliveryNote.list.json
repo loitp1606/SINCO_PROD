@@ -34,6 +34,22 @@
 			"width": "100px"
 		},
 		{
+			"key": "status",
+			"label": "Trạng thái",
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang chờ giao",
+					"value": "0"
+				},
+				{
+					"label": "Đã giao hàng",
+					"value": "1"
+				}
+			]
+		},
+		{
 			"key": "number_quotation",
 			"label": "Số báo giá",
 			"type": "text",
@@ -50,22 +66,6 @@
 			"label": "Danh sách hóa đơn",
 			"type": "text",
 			"width": "100px"
-		},
-		{
-			"key": "status",
-			"label": "Trạng thái",
-			"type": "select",
-			"width": "150px",
-			"options": [
-				{
-					"label": "Đang chờ giao",
-					"value": "0"
-				},
-				{
-					"label": "Đã giao hàng",
-					"value": "1"
-				}
-			]
 		},
 		{
 			"key": "paymentStatus",
