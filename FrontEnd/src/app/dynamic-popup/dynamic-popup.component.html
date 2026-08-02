@@ -186,6 +186,7 @@
             [name]="field.key" [required]="!!field.required" [disabled]="isInputDisabled(field)"
             [placeholder]="field.placeholder ? (field.placeholder | translate) : (( 'COMMON.ENTER' | translate ) + ' ' + (field.label | translate))"
             [value]="getFormattedMasterValue(field.key, field)"
+            (focus)="onNumberFocus($event)"
             (input)="onMasterCurrencyInput(field.key, $event, field)"
             (blur)="onMasterCurrencyBlur(field.key, $event, field)"
             class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100" />
@@ -461,13 +462,15 @@
                   </div>
                   <!-- Currency inputs -->
                   <input *ngIf="field.type === 'number' && isCurrencyField(field.key) && !field.disabled" type="text"
-                    [value]="formatCurrencyNumber(row[field.key] || 0, field.key, field)" (blur)="onCurrencyBlur($event, i, field.key)"
+                    [value]="formatCurrencyNumber(row[field.key] || 0, field.key, field)"
+                    (focus)="onNumberFocus($event)" (blur)="onCurrencyBlur($event, i, field.key)"
                     class="form-input w-full text-sm text-right" placeholder="0" [disabled]="isInputDisabled(field)" />
 
 
                   <!-- Text/Number inputs -->
                   <input *ngIf="field.type === 'number' && !isCurrencyField(field.key) && !field.disabled" type="text"
-                    [value]="formatCurrencyNumber(row[field.key] || 0, field.key, field)" (blur)="onCurrencyBlur($event, i, field.key)"
+                    [value]="formatCurrencyNumber(row[field.key] || 0, field.key, field)"
+                    (focus)="onNumberFocus($event)" (blur)="onCurrencyBlur($event, i, field.key)"
                     class="form-input w-full text-sm text-right" placeholder="0" [disabled]="isInputDisabled(field)" />
 
                   <!-- Text inputs -->

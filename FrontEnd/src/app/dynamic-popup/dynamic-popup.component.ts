@@ -2144,6 +2144,15 @@ export class DynamicPopupComponent implements OnInit {
         return 0
     }
 
+    onNumberFocus(event: Event): void {
+        const inputElement = event.target as HTMLInputElement | null;
+        if (!inputElement) return;
+
+        if (this.parseNumberInput(inputElement.value) === 0) {
+            inputElement.value = '';
+        }
+    }
+
     onCurrencyBlur(event: any, rowIndex: number, fieldKey: string): void {
         const inputElement = event.target;
         const numericValue = this.parseNumberInput(inputElement.value);
@@ -2693,6 +2702,10 @@ export class DynamicPopupComponent implements OnInit {
      * Xử lý khi field được focus - gợi ý số tự động nếu field có autoIncrement = true
      */
     onFieldFocus(fieldKey: string, event: any, field: any): void {
+        if (field.type === 'number') {
+            this.onNumberFocus(event);
+        }
+
         // Chỉ xử lý cho field có autoIncrement = true và chưa có giá trị
         if (field.autoIncrement && (!this.formData[this.selectedTab][fieldKey] || this.formData[this.selectedTab][fieldKey] === '')) {
             this.getNextFieldNumberForFocus(fieldKey, field);
