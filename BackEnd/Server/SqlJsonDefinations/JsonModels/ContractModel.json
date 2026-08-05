@@ -79,6 +79,12 @@
         "sqlType": "NVARCHAR(50)"
       },
       {
+        "name": "dai_dien_cty",
+        "property": "daiDienCty",
+        "type": "string",
+        "sqlType": "NVARCHAR(50)"
+      },
+      {
         "name": "address",
         "property": "address",
         "type": "string",
@@ -178,14 +184,14 @@
         "property": "sellerRepresentative",
         "type": "string",
         "sqlType": "NVARCHAR(128)",
-        "sqlExpression": "(SELECT TOP 1 ISNULL(c.giam_doc, N'') FROM company c WHERE c.company_id = 'SINCO01')"
+        "sqlExpression": "(SELECT TOP 1 ISNULL(e.full_name, N'') FROM employee e WHERE e.employee_id = {m}.dai_dien_cty)"
       },
       {
         "name": "sellerPosition",
         "property": "sellerPosition",
         "type": "string",
         "sqlType": "NVARCHAR(128)",
-        "sqlExpression": "N'Giám đốc'"
+        "sqlExpression": "(SELECT TOP 1 ISNULL(er.role_name, N'') FROM employee e LEFT JOIN employeeRole er ON er.employee_role_id = e.employee_role_id WHERE e.employee_id = {m}.dai_dien_cty)"
       },
       {
         "name": "sellerEmail",
