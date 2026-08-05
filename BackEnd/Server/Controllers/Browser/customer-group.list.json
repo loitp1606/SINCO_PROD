@@ -24,8 +24,18 @@
 		{
 			"key": "status",
 			"label": "POPUP.CUSTOMER_GROUP.STATUS",
-			"type": "text",
-			"width": "150px"
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang hoạt động",
+					"value": "1"
+				},
+				{
+					"label": "Không hoạt động",
+					"value": "0"
+				}
+			]
 		}
 	],
 	"query": {

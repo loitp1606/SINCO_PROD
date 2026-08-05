@@ -24,15 +24,15 @@
 		{
 			"key": "status",
 			"label": "POPUP.UOM.STATUS",
-			"type": "text",
+			"type": "select",
 			"width": "150px",
 			"options": [
 				{
-					"label": "POPUP.UOM.ACTIVE",
+					"label": "Đang hoạt động",
 					"value": "1"
 				},
 				{
-					"label": "POPUP.UOM.LOCKED",
+					"label": "Bị khóa",
 					"value": "0"
 				}
 			]
