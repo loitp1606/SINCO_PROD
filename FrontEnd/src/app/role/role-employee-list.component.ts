@@ -12,9 +12,9 @@ import { GirdInitData } from '../models';
   templateUrl: '../dynamic-gird/dynamic-grid-parent.component.html',
 })
 export class RoleEmployeeGridComponent {
-  // Fully driven by BackEnd/Server/Controllers/Browser/employeeRole.list.json
+  // Fully driven by BackEnd/Server/Controllers/Browser/roleEmployee.list.json
   initData = {
-    id: 'employeeRole',
+    id: 'roleEmployee',
     headers: [],
     query: {
       formId: {

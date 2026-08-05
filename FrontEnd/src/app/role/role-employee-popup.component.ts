@@ -11,6 +11,6 @@ import { DynamicPopupComponent } from '../dynamic-popup/dynamic-popup.component'
   templateUrl: '../dynamic-popup/dynamic-popup-parent.component.html',
 })
 export class RoleEmployeePopupComponent {
-  id: string = 'employeeRole';
+  id: string = 'roleEmployee';
   name: string = 'role-employee.page.json';
 }

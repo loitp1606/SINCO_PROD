@@ -1,5 +1,5 @@
 {
-	"id": "employeeRole",
+	"id": "roleEmployee",
 	"title": "GRID.EMPLOYEE_ROLE",
 	"headers": [
 		{
@@ -19,7 +19,17 @@
 			"key": "status",
 			"label": "POPUP.EMPLOYEE_ROLE.STATUS",
 			"type": "select",
-			"width": "150px"
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang hoạt động",
+					"value": "1"
+				},
+				{
+					"label": "Không hoạt động",
+					"value": "0"
+				}
+			]
 		}
 	],
 	"query": {
@@ -39,6 +49,6 @@
 			"VCDate": ""
 		}
 	},
-	"sort": "employee_role_id",
+	"sort": "role_name",
 	"actions": []
 }
