@@ -40,12 +40,16 @@
 			"width": "150px",
 			"options": [
 				{
-					"label": "Đang chờ nhập",
+					"label": "Chưa nhận hàng",
 					"value": "0"
 				},
 				{
-					"label": "Đã nhập hàng",
+					"label": "Đã nhận một phần",
 					"value": "1"
+				},
+				{
+					"label": "Đã nhận hàng",
+					"value": "2"
 				}
 			]
 		},

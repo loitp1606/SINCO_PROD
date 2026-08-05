@@ -41,26 +41,6 @@
 						"width": "100px"
 					},
 					{
-						"key": "receiveStatus",
-						"label": "TT nhận hàng",
-						"type": "select",
-						"width": "150px",
-						"options": [
-							{
-								"label": "Chưa nhận hàng",
-								"value": "NOT_RECEIVED"
-							},
-							{
-								"label": "Chưa nhận một phần",
-								"value": "PARTIAL"
-							},
-							{
-								"label": "Đã nhận hàng",
-								"value": "RECEIVED"
-							}
-						]
-					},
-					{
 						"key": "voucherDate",
 						"label": "Ngày chứng từ",
 						"required": true,
@@ -200,6 +180,7 @@
 						"label": "TT thanh toán",
 						"type": "select",
 						"width": "150px",
+						"type": "hidden",
 						"disabled": false,
 						"options": [
 							{
@@ -213,6 +194,49 @@
 							{
 								"label": "Đã chi",
 								"value": "PAID"
+							}
+						]
+					},
+					{
+						"key": "receiveStatus",
+						"label": "TT nhận hàng",
+						"type": "select",
+						"type": "hidden",
+						"width": "150px",
+						"options": [
+							{
+								"label": "Chưa nhận hàng",
+								"value": "NOT_RECEIVED"
+							},
+							{
+								"label": "Đã nhận một phần",
+								"value": "PARTIAL"
+							},
+							{
+								"label": "Đã nhận hàng",
+								"value": "RECEIVED"
+							}
+						]
+					},
+					{
+						"key": "status",
+						"default": "0",
+						"label": "Trạng thái",
+						"type": "select",
+						"width": "150px",
+						"required": true,
+						"options": [
+							{
+								"label": "Chưa nhận hàng",
+								"value": "0"
+							},
+							{
+								"label": "Đã nhận một phần",
+								"value": "1"
+							},
+							{
+								"label": "Đã nhận hàng",
+								"value": "2"
 							}
 						]
 					},
@@ -315,24 +339,6 @@
 							]
 						},
 						"width": "100px"
-					},
-					{
-						"key": "status",
-						"default": "0",
-						"label": "Trạng thái",
-						"type": "select",
-						"width": "150px",
-						"required": true,
-						"options": [
-							{
-								"label": "Đang chờ nhập",
-								"value": "0"
-							},
-							{
-								"label": "Đã chi tiền",
-								"value": "1"
-							}
-						]
 					}
 				],
 				"initialData": {}
