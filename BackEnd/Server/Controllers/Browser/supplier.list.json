@@ -57,10 +57,20 @@
 			"width": "150px"
 		},
 		{
-			"key": "statusname",
+			"key": "status",
 			"label": "Trạng thái",
-			"type": "text",
-			"width": "150px"
+			"type": "select",
+			"width": "150px",
+			"options": [
+				{
+					"label": "Đang hoạt động",
+					"value": "1"
+				},
+				{
+					"label": "Không hoạt động",
+					"value": "0"
+				}
+			]
 		}
 	],
 	"query": {

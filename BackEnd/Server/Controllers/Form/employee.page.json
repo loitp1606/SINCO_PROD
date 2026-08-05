@@ -79,6 +79,12 @@
 						]
 					},
 					{
+						"key": "daidien_yn",
+						"label": "Đại diện CTY",
+						"type": "checkbox",
+						"width": "130px"
+					},
+					{
 						"key": "birth_date",
 						"label": "Ngày sinh",
 						"type": "date",
