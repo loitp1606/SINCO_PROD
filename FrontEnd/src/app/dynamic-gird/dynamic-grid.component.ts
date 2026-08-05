@@ -136,6 +136,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   currentLanguage: string = 'vi'; // Track current language
   expandedRowId: any = null;
   private activeMasterRow: Record<string, any> | null = null;
+  private focusFirstMasterRowAfterLoad = false;
   activeDetailRowIndex: number = 0;
   paneMinHeight = 140;
   masterPaneHeight = 360;
@@ -278,9 +279,11 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     });
 
     this.route.queryParams.subscribe((p) => {
-      this.girdData.query.page = +p['page'] || 1;
-      this.girdData.query.pageSize =
+      const nextPage = +p['page'] || 1;
+      const nextPageSize =
         +p['pageSize'] || this.girdData.query.pageSize || this.defaultPageSize;
+      this.girdData.query.page = nextPage;
+      this.girdData.query.pageSize = nextPageSize;
       this.loadData();
     });
 
@@ -373,6 +376,8 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       'Custom-Header': 'CustomValue',
     });
     const params = this.buildDynamicQueryParams();
+    const shouldFocusFirstMasterRow = this.focusFirstMasterRowAfterLoad;
+    this.focusFirstMasterRowAfterLoad = false;
 
     // Reset toàn bộ khi loadData
     this.selectedOptions = {};
@@ -399,7 +404,14 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
           this.preloadHeaderLookupFromFirstRow();
           this.filteredData = this.response.data ? [...this.response.data] : [];
           this.rebuildMasterCellDisplayCache();
-          if (!this.restoreReturnRowState()) {
+          if (shouldFocusFirstMasterRow) {
+            this.activeMasterRow = this.filteredData.length ? this.filteredData[0] : null;
+            this.expandedRowId = null;
+            this.activeDetailRowIndex = 0;
+            if (this.activeMasterRow) {
+              this.scrollMasterRowIntoView(0);
+            }
+          } else if (!this.restoreReturnRowState()) {
             this.activeMasterRow = this.filteredData.length ? this.filteredData[0] : null;
           }
           this.refreshGridSummary();
@@ -535,6 +547,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   onPageChange(newPage: number): void {
     if (newPage !== this.girdData.query.page) {
+      this.focusFirstMasterRowAfterLoad = true;
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {
@@ -553,6 +566,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
     this.girdData.query.pageSize = newPageSize;
     this.girdData.query.page = 1;
+    this.focusFirstMasterRowAfterLoad = true;
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: 1, pageSize: newPageSize },
