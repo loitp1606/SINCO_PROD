@@ -184,7 +184,7 @@
 									"dependencies": [
 										"amount"
 									],
-									"precision": 2
+									"precision": 0
 								}
 							]
 						}

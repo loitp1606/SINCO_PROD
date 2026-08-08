@@ -262,7 +262,7 @@
 									"dependencies": [
 										"amount"
 									],
-									"precision": 2
+									"precision": 0
 								}
 							]
 						}
@@ -282,7 +282,7 @@
 									"dependencies": [
 										"vat"
 									],
-									"precision": 2
+									"precision": 0
 								}
 							]
 						}
@@ -302,7 +302,7 @@
 									"dependencies": [
 										"payment"
 									],
-									"precision": 2
+									"precision": 0
 								}
 							]
 						}
