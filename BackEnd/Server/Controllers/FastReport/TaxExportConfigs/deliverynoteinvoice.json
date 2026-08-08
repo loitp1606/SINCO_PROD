@@ -1,0 +1,50 @@
+{
+  "code": "deliverynoteinvoice",
+  "controller": "deliverynote",
+  "storeProcedure": "oot$exportVatInvoice",
+  "templateFile": "Phieu_xuat_kho_2_sheet.xlsx",
+  "filePrefix": "deliverynote_invoice",
+  "groupBy": "MaHD",
+  "sheets": [
+    {
+      "name": "PH",
+      "startRow": 2,
+      "headerRow": 1,
+      "rowMode": "firstOfGroup",
+      "orderBy": ["SortVoucherDate", "SortVoucherNumber", "SortIdGui"],
+      "columns": [
+        { "column": "A", "header": "Số seri - Ký hiệu HĐ", "sources": ["SoSeriKyHieuHD"] },
+        { "column": "B", "header": "Số phiếu/số hóa đơn", "sources": ["SoPhieuHoaDon"] },
+        { "column": "C", "header": "Ngày", "sources": ["NgayHoaDon"], "type": "date", "format": "dd/MM/yyyy" },
+        { "column": "D", "header": "Mã khách", "sources": ["MaKhachHang"] },
+        { "column": "E", "header": "Tên khách hàng", "sources": ["TenDonVi"] },
+        { "column": "F", "header": "Địa chỉ", "sources": ["DiaChiKhachHang"] },
+        { "column": "G", "header": "Mã số thuế", "sources": ["MaSoThue"] },
+        { "column": "H", "header": "Diễn giải", "sources": ["DienGiai"] },
+        { "column": "I", "header": "Mã đơn vị", "sources": ["MaDonVi"] },
+        { "column": "J", "header": "Tiền hàng", "sources": ["TienHang"], "type": "decimal" },
+        { "column": "K", "header": "Thuế suất", "sources": ["ThueSuat"], "type": "decimal" },
+        { "column": "L", "header": "Tiền thuế", "sources": ["TienThue"], "type": "decimal" },
+        { "column": "M", "header": "Tổng tiền", "sources": ["TongTien"], "type": "decimal" },
+        { "column": "N", "header": "Loai HD", "sources": ["LoaiHD"], "type": "integer" },
+        { "column": "O", "header": "HT_TT", "sources": ["HTTT"] }
+      ]
+    },
+    {
+      "name": "CT",
+      "startRow": 2,
+      "headerRow": 1,
+      "rowMode": "allRows",
+      "orderBy": ["SortVoucherDate", "SortVoucherNumber", "SortIdGui", "SortLineNbr"],
+      "columns": [
+        { "column": "A", "header": "Số phiếu/số hóa đơn", "sources": ["SoPhieuHoaDon"] },
+        { "column": "B", "header": "Mã hàng", "sources": ["MaHang"] },
+        { "column": "C", "header": "Mã kho", "sources": ["MaKho"] },
+        { "column": "D", "header": "Tên hàng hóa", "sources": ["TenHangHoa"] },
+        { "column": "E", "header": "Số lượng", "sources": ["SoLuong"], "type": "decimal" },
+        { "column": "F", "header": "Đơn giá", "sources": ["DonGia"], "type": "decimal" },
+        { "column": "G", "header": "Thành tiền", "sources": ["ThanhTien"], "type": "decimal" }
+      ]
+    }
+  ]
+}

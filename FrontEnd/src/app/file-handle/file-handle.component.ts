@@ -79,6 +79,7 @@ export class FileHandleComponent implements OnInit {
   @Input() enableTaxExcelExport: boolean = false;
   @Input() taxExcelExportConfig: string = '';
   @Input() extraTaxExcelExportLabel: string = '';
+  @Input() extraTaxExcelExportConfig: string = '';
   constructor(
     private fileService: FileService,
     private snackBar: MatSnackBar,
@@ -320,6 +321,7 @@ export class FileHandleComponent implements OnInit {
   async exportToReport(
     controll: string,
     type: 'pdf' | 'excel' | 'word' | 'excel-tax',
+    taxExcelExportConfigOverride: string = '',
   ) {
     // Gọi API export hoặc xử lý export
     if (!this.controll || Object.keys(this.controll).length === 0) {
@@ -346,7 +348,7 @@ export class FileHandleComponent implements OnInit {
       unit: this.user?.['unit0'] ?? '',
       language: localStorage.getItem('language') ?? 'vi',
       isReport : this.IsReport,
-      taxExcelExportConfig: this.taxExcelExportConfig || cleanControll,
+      taxExcelExportConfig: taxExcelExportConfigOverride || this.taxExcelExportConfig || cleanControll,
       noteEdited: '',
       isEdit: false
     };
@@ -683,7 +685,7 @@ export class FileHandleComponent implements OnInit {
     }
   }
 
-  selectExportType(type: 'pdf' | 'excel' | 'word' | 'excel-tax') {
+  selectExportType(type: 'pdf' | 'excel' | 'word' | 'excel-tax', taxExcelExportConfigOverride: string = '') {
   let controller = "";
 
   if (this.isOption) {
@@ -705,14 +707,14 @@ export class FileHandleComponent implements OnInit {
 
       this.pendingExportType = type;
       this.showExportOptions = false;
-      this.exportToReport(controller, this.pendingExportType);
+      this.exportToReport(controller, this.pendingExportType, taxExcelExportConfigOverride);
       this.pendingExportType = null;
     });
   } else {
     controller = this.controll;
     this.pendingExportType = type;
     this.showExportOptions = false;
-    this.exportToReport(controller, this.pendingExportType);
+    this.exportToReport(controller, this.pendingExportType, taxExcelExportConfigOverride);
     this.pendingExportType = null;
   }
   }

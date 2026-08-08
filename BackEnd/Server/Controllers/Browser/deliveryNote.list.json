@@ -117,7 +117,8 @@
 			"isFileHandle": "export",
 			"enableTaxExcelExport": true,
 			"taxExcelExportConfig": "deliverynote",
-			"extraTaxExcelExportLabel": "Kết xuất PM hóa đơn"
+			"extraTaxExcelExportLabel": "Kết xuất PM hóa đơn",
+			"extraTaxExcelExportConfig": "deliverynoteinvoice"
 		}
 	},
 	"sort": "voucherDate desc, voucherNumber desc",

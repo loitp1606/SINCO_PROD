@@ -50,6 +50,7 @@ export interface DetailApiQuery {
   enableTaxExcelExport?: boolean,
   taxExcelExportConfig?: string,
   extraTaxExcelExportLabel?: string,
+  extraTaxExcelExportConfig?: string,
   dataProcessing?: { actions: { post: any[] } }
 }
 
