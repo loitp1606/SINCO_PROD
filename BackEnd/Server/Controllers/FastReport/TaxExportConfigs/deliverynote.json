@@ -10,6 +10,7 @@
       "startRow": 2,
       "headerRow": 1,
       "rowMode": "allRows",
+      "orderBy": ["SortVoucherDate", "SortVoucherNumber", "SortIdGui", "SortLineNbr"],
       "columns": [
         { "column": "A", "header": "MaHD", "sources": ["MaHD"] },
         { "column": "B", "header": "NgayHoaDon", "sources": ["NgayHoaDon"], "type": "date", "format": "dd/MM/yyyy" },

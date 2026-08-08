@@ -117,8 +117,10 @@ export class FileService {
             XLSX.utils.json_to_sheet(filteredData)
           );
 
-          const blob = new Blob([csvData], { type: 'text/csv' });
-          const csvFile = new File([blob], 'convert.csv', { type: 'text/csv' });
+          const csvDataWithBom = '\uFEFF' + csvData;
+          const csvType = 'text/csv;charset=utf-8';
+          const blob = new Blob([csvDataWithBom], { type: csvType });
+          const csvFile = new File([blob], 'convert.csv', { type: csvType });
           resolve(csvFile);
         } catch (err) {
           reject(err);

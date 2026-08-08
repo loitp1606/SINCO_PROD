@@ -392,16 +392,16 @@ namespace Sinco.Server.Repositories
             }
             if (right == null || right == DBNull.Value) return 1;
 
+            if (TryConvertDate(left, out var leftDate)
+                && TryConvertDate(right, out var rightDate))
+            {
+                return leftDate.CompareTo(rightDate);
+            }
+
             if (decimal.TryParse(left.ToString(), out var leftNumber)
                 && decimal.TryParse(right.ToString(), out var rightNumber))
             {
                 return leftNumber.CompareTo(rightNumber);
-            }
-
-            if (DateTime.TryParse(left.ToString(), out var leftDate)
-                && DateTime.TryParse(right.ToString(), out var rightDate))
-            {
-                return leftDate.CompareTo(rightDate);
             }
 
             return string.Compare(
@@ -536,6 +536,44 @@ namespace Sinco.Server.Repositories
             }
 
             return raw;
+        }
+
+        private static bool TryConvertDate(object? value, out DateTime date)
+        {
+            if (value is DateTime dateTime)
+            {
+                date = dateTime;
+                return true;
+            }
+
+            var raw = value?.ToString()?.Trim();
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                date = default;
+                return false;
+            }
+
+            string[] acceptedFormats =
+            [
+                "dd/MM/yyyy",
+                "d/M/yyyy",
+                "yyyy-MM-dd",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-ddTHH:mm:ss",
+                "yyyy-MM-ddTHH:mm:ss.FFFFFFFK"
+            ];
+
+            return DateTime.TryParseExact(
+                    raw,
+                    acceptedFormats,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AllowWhiteSpaces,
+                    out date)
+                || DateTime.TryParse(
+                    raw,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AllowWhiteSpaces,
+                    out date);
         }
 
         private static bool TryConvertDecimal(object? value, out decimal number)

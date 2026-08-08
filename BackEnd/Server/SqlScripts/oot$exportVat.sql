@@ -181,6 +181,10 @@ BEGIN
         ON rawData.idGui = invoiceData.idGui;
 
     SELECT
+        SortVoucherDate = r.voucherDate,
+        SortVoucherNumber = r.voucherNumber,
+        SortIdGui = r.idGui,
+        SortLineNbr = r.line_nbr,
         MaHD = 'HD' + RTRIM(r.stt),
         NgayHoaDon = CONVERT(VARCHAR(10), r.voucherDate, 103),
         MaKhachHang = r.customerVAT,
