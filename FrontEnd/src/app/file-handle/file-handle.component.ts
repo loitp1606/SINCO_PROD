@@ -78,6 +78,7 @@ export class FileHandleComponent implements OnInit {
   @Input() IsReport : boolean = false;
   @Input() enableTaxExcelExport: boolean = false;
   @Input() taxExcelExportConfig: string = '';
+  @Input() extraTaxExcelExportLabel: string = '';
   constructor(
     private fileService: FileService,
     private snackBar: MatSnackBar,

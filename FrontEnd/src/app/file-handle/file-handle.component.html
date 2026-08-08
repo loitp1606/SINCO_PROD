@@ -71,6 +71,14 @@
         >
           <mat-icon class="text-base">receipt_long</mat-icon> Excel PM Thuế
         </button>
+        <button
+          *ngIf="enableTaxExcelExport && extraTaxExcelExportLabel"
+          mat-button
+          class="w-full flex items-center gap-2 px-2 py-1 hover:bg-gray-100 text-sm rounded"
+          (click)="selectExportType('excel-tax')"
+        >
+          <mat-icon class="text-base">receipt_long</mat-icon> {{ extraTaxExcelExportLabel }}
+        </button>
         <button mat-button class="w-full flex items-center gap-2 px-2 py-1 hover:bg-gray-100 text-sm rounded"
           (click)="selectExportType('word')">
           <mat-icon class="text-base">description</mat-icon> Word
