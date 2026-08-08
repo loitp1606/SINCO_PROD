@@ -11,6 +11,7 @@ namespace Sinco.Server.Repositories
     {
         private const string ConfigDirectory = "Controllers/FastReport/TaxExportConfigs";
         private const string TemplateDirectory = "Controllers/FastReport/TaxTemplates";
+        private const string DefaultDateFormat = "dd/MM/yyyy";
 
         private sealed class TaxExcelExportConfig
         {
@@ -489,13 +490,52 @@ namespace Sinco.Server.Repositories
                         ? decimal.Truncate(integer)
                         : 0m;
                 case "date":
-                    if (value is DateTime dateTime) return dateTime;
-                    return DateTime.TryParse(value.ToString(), out var parsedDate)
-                        ? parsedDate
-                        : value.ToString() ?? string.Empty;
+                    return FormatDateValue(value, format);
                 default:
                     return value.ToString() ?? string.Empty;
             }
+        }
+
+        private static string FormatDateValue(object value, string format)
+        {
+            var outputFormat = string.IsNullOrWhiteSpace(format)
+                ? DefaultDateFormat
+                : format;
+
+            if (value is DateTime dateTime)
+            {
+                return dateTime.ToString(outputFormat, CultureInfo.InvariantCulture);
+            }
+
+            var raw = value.ToString()?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+
+            string[] acceptedFormats =
+            [
+                "dd/MM/yyyy",
+                "d/M/yyyy",
+                "yyyy-MM-dd",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-ddTHH:mm:ss",
+                "yyyy-MM-ddTHH:mm:ss.FFFFFFFK"
+            ];
+
+            if (DateTime.TryParseExact(
+                    raw,
+                    acceptedFormats,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AllowWhiteSpaces,
+                    out var parsedDate)
+                || DateTime.TryParse(
+                    raw,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AllowWhiteSpaces,
+                    out parsedDate))
+            {
+                return parsedDate.ToString(outputFormat, CultureInfo.InvariantCulture);
+            }
+
+            return raw;
         }
 
         private static bool TryConvertDecimal(object? value, out decimal number)
