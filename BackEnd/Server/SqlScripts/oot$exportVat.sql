@@ -167,24 +167,18 @@ BEGIN
     (
         SELECT
             r.idGui,
-            r.customerVAT,
-            r.tax_rate,
             ROW_NUMBER() OVER
             (
                 ORDER BY
                     MIN(r.voucherDate),
                     MIN(r.voucherNumber),
                     r.idGui,
-                    MIN(r.line_nbr),
-                    r.customerVAT,
-                    r.tax_rate
+                    MIN(r.line_nbr)
             ) AS stt
         FROM #Raw r
-        GROUP BY r.idGui, r.customerVAT, r.tax_rate
+        GROUP BY r.idGui
     ) invoiceData
-        ON rawData.idGui = invoiceData.idGui
-       AND rawData.customerVAT = invoiceData.customerVAT
-       AND rawData.tax_rate = invoiceData.tax_rate;
+        ON rawData.idGui = invoiceData.idGui;
 
     SELECT
         MaHD = 'HD' + RTRIM(r.stt),
