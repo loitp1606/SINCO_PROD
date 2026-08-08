@@ -2181,7 +2181,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       if (this.isCurrencyField(header.key, header) || header.format === 'currency') {
         return this.formatCurrency(numericValue);
       }
-      return this.formatNumber(numericValue);
+      return this.formatNumber(numericValue, header);
     }
 
     return (rawValue ?? '').toString();
@@ -2338,7 +2338,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     ) {
       return this.formatCurrency(value);
     }
-    return this.formatNumber(value);
+    return this.formatNumber(value, this.getHeaderByKey(summary?.field || ''));
   }
 
   private getHeaderByKey(key: string): GirdHeader | undefined {
@@ -2957,7 +2957,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
         if (field.key === 'total' || field.key === 'price') {
           return this.formatCurrency(parseFloat(value));
         }
-        return this.formatNumber(value);
+        return this.formatNumber(value, field);
       case 'date':
         return this.formatDate(value);
       default:
@@ -2972,8 +2972,17 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     }).format(amount);
   }
 
-  formatNumber(value: number): string {
-    return new Intl.NumberFormat('vi-VN').format(value);
+  formatNumber(value: number, fieldObject?: any): string {
+    const configuredPrecision = Number(fieldObject?.precision);
+    const fractionDigits =
+      Number.isFinite(configuredPrecision) && configuredPrecision >= 0
+        ? configuredPrecision
+        : 0;
+
+    return new Intl.NumberFormat('vi-VN', {
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    }).format(value);
   }
 
   formatDate(date: string): string {
