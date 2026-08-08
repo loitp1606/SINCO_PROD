@@ -171,7 +171,13 @@ BEGIN
             r.tax_rate,
             ROW_NUMBER() OVER
             (
-                ORDER BY MIN(r.line_nbr), r.idGui, r.customerVAT, r.tax_rate
+                ORDER BY
+                    MIN(r.voucherDate),
+                    MIN(r.voucherNumber),
+                    r.idGui,
+                    MIN(r.line_nbr),
+                    r.customerVAT,
+                    r.tax_rate
             ) AS stt
         FROM #Raw r
         GROUP BY r.idGui, r.customerVAT, r.tax_rate
@@ -203,15 +209,15 @@ BEGIN
         DonGia = r.price,
         ThanhTien = r.amount,
         TienTe = N'VND',
-        SoTT = ROW_NUMBER() OVER
-        (
-            PARTITION BY r.stt
-            ORDER BY r.line_nbr, r.item_id
-        ),
+        SoTT = r.line_nbr,
         TinhChat = 1,
         Email = r.emailPerson,
         Ghichu = r.detailNote
     FROM #Raw r
-    ORDER BY r.stt, r.line_nbr, r.item_id;
+    ORDER BY
+        r.voucherDate,
+        r.voucherNumber,
+        r.idGui,
+        r.line_nbr;
 END
 GO
