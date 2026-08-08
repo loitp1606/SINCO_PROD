@@ -161,6 +161,28 @@
 						"placeholder": ""
 					},
 					{
+						"key": "dai_dien_cty",
+						"label": "Đại diện Sinco",
+						"type": "lookup",
+						"multiple": false,
+						"default": {
+							"controller": "Employee",
+							"filter": [
+								{
+									"field": "status",
+									"value": "1",
+									"operator": "="
+								},
+								{
+									"field": "daidien_yn",
+									"value": "1",
+									"operator": "="
+								}
+							]
+						},
+						"width": "350px"
+					},
+					{
 						"key": "tax_code",
 						"label": "MST",
 						"type": "text",
