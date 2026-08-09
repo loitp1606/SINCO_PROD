@@ -109,7 +109,7 @@
   "dataProcessing": {
     "report": [
       {
-        "query": "exec rp_qllsqt N'@dateFrom', N'@dateTo', N'@customer', N'@truck_id', N'@userId';"
+        "query": "exec rp_qlptvc N'@dateFrom', N'@dateTo', N'@customer', N'@truck_id', N'@userId';"
       }
     ]
   }
