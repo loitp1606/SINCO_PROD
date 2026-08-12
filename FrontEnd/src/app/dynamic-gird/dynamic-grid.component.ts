@@ -441,14 +441,48 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     }, 250);
   }
 
-  getRawExportHeaders(): Array<{ key: string; label: string }> {
+  getRawExportHeaders(): Array<{
+    key: string;
+    label: string;
+    type?: string;
+    options?: Array<{ label: string; value: any }>;
+  }> {
     return (this.girdData?.headers || [])
       .filter((header) => !header.hidden && (header.key || '').toLowerCase() !== 'idgui')
       .map((header) => ({
         key: header.key,
         label: this.resolveViLabel(header.label || header.key),
+        type: header.type,
+        options: header.options,
       }));
   }
+
+  resolveRawExportValue = (
+    row: Record<string, any>,
+    key: string,
+    header?: { type?: string; options?: Array<{ label: string; value: any }> },
+  ): any => {
+    const rawValue = row?.[key];
+
+    if (rawValue === null || rawValue === undefined || rawValue === '') {
+      return '';
+    }
+
+    if (header?.type === 'lookup') {
+      return this.getLookupDisplayValue(key, rawValue);
+    }
+
+    if (header?.type === 'select') {
+      const option = (header.options || []).find((opt) => `${opt?.value ?? ''}` === `${rawValue}`);
+      return option?.label ?? rawValue;
+    }
+
+    if (header?.type === 'date' || header?.type === 'datetime') {
+      return this.formatDateForRawExport(rawValue);
+    }
+
+    return rawValue;
+  };
 
   private resolveViLabel(label: string): string {
     if (!label) return '';
@@ -2988,6 +3022,18 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   formatDate(date: string): string {
     if (!date) return '';
     return new Date(date).toLocaleDateString('vi-VN');
+  }
+
+  private formatDateForRawExport(value: any): string {
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return `${value}`;
+    }
+
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
   }
   getOptionLabel(fieldKey: string, value: string): string {
     const field = this.getAllDetailFields().find((f) => f.key === fieldKey);

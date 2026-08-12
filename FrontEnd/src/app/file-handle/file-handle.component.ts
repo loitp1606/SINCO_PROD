@@ -35,6 +35,13 @@ import { RichTextComponent } from './rich-text.component';
 import { OptionDialogComponent } from './file-handle-option-dialog.component';
 import * as XLSX from 'xlsx';
 
+type RawExportHeader = {
+  key: string;
+  label: string;
+  type?: string;
+  options?: Array<{ label: string; value: any }>;
+};
+
 @Component({
   selector: 'app-file-handle',
   standalone: true,
@@ -64,7 +71,12 @@ export class FileHandleComponent implements OnInit {
   @Input() exportData: { [key: string]: any[] } = {};
   @Input() selectedExportRows: any[] = [];
   @Input() exportAllRows: any[] = [];
-  @Input() rawExportHeaders: Array<{ key: string; label: string }> = [];
+  @Input() rawExportHeaders: RawExportHeader[] = [];
+  @Input() rawExportValueResolver?: (
+    row: Record<string, any>,
+    key: string,
+    header: RawExportHeader,
+  ) => any;
   @Input() user: { [key: string]: string } = {};
   @Input() isFileHandle: string | undefined = ''; //"import" | "export" | "both"
   showImportOptions = false;
@@ -611,11 +623,16 @@ export class FileHandleComponent implements OnInit {
 
   private resolveRawExportHeaders(
     rows: Record<string, any>[],
-  ): Array<{ key: string; label: string }> {
+  ): RawExportHeader[] {
     const excluded = new Set(['idgui', 'id_gui']);
     const configured = (this.rawExportHeaders || [])
       .filter((h) => !!h?.key && !excluded.has(h.key.toLowerCase()))
-      .map((h) => ({ key: h.key, label: h.label || h.key }));
+      .map((h) => ({
+        key: h.key,
+        label: h.label || h.key,
+        type: h.type,
+        options: h.options,
+      }));
 
     if (configured.length > 0) {
       return configured;
@@ -635,11 +652,12 @@ export class FileHandleComponent implements OnInit {
 
   private normalizeRawExportRow(
     row: Record<string, any>,
-    headers: Array<{ key: string; label: string }>,
+    headers: RawExportHeader[],
   ): Record<string, any> {
     const normalized: Record<string, any> = {};
-    headers.forEach(({ key, label }) => {
-      const value = row[key];
+    headers.forEach((header) => {
+      const { key, label } = header;
+      const value = this.resolveRawExportValue(row, header);
       if (value === null || value === undefined) {
         normalized[label] = '';
         return;
@@ -651,6 +669,42 @@ export class FileHandleComponent implements OnInit {
       normalized[label] = value;
     });
     return normalized;
+  }
+
+  private resolveRawExportValue(row: Record<string, any>, header: RawExportHeader): any {
+    const resolvedValue = this.rawExportValueResolver?.(row, header.key, header);
+    const value = resolvedValue !== undefined ? resolvedValue : row[header.key];
+
+    if (value === null || value === undefined || value === '') {
+      return '';
+    }
+
+    if (header.type === 'date' || header.type === 'datetime') {
+      return this.formatRawExportDate(value);
+    }
+
+    if (header.type === 'select') {
+      const option = (header.options || []).find((opt) => `${opt?.value ?? ''}` === `${value}`);
+      return option?.label ?? value;
+    }
+
+    if (header.type === 'checkbox') {
+      return value === true || value === 1 || value === '1' ? 'Có' : 'Không';
+    }
+
+    return value;
+  }
+
+  private formatRawExportDate(value: any): string {
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return `${value}`;
+    }
+
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
   }
 
   private buildExportTimestamp(): string {

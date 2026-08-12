@@ -185,6 +185,7 @@
         [selectedExportRows]="getSelectedExportRows()"
         [exportAllRows]="filteredData"
         [rawExportHeaders]="getRawExportHeaders()"
+        [rawExportValueResolver]="resolveRawExportValue"
         (importCompleted)="ngOnInit()"
         class="w-full sm:w-auto"
       ></app-file-handle>
