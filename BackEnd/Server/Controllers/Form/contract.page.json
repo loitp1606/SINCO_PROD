@@ -146,15 +146,26 @@
 					},
 					{
 						"key": "account",
-						"label": "Tài khoản",
-						"type": "text",
+						"label": "Tài khoản Sinco",
+						"type": "lookup",
 						"width": "150px",
+						"multiple": false,
+						"default": {
+							"controller": "accountSinco",
+							"filter": [
+								{
+									"field": "status",
+									"value": "1",
+									"operator": "="
+								}
+							]
+						},
 						"required": false,
-						"placeholder": ""
+						"placeholder": "Chọn tài khoản Sinco"
 					},
 					{
 						"key": "customer_account",
-						"label": "Tài khoản (Bên B)",
+						"label": "Tài khoản KH",
 						"type": "text",
 						"width": "150px",
 						"required": false,

@@ -94,7 +94,8 @@
         "name": "phone",
         "property": "phone",
         "type": "string",
-        "sqlType": "VARCHAR(50)"
+        "sqlType": "VARCHAR(50)",
+        "sqlExpression": "COALESCE(NULLIF({m}.phone, N''), (SELECT TOP 1 ISNULL(c.phone_number, N'') FROM customer c WHERE c.customer_id = {m}.customer_id))"
       },
       {
         "name": "account",
@@ -112,7 +113,8 @@
         "name": "tax_code",
         "property": "taxCode",
         "type": "string",
-        "sqlType": "VARCHAR(50)"
+        "sqlType": "VARCHAR(50)",
+        "sqlExpression": "COALESCE(NULLIF({m}.tax_code, N''), (SELECT TOP 1 ISNULL(c.ma_so_thue, N'') FROM customer c WHERE c.customer_id = {m}.customer_id))"
       },
       {
         "name": "delivery_note",
@@ -170,7 +172,7 @@
         "property": "sellerCompanyBankAccount",
         "type": "string",
         "sqlType": "NVARCHAR(256)",
-        "sqlExpression": "(SELECT TOP 1 CONCAT(ISNULL(c.bank_number, N''), CASE WHEN ISNULL(c.bank_name, N'') = N'' THEN N'' ELSE N' - ' + c.bank_name END) FROM company c WHERE c.company_id = 'SINCO01')"
+        "sqlExpression": "COALESCE((SELECT TOP 1 NULLIF(CONCAT(ISNULL(a.account_number, N''), CASE WHEN ISNULL(COALESCE(b.bankName, a.bank_name), N'') = N'' THEN N'' ELSE N' - ' + COALESCE(b.bankName, a.bank_name) END, CASE WHEN ISNULL(a.bank_branch, N'') = N'' THEN N'' ELSE N' - ' + a.bank_branch END), N'') FROM AccountSinco a LEFT JOIN bank b ON b.bankCode = a.bank_name WHERE a.account_sinco_id = {m}.account), NULLIF({m}.account, N''), (SELECT TOP 1 CONCAT(ISNULL(c.bank_number, N''), CASE WHEN ISNULL(c.bank_name, N'') = N'' THEN N'' ELSE N' - ' + c.bank_name END) FROM company c WHERE c.company_id = 'SINCO01'))"
       },
       {
         "name": "sellerCompanyTaxCode",
