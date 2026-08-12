@@ -56,12 +56,6 @@
 			"width": "150px"
 		},
 		{
-			"key": "customerVAT",
-			"label": "Khách hàng VAT",
-			"type": "lookup",
-			"width": "200px"
-		},
-		{
 			"key": "ds_hoa_don",
 			"label": "Danh sách hóa đơn",
 			"type": "text",
@@ -90,6 +84,12 @@
 			"label": "Ngày quá hạn",
 			"type": "number",
 			"width": "100px"
+		},
+		{
+			"key": "customerVAT",
+			"label": "Khách hàng VAT",
+			"type": "lookup",
+			"width": "200px"
 		},
 		{
 			"key": "note",

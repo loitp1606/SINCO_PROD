@@ -44,7 +44,7 @@
 						"type": "select",
 						"width": "150px",
 						"required": true,
-						"default": "CUSTOMER",
+						"default": "DEPOSIT",
 						"quickEditable": true,
 						"options": [
 							{
@@ -52,7 +52,7 @@
 								"value": "DEPOSIT"
 							},
 							{
-								"label": "Thu tiền khách hàng",
+								"label": "Chi từ tiền đặt cọc",
 								"value": "CUSTOMER"
 							},
 							{
@@ -99,7 +99,7 @@
 					{
 						"key": "deliveryNoteNo",
 						"label": "Mã tham chiếu",
-						"type": "text",
+						"type": "hidden",
 						"width": "150px",
 						"required": false
 					},
@@ -184,7 +184,7 @@
 					{
 						"key": "invoiceNumber",
 						"label": "Số hoá đơn thu",
-						"type": "text",
+						"type": "hidden",
 						"width": "150px",
 						"required": false
 					},
@@ -193,6 +193,7 @@
 						"label": "Loại thanh toán",
 						"type": "select",
 						"width": "150px",
+						"default":"CK",
 						"required": true,
 						"options": [
 							{
@@ -202,10 +203,6 @@
 							{
 								"label": "Chuyển khoản",
 								"value": "CK"
-							},
-							{
-								"label": "TM/CK",
-								"value": "TM/CK"
 							}
 						]
 					},
@@ -240,9 +237,9 @@
 					{
 						"key": "status",
 						"label": "Trạng thái",
-						"type": "select",
+						"type": "hidden",
 						"width": "150px",
-						"required": true,
+						"required": false,
 						"options": [
 							{
 								"label": "Tạo phiếu",
