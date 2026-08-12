@@ -1,5 +1,5 @@
 {
-  "code": "deliverynoteinvoice",
+  "code": "deliverynote",
   "controller": "deliverynote",
   "storeProcedure": "oot$exportVat",
   "templateFile": "XHD_Mau.xlsx",
