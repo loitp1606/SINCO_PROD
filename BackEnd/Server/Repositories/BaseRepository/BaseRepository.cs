@@ -2436,7 +2436,9 @@ namespace Sinco.Server.Repositories.BaseRepository
                     var header = headerFields[i];
 
                     var found = def.ExcelIntegration.ColumnMapping
-                        .FirstOrDefault(c => CleanColumnName(c.FieldName) == header);
+                        .FirstOrDefault(c => CleanColumnName(c.FieldName) == header)
+                        ?? def.ExcelIntegration.ColumnMapping
+                            .FirstOrDefault(c => CleanColumnName(c.ExcelColumn) == header);
 
                     if (found != null)
                     {

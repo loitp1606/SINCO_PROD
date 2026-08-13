@@ -152,6 +152,12 @@
 				"sqlType": "NVARCHAR(MAX)"
 			},
 			{
+				"name": "dien_giai",
+				"property": "dien_giai",
+				"type": "string",
+				"sqlType": "NVARCHAR(MAX)"
+			},
+			{
 				"name": "status",
 				"property": "status",
 				"type": "string",
@@ -281,7 +287,7 @@
 				"hide": true
 			},
 			{
-				"excelColumn": "Lý do",
+				"excelColumn": "Lý do chi",
 				"fieldName": "reason",
 				"required": false,
 				"clauseForiegn": "select incomeExpenditure_id, incomeExpenditure_Name from Incomeexpenditure where status = '1' and type = '2'"
