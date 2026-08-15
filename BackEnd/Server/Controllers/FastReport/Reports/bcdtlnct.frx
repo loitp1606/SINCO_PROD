@@ -5,6 +5,7 @@
       <Column Name="loc_theo" DataType="System.Int32"/>
       <Column Name="nhom_theo" DataType="System.Int32"/>
       <Column Name="dateFrom" DataType="System.DateTime"/>
+      <Column Name="dateTo" DataType="System.DateTime"/>
       <Column Name="customer" DataType="System.String"/>
       <Column Name="Employee" DataType="System.String"/>
       <Column Name="item_id" DataType="System.String"/>
@@ -34,10 +35,10 @@
 		  <TextObject Name="Text3" Left="415.8" Width="1096.2" Height="75.6" CanGrow="true" Text="Địa chỉ: 489/9 Khu phố 1, Phường Bình Hưng Hòa, TP Hồ Chí Minh&#13;&#10;ĐT: 0946 556 058 - 028 3750 2826&#13;&#10;Email: saigonsinco@gmail.con         -  Website: saigonsinco.com       &#13;&#10;Fanpage: https://www.facebook.com/saigonsinco.com.vn&#13;&#10;" Font="Arial, 12pt"/>
 	  </ReportTitleBand>
     <PageHeaderBand Name="PageHeader1" Top="80.93" Width="1512.38" Height="37.8" CanGrow="true" PrintOn="FirstPage">
-      <TextObject Name="Text1" Width="1512" Height="37.8" Fill.Color="DodgerBlue" Text="BẢNG TỔNG HỢP DOANH THU LỢI NHUẬN CHI TIẾT THEO [param.loc_theo] - [param.nhom_theo]" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
+      <TextObject Name="Text1" Width="1512" Height="37.8" Fill.Color="DodgerBlue" Text="BẢNG TỔNG HỢP DOANH THU LỢI NHUẬN CHI TIẾT" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold"/>
     </PageHeaderBand>
     <DataBand Name="Data1" Top="124.07" Width="1512.38" Height="18.9" CanGrow="true" CanBreak="true" KeepTogether="true" KeepDetail="true">
-      <TextObject Name="Text2" Width="1512" Height="18.9" Fill.Color="MistyRose" Text="Từ ngày: [FormatDateTime([param.dateFrom], &quot;dd/MM/yyyy&quot;)]" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text2" Width="1512" Height="18.9" Fill.Color="MistyRose" Text="Từ ngày: [FormatDateTime([param.dateFrom], &quot;dd/MM/yyyy&quot;)] - Đến ngày: [FormatDateTime([param.dateTo], &quot;dd/MM/yyyy&quot;)]" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
     </DataBand>
     <DataBand Name="Data2" Top="148.3" Width="1512.38" Height="103.95" CanGrow="true" CanShrink="true" CanBreak="true" KeepTogether="true" KeepDetail="true">
       <TableObject Name="Table1" Width="1512" Height="103.95" RepeatHeaders="false">
