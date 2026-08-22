@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ListApiResponse } from '../models';
+import { FilterCondition, ListApiResponse } from '../models';
 
 interface DashboardListConfig {
   controller: string;
@@ -34,47 +34,47 @@ export class DashboardService {
 
   constructor(private readonly http: HttpClient) {}
 
-  loadQuotationList(): Observable<ListApiResponse> {
+  loadQuotationList(dateFrom?: Date, dateTo?: Date): Observable<ListApiResponse> {
     return this.loadList({
       controller: 'quotationPaper.page.json',
       formId: 'QuotationPaper',
       idVC: 'Z02',
       listTable: ['QuotationPaper', 'QuotationPaperDetail'],
       sort: 'voucherDate desc, voucherNumber desc',
-    });
+    }, dateFrom, dateTo);
   }
 
-  loadOrderList(): Observable<ListApiResponse> {
+  loadOrderList(dateFrom?: Date, dateTo?: Date): Observable<ListApiResponse> {
     return this.loadList({
       controller: 'Order.page.json',
       formId: 'Order',
       idVC: 'Z02',
       listTable: ['Order', 'OrderDetail'],
       sort: 'voucherDate desc, voucherNumber desc',
-    });
+    }, dateFrom, dateTo);
   }
 
-  loadDeliveryNoteList(): Observable<ListApiResponse> {
+  loadDeliveryNoteList(dateFrom?: Date, dateTo?: Date): Observable<ListApiResponse> {
     return this.loadList({
       controller: 'deliveryNote.page.json',
       formId: 'deliveryNote',
       idVC: 'Z05',
       listTable: ['deliveryNote', 'deliveryNoteDetail'],
       sort: 'voucherDate desc, voucherNumber desc',
-    });
+    }, dateFrom, dateTo);
   }
 
-  loadReceiptList(): Observable<ListApiResponse> {
+  loadReceiptList(dateFrom?: Date, dateTo?: Date): Observable<ListApiResponse> {
     return this.loadList({
       controller: 'receiptV2.page.json',
       formId: 'receiptV2',
       idVC: 'Z07',
       listTable: ['receiptV2', 'receiptdetailV2'],
       sort: 'voucherDate desc, voucherNumber desc',
-    });
+    }, dateFrom, dateTo);
   }
 
-  loadBcdtlnReportCurrent(): Observable<Record<string, any>[]> {
+  loadBcdtlnReport(dateFrom: Date, dateTo: Date): Observable<Record<string, any>[]> {
     return this.http
       .post<{ data: ReportListResponse }>(
         `${environment.apiUrl}/api/DynamicReport/processReport`,
@@ -112,11 +112,8 @@ export class DashboardService {
           param['userId'] = localStorage.getItem('userId') ?? '';
           param['language'] = localStorage.getItem('language') ?? 'vi';
 
-          const now = new Date();
-          const firstDate = new Date(now.getFullYear(), now.getMonth(), 1);
-          const lastDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-          const fromDate = this.formatDateYmd(firstDate);
-          const toDate = this.formatDateYmd(lastDate);
+          const fromDate = this.formatDateYmd(dateFrom);
+          const toDate = this.formatDateYmd(dateTo);
 
           for (const key of Object.keys(param)) {
             const lower = key.toLowerCase();
@@ -165,7 +162,11 @@ export class DashboardService {
       );
   }
 
-  private loadList(config: DashboardListConfig): Observable<ListApiResponse> {
+  private loadList(
+    config: DashboardListConfig,
+    dateFrom?: Date,
+    dateTo?: Date,
+  ): Observable<ListApiResponse> {
     const formId = {
       controller: config.controller,
       formId: config.formId,
@@ -182,9 +183,29 @@ export class DashboardService {
       isFileHandle: 'both',
     };
 
+    const filters: FilterCondition[] = [];
+    if (dateFrom) {
+      filters.push({
+        id: 'dashboard-date-from',
+        field: 'voucherDate',
+        operator: '>=',
+        value: this.formatDateYmd(dateFrom),
+        columnType: 'date',
+      });
+    }
+    if (dateTo) {
+      filters.push({
+        id: 'dashboard-date-to',
+        field: 'voucherDate',
+        operator: '<=',
+        value: this.formatDateYmd(dateTo),
+        columnType: 'date',
+      });
+    }
+
     const params = new HttpParams()
       .set('formId', JSON.stringify(formId))
-      .set('filter', JSON.stringify([]))
+      .set('filter', JSON.stringify(filters))
       .set('page', '1')
       .set('pageSize', String(this.defaultPageSize))
       .set('sort', config.sort);

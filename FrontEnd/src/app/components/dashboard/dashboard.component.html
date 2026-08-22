@@ -17,6 +17,31 @@
     </div>
   </header>
 
+  <section class="period-toolbar" aria-label="Chọn kỳ dữ liệu">
+    <div class="period-modes">
+      <button
+        type="button"
+        *ngFor="let mode of periodModes"
+        [class.active]="periodMode === mode.value"
+        [disabled]="isLoading"
+        (click)="selectPeriodMode(mode.value)">
+        {{ mode.label }}
+      </button>
+    </div>
+    <div class="period-navigation">
+      <button type="button" class="period-arrow" (click)="shiftPeriod(-1)" [disabled]="isLoading" title="Kỳ trước">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="period-current">
+        <i class="far fa-calendar"></i>
+        <strong>{{ currentPeriodLabel }}</strong>
+      </div>
+      <button type="button" class="period-arrow" (click)="shiftPeriod(1)" [disabled]="isLoading || !canGoNextPeriod" title="Kỳ sau">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
   <div *ngIf="errorMessage" class="error-banner">
     <i class="fas fa-circle-exclamation"></i>
     <span>{{ errorMessage }}</span>
@@ -31,7 +56,7 @@
       <div class="hero-trend" [class.down]="financialHighlights.revenueTrend < 0">
         <i [class]="financialHighlights.revenueTrend >= 0 ? 'fas fa-arrow-trend-up' : 'fas fa-arrow-trend-down'"></i>
         <strong>{{ financialHighlights.revenueTrend >= 0 ? '+' : '' }}{{ financialHighlights.revenueTrend }}%</strong>
-        <span>so với kỳ trước</span>
+        <span>{{ comparisonPeriodLabel }}</span>
       </div>
     </div>
     <div class="hero-metrics">
@@ -83,7 +108,7 @@
       <div class="panel-header">
         <div>
           <h2>Luồng bán hàng</h2>
-          <p>Chuyển đổi chứng từ trong tháng</p>
+          <p>Chuyển đổi chứng từ trong kỳ đã chọn</p>
         </div>
         <i class="fas fa-filter-circle-dollar panel-icon"></i>
       </div>

@@ -95,6 +95,87 @@
   &:disabled { opacity: 0.62; cursor: wait; }
 }
 
+.period-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding: 8px;
+  border: 1px solid #e3e9f2;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.045);
+}
+
+.period-modes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 10px;
+  background: #f1f5f9;
+
+  button {
+    min-width: 72px;
+    height: 34px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    transition: 0.18s ease;
+
+    &:hover:not(:disabled):not(.active) { color: #2563eb; background: #e8eef7; }
+    &.active {
+      background: #fff;
+      color: #1d4ed8;
+      box-shadow: 0 2px 7px rgba(15, 23, 42, 0.1);
+    }
+    &:disabled { cursor: wait; opacity: 0.65; }
+  }
+}
+
+.period-navigation {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.period-current {
+  display: flex;
+  min-width: 155px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #334155;
+
+  i { color: #2563eb; font-size: 13px; }
+  strong { font-size: 13px; }
+}
+
+.period-arrow {
+  display: grid;
+  width: 35px;
+  height: 35px;
+  place-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+  transition: 0.18s ease;
+
+  &:hover:not(:disabled) { color: #2563eb; border-color: #93c5fd; background: #eff6ff; }
+  &:disabled { color: #cbd5e1; background: #f8fafc; cursor: not-allowed; }
+  i { font-size: 10px; }
+}
+
 .error-banner {
   display: flex;
   align-items: center;
@@ -443,6 +524,10 @@
   .dashboard-shell { padding: 16px; }
   .dashboard-header { align-items: flex-start; flex-direction: column; }
   .header-actions { width: 100%; justify-content: space-between; }
+  .period-toolbar { align-items: stretch; flex-direction: column; }
+  .period-modes { justify-content: stretch; }
+  .period-modes button { min-width: 0; flex: 1; }
+  .period-navigation { justify-content: space-between; }
   .update-status { align-items: flex-start; }
   .hero { padding: 26px 20px; border-radius: 18px; }
   .hero-value { white-space: normal; }

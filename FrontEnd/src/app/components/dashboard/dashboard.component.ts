@@ -37,6 +37,21 @@ interface DashboardAlert {
   route: string;
 }
 
+type DashboardPeriodMode = 'month' | 'quarter' | 'year';
+
+interface DashboardPeriodRange {
+  start: Date;
+  end: Date;
+  previousStart: Date;
+  previousEnd: Date;
+}
+
+interface DashboardTimeBucket {
+  label: string;
+  start: Date;
+  end: Date;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -46,6 +61,13 @@ interface DashboardAlert {
 })
 export class DashboardComponent implements OnInit {
   today = new Date();
+  selectedDate = new Date(this.today.getFullYear(), this.today.getMonth(), 1);
+  periodMode: DashboardPeriodMode = 'month';
+  readonly periodModes: Array<{ value: DashboardPeriodMode; label: string }> = [
+    { value: 'month', label: 'Tháng' },
+    { value: 'quarter', label: 'Quý' },
+    { value: 'year', label: 'Năm' },
+  ];
   errorMessage = '';
   isLoading = true;
   lastUpdated: Date | null = null;
@@ -100,7 +122,39 @@ export class DashboardComponent implements OnInit {
   }
 
   get currentPeriodLabel(): string {
-    return `Tháng ${this.today.getMonth() + 1}/${this.today.getFullYear()}`;
+    const year = this.selectedDate.getFullYear();
+    if (this.periodMode === 'year') return `Năm ${year}`;
+    if (this.periodMode === 'quarter') {
+      return `Quý ${Math.floor(this.selectedDate.getMonth() / 3) + 1}/${year}`;
+    }
+    return `Tháng ${this.selectedDate.getMonth() + 1}/${year}`;
+  }
+
+  get comparisonPeriodLabel(): string {
+    if (this.periodMode === 'year') return 'so với năm trước';
+    if (this.periodMode === 'quarter') return 'so với quý trước';
+    return 'so với tháng trước';
+  }
+
+  get canGoNextPeriod(): boolean {
+    return this.getPeriodRange().end.getTime() < this.today.getTime();
+  }
+
+  selectPeriodMode(mode: DashboardPeriodMode): void {
+    if (this.periodMode === mode) return;
+    this.periodMode = mode;
+    this.selectedDate = new Date(this.today.getFullYear(), this.today.getMonth(), 1);
+    this.loadDashboardData();
+  }
+
+  shiftPeriod(direction: -1 | 1): void {
+    if (direction > 0 && !this.canGoNextPeriod) return;
+    const next = new Date(this.selectedDate);
+    if (this.periodMode === 'month') next.setMonth(next.getMonth() + direction);
+    if (this.periodMode === 'quarter') next.setMonth(next.getMonth() + direction * 3);
+    if (this.periodMode === 'year') next.setFullYear(next.getFullYear() + direction);
+    this.selectedDate = new Date(next.getFullYear(), next.getMonth(), 1);
+    this.loadDashboardData();
   }
 
   get maxFunnelValue(): number {
@@ -114,6 +168,7 @@ export class DashboardComponent implements OnInit {
   private loadDashboardData(): void {
     this.isLoading = true;
     this.errorMessage = '';
+    const period = this.getPeriodRange();
     let failedSources = 0;
     const fallback = () => {
       failedSources += 1;
@@ -121,14 +176,14 @@ export class DashboardComponent implements OnInit {
     };
 
     forkJoin({
-      bcdtln: this.dashboardService.loadBcdtlnReportCurrent().pipe(catchError(() => {
+      bcdtln: this.dashboardService.loadBcdtlnReport(period.start, period.end).pipe(catchError(() => {
         failedSources += 1;
         return of([]);
       })),
-      quotation: this.dashboardService.loadQuotationList().pipe(catchError(fallback)),
-      order: this.dashboardService.loadOrderList().pipe(catchError(fallback)),
-      deliveryNote: this.dashboardService.loadDeliveryNoteList().pipe(catchError(fallback)),
-      receipt: this.dashboardService.loadReceiptList().pipe(catchError(fallback)),
+      quotation: this.dashboardService.loadQuotationList(period.previousStart, period.end).pipe(catchError(fallback)),
+      order: this.dashboardService.loadOrderList(period.previousStart, period.end).pipe(catchError(fallback)),
+      deliveryNote: this.dashboardService.loadDeliveryNoteList(period.previousStart, period.end).pipe(catchError(fallback)),
+      receipt: this.dashboardService.loadReceiptList(period.previousStart, period.end).pipe(catchError(fallback)),
     }).subscribe({
       next: (data) => {
         const quotationRows = data.quotation?.data || [];
@@ -148,11 +203,11 @@ export class DashboardComponent implements OnInit {
           revenueTrend: this.calculateTrendPercent(financial.revenue, financial.previousRevenue),
         };
 
-        this.buildStatistics(quotationRows, orderRows, deliveryRows, receiptRows);
-        this.buildCharts(orderRows, deliveryRows);
-        this.buildFunnel(quotationRows, orderRows, deliveryRows, receiptRows);
-        this.buildActivities(quotationRows, orderRows, deliveryRows, receiptRows);
-        this.buildAlerts(deliveryRows, receiptRows);
+        this.buildStatistics(quotationRows, orderRows, deliveryRows, receiptRows, period);
+        this.buildCharts(orderRows, deliveryRows, period);
+        this.buildFunnel(quotationRows, orderRows, deliveryRows, receiptRows, period);
+        this.buildActivities(quotationRows, orderRows, deliveryRows, receiptRows, period);
+        this.buildAlerts(deliveryRows, receiptRows, period);
 
         this.lastUpdated = new Date();
         this.errorMessage = failedSources
@@ -167,18 +222,22 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private buildStatistics(quotations: any[], orders: any[], deliveries: any[], receipts: any[]): void {
-    const currentOrders = this.rowsByMonth(orders, 0);
-    const previousOrders = this.rowsByMonth(orders, 1);
-    const currentQuotations = this.rowsByMonth(quotations, 0);
-    const previousQuotations = this.rowsByMonth(quotations, 1);
-    const delivered = deliveries.filter((row) => String(row?.status) === '1').length;
-    const pendingDelivery = deliveries.filter((row) => String(row?.status) === '0').length;
-    const currentReceipts = this.rowsByMonth(receipts, 0);
+  private buildStatistics(
+    quotations: any[], orders: any[], deliveries: any[], receipts: any[],
+    period: DashboardPeriodRange,
+  ): void {
+    const currentOrders = this.rowsInRange(orders, period.start, period.end);
+    const previousOrders = this.rowsInRange(orders, period.previousStart, period.previousEnd);
+    const currentQuotations = this.rowsInRange(quotations, period.start, period.end);
+    const previousQuotations = this.rowsInRange(quotations, period.previousStart, period.previousEnd);
+    const currentDeliveries = this.rowsInRange(deliveries, period.start, period.end);
+    const delivered = currentDeliveries.filter((row) => String(row?.status) === '1').length;
+    const pendingDelivery = currentDeliveries.filter((row) => String(row?.status) === '0').length;
+    const currentReceipts = this.rowsInRange(receipts, period.start, period.end);
     const collectedThisMonth = currentReceipts
       .filter((row) => this.isTruthy(row?.isReceived))
       .reduce((sum, row) => sum + this.amountOf(row, ['total_amount']), 0);
-    const collectedPreviousMonth = this.rowsByMonth(receipts, 1)
+    const collectedPreviousPeriod = this.rowsInRange(receipts, period.previousStart, period.previousEnd)
       .filter((row) => this.isTruthy(row?.isReceived))
       .reduce((sum, row) => sum + this.amountOf(row, ['total_amount']), 0);
     const conversion = currentQuotations.length
@@ -190,32 +249,32 @@ export class DashboardComponent implements OnInit {
 
     this.statistics = [
       {
-        title: 'Đơn hàng tháng này',
+        title: 'Đơn hàng trong kỳ',
         value: this.formatNumber(currentOrders.length),
         icon: 'fas fa-bag-shopping',
         trend: Math.abs(this.calculateTrendPercent(currentOrders.length, previousOrders.length)),
-        trendText: 'so với tháng trước',
+        trendText: this.comparisonPeriodLabel,
         trendUp: currentOrders.length >= previousOrders.length,
         color: '#7c3aed',
         caption: this.formatCurrencyVnd(this.sumAmounts(currentOrders, ['total_payment'])),
       },
       {
         title: 'Tiến độ giao hàng',
-        value: `${delivered}/${deliveries.length}`,
+        value: `${delivered}/${currentDeliveries.length}`,
         icon: 'fas fa-truck-fast',
-        trend: deliveries.length ? Number(((delivered / deliveries.length) * 100).toFixed(1)) : 0,
+        trend: currentDeliveries.length ? Number(((delivered / currentDeliveries.length) * 100).toFixed(1)) : 0,
         trendText: 'đã hoàn tất',
         trendUp: true,
         color: '#059669',
         caption: `${this.formatNumber(pendingDelivery)} phiếu đang chờ giao`,
       },
       {
-        title: 'Đã thu trong tháng',
+        title: 'Đã thu trong kỳ',
         value: this.formatCurrencyCompact(collectedThisMonth),
         icon: 'fas fa-wallet',
-        trend: Math.abs(this.calculateTrendPercent(collectedThisMonth, collectedPreviousMonth)),
-        trendText: 'so với tháng trước',
-        trendUp: collectedThisMonth >= collectedPreviousMonth,
+        trend: Math.abs(this.calculateTrendPercent(collectedThisMonth, collectedPreviousPeriod)),
+        trendText: this.comparisonPeriodLabel,
+        trendUp: collectedThisMonth >= collectedPreviousPeriod,
         color: '#0891b2',
         caption: `${this.formatNumber(currentReceipts.length)} phiếu thu`,
       },
@@ -224,7 +283,7 @@ export class DashboardComponent implements OnInit {
         value: `${conversion.toFixed(1)}%`,
         icon: 'fas fa-arrow-trend-up',
         trend: Math.abs(this.calculateTrendPercent(conversion, previousConversion)),
-        trendText: 'so với tháng trước',
+        trendText: this.comparisonPeriodLabel,
         trendUp: conversion >= previousConversion,
         color: '#ea580c',
         caption: `${currentOrders.length}/${currentQuotations.length} báo giá thành đơn`,
@@ -232,40 +291,47 @@ export class DashboardComponent implements OnInit {
     ];
   }
 
-  private buildCharts(orders: any[], deliveries: any[]): void {
-    const months = this.getLastMonths(6);
-    const orderValues = months.map((month) => this.sumAmounts(
-      orders.filter((row) => this.isSameMonth(row?.voucherDate, month.year, month.month)),
+  private buildCharts(orders: any[], deliveries: any[], period: DashboardPeriodRange): void {
+    const buckets = this.getChartBuckets(period);
+    const orderValues = buckets.map((bucket) => this.sumAmounts(
+      this.rowsInRange(orders, bucket.start, bucket.end),
       ['total_payment'],
     ));
-    const pending = deliveries.filter((row) => String(row?.status) === '0').length;
-    const completed = deliveries.filter((row) => String(row?.status) === '1').length;
-    const other = Math.max(deliveries.length - pending - completed, 0);
+    const currentDeliveries = this.rowsInRange(deliveries, period.start, period.end);
+    const pending = currentDeliveries.filter((row) => String(row?.status) === '0').length;
+    const completed = currentDeliveries.filter((row) => String(row?.status) === '1').length;
+    const other = Math.max(currentDeliveries.length - pending - completed, 0);
 
     this.charts = [
       {
-        title: 'Giá trị đơn hàng', subtitle: 'Xu hướng 6 tháng gần nhất', type: 'line',
-        data: orderValues, labels: months.map((month) => `T${month.month}`),
+        title: 'Giá trị đơn hàng', subtitle: `Diễn biến ${this.currentPeriodLabel.toLowerCase()}`, type: 'line',
+        data: orderValues, labels: buckets.map((bucket) => bucket.label),
         color: '#2563eb', valueFormat: 'currency',
       },
       {
-        title: 'Tình trạng giao hàng', subtitle: `${this.formatNumber(deliveries.length)} phiếu xuất`, type: 'pie',
+        title: 'Tình trạng giao hàng', subtitle: `${this.formatNumber(currentDeliveries.length)} phiếu xuất`, type: 'pie',
         data: [completed, pending, other], labels: ['Đã giao', 'Đang chờ giao', 'Khác'],
         color: '#059669', valueFormat: 'number',
       },
     ];
   }
 
-  private buildFunnel(quotations: any[], orders: any[], deliveries: any[], receipts: any[]): void {
+  private buildFunnel(
+    quotations: any[], orders: any[], deliveries: any[], receipts: any[],
+    period: DashboardPeriodRange,
+  ): void {
     this.funnel = [
-      { label: 'Báo giá', value: this.rowsByMonth(quotations, 0).length, color: '#2563eb', route: '/quotationPaper' },
-      { label: 'Đơn hàng', value: this.rowsByMonth(orders, 0).length, color: '#7c3aed', route: '/order' },
-      { label: 'Đã giao', value: this.rowsByMonth(deliveries, 0).filter((row) => String(row?.status) === '1').length, color: '#059669', route: '/deliveryNote' },
-      { label: 'Đã thu', value: this.rowsByMonth(receipts, 0).filter((row) => this.isTruthy(row?.isReceived)).length, color: '#0891b2', route: '/receiptV2' },
+      { label: 'Báo giá', value: this.rowsInRange(quotations, period.start, period.end).length, color: '#2563eb', route: '/quotationPaper' },
+      { label: 'Đơn hàng', value: this.rowsInRange(orders, period.start, period.end).length, color: '#7c3aed', route: '/order' },
+      { label: 'Đã giao', value: this.rowsInRange(deliveries, period.start, period.end).filter((row) => String(row?.status) === '1').length, color: '#059669', route: '/deliveryNote' },
+      { label: 'Đã thu', value: this.rowsInRange(receipts, period.start, period.end).filter((row) => this.isTruthy(row?.isReceived)).length, color: '#0891b2', route: '/receiptV2' },
     ];
   }
 
-  private buildActivities(quotations: any[], orders: any[], deliveries: any[], receipts: any[]): void {
+  private buildActivities(
+    quotations: any[], orders: any[], deliveries: any[], receipts: any[],
+    period: DashboardPeriodRange,
+  ): void {
     const mapRows = (
       rows: any[], type: string, route: string, icon: string, color: string,
       amountKeys: string[], customerKeys: string[],
@@ -281,17 +347,19 @@ export class DashboardComponent implements OnInit {
     }));
 
     this.activities = [
-      ...mapRows(quotations, 'Báo giá', '/quotationPaper', 'fas fa-file-signature', '#2563eb', ['total_payment'], ['customerName', 'customerCode']),
-      ...mapRows(orders, 'Đơn hàng', '/order', 'fas fa-bag-shopping', '#7c3aed', ['total_payment'], ['customerName', 'customerID']),
-      ...mapRows(deliveries, 'Xuất hàng', '/deliveryNote', 'fas fa-truck-fast', '#059669', ['totalPayment'], ['customerName', 'customer_id']),
-      ...mapRows(receipts, 'Phiếu thu', '/receiptV2', 'fas fa-wallet', '#0891b2', ['total_amount'], ['customerName', 'customerCode']),
+      ...mapRows(this.rowsInRange(quotations, period.start, period.end), 'Báo giá', '/quotationPaper', 'fas fa-file-signature', '#2563eb', ['total_payment'], ['customerName', 'customerCode']),
+      ...mapRows(this.rowsInRange(orders, period.start, period.end), 'Đơn hàng', '/order', 'fas fa-bag-shopping', '#7c3aed', ['total_payment'], ['customerName', 'customerID']),
+      ...mapRows(this.rowsInRange(deliveries, period.start, period.end), 'Xuất hàng', '/deliveryNote', 'fas fa-truck-fast', '#059669', ['totalPayment'], ['customerName', 'customer_id']),
+      ...mapRows(this.rowsInRange(receipts, period.start, period.end), 'Phiếu thu', '/receiptV2', 'fas fa-wallet', '#0891b2', ['total_amount'], ['customerName', 'customerCode']),
     ].sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0)).slice(0, 6);
   }
 
-  private buildAlerts(deliveries: any[], receipts: any[]): void {
-    const pendingDelivery = deliveries.filter((row) => String(row?.status) === '0');
-    const debt = deliveries.reduce((sum, row) => sum + this.amountOf(row, ['debtAmount']), 0);
-    const pendingReceipt = receipts.filter((row) => !this.isTruthy(row?.isReceived));
+  private buildAlerts(deliveries: any[], receipts: any[], period: DashboardPeriodRange): void {
+    const currentDeliveries = this.rowsInRange(deliveries, period.start, period.end);
+    const currentReceipts = this.rowsInRange(receipts, period.start, period.end);
+    const pendingDelivery = currentDeliveries.filter((row) => String(row?.status) === '0');
+    const debt = currentDeliveries.reduce((sum, row) => sum + this.amountOf(row, ['debtAmount']), 0);
+    const pendingReceipt = currentReceipts.filter((row) => !this.isTruthy(row?.isReceived));
     this.alerts = [
       { label: 'Chờ giao hàng', value: this.formatNumber(pendingDelivery.length), note: 'phiếu cần theo dõi tiến độ', icon: 'fas fa-clock', tone: 'warning', route: '/deliveryNote' },
       { label: 'Công nợ phiếu xuất', value: this.formatCurrencyCompact(debt), note: 'giá trị còn phải thu', icon: 'fas fa-triangle-exclamation', tone: 'danger', route: '/deliveryNote' },
@@ -299,20 +367,11 @@ export class DashboardComponent implements OnInit {
     ];
   }
 
-  private rowsByMonth(rows: any[], monthOffset: number): any[] {
-    return rows.filter((row) => this.isMonthOffset(row?.voucherDate, monthOffset));
-  }
-
-  private isMonthOffset(dateValue: string, monthOffset: number): boolean {
-    const date = this.parseDate(dateValue);
-    if (!date) return false;
-    const target = new Date(this.today.getFullYear(), this.today.getMonth() - monthOffset, 1);
-    return date.getFullYear() === target.getFullYear() && date.getMonth() === target.getMonth();
-  }
-
-  private isSameMonth(dateValue: string, year: number, month: number): boolean {
-    const date = this.parseDate(dateValue);
-    return !!date && date.getFullYear() === year && date.getMonth() + 1 === month;
+  private rowsInRange(rows: any[], start: Date, end: Date): any[] {
+    return rows.filter((row) => {
+      const date = this.parseDate(row?.voucherDate);
+      return !!date && date.getTime() >= start.getTime() && date.getTime() <= end.getTime();
+    });
   }
 
   private parseDate(value: any): Date | null {
@@ -325,10 +384,61 @@ export class DashboardComponent implements OnInit {
     return isNaN(date.getTime()) ? null : date;
   }
 
-  private getLastMonths(count: number): Array<{ year: number; month: number }> {
-    return Array.from({ length: count }, (_, index) => {
-      const date = new Date(this.today.getFullYear(), this.today.getMonth() - (count - index - 1), 1);
-      return { year: date.getFullYear(), month: date.getMonth() + 1 };
+  private getPeriodRange(): DashboardPeriodRange {
+    const year = this.selectedDate.getFullYear();
+    const month = this.selectedDate.getMonth();
+    let start: Date;
+    let end: Date;
+    let previousStart: Date;
+    let previousEnd: Date;
+
+    if (this.periodMode === 'year') {
+      start = new Date(year, 0, 1);
+      end = new Date(year, 11, 31, 23, 59, 59, 999);
+      previousStart = new Date(year - 1, 0, 1);
+      previousEnd = new Date(year - 1, 11, 31, 23, 59, 59, 999);
+    } else if (this.periodMode === 'quarter') {
+      const quarterStartMonth = Math.floor(month / 3) * 3;
+      start = new Date(year, quarterStartMonth, 1);
+      end = new Date(year, quarterStartMonth + 3, 0, 23, 59, 59, 999);
+      previousStart = new Date(year, quarterStartMonth - 3, 1);
+      previousEnd = new Date(year, quarterStartMonth, 0, 23, 59, 59, 999);
+    } else {
+      start = new Date(year, month, 1);
+      end = new Date(year, month + 1, 0, 23, 59, 59, 999);
+      previousStart = new Date(year, month - 1, 1);
+      previousEnd = new Date(year, month, 0, 23, 59, 59, 999);
+    }
+
+    return { start, end, previousStart, previousEnd };
+  }
+
+  private getChartBuckets(period: DashboardPeriodRange): DashboardTimeBucket[] {
+    if (this.periodMode === 'month') {
+      const buckets: DashboardTimeBucket[] = [];
+      let day = 1;
+      let week = 1;
+      while (day <= period.end.getDate()) {
+        const endDay = Math.min(day + 6, period.end.getDate());
+        buckets.push({
+          label: `T${week}`,
+          start: new Date(period.start.getFullYear(), period.start.getMonth(), day),
+          end: new Date(period.start.getFullYear(), period.start.getMonth(), endDay, 23, 59, 59, 999),
+        });
+        day += 7;
+        week += 1;
+      }
+      return buckets;
+    }
+
+    const monthCount = this.periodMode === 'quarter' ? 3 : 12;
+    return Array.from({ length: monthCount }, (_, index) => {
+      const monthStart = new Date(period.start.getFullYear(), period.start.getMonth() + index, 1);
+      return {
+        label: `T${monthStart.getMonth() + 1}`,
+        start: monthStart,
+        end: new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0, 23, 59, 59, 999),
+      };
     });
   }
 

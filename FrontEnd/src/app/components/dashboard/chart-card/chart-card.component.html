@@ -11,7 +11,7 @@
 
   <div class="line-chart" *ngIf="chartType === 'line'">
     <div class="chart-total">
-      <span>Tổng 6 tháng</span>
+      <span>Tổng trong kỳ</span>
       <strong>{{ formatValue(total) }}</strong>
     </div>
     <svg viewBox="0 0 400 190" preserveAspectRatio="none" class="line-svg" *ngIf="data.length; else emptyChart">

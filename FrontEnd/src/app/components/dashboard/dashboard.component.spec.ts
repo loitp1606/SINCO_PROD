@@ -9,8 +9,8 @@ describe('DashboardComponent', () => {
   let fixture: ComponentFixture<DashboardComponent>;
 
   const dashboardServiceMock = {
-    loadBcdtlnReportCurrent: jasmine
-      .createSpy('loadBcdtlnReportCurrent')
+    loadBcdtlnReport: jasmine
+      .createSpy('loadBcdtlnReport')
       .and.returnValue(of([])),
     loadQuotationList: jasmine
       .createSpy('loadQuotationList')
@@ -51,7 +51,7 @@ describe('DashboardComponent', () => {
   });
 
   it('should load real dashboard data via DashboardService', () => {
-    expect(dashboardServiceMock.loadBcdtlnReportCurrent).toHaveBeenCalled();
+    expect(dashboardServiceMock.loadBcdtlnReport).toHaveBeenCalled();
     expect(dashboardServiceMock.loadQuotationList).toHaveBeenCalled();
     expect(dashboardServiceMock.loadOrderList).toHaveBeenCalled();
     expect(component.isLoading).toBeFalse();
