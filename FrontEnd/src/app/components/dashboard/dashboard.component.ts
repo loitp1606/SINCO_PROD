@@ -52,6 +52,11 @@ interface DashboardTimeBucket {
   end: Date;
 }
 
+interface DashboardPeriodOption {
+  value: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -68,6 +73,7 @@ export class DashboardComponent implements OnInit {
     { value: 'quarter', label: 'Quý' },
     { value: 'year', label: 'Năm' },
   ];
+  private readonly periodHistoryYears = 10;
   errorMessage = '';
   isLoading = true;
   lastUpdated: Date | null = null;
@@ -136,8 +142,54 @@ export class DashboardComponent implements OnInit {
     return 'so với tháng trước';
   }
 
+  get selectedPeriodValue(): string {
+    const year = this.selectedDate.getFullYear();
+    if (this.periodMode === 'year') return String(year);
+    if (this.periodMode === 'quarter') {
+      return `${year}-Q${Math.floor(this.selectedDate.getMonth() / 3) + 1}`;
+    }
+    return `${year}-${String(this.selectedDate.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  get periodOptions(): DashboardPeriodOption[] {
+    const options: DashboardPeriodOption[] = [];
+    const currentYear = this.today.getFullYear();
+    const firstYear = currentYear - this.periodHistoryYears + 1;
+
+    for (let year = currentYear; year >= firstYear; year -= 1) {
+      if (this.periodMode === 'year') {
+        options.push({ value: String(year), label: `Năm ${year}` });
+        continue;
+      }
+
+      if (this.periodMode === 'quarter') {
+        const lastQuarter = year === currentYear
+          ? Math.floor(this.today.getMonth() / 3) + 1
+          : 4;
+        for (let quarter = lastQuarter; quarter >= 1; quarter -= 1) {
+          options.push({ value: `${year}-Q${quarter}`, label: `Quý ${quarter}/${year}` });
+        }
+        continue;
+      }
+
+      const lastMonth = year === currentYear ? this.today.getMonth() + 1 : 12;
+      for (let month = lastMonth; month >= 1; month -= 1) {
+        options.push({
+          value: `${year}-${String(month).padStart(2, '0')}`,
+          label: `Tháng ${month}/${year}`,
+        });
+      }
+    }
+    return options;
+  }
+
   get canGoNextPeriod(): boolean {
     return this.getPeriodRange().end.getTime() < this.today.getTime();
+  }
+
+  get canGoPreviousPeriod(): boolean {
+    const firstYear = this.today.getFullYear() - this.periodHistoryYears + 1;
+    return this.getPeriodRange().start.getTime() > new Date(firstYear, 0, 1).getTime();
   }
 
   selectPeriodMode(mode: DashboardPeriodMode): void {
@@ -147,8 +199,23 @@ export class DashboardComponent implements OnInit {
     this.loadDashboardData();
   }
 
+  selectPeriodValue(value: string): void {
+    if (!value || value === this.selectedPeriodValue) return;
+    if (this.periodMode === 'year') {
+      this.selectedDate = new Date(Number(value), 0, 1);
+    } else if (this.periodMode === 'quarter') {
+      const [yearText, quarterText] = value.split('-Q');
+      this.selectedDate = new Date(Number(yearText), (Number(quarterText) - 1) * 3, 1);
+    } else {
+      const [yearText, monthText] = value.split('-');
+      this.selectedDate = new Date(Number(yearText), Number(monthText) - 1, 1);
+    }
+    this.loadDashboardData();
+  }
+
   shiftPeriod(direction: -1 | 1): void {
     if (direction > 0 && !this.canGoNextPeriod) return;
+    if (direction < 0 && !this.canGoPreviousPeriod) return;
     const next = new Date(this.selectedDate);
     if (this.periodMode === 'month') next.setMonth(next.getMonth() + direction);
     if (this.periodMode === 'quarter') next.setMonth(next.getMonth() + direction * 3);

@@ -146,17 +146,48 @@
   gap: 5px;
 }
 
-.period-current {
+.period-select-wrap {
+  position: relative;
   display: flex;
-  min-width: 155px;
+  min-width: 190px;
   height: 38px;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 5px;
+  padding-left: 12px;
+  border: 1px solid #dbe4f0;
+  border-radius: 9px;
+  background: #fff;
   color: #334155;
+  transition: 0.18s ease;
 
-  i { color: #2563eb; font-size: 13px; }
-  strong { font-size: 13px; }
+  &:focus-within { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.11); }
+  > i:first-child { color: #2563eb; font-size: 13px; }
+
+  select {
+    min-width: 0;
+    height: 100%;
+    flex: 1;
+    padding: 0 28px 0 3px;
+    border: 0;
+    outline: 0;
+    appearance: none;
+    background: transparent;
+    color: #334155;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    &:disabled { cursor: wait; opacity: 0.65; }
+  }
+
+  .select-chevron {
+    position: absolute;
+    right: 11px;
+    color: #94a3b8;
+    font-size: 9px;
+    pointer-events: none;
+  }
 }
 
 .period-arrow {
@@ -528,6 +559,7 @@
   .period-modes { justify-content: stretch; }
   .period-modes button { min-width: 0; flex: 1; }
   .period-navigation { justify-content: space-between; }
+  .period-select-wrap { flex: 1; }
   .update-status { align-items: flex-start; }
   .hero { padding: 26px 20px; border-radius: 18px; }
   .hero-value { white-space: normal; }
