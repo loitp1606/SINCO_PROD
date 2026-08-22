@@ -127,6 +127,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   controll = '';
   rowHeights: { [key: number]: number } = {};
   columnWidths: { [key: string]: number } = {};
+  showColumnSettings = false;
+  private defaultGridHeaders: GirdHeader[] = [];
+  private customizableColumnKeys = new Set<string>();
   isFileHandle: string | undefined = 'both'; //"import" | "export" | "both"
   isListNotSuccess: boolean = false;
   objectKeys = Object.keys;
@@ -265,6 +268,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       document.body.classList.add('dynamic-grid-viewport-lock');
     }
     await this.loadGridConfigFromBrowser();
+    this.initializeGridColumnPreferences();
     this.rebuildGridLayoutCache();
     this.pageTitleService.setTitle(this.girdData?.title ?? '');
     this.initializePaneHeights();
@@ -1609,13 +1613,15 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   }
 
   onResizeColumn(event: MouseEvent, header: any) {
+    event.preventDefault();
+    event.stopPropagation();
     const startX = event.pageX;
     const startWidth = event.target
       ? (event.target as HTMLElement).parentElement!.offsetWidth
       : 0;
 
     const onMouseMove = (moveEvent: MouseEvent) => {
-      const currentWidth = startWidth + (moveEvent.pageX - startX);
+      const currentWidth = Math.min(1200, startWidth + (moveEvent.pageX - startX));
       if (currentWidth > 50) {
         this.updateColumnWidth(header.key, currentWidth);
       }
@@ -1624,6 +1630,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+      this.saveGridColumnPreferences();
     };
 
     document.addEventListener('mousemove', onMouseMove);
@@ -1656,6 +1663,134 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   updateColumnWidth(key: string, width: number) {
     this.columnWidths[key] = width;
     this.rebuildGridLayoutCache();
+  }
+
+  get configurableHeaders(): GirdHeader[] {
+    return (this.girdData?.headers || []).filter((header) =>
+      this.customizableColumnKeys.has(header.key),
+    );
+  }
+
+  toggleColumnSettings(event: MouseEvent): void {
+    event.stopPropagation();
+    this.showColumnSettings = !this.showColumnSettings;
+  }
+
+  toggleColumnVisibility(header: GirdHeader): void {
+    if (!header.hidden && !this.canHideColumn(header)) return;
+
+    header.hidden = !header.hidden;
+    const hadFilter = !!this.filterColumns[header.key];
+    if (header.hidden) {
+      this.filterColumns[header.key] = '';
+    }
+    this.applyGridColumnPreferenceChange();
+    if (hadFilter) {
+      this.onColumnFilterChange();
+    }
+  }
+
+  canHideColumn(header: GirdHeader): boolean {
+    if (header.hidden) return true;
+    return this.configurableHeaders.filter((item) => !item.hidden).length > 1;
+  }
+
+  moveColumn(header: GirdHeader, direction: -1 | 1): void {
+    const configurable = this.configurableHeaders;
+    const currentIndex = configurable.findIndex((item) => item.key === header.key);
+    const targetIndex = currentIndex + direction;
+    if (currentIndex < 0 || targetIndex < 0 || targetIndex >= configurable.length) return;
+
+    [configurable[currentIndex], configurable[targetIndex]] = [
+      configurable[targetIndex],
+      configurable[currentIndex],
+    ];
+    const technicalHeaders = this.girdData.headers.filter(
+      (item) => !this.customizableColumnKeys.has(item.key),
+    );
+    this.girdData.headers = [...configurable, ...technicalHeaders];
+    this.applyGridColumnPreferenceChange();
+  }
+
+  resetGridColumnPreferences(): void {
+    localStorage.removeItem(this.gridColumnPreferenceStorageKey);
+    this.girdData.headers = this.defaultGridHeaders.map((header) => ({ ...header }));
+    this.columnWidths = {};
+    this.applyGridColumnPreferenceChange(false);
+  }
+
+  @HostListener('document:click')
+  closeColumnSettings(): void {
+    this.showColumnSettings = false;
+  }
+
+  private initializeGridColumnPreferences(): void {
+    if (this.defaultGridHeaders.length === 0) {
+      this.defaultGridHeaders = (this.girdData?.headers || []).map((header) => ({ ...header }));
+    }
+    this.customizableColumnKeys = new Set(
+      this.defaultGridHeaders.filter((header) => !header.hidden).map((header) => header.key),
+    );
+
+    try {
+      const stored = JSON.parse(
+        localStorage.getItem(this.gridColumnPreferenceStorageKey) || '{}',
+      ) as {
+        order?: string[];
+        hidden?: string[];
+        widths?: Record<string, number>;
+      };
+      const order = (stored.order || []).filter((key) => this.customizableColumnKeys.has(key));
+      const orderIndex = new Map(order.map((key, index) => [key, index]));
+      const configurable = this.defaultGridHeaders
+        .filter((header) => this.customizableColumnKeys.has(header.key))
+        .sort((left, right) => {
+          const leftIndex = orderIndex.get(left.key) ?? Number.MAX_SAFE_INTEGER;
+          const rightIndex = orderIndex.get(right.key) ?? Number.MAX_SAFE_INTEGER;
+          return leftIndex - rightIndex;
+        })
+        .map((header) => ({
+          ...header,
+          hidden: (stored.hidden || []).includes(header.key),
+        }));
+      const technical = this.defaultGridHeaders
+        .filter((header) => !this.customizableColumnKeys.has(header.key))
+        .map((header) => ({ ...header }));
+      this.girdData.headers = [...configurable, ...technical];
+      this.columnWidths = Object.fromEntries(
+        Object.entries(stored.widths || {}).filter(
+          ([, width]) => Number.isFinite(width) && width >= 50 && width <= 1200,
+        ),
+      );
+    } catch {
+      this.girdData.headers = this.defaultGridHeaders.map((header) => ({ ...header }));
+      this.columnWidths = {};
+    }
+  }
+
+  private applyGridColumnPreferenceChange(save: boolean = true): void {
+    this.rebuildGridLayoutCache();
+    this.rebuildMasterCellDisplayCache();
+    if (save) this.saveGridColumnPreferences();
+  }
+
+  private saveGridColumnPreferences(): void {
+    if (!this.girdData?.id || this.customizableColumnKeys.size === 0) return;
+    localStorage.setItem(
+      this.gridColumnPreferenceStorageKey,
+      JSON.stringify({
+        order: this.configurableHeaders.map((header) => header.key),
+        hidden: this.configurableHeaders
+          .filter((header) => header.hidden)
+          .map((header) => header.key),
+        widths: this.columnWidths,
+      }),
+    );
+  }
+
+  private get gridColumnPreferenceStorageKey(): string {
+    const userId = localStorage.getItem('userId') || 'anonymous';
+    return `sinco:grid-columns:${userId}:${this.girdData?.id || 'unknown'}`;
   }
 
   private getDefaultColumnWidth(key: string, type?: string): number {
