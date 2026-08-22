@@ -28,12 +28,6 @@
 			"width": "350px"
 		},
 		{
-			"key": "totalPayment",
-			"label": "GRID.total_amount",
-			"type": "number",
-			"width": "100px"
-		},
-		{
 			"key": "status",
 			"label": "Trạng thái",
 			"type": "select",
@@ -64,6 +58,12 @@
 			"label": "Danh sách hóa đơn",
 			"type": "text",
 			"width": "150px"
+		},
+		{
+			"key": "totalPayment",
+			"label": "GRID.total_amount",
+			"type": "number",
+			"width": "100px"
 		},
 		{
 			"key": "paidAmount",
