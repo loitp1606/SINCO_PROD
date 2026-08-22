@@ -1,64 +1,154 @@
-<div class="dashboard">
-  <div class="header">
-    <div class="header-left">
-      <h1>Dashboard</h1>
-      <div class="date-range">
-        <span>Hôm nay: {{ today | date:'dd/MM/yyyy' }}</span>
-      </div>
+<main class="dashboard-shell">
+  <header class="dashboard-header">
+    <div>
+      <div class="eyebrow"><span class="live-dot"></span> Trung tâm điều hành</div>
+      <h1>Tổng quan kinh doanh</h1>
+      <p>Dữ liệu vận hành cập nhật cho {{ currentPeriodLabel }}</p>
     </div>
-    <div class="header-right">
-      <button class="refresh-btn" (click)="refreshData()" [disabled]="isLoading">
-        <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i>
-        Làm mới
+    <div class="header-actions">
+      <div class="update-status" *ngIf="lastUpdated">
+        <span>Cập nhật gần nhất</span>
+        <strong>{{ lastUpdated | date:'HH:mm, dd/MM/yyyy' }}</strong>
+      </div>
+      <button type="button" class="refresh-button" (click)="refreshData()" [disabled]="isLoading">
+        <i class="fas fa-rotate" [class.fa-spin]="isLoading"></i>
+        <span>{{ isLoading ? 'Đang tải' : 'Làm mới' }}</span>
       </button>
     </div>
-  </div>
-
-  <div *ngIf="isLoading" class="loading-overlay">
-    <div class="spinner"></div>
-  </div>
+  </header>
 
   <div *ngIf="errorMessage" class="error-banner">
-    <i class="fas fa-exclamation-triangle"></i>
+    <i class="fas fa-circle-exclamation"></i>
     <span>{{ errorMessage }}</span>
   </div>
 
-  <div class="content" [class.loading]="isLoading">
-    <section class="finance-hero">
-      <article class="finance-card revenue">
-        <div class="finance-card__label">Doanh thu tháng hiện tại</div>
-        <div class="finance-card__value">{{ formatCurrencyVnd(financialHighlights.revenue) }}</div>
-        <div class="finance-card__meta">Biên lợi nhuận: {{ financialHighlights.margin | number:'1.0-1' }}%</div>
-      </article>
-      <article class="finance-card profit">
-        <div class="finance-card__label">Lợi nhuận hiện tại</div>
-        <div class="finance-card__value">{{ formatCurrencyVnd(financialHighlights.profit) }}</div>
-        <div class="finance-card__meta">Nguồn dữ liệu: báo cáo BCĐTLN</div>
-      </article>
-    </section>
-
-    <div class="statistics-grid">
-      <app-statistics-card
-        *ngFor="let stat of statistics"
-        [title]="stat.title"
-        [value]="stat.value"
-        [icon]="stat.icon"
-        [trend]="stat.trend"
-        [trendText]="stat.trendText"
-        [trendUp]="stat.trendUp"
-        [color]="stat.color">
-      </app-statistics-card>
+  <section class="hero" [class.is-loading]="isLoading">
+    <div class="hero-glow hero-glow-one"></div>
+    <div class="hero-glow hero-glow-two"></div>
+    <div class="hero-main">
+      <span class="hero-label">Doanh thu {{ currentPeriodLabel | lowercase }}</span>
+      <div class="hero-value">{{ formatCurrencyVnd(financialHighlights.revenue) }}</div>
+      <div class="hero-trend" [class.down]="financialHighlights.revenueTrend < 0">
+        <i [class]="financialHighlights.revenueTrend >= 0 ? 'fas fa-arrow-trend-up' : 'fas fa-arrow-trend-down'"></i>
+        <strong>{{ financialHighlights.revenueTrend >= 0 ? '+' : '' }}{{ financialHighlights.revenueTrend }}%</strong>
+        <span>so với kỳ trước</span>
+      </div>
     </div>
-
-    <div class="charts-grid">
-      <app-chart-card
-        *ngFor="let chart of charts"
-        [title]="chart.title"
-        [chartType]="chart.type"
-        [data]="chart.data"
-        [labels]="chart.labels"
-        [color]="chart.color">
-      </app-chart-card>
+    <div class="hero-metrics">
+      <div class="hero-metric">
+        <span>Lợi nhuận gộp</span>
+        <strong>{{ formatCurrencyVnd(financialHighlights.grossProfit) }}</strong>
+        <small>Biên lợi nhuận {{ financialHighlights.margin | number:'1.0-1' }}%</small>
+      </div>
+      <div class="hero-metric">
+        <span>Giá vốn</span>
+        <strong>{{ formatCurrencyVnd(financialHighlights.cost) }}</strong>
+        <small>Chi phí trực tiếp trong kỳ</small>
+      </div>
+      <div class="hero-metric accent">
+        <span>Lãi / lỗ ròng</span>
+        <strong>{{ formatCurrencyVnd(financialHighlights.netProfit) }}</strong>
+        <small>Nguồn BCĐTLN</small>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
+
+  <section class="statistics-grid" [class.is-loading]="isLoading">
+    <app-statistics-card
+      *ngFor="let stat of statistics"
+      [title]="stat.title"
+      [value]="stat.value"
+      [icon]="stat.icon"
+      [trend]="stat.trend"
+      [trendText]="stat.trendText"
+      [trendUp]="stat.trendUp"
+      [color]="stat.color"
+      [caption]="stat.caption">
+    </app-statistics-card>
+  </section>
+
+  <section class="insight-grid" [class.is-loading]="isLoading">
+    <app-chart-card
+      *ngFor="let chart of charts"
+      [title]="chart.title"
+      [subtitle]="chart.subtitle"
+      [chartType]="chart.type"
+      [data]="chart.data"
+      [labels]="chart.labels"
+      [color]="chart.color"
+      [valueFormat]="chart.valueFormat">
+    </app-chart-card>
+
+    <article class="panel funnel-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Luồng bán hàng</h2>
+          <p>Chuyển đổi chứng từ trong tháng</p>
+        </div>
+        <i class="fas fa-filter-circle-dollar panel-icon"></i>
+      </div>
+      <div class="funnel-list">
+        <button type="button" class="funnel-row" *ngFor="let item of funnel" (click)="navigateTo(item.route)">
+          <div class="funnel-meta">
+            <span>{{ item.label }}</span>
+            <strong>{{ formatNumber(item.value) }}</strong>
+          </div>
+          <div class="funnel-track">
+            <span [style.width.%]="funnelWidth(item.value)" [style.background]="item.color"></span>
+          </div>
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <section class="bottom-grid" [class.is-loading]="isLoading">
+    <article class="panel activity-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Hoạt động mới nhất</h2>
+          <p>Chứng từ vừa phát sinh trên hệ thống</p>
+        </div>
+        <span class="panel-badge">{{ activities.length }} hoạt động</span>
+      </div>
+      <div class="activity-list" *ngIf="activities.length; else emptyActivity">
+        <button type="button" class="activity-row" *ngFor="let activity of activities" (click)="navigateTo(activity.route)">
+          <span class="activity-icon" [style.color]="activity.color" [style.background]="activity.color + '14'">
+            <i [class]="activity.icon"></i>
+          </span>
+          <span class="activity-main">
+            <strong>{{ activity.number }}</strong>
+            <small>{{ activity.type }} · {{ activity.customer }}</small>
+          </span>
+          <span class="activity-side">
+            <strong>{{ formatCurrencyVnd(activity.amount) }}</strong>
+            <small>{{ activity.date | date:'dd/MM/yyyy' }}</small>
+          </span>
+          <i class="fas fa-chevron-right row-arrow"></i>
+        </button>
+      </div>
+      <ng-template #emptyActivity>
+        <div class="empty-state"><i class="fas fa-inbox"></i><span>Chưa có hoạt động để hiển thị</span></div>
+      </ng-template>
+    </article>
+
+    <article class="panel alert-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Cần chú ý</h2>
+          <p>Các chỉ số cần được xử lý</p>
+        </div>
+        <i class="fas fa-bell panel-icon"></i>
+      </div>
+      <button type="button" class="alert-row" *ngFor="let alert of alerts" [ngClass]="alert.tone" (click)="navigateTo(alert.route)">
+        <span class="alert-icon"><i [class]="alert.icon"></i></span>
+        <span class="alert-content">
+          <span>{{ alert.label }}</span>
+          <small>{{ alert.note }}</small>
+        </span>
+        <strong>{{ alert.value }}</strong>
+      </button>
+    </article>
+  </section>
+
+  <div class="loading-bar" *ngIf="isLoading"><span></span></div>
+</main>

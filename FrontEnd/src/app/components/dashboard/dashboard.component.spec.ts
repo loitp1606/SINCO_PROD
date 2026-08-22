@@ -9,6 +9,9 @@ describe('DashboardComponent', () => {
   let fixture: ComponentFixture<DashboardComponent>;
 
   const dashboardServiceMock = {
+    loadBcdtlnReportCurrent: jasmine
+      .createSpy('loadBcdtlnReportCurrent')
+      .and.returnValue(of([])),
     loadQuotationList: jasmine
       .createSpy('loadQuotationList')
       .and.returnValue(of({ data: [], total: 0 })),
@@ -48,6 +51,7 @@ describe('DashboardComponent', () => {
   });
 
   it('should load real dashboard data via DashboardService', () => {
+    expect(dashboardServiceMock.loadBcdtlnReportCurrent).toHaveBeenCalled();
     expect(dashboardServiceMock.loadQuotationList).toHaveBeenCalled();
     expect(dashboardServiceMock.loadOrderList).toHaveBeenCalled();
     expect(component.isLoading).toBeFalse();
@@ -59,7 +63,7 @@ describe('DashboardComponent', () => {
     );
 
     component.refreshData();
-    expect(component.errorMessage).toBe('Không thể tải dữ liệu dashboard.');
+    expect(component.errorMessage).toContain('1 nguồn dữ liệu chưa tải được');
     expect(component.isLoading).toBeFalse();
   });
 });

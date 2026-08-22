@@ -14,6 +14,8 @@ export class ChartCardComponent {
   @Input() data: any[] = [];
   @Input() labels: string[] = [];
   @Input() color: string = '#007bff';
+  @Input() subtitle: string = '';
+  @Input() valueFormat: 'number' | 'currency' = 'number';
 
   getLinePoints(): string {
     if (!this.data || this.data.length === 0) return '';
@@ -23,18 +25,25 @@ export class ChartCardComponent {
     const range = maxValue - minValue || 1;
     
     const points = this.data.map((value, index) => {
-      const x = (index / (this.data.length - 1)) * 360 + 20; // 20px padding
-      const y = 180 - ((value - minValue) / range) * 160 + 10; // 10px padding
+      const denominator = Math.max(this.data.length - 1, 1);
+      const x = (index / denominator) * 360 + 20;
+      const y = 170 - ((value - minValue) / range) * 130;
       return `${x},${y}`;
     });
     
     return points.join(' ');
   }
 
+  getAreaPoints(): string {
+    const points = this.getLinePoints();
+    return points ? `20,180 ${points} 380,180` : '';
+  }
+
   getPieSlices() {
     if (!this.data || this.data.length === 0) return [];
     
     const total = this.data.reduce((sum, value) => sum + value, 0);
+    if (!total) return [];
     let currentAngle = 0;
     
     return this.data.map(value => {
@@ -53,8 +62,22 @@ export class ChartCardComponent {
       const path = `M 0 0 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`;
       
       currentAngle += angle;
-      return { path };
+      return { path, percentage: percentage * 100 };
     });
+  }
+
+  get total(): number {
+    return this.data.reduce((sum, value) => sum + (Number(value) || 0), 0);
+  }
+
+  formatValue(value: number): string {
+    if (this.valueFormat === 'currency') {
+      if (Math.abs(value) >= 1_000_000) {
+        return new Intl.NumberFormat('vi-VN', { notation: 'compact', maximumFractionDigits: 1 }).format(value) + ' ₫';
+      }
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(value || 0);
+    }
+    return new Intl.NumberFormat('vi-VN').format(value || 0);
   }
 
   getSliceColor(index: number): string {

@@ -66,10 +66,10 @@ export class DashboardService {
 
   loadReceiptList(): Observable<ListApiResponse> {
     return this.loadList({
-      controller: 'receipt.page.json',
-      formId: 'receipt',
+      controller: 'receiptV2.page.json',
+      formId: 'receiptV2',
       idVC: 'Z07',
-      listTable: ['receipt', 'receiptDetail'],
+      listTable: ['receiptV2', 'receiptdetailV2'],
       sort: 'voucherDate desc, voucherNumber desc',
     });
   }

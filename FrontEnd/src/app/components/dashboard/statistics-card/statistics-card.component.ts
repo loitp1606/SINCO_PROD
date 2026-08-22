@@ -16,4 +16,5 @@ export class StatisticsCardComponent {
   @Input() trendText: string = '';
   @Input() trendUp: boolean = true;
   @Input() color: string = '#007bff';
+  @Input() caption: string = '';
 }

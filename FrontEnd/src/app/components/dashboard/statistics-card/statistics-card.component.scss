@@ -1,74 +1,99 @@
+:host { display: block; min-width: 0; }
+
 .statistics-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  position: relative;
+  height: 100%;
+  min-height: 154px;
+  padding: 18px;
+  overflow: hidden;
+  border: 1px solid #e5eaf2;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 7px 24px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 62px;
+    height: 3px;
+    border-radius: 0 0 0 5px;
+    background: var(--accent);
+  }
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
+  }
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.icon-container {
+  display: grid;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 10.5px;
+  font-weight: 750;
+
+  &.down { background: #fff1f2; color: #e11d48; }
+  i { font-size: 8px; }
+}
+
+.card-title {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.card-value {
+  display: block;
+  overflow: hidden;
+  color: #172033;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.2;
+  letter-spacing: -0.6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+
+  span {
+    overflow: hidden;
+    color: var(--accent);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .icon-container {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 1rem;
-    background: var(--card-color, #007bff);
-    opacity: 0.1;
-
-    .icon {
-      font-size: 24px;
-      color: var(--card-color, #007bff);
-    }
-  }
-
-  .content {
-    flex: 1;
-
-    .title {
-      font-size: 0.875rem;
-      color: #6c757d;
-      margin-bottom: 0.5rem;
-    }
-
-    .value {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--card-color, #007bff);
-      margin-bottom: 0.5rem;
-    }
-
-    .trend {
-      display: flex;
-      align-items: center;
-      font-size: 0.875rem;
-
-      &.up {
-        color: #28a745;
-      }
-
-      &.down {
-        color: #dc3545;
-      }
-
-      .trend-icon {
-        margin-right: 0.25rem;
-      }
-
-      .trend-value {
-        font-weight: 600;
-        margin-right: 0.25rem;
-      }
-
-      .trend-text {
-        color: #6c757d;
-      }
-    }
-  }
+  small { color: #a0aec0; font-size: 9.5px; white-space: nowrap; }
 }
