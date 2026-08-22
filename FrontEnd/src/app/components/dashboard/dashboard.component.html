@@ -101,6 +101,88 @@
     </app-statistics-card>
   </section>
 
+  <section class="financial-analysis-grid" [class.is-loading]="isLoading">
+    <article class="panel gauge-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Chất lượng lợi nhuận</h2>
+          <p>Tỷ suất trên doanh thu thuần</p>
+        </div>
+        <span class="section-icon emerald"><i class="fas fa-gauge-high"></i></span>
+      </div>
+      <div class="gauge-grid">
+        <div class="gauge-item" *ngFor="let gauge of profitGauges">
+          <span class="gauge-label">{{ gauge.label }}</span>
+          <div class="gauge-visual">
+            <svg viewBox="0 0 180 105" aria-hidden="true">
+              <path class="gauge-background" d="M20 90 A70 70 0 0 1 160 90" pathLength="100"></path>
+              <path
+                class="gauge-progress"
+                d="M20 90 A70 70 0 0 1 160 90"
+                pathLength="100"
+                [attr.stroke]="gauge.color"
+                [attr.stroke-dasharray]="gaugeProgress(gauge.value) + ' 100'">
+              </path>
+            </svg>
+            <strong [style.color]="gauge.color">{{ gauge.value | number:'1.0-1' }}%</strong>
+          </div>
+          <small>Kỳ trước <b>{{ gauge.benchmark | number:'1.0-1' }}%</b></small>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel performance-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Kết quả hoạt động kinh doanh</h2>
+          <p>Thực tế và biến động so với kỳ trước</p>
+        </div>
+        <span class="section-icon violet"><i class="fas fa-chart-column"></i></span>
+      </div>
+      <div class="performance-list">
+        <div class="performance-row" *ngFor="let row of financialPerformance">
+          <div class="performance-meta">
+            <span>{{ row.label }}</span>
+            <strong>{{ formatCurrencyCompact(row.current) }}</strong>
+            <small [class.favorable]="row.favorable" [class.unfavorable]="!row.favorable">
+              <i [class]="row.trend >= 0 ? 'fas fa-caret-up' : 'fas fa-caret-down'"></i>
+              {{ row.trend | number:'1.0-1' }}%
+            </small>
+          </div>
+          <div class="performance-track">
+            <span [style.width.%]="performanceWidth(row.current)" [style.background]="row.color"></span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel aging-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Tuổi nợ phải thu</h2>
+          <p>Phân nhóm công nợ phiếu xuất</p>
+        </div>
+        <span class="section-icon orange"><i class="fas fa-hourglass-half"></i></span>
+      </div>
+      <div class="aging-total">
+        <span>Tổng công nợ trong kỳ</span>
+        <strong>{{ formatCurrencyCompact(totalDebtAging) }}</strong>
+      </div>
+      <div class="aging-list">
+        <div class="aging-row" *ngFor="let bucket of debtAging">
+          <div class="aging-meta">
+            <span>{{ bucket.label }}</span>
+            <small>{{ bucket.count }} phiếu</small>
+            <strong>{{ formatCurrencyCompact(bucket.amount) }}</strong>
+          </div>
+          <div class="aging-track">
+            <span [style.width.%]="debtAgingWidth(bucket.amount)" [style.background]="bucket.color"></span>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
   <section class="insight-grid" [class.is-loading]="isLoading">
     <app-chart-card
       *ngFor="let chart of charts"

@@ -57,6 +57,42 @@ interface DashboardPeriodOption {
   label: string;
 }
 
+interface FinancialPerformanceRow {
+  label: string;
+  current: number;
+  previous: number;
+  trend: number;
+  favorable: boolean;
+  color: string;
+}
+
+interface ProfitGauge {
+  label: string;
+  value: number;
+  benchmark: number;
+  color: string;
+}
+
+interface DebtAgingBucket {
+  label: string;
+  amount: number;
+  count: number;
+  color: string;
+}
+
+interface FinancialMetrics {
+  revenue: number;
+  previousRevenue: number;
+  grossProfit: number;
+  previousGrossProfit: number;
+  netProfit: number;
+  previousNetProfit: number;
+  cost: number;
+  previousCost: number;
+  expense: number;
+  previousExpense: number;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -80,9 +116,15 @@ export class DashboardComponent implements OnInit {
 
   financialHighlights = {
     revenue: 0,
+    previousRevenue: 0,
     grossProfit: 0,
+    previousGrossProfit: 0,
     netProfit: 0,
+    previousNetProfit: 0,
     cost: 0,
+    previousCost: 0,
+    expense: 0,
+    previousExpense: 0,
     margin: 0,
     revenueTrend: 0,
   };
@@ -99,6 +141,9 @@ export class DashboardComponent implements OnInit {
   }> = [];
   activities: DashboardActivity[] = [];
   alerts: DashboardAlert[] = [];
+  financialPerformance: FinancialPerformanceRow[] = [];
+  profitGauges: ProfitGauge[] = [];
+  debtAging: DebtAgingBucket[] = [];
   funnel = [
     { label: 'Báo giá', value: 0, color: '#2563eb', route: '/quotationPaper' },
     { label: 'Đơn hàng', value: 0, color: '#7c3aed', route: '/order' },
@@ -261,9 +306,15 @@ export class DashboardComponent implements OnInit {
 
         this.financialHighlights = {
           revenue: financial.revenue,
+          previousRevenue: financial.previousRevenue,
           grossProfit: financial.grossProfit,
+          previousGrossProfit: financial.previousGrossProfit,
           netProfit: financial.netProfit,
+          previousNetProfit: financial.previousNetProfit,
           cost: financial.cost,
+          previousCost: financial.previousCost,
+          expense: financial.expense,
+          previousExpense: financial.previousExpense,
           margin: financial.revenue
             ? Number(((financial.grossProfit / financial.revenue) * 100).toFixed(1))
             : 0,
@@ -275,6 +326,8 @@ export class DashboardComponent implements OnInit {
         this.buildFunnel(quotationRows, orderRows, deliveryRows, receiptRows, period);
         this.buildActivities(quotationRows, orderRows, deliveryRows, receiptRows, period);
         this.buildAlerts(deliveryRows, receiptRows, period);
+        this.buildFinancialAnalysis(financial);
+        this.buildDebtAging(deliveryRows, period);
 
         this.lastUpdated = new Date();
         this.errorMessage = failedSources
@@ -434,6 +487,109 @@ export class DashboardComponent implements OnInit {
     ];
   }
 
+  private buildFinancialAnalysis(financial: FinancialMetrics): void {
+    const operatingProfit = financial.grossProfit - financial.expense;
+    const previousOperatingProfit = financial.previousGrossProfit - financial.previousExpense;
+    this.financialPerformance = [
+      this.createPerformanceRow('Doanh thu thuần', financial.revenue, financial.previousRevenue, true, '#3b82f6'),
+      this.createPerformanceRow('Giá vốn', financial.cost, financial.previousCost, false, '#f97316'),
+      this.createPerformanceRow('Lợi nhuận gộp', financial.grossProfit, financial.previousGrossProfit, true, '#10b981'),
+      this.createPerformanceRow('Chi phí bán hàng & QLDN', financial.expense, financial.previousExpense, false, '#ef4444'),
+      this.createPerformanceRow('Lợi nhuận từ HĐKD', operatingProfit, previousOperatingProfit, true, '#8b5cf6'),
+      this.createPerformanceRow('Lãi / lỗ ròng', financial.netProfit, financial.previousNetProfit, true, '#06b6d4'),
+    ];
+
+    this.profitGauges = [
+      {
+        label: 'Biên lợi nhuận gộp',
+        value: this.ratioPercent(financial.grossProfit, financial.revenue),
+        benchmark: this.ratioPercent(financial.previousGrossProfit, financial.previousRevenue),
+        color: '#10b981',
+      },
+      {
+        label: 'Biên lợi nhuận HĐKD',
+        value: this.ratioPercent(operatingProfit, financial.revenue),
+        benchmark: this.ratioPercent(previousOperatingProfit, financial.previousRevenue),
+        color: '#8b5cf6',
+      },
+      {
+        label: 'Biên lợi nhuận ròng',
+        value: this.ratioPercent(financial.netProfit, financial.revenue),
+        benchmark: this.ratioPercent(financial.previousNetProfit, financial.previousRevenue),
+        color: '#06b6d4',
+      },
+    ];
+  }
+
+  private buildDebtAging(deliveries: any[], period: DashboardPeriodRange): void {
+    const currentDeliveries = this.rowsInRange(deliveries, period.start, period.end)
+      .filter((row) => this.amountOf(row, ['debtAmount']) > 0);
+    const definitions = [
+      { label: '0–30 ngày', min: 0, max: 30, color: '#22c55e' },
+      { label: '31–60 ngày', min: 31, max: 60, color: '#eab308' },
+      { label: '61–90 ngày', min: 61, max: 90, color: '#f97316' },
+      { label: 'Trên 90 ngày', min: 91, max: Number.POSITIVE_INFINITY, color: '#ef4444' },
+    ];
+    this.debtAging = definitions.map((definition) => {
+      const rows = currentDeliveries.filter((row) => {
+        const days = Math.max(this.parseNumeric(row?.overdueDays), 0);
+        return days >= definition.min && days <= definition.max;
+      });
+      return {
+        label: definition.label,
+        amount: this.sumAmounts(rows, ['debtAmount']),
+        count: rows.length,
+        color: definition.color,
+      };
+    });
+  }
+
+  get maxPerformanceValue(): number {
+    return Math.max(...this.financialPerformance.map((row) => Math.abs(row.current)), 1);
+  }
+
+  get maxDebtAgingAmount(): number {
+    return Math.max(...this.debtAging.map((bucket) => bucket.amount), 1);
+  }
+
+  get totalDebtAging(): number {
+    return this.debtAging.reduce((sum, bucket) => sum + bucket.amount, 0);
+  }
+
+  performanceWidth(value: number): number {
+    return Math.max((Math.abs(value) / this.maxPerformanceValue) * 100, value ? 3 : 0);
+  }
+
+  debtAgingWidth(value: number): number {
+    return Math.max((value / this.maxDebtAgingAmount) * 100, value ? 4 : 0);
+  }
+
+  gaugeProgress(value: number): number {
+    return Math.min(Math.max(value, 0), 100);
+  }
+
+  private createPerformanceRow(
+    label: string,
+    current: number,
+    previous: number,
+    increaseIsFavorable: boolean,
+    color: string,
+  ): FinancialPerformanceRow {
+    const trend = this.calculateTrendPercent(current, previous);
+    return {
+      label,
+      current,
+      previous,
+      trend,
+      favorable: increaseIsFavorable ? current >= previous : current <= previous,
+      color,
+    };
+  }
+
+  private ratioPercent(numerator: number, denominator: number): number {
+    return denominator ? Number(((numerator / denominator) * 100).toFixed(1)) : 0;
+  }
+
   private rowsInRange(rows: any[], start: Date, end: Date): any[] {
     return rows.filter((row) => {
       const date = this.parseDate(row?.voucherDate);
@@ -566,19 +722,18 @@ export class DashboardComponent implements OnInit {
     return value === true || value === 1 || String(value).toLowerCase() === 'true' || String(value) === '1';
   }
 
-  private extractFinancialMetrics(rows: Record<string, any>[]): {
-    revenue: number;
-    previousRevenue: number;
-    grossProfit: number;
-    netProfit: number;
-    cost: number;
-  } {
+  private extractFinancialMetrics(rows: Record<string, any>[]): FinancialMetrics {
     return {
       revenue: this.reportTotal(rows, 'dt_kn'),
       previousRevenue: this.reportTotal(rows, 'dt_ktr'),
       grossProfit: this.reportTotal(rows, 'loi_nhuan_kn'),
+      previousGrossProfit: this.reportTotal(rows, 'loi_nhuan_ktr'),
       netProfit: this.reportTotal(rows, 'lai_lo_kn'),
+      previousNetProfit: this.reportTotal(rows, 'lai_lo_ktr'),
       cost: this.reportTotal(rows, 'gv_kn'),
+      previousCost: this.reportTotal(rows, 'gv_ktr'),
+      expense: this.reportTotal(rows, 'cp_kn'),
+      previousExpense: this.reportTotal(rows, 'cp_ktr'),
     };
   }
 
