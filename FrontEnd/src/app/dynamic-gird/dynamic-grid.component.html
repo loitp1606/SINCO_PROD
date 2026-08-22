@@ -470,10 +470,14 @@
                 *ngIf="!header.hidden"
                 class="relative px-3 py-1 text-left text-[11px] font-bold uppercase tracking-wider group border-r border-sky-800"
                 [class.cursor-pointer]="isHeaderSortable(header)"
+                [class.grid-number-column]="header.type === 'number'"
                 [ngStyle]="headerCellStyles[header.key]"
                 (click)="onHeaderSortClick(header)"
               >
-                <div class="flex items-center gap-1">
+                <div
+                  class="flex items-center gap-1"
+                  [class.justify-end]="header.type === 'number'"
+                >
                   <span>{{ header.label | translate }}</span>
                   <span
                     *ngIf="isHeaderSortable(header)"
@@ -512,6 +516,7 @@
               <th
                 *ngIf="!header.hidden"
                 class="px-3 py-0.5 border-r border-sky-100"
+                [class.grid-number-column]="header.type === 'number'"
                 [ngStyle]="headerCellStyles[header.key]"
               >
                 <select
@@ -530,6 +535,7 @@
                     [(ngModel)]="filterColumns[header.key]"
                     (ngModelChange)="onColumnFilterChange()"
                     class="w-full rounded border border-sky-200 px-2 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    [class.grid-number-input]="header.type === 'number'"
                     [placeholder]="header.type === 'date' ? '' : 'Lọc...'"
                   />
                 </ng-template>
@@ -571,6 +577,7 @@
                 <td
                   *ngIf="!header.hidden"
                   class="px-2 py-0.5 text-xs relative"
+                  [class.grid-number-column]="header.type === 'number'"
                   [ngStyle]="headerCellStyles[header.key]"
                 >
                   <ng-container
@@ -617,6 +624,7 @@
                       (ngModelChange)="onQuickMasterFieldChange(data, header.key, $event, header.type)"
                       (click)="$event.stopPropagation()"
                       class="w-full rounded border border-sky-200 px-1.5 py-0.5 text-[11px] text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                      [class.grid-number-input]="header.type === 'number'"
                     />
                   </ng-container>
                   <ng-template #readonlyMasterCell>
@@ -897,12 +905,16 @@
                     *ngFor="let field of getAllDetailFields()"
                     [style.width]="getFieldWidth(field)"
                     class="relative resizable-header px-2 py-1 text-[11px] font-semibold whitespace-nowrap group cursor-pointer select-none"
+                    [class.grid-number-column]="field.type === 'number'"
                     [hidden]="field.type === 'hidden' || field.key === 'line_nbr'"
                     [attr.data-field-key]="field.key"
                     (click)="onDetailSortClick(field)"
                     title="Bấm để sắp xếp"
                   >
-                    <div class="flex items-center justify-between">
+                    <div
+                      class="flex items-center justify-between"
+                      [style.justify-content]="field.type === 'number' ? 'flex-end' : null"
+                    >
                       <span class="inline-flex items-center gap-1">
                         {{ field.label | translate }}
                         <span *ngIf="field.required" class="text-red-500"
@@ -944,6 +956,7 @@
                   <td
                     *ngFor="let field of getAllDetailFields()"
                     class="p-0"
+                    [class.grid-number-column]="field.type === 'number'"
                     [hidden]="field.type === 'hidden' || field.key === 'line_nbr'"
                   >
                     <div class="relative" [hidden]="field.disabled">
@@ -953,6 +966,7 @@
                         "
                         type="text"
                         class="w-full text-[11px] border border-slate-300 rounded px-2 py-0.5 focus:border-sky-500 focus:outline-none"
+                        [class.grid-number-input]="field.type === 'number'"
                         [value]="getFormattedFilterValue(field.key, field)"
                         (blur)="onCurrencyFilterBlur(field.key, $event, field)"
                         [(ngModel)]="currentColumnFilters[field.key]"
@@ -966,6 +980,7 @@
                         "
                         type="text"
                         class="w-full text-[11px] border border-slate-300 rounded px-2 py-0.5 focus:border-sky-500 focus:outline-none"
+                        [class.grid-number-input]="field.type === 'number'"
                         [(ngModel)]="currentColumnFilters[field.key]"
                         (ngModelChange)="onFilterChange(field.key, $event)"
                         (keydown.enter)="applyFilters()"
@@ -1035,6 +1050,7 @@
                     class="relative px-2 py-0.5"
                     *ngFor="let field of getAllDetailFields()"
                     [class.detail-wrap-cell]="field.wrap === true"
+                    [class.grid-number-column]="field.type === 'number'"
                     [hidden]="field.type === 'hidden' || field.key === 'line_nbr'"
                   >
                     <textarea

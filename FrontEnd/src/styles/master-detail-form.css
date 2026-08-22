@@ -1628,6 +1628,12 @@
   text-align: left;
 }
 
+/* Number columns are aligned consistently in master/detail headers, filters and cells. */
+.dynamic-grid-page .grid-number-column,
+.dynamic-grid-page .grid-number-input {
+  text-align: right !important;
+}
+
 .dynamic-grid-page .detail-professional .detail-table tbody app-lookup textarea.lookup-wrap-value {
   field-sizing: content;
   height: auto !important;
