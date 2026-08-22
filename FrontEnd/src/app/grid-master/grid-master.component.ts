@@ -450,7 +450,9 @@ export class GridMaster implements OnInit {
 
   formatDate(date: string): string {
     if (!date) return '';
-    return new Date(date).toLocaleDateString('vi-VN');
+    return new Date(date).toLocaleDateString('vi-VN', {
+      day: '2-digit', month: '2-digit', year: 'numeric'
+    });
   }
 
   getOptionLabel(fieldKey: string, value: string): string {

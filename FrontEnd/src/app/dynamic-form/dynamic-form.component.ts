@@ -258,11 +258,11 @@ export class DynamicFormComponent implements OnInit {
       return 'Email không hợp lệ.';
     if (errors?.['minDate']) {
       const requiredDate = new Date(errors['minDate'].requiredDate);
-      return `Ngày phải sau hoặc bằng ${requiredDate.toLocaleDateString()}.`;
+      return `Ngày phải sau hoặc bằng ${requiredDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}.`;
     }
     if (errors?.['maxDate']) {
       const requiredDate = new Date(errors['maxDate'].requiredDate);
-      return `Ngày phải trước hoặc bằng ${requiredDate.toLocaleDateString()}.`;
+      return `Ngày phải trước hoặc bằng ${requiredDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}.`;
     }
 
     return 'Giá trị không hợp lệ.';

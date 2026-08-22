@@ -363,7 +363,7 @@
               <ng-container *ngFor="let header of girdData.headers">
                 <td *ngIf="!header.hidden" class="px-4 py-3 text-sm">
                   <span *ngIf="header.type === 'date'; else normalDisplay">
-                    {{ data[header.key] | date:'dd-MM-yyyy' }}
+                    {{ data[header.key] | date:'dd/MM/yyyy' }}
                   </span>
                   <ng-template #normalDisplay>
                     {{ data[header.key] }}
@@ -637,7 +637,7 @@
                     </span>
                     <ng-template #nonCheckboxMasterDisplay>
                     <span *ngIf="header.type === 'date'; else normalDisplay">
-                      {{ data[header.key] | date: "dd-MM-yyyy" }}
+                      {{ data[header.key] | date: "dd/MM/yyyy" }}
                     </span>
                     <ng-template #normalDisplay>
                       <span

@@ -3021,7 +3021,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   formatDate(date: string): string {
     if (!date) return '';
-    return new Date(date).toLocaleDateString('vi-VN');
+    return new Date(date).toLocaleDateString('vi-VN', {
+      day: '2-digit', month: '2-digit', year: 'numeric'
+    });
   }
 
   private formatDateForRawExport(value: any): string {

@@ -52,6 +52,7 @@ export class DynamicReportComponent implements OnInit {
   data: Record<string, any>[] = [];
   filteredData: Record<string, any>[] = [];
   columnFilters: { [key: string]: string } = {};
+  columnWidths: Record<string, number> = {};
   isFileHandle: string | undefined = "export";
   userData: { [key: string]: string } = {};
   exportData: { [key: string]: any[] } = {};
@@ -84,6 +85,7 @@ export class DynamicReportComponent implements OnInit {
       )
       .subscribe(async (meta) => {
         this.response = meta.data;
+        this.initColumnWidths();
         this.pageTitleService.setTitle(this.response?.title ?? '');
         this.initFilterForm();
         this.initColumnFilters();
@@ -257,6 +259,9 @@ export class DynamicReportComponent implements OnInit {
     if (value === 0 || value === '0' || value === null || value === undefined) {
       return '';
     }
+    if (type === 'date' || type === 'datetime') {
+      return this.formatDisplayDate(value, type === 'datetime');
+    }
     if (format === 'space-group') {
       // Định dạng 100000000 -> 100 000 000
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -274,6 +279,49 @@ export class DynamicReportComponent implements OnInit {
       return Number(value).toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
     return value;
+  }
+
+  get reportTableWidth(): number {
+    return (this.response?.header || []).reduce(
+      (total: number, header: any) => total + this.getColumnWidth(header),
+      0
+    );
+  }
+
+  getColumnWidth(header: any): number {
+    const storedWidth = this.columnWidths[header.key];
+    if (Number.isFinite(storedWidth)) {
+      return storedWidth;
+    }
+
+    const configuredWidth = Number(header.width);
+    return Number.isFinite(configuredWidth) && configuredWidth > 0
+      ? configuredWidth
+      : 160;
+  }
+
+  onResizeColumn(event: MouseEvent, header: any): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const startX = event.clientX;
+    const startWidth = this.getColumnWidth(header);
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      this.columnWidths = {
+        ...this.columnWidths,
+        [header.key]: Math.min(800, Math.max(60, startWidth + moveEvent.clientX - startX)),
+      };
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      this.saveColumnWidths();
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 
   getRowClass(row: any): string {
@@ -294,6 +342,59 @@ export class DynamicReportComponent implements OnInit {
       this.columnFilters[header.key] = '';
     }
     this.applyColumnFilters();
+  }
+
+  private initColumnWidths(): void {
+    const configuredWidths = Object.fromEntries(
+      (this.response?.header || []).map((header: any) => [
+        header.key,
+        Number(header.width) > 0 ? Number(header.width) : 160,
+      ])
+    );
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(this.columnWidthStorageKey) || '{}');
+      this.columnWidths = { ...configuredWidths, ...stored };
+    } catch {
+      this.columnWidths = configuredWidths;
+    }
+  }
+
+  private saveColumnWidths(): void {
+    localStorage.setItem(this.columnWidthStorageKey, JSON.stringify(this.columnWidths));
+  }
+
+  private get columnWidthStorageKey(): string {
+    const userId = localStorage.getItem('userId') || 'anonymous';
+    return `sinco:report-column-widths:${userId}:${this.controller}`;
+  }
+
+  private formatDisplayDate(value: any, includeTime: boolean): string {
+    const text = String(value).trim();
+    const vietnameseDate = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2}):(\d{2}))?/);
+    if (vietnameseDate) {
+      const datePart = `${vietnameseDate[1].padStart(2, '0')}/${vietnameseDate[2].padStart(2, '0')}/${vietnameseDate[3]}`;
+      return includeTime && vietnameseDate[4]
+        ? `${datePart} ${vietnameseDate[4].padStart(2, '0')}:${vietnameseDate[5]}`
+        : datePart;
+    }
+
+    const isoDate = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[T ](\d{1,2}):(\d{2}))?/);
+    if (isoDate) {
+      const datePart = `${isoDate[3].padStart(2, '0')}/${isoDate[2].padStart(2, '0')}/${isoDate[1]}`;
+      return includeTime && isoDate[4]
+        ? `${datePart} ${isoDate[4].padStart(2, '0')}:${isoDate[5]}`
+        : datePart;
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return text;
+    }
+    const datePart = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    return includeTime
+      ? `${datePart} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+      : datePart;
   }
 
   private getInitialFilterValue(field: any): any {
@@ -348,7 +449,10 @@ export class DynamicReportComponent implements OnInit {
       activeFilters.every((f) => {
         const raw = row?.[f.key];
         if (raw === null || raw === undefined) return false;
-        return String(raw).toLowerCase().includes(f.value);
+        const header = this.response?.header.find((item: any) => item.key === f.key);
+        return String(this.formatCell(raw, header?.format || '', header?.type))
+          .toLowerCase()
+          .includes(f.value);
       })
     );
   }

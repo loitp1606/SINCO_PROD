@@ -114,24 +114,33 @@
     </form>
 
     <div class="report-table-shell">
-      <table class="report-table">
+      <table class="report-table" [style.width.px]="reportTableWidth">
+        <colgroup>
+          <col
+            *ngFor="let header of response.header"
+            [style.width.px]="getColumnWidth(header)"
+          />
+        </colgroup>
         <thead>
           <tr class="column-heading-row">
             <ng-container *ngFor="let header of response.header">
               <th
-                [style.width.px]="header.width"
-                [style.min-width.px]="header.width"
+                [style.width.px]="getColumnWidth(header)"
                 [class]="header.align"
               >
-                {{ header.label | translate }}
+                <span>{{ header.label | translate }}</span>
+                <span
+                  class="column-resize-handle"
+                  title="Kéo để thay đổi độ rộng cột"
+                  (mousedown)="onResizeColumn($event, header)"
+                ></span>
               </th>
             </ng-container>
           </tr>
           <tr class="column-filter-row">
             <ng-container *ngFor="let header of response.header">
               <th
-                [style.width.px]="header.width"
-                [style.min-width.px]="header.width"
+                [style.width.px]="getColumnWidth(header)"
               >
                 <input
                   type="text"
@@ -155,8 +164,7 @@
           >
             <ng-container *ngFor="let header of response.header">
               <td
-                [style.width.px]="header.width"
-                [style.min-width.px]="header.width"
+                [style.width.px]="getColumnWidth(header)"
                 [class]="header.align"
               >
                 {{ formatCell(row[header.key], header.format, header.type) }}
