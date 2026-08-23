@@ -155,10 +155,12 @@ BEGIN
             -- Hai loại thu công nợ được ghi theo từng phiếu xuất bởi
             -- sp_ApplyCustomerReceiptAllocationFromReceiptV2.
             -- Không ghi thêm dòng tổng tại đây để tránh trùng công nợ.
+			print ''
         END
         ELSE
         BEGIN
             -- OTHER và các loại không tác động công nợ chỉ lưu chứng từ thu.
+			print ''
         END;
 
         COMMIT;

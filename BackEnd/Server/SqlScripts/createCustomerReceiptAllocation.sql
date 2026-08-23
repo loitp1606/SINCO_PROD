@@ -3,6 +3,8 @@
     - Dùng cho receiptV2 loại CUSTOMER
     - Phân bổ trực tiếp theo phiếu xuất, không dùng detail hóa đơn cũ
 */
+drop table CustomerReceiptAllocation
+
 IF OBJECT_ID('dbo.CustomerReceiptAllocation', 'U') IS NULL
 BEGIN
     CREATE TABLE dbo.CustomerReceiptAllocation

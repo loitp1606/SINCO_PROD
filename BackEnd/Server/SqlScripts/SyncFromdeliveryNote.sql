@@ -51,7 +51,7 @@ BEGIN
 
 	IF exists (SELECT  1 FROM #master a join #master b on 1=1 where a.customer_id <> b.customer_id)
 	BEGIN
-		SELECT 0 as type, case when @Language = 'V' then N'Có mã khách khác nhau giữa 2 phiếu xuất, vui lòng xem lại!!!' else N'There are different customer codes between the 2 delivery orders, please check again!!!' end as message
+		SELECT 0 as type, case when UPPER(ISNULL(@Language, '')) IN ('V', 'VI') then N'Có mã khách khác nhau giữa 2 phiếu xuất, vui lòng xem lại!!!' else N'There are different customer codes between the 2 delivery orders, please check again!!!' end as message
 		return
 	END
 	exec [sp_UpdateNullsToDefault] '#master'
@@ -92,6 +92,17 @@ BEGIN
 
 	IF @FormConfig = 'receiptV2.page.json'
 	BEGIN
+		IF EXISTS
+		(
+			SELECT 1
+			FROM #master
+			WHERE UPPER(ISNULL(paymentStatus, '')) = 'PAID'
+		)
+		BEGIN
+			SELECT 0 AS type, N'Có phiếu xuất đã thu đủ. Vui lòng chỉ chọn các phiếu còn nợ.' AS message;
+			RETURN;
+		END
+
 		IF OBJECT_ID('dbo.CustomerDebtLedger', 'U') IS NULL
 		BEGIN
 			SELECT 0 AS type, N'Chưa có bảng CustomerDebtLedger để xác định công nợ phiếu xuất.' AS message;
