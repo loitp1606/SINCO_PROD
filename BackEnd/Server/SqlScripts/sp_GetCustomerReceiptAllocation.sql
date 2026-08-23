@@ -255,7 +255,6 @@ BEGIN
                 @p_customerCode = @resolvedCustomerCode,
                 @p_unitCode = @resolvedUnitCodeEdit,
                 @p_idGui = @idGui;
-                print @sqlEdit
         END;
 
    

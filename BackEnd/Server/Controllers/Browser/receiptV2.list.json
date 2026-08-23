@@ -35,6 +35,34 @@
 			"width": "100px"
 		},
 		{
+			"key": "receiptType",
+			"label": "Loại thu",
+			"type": "select",
+			"width": "190px",
+			"options": [
+				{
+					"label": "Thu công nợ trực tiếp",
+					"value": "CUSTOMER"
+				},
+				{
+					"label": "Thu công nợ từ tiền đặt cọc",
+					"value": "DEPOSIT_OFFSET"
+				},
+				{
+					"label": "Thu tiền đặt cọc",
+					"value": "DEPOSIT"
+				},
+				{
+					"label": "Thu khác",
+					"value": "OTHER"
+				},
+				{
+					"label": "Thu theo hóa đơn (dữ liệu cũ)",
+					"value": "INVOICE"
+				}
+			]
+		},
+		{
 			"key": "isReceived",
 			"label": "Đã thu tiền",
 			"quickEditable": true,

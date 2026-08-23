@@ -21,7 +21,10 @@ BEGIN
             @customerCode NVARCHAR(50),
             @receiptType NVARCHAR(30),
             @masterAmount DECIMAL(24,6),
-            @resolvedUnitCode NVARCHAR(50);
+            @resolvedUnitCode NVARCHAR(50),
+            @status NVARCHAR(10),
+            @isReceived INT,
+            @clearAllocationOnly BIT;
 
         SELECT @sync = CONVERT(VARCHAR(6), voucherDate, 112)
         FROM dbo.receiptV2$000000
@@ -36,16 +39,20 @@ BEGIN
             customerCode NVARCHAR(50) NULL,
             receiptType NVARCHAR(30) NULL,
             total_amount DECIMAL(24,6) NULL,
-            unitCode NVARCHAR(50) NULL
+            unitCode NVARCHAR(50) NULL,
+            status NVARCHAR(10) NULL,
+            isReceived INT NULL
         );
 
         SET @q = N'
-            INSERT INTO #mt(customerCode, receiptType, total_amount, unitCode)
+            INSERT INTO #mt(customerCode, receiptType, total_amount, unitCode, status, isReceived)
             SELECT TOP 1
                 customerCode,
                 ISNULL(receiptType, N''CUSTOMER''),
                 TRY_CONVERT(decimal(24,6), total_amount),
-                unitCode
+                unitCode,
+                status,
+                TRY_CONVERT(int, isReceived)
             FROM dbo.receiptV2$' + @sync + N'
             WHERE idGui = @p_idGui;';
 
@@ -58,7 +65,9 @@ BEGIN
             @customerCode = customerCode,
             @receiptType = UPPER(ISNULL(receiptType, N'CUSTOMER')),
             @masterAmount = ISNULL(total_amount, 0),
-            @resolvedUnitCode = unitCode
+            @resolvedUnitCode = unitCode,
+            @status = status,
+            @isReceived = ISNULL(isReceived, 0)
         FROM #mt;
 
         IF @unitCode IS NOT NULL AND LTRIM(RTRIM(@unitCode)) <> N''
@@ -73,11 +82,9 @@ BEGIN
             RETURN;
         END;
 
-        IF @receiptType = N'DEPOSIT' OR @receiptType = N'DEPOSIT_OFFSET'
-        BEGIN
-            -- DEPOSIT cho phép không phân bổ: xóa dữ liệu cũ để tránh hiểu nhầm
-            DELETE dbo.CustomerReceiptAllocation WHERE ReceiptIdGui = @idGui;
-            RETURN;
+        SET @clearAllocationOnly = CASE
+            WHEN @receiptType IN (N'DEPOSIT', N'OTHER') THEN 1
+            ELSE 0
         END;
 
         IF OBJECT_ID('tempdb..#alloc') IS NOT NULL DROP TABLE #alloc;
@@ -94,7 +101,8 @@ BEGIN
             note NVARCHAR(500) NULL
         );
 
-        IF ISNULL(LTRIM(RTRIM(@allocationJson)), N'') <> N''
+        IF @clearAllocationOnly = 0
+           AND ISNULL(LTRIM(RTRIM(@allocationJson)), N'') <> N''
         BEGIN
             INSERT INTO #alloc
             (
@@ -131,9 +139,26 @@ BEGIN
         DECLARE @sumAlloc DECIMAL(24,6) =
             ISNULL((SELECT SUM(ISNULL(allocatedAmount, 0)) FROM #alloc), 0);
 
+        DECLARE @isConfirmed BIT = CASE
+            WHEN ISNULL(@status, N'0') = N'1' OR ISNULL(@isReceived, 0) = 1 THEN 1
+            ELSE 0
+        END;
+
+        IF @clearAllocationOnly = 0 AND @isConfirmed = 1 AND @sumAlloc <= 0
+        BEGIN
+            RAISERROR(N'Phiếu thu công nợ phải phân bổ ít nhất một phiếu xuất.', 16, 1);
+            RETURN;
+        END;
+
         IF @sumAlloc > ISNULL(@masterAmount, 0)
         BEGIN
             RAISERROR(N'Tổng phân bổ vượt quá số tiền chứng từ.', 16, 1);
+            RETURN;
+        END;
+
+        IF @isConfirmed = 1 AND @receiptType = N'DEPOSIT_OFFSET' AND @sumAlloc <> ISNULL(@masterAmount, 0)
+        BEGIN
+            RAISERROR(N'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.', 16, 1);
             RETURN;
         END;
 
@@ -145,15 +170,11 @@ BEGIN
         );
 
         DECLARE @sql NVARCHAR(MAX);
-        DECLARE @exprOutstanding NVARCHAR(300) = CASE
-            WHEN COL_LENGTH('dbo.CustomerDebtLedger', 'OutstandingAmount') IS NOT NULL
-                THEN N'ISNULL(TRY_CONVERT(decimal(24,6), OutstandingAmount), 0)'
-            ELSE N'
-                ISNULL(TRY_CONVERT(decimal(24,6), ReceivableAmount), 0)
-                + ISNULL(TRY_CONVERT(decimal(24,6), DebitAmount), 0)
-                - ISNULL(TRY_CONVERT(decimal(24,6), CreditAmount), 0)
-                - ISNULL(TRY_CONVERT(decimal(24,6), CollectedAmount), 0)'
-        END;
+        DECLARE @exprOutstanding NVARCHAR(300) = N'
+            ISNULL(TRY_CONVERT(decimal(24,6), ReceivableAmount), 0)
+            + ISNULL(TRY_CONVERT(decimal(24,6), DebitAmount), 0)
+            - ISNULL(TRY_CONVERT(decimal(24,6), CreditAmount), 0)
+            - ISNULL(TRY_CONVERT(decimal(24,6), CollectedAmount), 0)';
 
         SET @sql = N'
             INSERT INTO #open(refIdGuiDN, outstandingAmount)
@@ -163,15 +184,27 @@ BEGIN
             FROM dbo.CustomerDebtLedger
             WHERE CustomerId = @p_customerCode
               AND UnitCode = @p_unitCode
-              AND ISNULL(RefController, N'''') = N''deliveryNote''
+              AND ISNULL(ReceiptIdGui, N'''') <> @p_idGui
               AND ISNULL(RefIdGui, N'''') <> N''''
+              AND
+              (
+                    ISNULL(RefController, N'''') = N''deliveryNote''
+                    OR (
+                        ISNULL(RefController, N'''') = N''receiptV2''
+                        AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_INVOICE'', N''RECEIPT_DEPOSIT_OFFSET'')
+                    )
+              )
             GROUP BY RefIdGui;';
 
-        EXEC sp_executesql
-            @sql,
-            N'@p_customerCode nvarchar(50), @p_unitCode nvarchar(50)',
-            @p_customerCode = @customerCode,
-            @p_unitCode = @resolvedUnitCode;
+        IF @clearAllocationOnly = 0
+        BEGIN
+            EXEC sp_executesql
+                @sql,
+                N'@p_customerCode nvarchar(50), @p_unitCode nvarchar(50), @p_idGui nvarchar(50)',
+                @p_customerCode = @customerCode,
+                @p_unitCode = @resolvedUnitCode,
+                @p_idGui = @idGui;
+        END;
 
         IF EXISTS
         (
@@ -187,7 +220,7 @@ BEGIN
             WHERE a.allocatedAmount > ISNULL(o.outstandingAmount, 0)
         )
         BEGIN
-            RAISERROR(N'Số phân bổ vượt nợ còn lại của ít nhất một hóa đơn.', 16, 1);
+            RAISERROR(N'Số phân bổ vượt nợ còn lại của ít nhất một phiếu xuất.', 16, 1);
             RETURN;
         END;
 
@@ -253,7 +286,8 @@ BEGIN
         COMMIT;
 
         -- Đồng bộ ledger ngay sau khi lưu phân bổ
-        IF OBJECT_ID('dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2', 'P') IS NOT NULL
+        IF @clearAllocationOnly = 0
+           AND OBJECT_ID('dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2', 'P') IS NOT NULL
         BEGIN
             EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2
                 @idGui = @idGui,

@@ -81,7 +81,7 @@
             <strong>{{ formatCurrency(receiptAllocationDialog.allocatedTotal) }}</strong>
           </div>
           <div class="debt-summary-row is-payable flex items-center justify-between border rounded px-3 py-2">
-            <span>Còn lại</span>
+            <span>{{ receiptAllocationDialog.remainingLabel }}</span>
             <strong>{{ formatCurrency(receiptAllocationDialog.remainingAmount) }}</strong>
           </div>
         </div>
@@ -94,9 +94,9 @@
           <table class="min-w-full text-sm receipt-allocation-table">
             <thead>
               <tr>
-                <th class="text-left px-2 py-2">Số hóa đơn</th>
+                <th class="text-left px-2 py-2">Số phiếu xuất</th>
                 <th class="text-left px-2 py-2">Ngày</th>
-                <th class="text-right px-2 py-2">Tiền hóa đơn</th>
+                <th class="text-right px-2 py-2">Tiền phiếu xuất</th>
                 <th class="text-right px-2 py-2">Đã thu</th>
                 <th class="text-right px-2 py-2">Nợ còn lại</th>
                 <th class="text-right px-2 py-2">Số phân bổ</th>
@@ -121,7 +121,7 @@
                 </td>
               </tr>
               <tr *ngIf="!(receiptAllocationDialog.rows?.length)">
-                <td colspan="6" class="px-2 py-3 text-center text-gray-500">Không có hóa đơn còn nợ</td>
+                <td colspan="6" class="px-2 py-3 text-center text-gray-500">Không có phiếu xuất còn nợ</td>
               </tr>
             </tbody>
           </table>
@@ -231,7 +231,7 @@
             [(ngModel)]="formData[selectedTab][field.key]"
             (ngModelChange)="onMasterFieldChange(field.key, $event)">
             <option value="">-- {{ "COMMON.SELECT" | translate}} {{ field.label | translate}} --</option>
-            <option *ngFor="let opt of field.options || []" [value]="opt.value">
+            <option *ngFor="let opt of field.options || []" [value]="opt.value" [disabled]="isSelectOptionDisabled(field, opt)">
               {{ opt.label | translate}}
             </option>
           </select>

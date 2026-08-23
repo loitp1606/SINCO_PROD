@@ -115,15 +115,10 @@ BEGIN
             ELSE N'0'
         END;
 
-        SET @refIdExpr = CASE
-            WHEN COL_LENGTH('tempdb..#detail', 'idGuiHD') IS NOT NULL AND COL_LENGTH('tempdb..#detail', 'vcNumberHD') IS NOT NULL
-                THEN N'COALESCE(CONVERT(nvarchar(50), d.idGuiHD), CONVERT(nvarchar(50), d.vcNumberHD), CONVERT(nvarchar(50), d.idGui))'
-            WHEN COL_LENGTH('tempdb..#detail', 'idGuiHD') IS NOT NULL
-                THEN N'COALESCE(CONVERT(nvarchar(50), d.idGuiHD), CONVERT(nvarchar(50), d.idGui))'
-            WHEN COL_LENGTH('tempdb..#detail', 'vcNumberHD') IS NOT NULL
-                THEN N'COALESCE(CONVERT(nvarchar(50), d.vcNumberHD), CONVERT(nvarchar(50), d.idGui))'
-            ELSE N'CONVERT(nvarchar(50), d.idGui)'
-        END;
+        -- Công nợ được quản lý theo phiếu xuất, không theo mã hóa đơn VAT.
+        -- Giữ RefIdGui ổn định là idGui phiếu xuất để mọi phiếu thu phân bổ
+        -- về đúng một chứng từ nguồn.
+        SET @refIdExpr = N'CONVERT(nvarchar(50), d.idGui)';
 
         SET @refLineExpr = CASE
             WHEN COL_LENGTH('tempdb..#detail', 'lnHD') IS NOT NULL

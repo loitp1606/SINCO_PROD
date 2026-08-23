@@ -223,98 +223,15 @@ BEGIN
                 );
             END
         END
-        ELSE IF @receiptType = N'DEPOSIT_OFFSET'
+        ELSE IF @receiptType IN (N'CUSTOMER', N'DEPOSIT_OFFSET')
         BEGIN
-            IF @masterAmount > 0
-            BEGIN
-                INSERT dbo.CustomerDebtLedger
-                (
-                    UnitCode,
-                    CustomerId,
-                    ReceiptIdGui,
-                    VoucherNumber,
-                    VoucherDate,
-                    ReceiptType,
-                    DebitAmount,
-                    CreditAmount,
-                    DepositAmount,
-                    CollectedAmount,
-                    ReceivableAmount,
-                    RefController,
-                    RefIdGui,
-                    RefLineNbr,
-                    Note,
-                    CreatedBy,
-                    CreatedAt
-                )
-                VALUES
-                (
-                    @resolvedUnitCode,
-                    @customerCode,
-                    @idGui,
-                    @voucherNumber,
-                    @voucherDate,
-                    N'RECEIPT_DEPOSIT_OFFSET',
-                    0,
-                    0,
-                    -@masterAmount,
-                    @masterAmount,
-                    0,
-                    N'receiptV2',
-                    COALESCE(@depositReceiptNo, @idGui),
-                    NULL,
-                    N'Cấn trừ công nợ từ phiếu thu đặt cọc',
-                    @userId,
-                    SYSDATETIME()
-                );
-            END
+            -- Hai loại thu công nợ được ghi theo từng phiếu xuất bởi
+            -- sp_ApplyCustomerReceiptAllocationFromReceiptV2.
+            -- Không ghi một dòng tổng tại đây để tránh trùng công nợ.
         END
         ELSE
         BEGIN
-            -- CUSTOMER
-            IF @masterAmount > 0
-            BEGIN
-                INSERT dbo.CustomerDebtLedger
-                (
-                    UnitCode,
-                    CustomerId,
-                    ReceiptIdGui,
-                    VoucherNumber,
-                    VoucherDate,
-                    ReceiptType,
-                    DebitAmount,
-                    CreditAmount,
-                    DepositAmount,
-                    CollectedAmount,
-                    ReceivableAmount,
-                    RefController,
-                    RefIdGui,
-                    RefLineNbr,
-                    Note,
-                    CreatedBy,
-                    CreatedAt
-                )
-                VALUES
-                (
-                    @resolvedUnitCode,
-                    @customerCode,
-                    @idGui,
-                    @voucherNumber,
-                    @voucherDate,
-                    N'RECEIPT_CUSTOMER',
-                    0,
-                    0,
-                    0,
-                    @masterAmount,
-                    0,
-                    N'receiptV2',
-                    @idGui,
-                    NULL,
-                    N'Thu tiền khách hàng',
-                    @userId,
-                    SYSDATETIME()
-                );
-            END
+            -- OTHER và các loại không tác động công nợ chỉ lưu chứng từ thu.
         END;
 
         COMMIT;

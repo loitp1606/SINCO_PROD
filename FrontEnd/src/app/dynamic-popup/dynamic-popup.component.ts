@@ -157,6 +157,8 @@ export class DynamicPopupComponent implements OnInit {
         receiptAmount: 0,
         allocatedTotal: 0,
         remainingAmount: 0,
+        remainingLabel: 'Chuyển thành đặt cọc',
+        receiptType: 'CUSTOMER',
         rows: [] as any[],
         config: null as any,
     };
@@ -244,6 +246,7 @@ export class DynamicPopupComponent implements OnInit {
             await this.initializeFormData()
             this.loadInitialDetailData()
             this.checkAndAutoAddRows()
+            await this.openInitialReceiptAllocationIfNeeded()
         } else {
 
             this.http
@@ -918,6 +921,12 @@ export class DynamicPopupComponent implements OnInit {
             return;
         }
         if (Object.keys(this.errors).length === 0 && Object.keys(this.detailErrors).length === 0) {
+            const allocationError = this.validateReceiptAllocationBeforeSubmit();
+            if (allocationError) {
+                alert(allocationError);
+                return;
+            }
+
             // Show warning if primary key has changed
 
             const primaryKeyChanged = this.hasPrimaryKeyChanged()
@@ -1088,6 +1097,9 @@ export class DynamicPopupComponent implements OnInit {
         const config = action?.config || {};
         const currentData = this.formData?.[this.selectedTab] || {};
         const receiptAmountField = config.receiptAmountField || 'total_amount';
+        const receiptTypeField = config.receiptTypeField || 'receiptType';
+        const allocationJsonField = config.allocationJsonField || 'allocationJson';
+        const receiptType = String(currentData?.[receiptTypeField] || 'CUSTOMER').toUpperCase();
 
         this.receiptAllocationDialog = {
             open: true,
@@ -1097,6 +1109,8 @@ export class DynamicPopupComponent implements OnInit {
             receiptAmount: this.parseNumberInput(currentData?.[receiptAmountField]),
             allocatedTotal: 0,
             remainingAmount: 0,
+            remainingLabel: receiptType === 'CUSTOMER' ? 'Chuyển thành đặt cọc' : 'Chưa phân bổ',
+            receiptType,
             rows: [],
             config,
         };
@@ -1124,6 +1138,8 @@ export class DynamicPopupComponent implements OnInit {
                 allocatedAmount: this.parseNumberInput(r.allocatedAmount),
                 note: r.note || '',
             }));
+
+            const pendingRows = this.parseReceiptAllocationJson(currentData?.[allocationJsonField]);
 
             if (loadSource?.query) {
                 const savedRows = await this.executePopupDataSource(loadSource, currentData);
@@ -1156,7 +1172,39 @@ export class DynamicPopupComponent implements OnInit {
                 });
             }
 
-            this.receiptAllocationDialog.rows = rows;
+            pendingRows.forEach((pending: any) => {
+                const ref = pending.refIdGuiDN || pending.refIdguiDN || '';
+                const lineNbr = this.parseNumberInput(pending.refLineNbrDN);
+                const found = rows.find((x: any) =>
+                    (x.refIdGuiDN || '') === ref &&
+                    this.parseNumberInput(x.refLineNbrDN) === lineNbr
+                );
+                if (found) {
+                    found.allocatedAmount = this.parseNumberInput(pending.allocatedAmount);
+                    found.note = pending.note || found.note || '';
+                } else if (ref) {
+                    rows.push({
+                        refIdGuiDN: ref,
+                        refLineNbrDN: lineNbr,
+                        voucherNumber: pending.voucherNumber || pending.invoiceNumber || '',
+                        voucherDate: pending.voucherDate || pending.invoiceDate || null,
+                        receivableAmount: this.parseNumberInput(pending.receivableAmount || pending.invoiceAmount),
+                        collectedAmount: this.parseNumberInput(pending.collectedAmount),
+                        outstandingAmount: this.parseNumberInput(pending.outstandingAmount),
+                        invoiceAmount: this.parseNumberInput(pending.invoiceAmount || pending.receivableAmount),
+                        allocatedAmount: this.parseNumberInput(pending.allocatedAmount),
+                        note: pending.note || '',
+                    });
+                }
+            });
+
+            this.receiptAllocationDialog.rows = rows.sort((a: any, b: any) => {
+                const selectedDiff = Number(this.parseNumberInput(b.allocatedAmount) > 0) - Number(this.parseNumberInput(a.allocatedAmount) > 0);
+                if (selectedDiff !== 0) return selectedDiff;
+                const dateA = a.voucherDate ? new Date(a.voucherDate).getTime() : 0;
+                const dateB = b.voucherDate ? new Date(b.voucherDate).getTime() : 0;
+                return dateA - dateB || String(a.voucherNumber || '').localeCompare(String(b.voucherNumber || ''));
+            });
             this.recalculateReceiptAllocationTotals();
         } finally {
             this.receiptAllocationDialog.loading = false;
@@ -1217,11 +1265,10 @@ export class DynamicPopupComponent implements OnInit {
         this.recalculateReceiptAllocationTotals();
     }
 
-    async saveReceiptAllocation(): Promise<void> {
+    saveReceiptAllocation(): void {
         const config = this.receiptAllocationDialog.config || {};
-        const saveSource = config.saveAllocationDataSource;
         const currentData = this.formData?.[this.selectedTab] || {};
-        if (!saveSource?.query) return;
+        const allocationJsonField = config.allocationJsonField || 'allocationJson';
 
         this.recalculateReceiptAllocationTotals();
         if (this.receiptAllocationDialog.allocatedTotal > this.receiptAllocationDialog.receiptAmount) {
@@ -1243,18 +1290,82 @@ export class DynamicPopupComponent implements OnInit {
                 note: r.note || '',
             }));
 
-        this.receiptAllocationDialog.saving = true;
+        currentData[allocationJsonField] = JSON.stringify(payloadRows);
+        const remaining = Math.max(0, this.receiptAllocationDialog.remainingAmount);
+        const suffix = this.receiptAllocationDialog.receiptType === 'CUSTOMER' && remaining > 0
+            ? ` Phần dư ${this.formatCurrency(remaining)} sẽ chuyển thành tiền đặt cọc khi xác nhận.`
+            : '';
+        alert(`Đã cập nhật phân bổ. Nhấn Lưu phiếu để ghi nhận.${suffix}`);
+        this.closeReceiptAllocationDialog();
+    }
+
+    isSelectOptionDisabled(field: any, option: any): boolean {
+        if (option?.disabled === true) return true;
+        if (option?.legacyOnly !== true) return false;
+        const currentValue = String(this.formData?.[this.selectedTab]?.[field?.key] ?? '');
+        return currentValue !== String(option?.value ?? '');
+    }
+
+    private parseReceiptAllocationJson(value: any): any[] {
+        if (Array.isArray(value)) return value;
+        if (typeof value !== 'string' || value.trim() === '') return [];
         try {
-            await this.executePopupDataSource(saveSource, currentData, {
-                allocationJson: JSON.stringify(payloadRows),
-            });
-            alert('Lưu phân bổ thành công.');
-            this.closeReceiptAllocationDialog();
+            const parsed = JSON.parse(value);
+            return Array.isArray(parsed) ? parsed : [];
         } catch {
-            alert('Không thể lưu phân bổ.');
-        } finally {
-            this.receiptAllocationDialog.saving = false;
+            return [];
         }
+    }
+
+    private async openInitialReceiptAllocationIfNeeded(): Promise<void> {
+        const action = this.getPopupActions().find((item: any) => {
+            const actionType = String(item?.type || item?.id || '').toLowerCase();
+            if (!['receiptallocation', 'receipt-allocation', 'allocation'].includes(actionType)) return false;
+            const allocationJsonField = item?.config?.allocationJsonField || 'allocationJson';
+            return this.parseReceiptAllocationJson(this.formData?.[this.selectedTab]?.[allocationJsonField]).length > 0;
+        });
+        if (action && this.evaluateVisibilityRule(action?.visibleWhen, this.selectedTab)) {
+            await this.openReceiptAllocation(action);
+        }
+    }
+
+    private validateReceiptAllocationBeforeSubmit(): string | null {
+        const action = this.getPopupActions().find((item: any) => {
+            const actionType = String(item?.type || item?.id || '').toLowerCase();
+            return ['receiptallocation', 'receipt-allocation', 'allocation'].includes(actionType);
+        });
+        if (!action) return null;
+
+        const config = action.config || {};
+        const currentData = this.formData?.[this.selectedTab] || {};
+        const receiptType = String(currentData?.[config.receiptTypeField || 'receiptType'] || '').toUpperCase();
+        if (!['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType)) return null;
+
+        const isConfirmed = String(currentData?.['status'] ?? '0') === '1' || this.isCheckboxChecked(currentData?.['isReceived']);
+        if (!isConfirmed) return null;
+
+        const rawAllocation = currentData?.[config.allocationJsonField || 'allocationJson'];
+        const rows = this.parseReceiptAllocationJson(rawAllocation);
+        if (!rows.length && !this.girdData) {
+            return 'Phiếu thu công nợ phải phân bổ ít nhất một phiếu xuất trước khi xác nhận.';
+        }
+        if (!rows.length) return null;
+
+        const receiptAmount = this.parseNumberInput(currentData?.[config.receiptAmountField || 'total_amount']);
+        const allocatedTotal = rows.reduce(
+            (sum: number, row: any) => sum + Math.max(0, this.parseNumberInput(row?.allocatedAmount)),
+            0,
+        );
+        if (allocatedTotal <= 0) {
+            return 'Phiếu thu công nợ phải có số tiền phân bổ lớn hơn 0.';
+        }
+        if (allocatedTotal > receiptAmount) {
+            return 'Tổng phân bổ không được vượt số tiền phiếu thu.';
+        }
+        if (receiptType === 'DEPOSIT_OFFSET' && allocatedTotal !== receiptAmount) {
+            return 'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.';
+        }
+        return null;
     }
 
     private recalculateReceiptAllocationTotals(): void {

@@ -93,6 +93,12 @@
 				"sqlType": "VARCHAR(50)"
 			},
 			{
+				"name": "allocationJson",
+				"property": "allocationJson",
+				"type": "string",
+				"sqlType": "NVARCHAR(MAX)"
+			},
+			{
 				"name": "depositReceiptNo",
 				"property": "depositReceiptNo",
 				"type": "string",
@@ -273,13 +279,13 @@
 				"excelColumn": "Lý do thu",
 				"fieldName": "reason",
 				"required": true,
-				"clauseForiegn": "select incomeExpenditure_id, incomeExpenditure_Name from Incomeexpenditure where status = '1' and type = '1'",
+				"clauseForiegn": "select incomeExpenditure_id, incomeExpenditure_Name from Incomeexpenditure where status = '1' and type = '1'"
 			},
 			{
 				"excelColumn": "Số tài khoản",
 				"fieldName": "accountReceiveCode",
 				"required": false,
-				"clauseForiegn": "select account_sinco_id, account_sinco_name from AccountSinco where status = '1'",
+				"clauseForiegn": "select account_sinco_id, account_sinco_name from AccountSinco where status = '1'"
 			},
 			{
 				"excelColumn": "collectorCode",

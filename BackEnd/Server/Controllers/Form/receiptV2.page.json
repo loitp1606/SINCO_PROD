@@ -44,24 +44,29 @@
 						"type": "select",
 						"width": "150px",
 						"required": true,
-						"default": "DEPOSIT",
+						"default": "CUSTOMER",
 						"quickEditable": true,
 						"options": [
 							{
-								"label": "Thu đặt cọc",
+								"label": "Thu tiền đặt cọc",
 								"value": "DEPOSIT"
 							},
 							{
-								"label": "Chi từ tiền đặt cọc",
+								"label": "Thu công nợ trực tiếp",
 								"value": "CUSTOMER"
 							},
 							{
-								"label": "Thu theo hóa đơn",
-								"value": "INVOICE"
+								"label": "Thu công nợ từ tiền đặt cọc",
+								"value": "DEPOSIT_OFFSET"
 							},
 							{
-								"label": "Cấn trừ từ phiếu đặt cọc",
-								"value": "DEPOSIT_OFFSET"
+								"label": "Thu khác",
+								"value": "OTHER"
+							},
+							{
+								"label": "Thu theo hóa đơn (dữ liệu cũ)",
+								"value": "INVOICE",
+								"legacyOnly": true
 							}
 						]
 					},
@@ -101,6 +106,12 @@
 						"label": "Mã tham chiếu",
 						"type": "hidden",
 						"width": "150px",
+						"required": false
+					},
+					{
+						"key": "allocationJson",
+						"label": "Dữ liệu phân bổ công nợ",
+						"type": "hidden",
 						"required": false
 					},
 					{
@@ -381,7 +392,7 @@
 				{
 					"step": "afterUpdate",
 					"type": "sql02",
-					"query": "exec afterUpdateReceiptV2 N'@idGui', N'@voucherNumber', N'@voucherDate';EXEC dbo.sp_PostDebtFromReceiptV2 N'@idGui', '@unit', '@userId';EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2 N'@idGui', '@unit', '@userId';"
+					"query": "exec afterUpdateReceiptV2 N'@idGui', N'@voucherNumber', N'@voucherDate';EXEC dbo.sp_PostDebtFromReceiptV2 N'@idGui', '@unit', '@userId';IF NULLIF(N'@allocationJson', N'') IS NOT NULL OR UPPER(N'@receiptType') IN (N'DEPOSIT', N'OTHER') EXEC dbo.sp_SaveCustomerReceiptAllocation N'@idGui', N'@allocationJson', '@unit', '@userId';EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2 N'@idGui', '@unit', '@userId';"
 				}
 			]
 		}
@@ -432,12 +443,17 @@
 			"showInView": false,
 			"visibleWhen": {
 				"field": "receiptType",
-				"operator": "=",
-				"value": "CUSTOMER"
+				"operator": "in",
+				"value": [
+					"CUSTOMER",
+					"DEPOSIT_OFFSET"
+				]
 			},
 			"config": {
-				"title": "Phân bổ thu theo hóa đơn",
+				"title": "Phân bổ thu công nợ theo phiếu xuất",
 				"receiptAmountField": "total_amount",
+				"receiptTypeField": "receiptType",
+				"allocationJsonField": "allocationJson",
 				"openInvoiceDataSource": {
 					"api": "/api/CustomQuery/execute",
 					"query": "exec dbo.sp_GetCustomerReceiptAllocation @mode, @idGui, @customerCode, @unitCode, @keyword",
