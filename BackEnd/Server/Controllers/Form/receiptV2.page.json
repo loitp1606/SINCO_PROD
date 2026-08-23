@@ -274,7 +274,163 @@
 				],
 				"initialData": {}
 			},
-			"detail": []
+			"detail": [
+				{
+					"title": "Danh sách phiếu xuất còn nợ",
+					"controllerDetail": "receiptdetailV2",
+					"formId": "receiptdetailV2",
+					"foreignKey": "idGui,line_nbr",
+					"allowAdd": false,
+					"allowDelete": false,
+					"allowMove": false,
+					"allowSelect": false,
+					"visibleWhen": {
+						"field": "receiptType",
+						"operator": "in",
+						"value": [
+							"CUSTOMER",
+							"DEPOSIT_OFFSET"
+						]
+					},
+					"autoLoad": {
+						"whenFieldsChange": [
+							"receiptType",
+							"customerCode"
+						],
+						"clearWhenEmpty": true,
+						"dataSource": {
+							"api": "/api/CustomQuery/execute",
+							"query": "exec dbo.sp_GetCustomerReceiptAllocation @mode, @idGui, @customerCode, @unitCode, @keyword",
+							"params": [
+								"mode",
+								"idGui",
+								"customerCode",
+								"unitCode",
+								"keyword"
+							],
+							"dataType": [
+								"String",
+								"String",
+								"String",
+								"String",
+								"String"
+							],
+							"values": [
+								"EDIT",
+								"@idGui",
+								"@customerCode",
+								"@unitCode",
+								""
+							]
+						},
+						"map": {
+							"idGuiDN": "refIdGuiDN",
+							"lnDN": "refLineNbrDN",
+							"vcNumberDN": "voucherNumber",
+							"invoiceNumber": "voucherNumber",
+							"invoiceDate": "voucherDate",
+							"invoiceAmount": "receivableAmount",
+							"paidAmount": "collectedAmount",
+							"debtAmount": "outstandingAmount",
+							"amount": "allocatedAmount",
+							"note": "note"
+						}
+					},
+					"allocationJson": {
+						"enabled": true,
+						"allocationJsonField": "allocationJson",
+						"receiptAmountField": "total_amount",
+						"receiptTypeField": "receiptType",
+						"lineNbrField": "line_nbr",
+						"refIdGuiField": "idGuiDN",
+						"refLineNbrField": "lnDN",
+						"voucherNumberField": "vcNumberDN",
+						"invoiceDateField": "invoiceDate",
+						"invoiceAmountField": "invoiceAmount",
+						"outstandingAmountField": "debtAmount",
+						"allocatedAmountField": "amount",
+						"noteField": "note"
+					},
+					"fields": [
+						{
+							"key": "line_nbr",
+							"label": "Stt",
+							"type": "text",
+							"disabled": true,
+							"width": "60px"
+						},
+						{
+							"key": "vcNumberDN",
+							"label": "Số phiếu xuất",
+							"type": "text",
+							"disabled": true,
+							"required": true,
+							"width": "160px"
+						},
+						{
+							"key": "invoiceDate",
+							"label": "Ngày xuất",
+							"type": "date",
+							"disabled": true,
+							"width": "120px"
+						},
+						{
+							"key": "invoiceAmount",
+							"label": "Tiền phiếu xuất",
+							"type": "number",
+							"currency": "VN",
+							"disabled": true,
+							"width": "150px"
+						},
+						{
+							"key": "paidAmount",
+							"label": "Đã thu",
+							"type": "number",
+							"currency": "VN",
+							"disabled": true,
+							"width": "140px"
+						},
+						{
+							"key": "debtAmount",
+							"label": "Còn phải thu",
+							"type": "number",
+							"currency": "VN",
+							"disabled": true,
+							"width": "150px"
+						},
+						{
+							"key": "amount",
+							"label": "Số tiền thu",
+							"type": "number",
+							"currency": "VN",
+							"required": true,
+							"width": "150px"
+						},
+						{
+							"key": "note",
+							"label": "Ghi chú",
+							"type": "text",
+							"width": "220px"
+						},
+						{
+							"key": "idGuiDN",
+							"label": "Key phiếu xuất",
+							"type": "hidden"
+						},
+						{
+							"key": "lnDN",
+							"label": "Dòng phiếu xuất",
+							"type": "hidden"
+						},
+						{
+							"key": "invoiceNumber",
+							"label": "Số hóa đơn",
+							"type": "hidden"
+						}
+					],
+					"initialData": []
+				}
+			]
 		},
 		{
 			"title": "Tệp đính kèm",
@@ -287,7 +443,7 @@
 				{
 					"step": "afterUpdate",
 					"type": "sql02",
-					"query": "EXEC dbo.sp_PostDebtFromReceiptV2 N'@idGui', '@unit', '@userId';IF NULLIF(N'@allocationJson', N'') IS NOT NULL OR UPPER(N'@receiptType') IN (N'DEPOSIT', N'OTHER') EXEC dbo.sp_SaveCustomerReceiptAllocation N'@idGui', N'@allocationJson', '@unit', '@userId';EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2 N'@idGui', '@unit', '@userId';"
+					"query": "EXEC dbo.sp_PostDebtFromReceiptV2 N'@idGui', '@unit', '@userId';IF UPPER(N'@receiptType') IN (N'CUSTOMER', N'DEPOSIT_OFFSET') EXEC dbo.sp_SaveCustomerReceiptAllocation N'@idGui', N'@allocationJson', '@unit', '@userId';IF UPPER(N'@receiptType') IN (N'CUSTOMER', N'DEPOSIT_OFFSET') EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2 N'@idGui', '@unit', '@userId';"
 				}
 			]
 		}
@@ -327,74 +483,6 @@
 						"receivable": "receivableAmount",
 						"payable": "collectedAmount"
 					}
-				}
-			}
-		},
-		{
-			"id": "receiptAllocation",
-			"label": "Phân bổ phải thu",
-			"type": "receiptAllocation",
-			"style": "primary",
-			"showInView": false,
-			"visibleWhen": {
-				"field": "receiptType",
-				"operator": "in",
-				"value": [
-					"CUSTOMER",
-					"DEPOSIT_OFFSET"
-				]
-			},
-			"config": {
-				"title": "Phân bổ thu công nợ theo phiếu xuất",
-				"receiptAmountField": "total_amount",
-				"receiptTypeField": "receiptType",
-				"allocationJsonField": "allocationJson",
-				"openInvoiceDataSource": {
-					"api": "/api/CustomQuery/execute",
-					"query": "exec dbo.sp_GetCustomerReceiptAllocation @mode, @idGui, @customerCode, @unitCode, @keyword",
-					"params": [
-						"mode",
-						"idGui",
-						"customerCode",
-						"unitCode",
-						"keyword"
-					],
-					"dataType": [
-						"String",
-						"String",
-						"String",
-						"String",
-						"String"
-					],
-					"values": [
-						"EDIT",
-						"@idGui",
-						"@customerCode",
-						"@unitCode",
-						"@keyword"
-					]
-				},
-				"saveAllocationDataSource": {
-					"api": "/api/CustomQuery/execute",
-					"query": "exec dbo.sp_SaveCustomerReceiptAllocation @idGui, @allocationJson, @unitCode, @userId",
-					"params": [
-						"idGui",
-						"allocationJson",
-						"unitCode",
-						"userId"
-					],
-					"dataType": [
-						"String",
-						"String",
-						"String",
-						"String"
-					],
-					"values": [
-						"@idGui",
-						"@allocationJson",
-						"@unit",
-						"@userId"
-					]
 				}
 			}
 		}

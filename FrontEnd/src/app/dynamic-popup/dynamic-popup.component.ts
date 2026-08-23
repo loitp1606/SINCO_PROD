@@ -697,6 +697,7 @@ export class DynamicPopupComponent implements OnInit {
 
         // Hoàn thành initial loading
         this.isInitialLoading = false
+        this.runVisibleDetailAutoLoads()
     }
 
     // Getter methods for current active detail section
@@ -772,6 +773,126 @@ export class DynamicPopupComponent implements OnInit {
 
     isDetailSectionVisible(detailSection: any, tabIndex: number = this.selectedTab): boolean {
         return this.evaluateVisibilityRule(detailSection?.visibleWhen, tabIndex);
+    }
+
+    shouldShowDetailAddButton(detailSection: any = this.currentDetailSection): boolean {
+        return detailSection?.allowAdd !== false && this.mode !== 'view';
+    }
+
+    shouldShowDetailDeleteButton(detailSection: any = this.currentDetailSection): boolean {
+        return detailSection?.allowDelete !== false && this.mode !== 'view';
+    }
+
+    shouldShowDetailMoveButtons(detailSection: any = this.currentDetailSection): boolean {
+        return detailSection?.allowMove !== false && this.mode !== 'view';
+    }
+
+    shouldShowDetailSelectColumn(detailSection: any = this.currentDetailSection): boolean {
+        return detailSection?.allowSelect !== false && this.mode !== 'view';
+    }
+
+    shouldShowDetailActionColumn(detailSection: any = this.currentDetailSection): boolean {
+        return this.shouldShowDetailSelectColumn(detailSection)
+            || this.shouldShowDetailMoveButtons(detailSection)
+            || this.shouldShowDetailDeleteButton(detailSection);
+    }
+
+    getDetailColspan(detailSection: any = this.currentDetailSection): number {
+        return this.getAllDetailFields().filter((field: any) => field.type !== 'hidden' && field.key !== 'line_nbr').length
+            + 1
+            + (this.shouldShowDetailActionColumn(detailSection) ? 1 : 0);
+    }
+
+    private runDetailAutoLoadForMasterField(fieldKey: string): void {
+        const sections = this.metadata?.tabs?.[this.selectedTab]?.detail || [];
+        sections.forEach((section: any, detailIndex: number) => {
+            const watchedFields = section?.autoLoad?.whenFieldsChange;
+            if (!Array.isArray(watchedFields) || !watchedFields.includes(fieldKey)) {
+                return;
+            }
+
+            if (this.isDetailSectionVisible(section, this.selectedTab)) {
+                this.loadAutoDetailRows(section, this.selectedTab, detailIndex);
+            } else if (section?.autoLoad?.clearWhenEmpty !== false) {
+                this.setDetailRows(this.selectedTab, detailIndex, []);
+            }
+        });
+    }
+
+    private runVisibleDetailAutoLoads(): void {
+        const sections = this.metadata?.tabs?.[this.selectedTab]?.detail || [];
+        sections.forEach((section: any, detailIndex: number) => {
+            if (section?.autoLoad && this.isDetailSectionVisible(section, this.selectedTab)) {
+                this.loadAutoDetailRows(section, this.selectedTab, detailIndex);
+            }
+        });
+    }
+
+    private loadAutoDetailRows(detailSection: any, tabIndex: number, detailIndex: number): void {
+        const dataSource = detailSection?.autoLoad?.dataSource;
+        if (!dataSource?.query) {
+            return;
+        }
+
+        const currentData = this.formData?.[tabIndex] || {};
+        if (!this.normalizeVisibilityValue(currentData['customerCode'])) {
+            if (detailSection?.autoLoad?.clearWhenEmpty !== false) {
+                this.setDetailRows(tabIndex, detailIndex, []);
+            }
+            return;
+        }
+
+        this.executePopupDataSource(dataSource, currentData).then((rows: any[]) => {
+            const mappedRows = (rows || []).map((row: any, index: number) => {
+                const mapped = this.mapAutoDetailRow(row, detailSection, index);
+                return mapped;
+            });
+
+            this.setDetailRows(tabIndex, detailIndex, mappedRows);
+            this.prepareAllocationJsonFromDetail();
+            this.updateMasterCalculations();
+            this.calculateAggregateValues();
+            this.cdr.detectChanges();
+        }).catch((error) => {
+            console.warn('Unable to auto-load detail rows:', error);
+            if (detailSection?.autoLoad?.clearWhenEmpty !== false) {
+                this.setDetailRows(tabIndex, detailIndex, []);
+            }
+        });
+    }
+
+    private mapAutoDetailRow(source: any, detailSection: any, index: number): any {
+        const map = detailSection?.autoLoad?.map || {};
+        const row: any = {};
+
+        (detailSection?.fields || []).forEach((field: any) => {
+            if (field.key === 'line_nbr') {
+                row[field.key] = index + 1;
+                return;
+            }
+
+            const sourceKey = map[field.key] || field.key;
+            row[field.key] = source?.[sourceKey] ?? '';
+
+            if (field.type === 'number' && (row[field.key] === '' || row[field.key] === null || row[field.key] === undefined)) {
+                row[field.key] = 0;
+            }
+
+            if (field.type === 'date' && row[field.key]) {
+                row[field.key] = `${row[field.key]}`.substring(0, 10);
+            }
+        });
+
+        return row;
+    }
+
+    private setDetailRows(tabIndex: number, detailIndex: number, rows: any[]): void {
+        this.ensureDetailState(tabIndex, detailIndex);
+        this.detailRowsData[tabIndex][detailIndex] = rows;
+        this.filteredDetailRowsData[tabIndex][detailIndex] = [...rows];
+        this.columnFiltersData[tabIndex][detailIndex] = {};
+        this.selectedDetailRows.clear();
+        this.applyFilters();
     }
 
     private evaluateVisibilityRule(rule: any, tabIndex: number = this.selectedTab): boolean {
@@ -1323,6 +1444,12 @@ export class DynamicPopupComponent implements OnInit {
     }
 
     private validateReceiptAllocationBeforeSubmit(): string | null {
+        const detailConfig = this.getReceiptAllocationDetailConfig();
+        if (detailConfig) {
+            this.prepareAllocationJsonFromDetail();
+            return this.validateReceiptAllocationDetail(detailConfig);
+        }
+
         const action = this.getPopupActions().find((item: any) => {
             const actionType = String(item?.type || item?.id || '').toLowerCase();
             return ['receiptallocation', 'receipt-allocation', 'allocation'].includes(actionType);
@@ -1358,6 +1485,101 @@ export class DynamicPopupComponent implements OnInit {
         if (receiptType === 'DEPOSIT_OFFSET' && allocatedTotal !== receiptAmount) {
             return 'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.';
         }
+        return null;
+    }
+
+    private getReceiptAllocationDetailConfig(): { detailSection: any; tabIndex: number; detailIndex: number } | null {
+        const tabs = this.metadata?.tabs || [];
+        for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
+            const sections = tabs[tabIndex]?.detail || [];
+            for (let detailIndex = 0; detailIndex < sections.length; detailIndex++) {
+                const detailSection: any = sections[detailIndex];
+                if (detailSection?.allocationJson?.enabled) {
+                    return { detailSection, tabIndex, detailIndex };
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private prepareAllocationJsonFromDetail(): void {
+        const detailConfig = this.getReceiptAllocationDetailConfig();
+        if (!detailConfig) {
+            return;
+        }
+
+        const { detailSection, tabIndex, detailIndex } = detailConfig;
+        const config = detailSection.allocationJson || {};
+        const currentData = this.formData?.[tabIndex] || {};
+        const receiptType = String(currentData?.[config.receiptTypeField || 'receiptType'] || '').toUpperCase();
+        const allocationJsonField = config.allocationJsonField || 'allocationJson';
+
+        if (!['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType)) {
+            currentData[allocationJsonField] = '';
+            return;
+        }
+
+        const rows = this.detailRowsData?.[tabIndex]?.[detailIndex] || [];
+        const payloadRows = rows
+            .filter((row: any) => this.parseNumberInput(row?.[config.allocatedAmountField || 'amount']) > 0)
+            .map((row: any, index: number) => ({
+                refIdGuiDN: row?.[config.refIdGuiField || 'idGuiDN'] || '',
+                refLineNbrDN: this.parseNumberInput(row?.[config.refLineNbrField || 'lnDN']) || null,
+                receiptLineNbr: this.parseNumberInput(row?.[config.lineNbrField || 'line_nbr']) || index + 1,
+                invoiceNumber: row?.[config.voucherNumberField || 'vcNumberDN'] || row?.['invoiceNumber'] || '',
+                invoiceDate: row?.[config.invoiceDateField || 'invoiceDate'] || null,
+                invoiceAmount: this.parseNumberInput(row?.[config.invoiceAmountField || 'invoiceAmount']),
+                outstandingAmount: this.parseNumberInput(row?.[config.outstandingAmountField || 'debtAmount']),
+                allocatedAmount: this.parseNumberInput(row?.[config.allocatedAmountField || 'amount']),
+                note: row?.[config.noteField || 'note'] || '',
+            }));
+
+        currentData[allocationJsonField] = JSON.stringify(payloadRows);
+    }
+
+    private validateReceiptAllocationDetail(detailConfig: { detailSection: any; tabIndex: number; detailIndex: number }): string | null {
+        const { detailSection, tabIndex, detailIndex } = detailConfig;
+        const config = detailSection.allocationJson || {};
+        const currentData = this.formData?.[tabIndex] || {};
+        const receiptType = String(currentData?.[config.receiptTypeField || 'receiptType'] || '').toUpperCase();
+        if (!['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType)) return null;
+
+        const isConfirmed = String(currentData?.['status'] ?? '0') === '1' || this.isCheckboxChecked(currentData?.['isReceived']);
+        if (!isConfirmed) return null;
+
+        const rows = this.detailRowsData?.[tabIndex]?.[detailIndex] || [];
+        const amountField = config.allocatedAmountField || 'amount';
+        const outstandingField = config.outstandingAmountField || 'debtAmount';
+        const refIdGuiField = config.refIdGuiField || 'idGuiDN';
+        const allocatedRows = rows.filter((row: any) => this.parseNumberInput(row?.[amountField]) > 0);
+
+        if (!allocatedRows.length) {
+            return 'Phiếu thu công nợ phải nhập số tiền thu cho ít nhất một phiếu xuất trước khi xác nhận.';
+        }
+
+        if (allocatedRows.some((row: any) => !row?.[refIdGuiField])) {
+            return 'Dòng thu công nợ thiếu tham chiếu phiếu xuất.';
+        }
+
+        if (allocatedRows.some((row: any) => this.parseNumberInput(row?.[amountField]) > this.parseNumberInput(row?.[outstandingField]))) {
+            return 'Số tiền thu không được vượt nợ còn lại của phiếu xuất.';
+        }
+
+        const receiptAmount = this.parseNumberInput(currentData?.[config.receiptAmountField || 'total_amount']);
+        const allocatedTotal = allocatedRows.reduce(
+            (sum: number, row: any) => sum + Math.max(0, this.parseNumberInput(row?.[amountField])),
+            0,
+        );
+
+        if (allocatedTotal > receiptAmount) {
+            return 'Tổng tiền thu chi tiết không được vượt số tiền phiếu thu.';
+        }
+
+        if (receiptType === 'DEPOSIT_OFFSET' && allocatedTotal !== receiptAmount) {
+            return 'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.';
+        }
+
         return null;
     }
 
@@ -1724,6 +1946,7 @@ export class DynamicPopupComponent implements OnInit {
     }
 
     buildInsertPayload(): any {
+        this.prepareAllocationJsonFromDetail();
         const metadataPostActions = this.metadata?.dataProcessing?.actions?.post
         const postActions = Array.isArray(metadataPostActions)
             ? metadataPostActions.map((action: any) => ({
@@ -2337,12 +2560,13 @@ export class DynamicPopupComponent implements OnInit {
         }
         // Update the row value first
         row[fieldKey] = numericValue;
+        this.clampReceiptAllocationDetailAmount(row, fieldKey);
 
         // Find field config
         const field = this.getAllDetailFields().find(f => f.key === fieldKey);
 
         // Format the display
-        inputElement.value = this.formatCurrencyNumber(numericValue, fieldKey, field);
+        inputElement.value = this.formatCurrencyNumber(row[fieldKey], fieldKey, field);
 
         if (field) {
             // Apply calculations for this row
@@ -2389,6 +2613,7 @@ export class DynamicPopupComponent implements OnInit {
             } else {
                 // Nếu không có onChange thì set giá trị và apply calculations
                 row[fieldKey] = value
+                this.clampReceiptAllocationDetailAmount(row, fieldKey);
 
                 // Apply calculations for this row
                 this.applyRowCalculations(row, field)
@@ -2412,6 +2637,31 @@ export class DynamicPopupComponent implements OnInit {
         this.calculateAggregateValues()
         // Update master calculations
         this.updateMasterCalculations()
+    }
+
+    private clampReceiptAllocationDetailAmount(row: any, fieldKey: string): void {
+        const detailConfig = this.getReceiptAllocationDetailConfig();
+        if (!detailConfig || detailConfig.tabIndex !== this.selectedTab || detailConfig.detailIndex !== this.selectedDetailIndex) {
+            return;
+        }
+
+        const config = detailConfig.detailSection.allocationJson || {};
+        const amountField = config.allocatedAmountField || 'amount';
+        if (fieldKey !== amountField) {
+            return;
+        }
+
+        const outstandingField = config.outstandingAmountField || 'debtAmount';
+        let amount = this.parseNumberInput(row?.[amountField]);
+        if (amount < 0) amount = 0;
+
+        const outstanding = this.parseNumberInput(row?.[outstandingField]);
+        if (outstanding > 0 && amount > outstanding) {
+            amount = outstanding;
+        }
+
+        row[amountField] = amount;
+        this.prepareAllocationJsonFromDetail();
     }
 
     trackByIndex(index: number, item: any): any {
@@ -3044,6 +3294,7 @@ export class DynamicPopupComponent implements OnInit {
         if (field.onChange) {
             this.handleOnChange(field, value)
         }
+        this.runDetailAutoLoadForMasterField(field.key);
 
         this.updateMasterSubtotals();
     }
@@ -3238,6 +3489,7 @@ export class DynamicPopupComponent implements OnInit {
         if (field?.onChange) {
             this.handleOnChange(field, value);
         }
+        this.runDetailAutoLoadForMasterField(fieldKey);
     }
 
     isCheckboxChecked(value: any): boolean {

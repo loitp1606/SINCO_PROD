@@ -322,11 +322,11 @@
             </button>
 
             <!-- Add Row Button -->
-            <button type="button" class="btn-modern btn-success btn-small w-full sm:w-auto" (click)="addDetailRow()">
+            <button *ngIf="shouldShowDetailAddButton(detail)" type="button" class="btn-modern btn-success btn-small w-full sm:w-auto" (click)="addDetailRow()">
               {{ "FILTER.ADD_ROW" | translate }}
             </button>
 
-            <button type="button" class="btn-modern btn-danger btn-small w-full sm:w-auto"
+            <button *ngIf="shouldShowDetailDeleteButton(detail)" type="button" class="btn-modern btn-danger btn-small w-full sm:w-auto"
               [disabled]="selectedDetailRows.size === 0" (click)="removeSelectedDetailRows()">
               Xóa dòng đã chọn ({{ selectedDetailRows.size }})
             </button>
@@ -339,9 +339,9 @@
             <thead>
               <!-- Column Headers -->
               <tr>
-                <th style="width: 110px; min-width: 110px;">
+                <th *ngIf="shouldShowDetailActionColumn(detail)" style="width: 110px; min-width: 110px;">
                   <div class="flex items-center justify-center gap-2">
-                    <input type="checkbox" class="detail-row-selector" aria-label="Chọn tất cả dòng đang hiển thị"
+                    <input *ngIf="shouldShowDetailSelectColumn(detail)" type="checkbox" class="detail-row-selector" aria-label="Chọn tất cả dòng đang hiển thị"
                       [checked]="areAllVisibleDetailRowsSelected()"
                       [indeterminate]="areSomeVisibleDetailRowsSelected()"
                       [disabled]="currentFilteredDetailRows.length === 0"
@@ -393,7 +393,7 @@
 
               <!-- Column Filters Row -->
               <tr class="bg-gray-50">
-                <td class="p-1"></td>
+                <td *ngIf="shouldShowDetailActionColumn(detail)" class="p-1"></td>
                 <td class="p-1"></td>
                 <td *ngFor="let field of getAllDetailFields()" class="p-1" [hidden]="field.type === 'hidden' || field.key === 'line_nbr'">
                   <div class="relative" [hidden]="field.disabled">
@@ -439,27 +439,27 @@
               <tr *ngFor="let row of currentFilteredDetailRows; let i = index; trackBy: trackByIndex"
                 class="hover:bg-blue-50">
                 <!-- Row actions -->
-                <td>
+                <td *ngIf="shouldShowDetailActionColumn(detail)">
                   <div class="row-actions flex justify-center gap-1">
-                    <input type="checkbox" class="detail-row-selector" aria-label="Chọn dòng"
+                    <input *ngIf="shouldShowDetailSelectColumn(detail)" type="checkbox" class="detail-row-selector" aria-label="Chọn dòng"
                       [checked]="isDetailRowSelected(row)"
                       (change)="toggleDetailRowSelection(row, $event)" />
 
                     <!-- Move Up -->
-                    <button type="button" class="btn-modern btn-info btn-xs" [disabled]="!canMoveUp(i)"
+                    <button *ngIf="shouldShowDetailMoveButtons(detail)" type="button" class="btn-modern btn-info btn-xs" [disabled]="!canMoveUp(i)"
                       (click)="moveRowUp(i)" title="Chuyển lên" style="min-width: 22px; height: 22px; padding: 1px;">
                       &uarr;
                     </button>
 
                     <!-- Move Down -->
-                    <button type="button" class="btn-modern btn-info btn-xs" [disabled]="!canMoveDown(i)"
+                    <button *ngIf="shouldShowDetailMoveButtons(detail)" type="button" class="btn-modern btn-info btn-xs" [disabled]="!canMoveDown(i)"
                       (click)="moveRowDown(i)" title="Chuyển xuống"
                       style="min-width: 22px; height: 22px; padding: 1px;">
                       &darr;
                     </button>
 
                     <!-- Delete Button -->
-                    <button type="button" class="btn-modern btn-danger btn-xs" (click)="removeDetailRow(i)"
+                    <button *ngIf="shouldShowDetailDeleteButton(detail)" type="button" class="btn-modern btn-danger btn-xs" (click)="removeDetailRow(i)"
                       title="Xóa dòng" style="min-width: 22px; height: 22px; padding: 1px;">
                       &times;
                     </button>
@@ -562,14 +562,14 @@
 
               <!-- Empty state -->
               <tr *ngIf="currentFilteredDetailRows.length === 0 && currentDetailRows.length === 0">
-                <td [attr.colspan]="getAllDetailFields().length + 2" class="text-center text-gray-500 py-8">
+                <td [attr.colspan]="getDetailColspan(detail)" class="text-center text-gray-500 py-8">
                   {{"FILTER.EMPTY_ADD_ROW" | translate}}
                 </td>
               </tr>
 
               <!-- No results after filtering -->
               <tr *ngIf="currentFilteredDetailRows.length === 0 && currentDetailRows.length > 0">
-                <td [attr.colspan]="getAllDetailFields().length + 2" class="text-center text-yellow-600 py-8">
+                <td [attr.colspan]="getDetailColspan(detail)" class="text-center text-yellow-600 py-8">
                   <div class="flex flex-col items-center gap-2">
                     <span>{{"FILTER.NOT_FOUND" | translate}}</span>
                     <button type="button" class="btn-modern btn-warning btn-small" (click)="clearAllFilters()">
