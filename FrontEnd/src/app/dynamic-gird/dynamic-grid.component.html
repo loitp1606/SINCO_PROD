@@ -647,6 +647,62 @@
           </ng-container>
           </tbody>
         </table>
+
+        <div class="mobile-master-list md:hidden">
+          <article
+            *ngFor="let data of filteredData; let i = index; trackBy: trackByMasterRow"
+            class="mobile-master-card"
+            [class.mobile-master-card-active]="isMasterRowActive(data)"
+            (click)="onMasterRowClick(data)"
+          >
+            <header class="mobile-card-header">
+              <div class="mobile-card-title">
+                <span>{{ (mobileMasterPrimaryHeader?.label || '') | translate }}</span>
+                <strong>{{ getMobileMasterDisplayValue(data, mobileMasterPrimaryHeader) || '—' }}</strong>
+              </div>
+              <label class="mobile-row-selector" title="Chọn dòng">
+                <input
+                  type="checkbox"
+                  [checked]="selectedOptions[data[masterPrimaryKeyField]] !== undefined"
+                  (click)="$event.stopPropagation()"
+                  (change)="handleSelection($event, data)"
+                />
+              </label>
+            </header>
+
+            <div class="mobile-card-fields">
+              <div
+                *ngFor="let header of mobileMasterDetailHeaders"
+                class="mobile-card-field"
+                [class.mobile-card-field-wide]="isMobileWideHeader(header)"
+                [class.mobile-card-field-number]="header.type === 'number'"
+              >
+                <span>{{ header.label | translate }}</span>
+                <strong
+                  *ngIf="statusHeaderKeys[header.key]; else mobileRegularValue"
+                  class="grid-status-badge"
+                  [ngClass]="getStatusBadgeClass(data[header.key])"
+                >
+                  {{ getMobileMasterDisplayValue(data, header) || '—' }}
+                </strong>
+                <ng-template #mobileRegularValue>
+                  <strong>{{ getMobileMasterDisplayValue(data, header) || '—' }}</strong>
+                </ng-template>
+              </div>
+            </div>
+
+            <footer *ngIf="isVoucherGrid" class="mobile-card-footer">
+              <span><i class="fas fa-hand-pointer"></i> Chạm để xem chi tiết</span>
+              <i class="fas fa-chevron-right"></i>
+            </footer>
+          </article>
+
+          <div *ngIf="filteredData.length === 0" class="mobile-empty-state">
+            <i class="fas fa-inbox"></i>
+            <strong>Không có dữ liệu</strong>
+            <span>Không tìm thấy dòng phù hợp với điều kiện lọc.</span>
+          </div>
+        </div>
       </div>
 
       <div

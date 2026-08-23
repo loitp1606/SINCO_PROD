@@ -1611,7 +1611,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.masterCellStatusClasses = statusRows;
   }
 
-  private getStatusBadgeClass(value: any): string {
+  getStatusBadgeClass(value: any): string {
     const statusCode = String(value ?? '').trim();
     return /^[0-5]$/.test(statusCode)
       ? `grid-status-${statusCode}`
@@ -2488,6 +2488,36 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     }
 
     return (rawValue ?? '').toString();
+  }
+
+  get mobileMasterHeaders(): GirdHeader[] {
+    return (this.girdData?.headers || []).filter((header) => !header.hidden);
+  }
+
+  get mobileMasterPrimaryHeader(): GirdHeader | undefined {
+    const headers = this.mobileMasterHeaders;
+    return headers.find((header) => header.key === 'voucherNumber') || headers[0];
+  }
+
+  get mobileMasterDetailHeaders(): GirdHeader[] {
+    const primaryKey = this.mobileMasterPrimaryHeader?.key;
+    return this.mobileMasterHeaders.filter((header) => header.key !== primaryKey);
+  }
+
+  getMobileMasterDisplayValue(data: any, header: GirdHeader | undefined): string {
+    if (!header) return '';
+    const rawValue = data?.[header.key];
+    if (header.type === 'date' || header.type === 'datetime') {
+      return this.formatDate(rawValue);
+    }
+    if (header.type === 'checkbox') {
+      return rawValue == 1 || rawValue === true ? 'Có' : 'Không';
+    }
+    return this.getGridCellDisplayValue(data, header);
+  }
+
+  isMobileWideHeader(header: GirdHeader): boolean {
+    return header.type === 'lookup' || header.width === '350px' || header.width === '400px';
   }
 
   private getDerivedDeliveryStatusLabel(row: any, key: string): string | null {

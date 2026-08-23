@@ -1439,6 +1439,205 @@
   flex: 0 0 auto;
 }
 
+.mobile-master-list {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .dynamic-grid-page .master-scroll-zone {
+    padding: 7px;
+    background: #edf3f9;
+  }
+
+  .mobile-master-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mobile-master-card {
+    overflow: hidden;
+    border: 1px solid #cbd8e6;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(15, 42, 73, 0.08);
+    transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+  }
+
+  .mobile-master-card:active {
+    transform: scale(0.995);
+  }
+
+  .mobile-master-card.mobile-master-card-active {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12), 0 4px 10px rgba(30, 64, 175, 0.12);
+  }
+
+  .mobile-card-header {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  }
+
+  .mobile-master-card-active .mobile-card-header {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  }
+
+  .mobile-card-title {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mobile-card-title span,
+  .mobile-card-title strong {
+    display: block;
+  }
+
+  .mobile-card-title span {
+    margin-bottom: 2px;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 650;
+    text-transform: uppercase;
+  }
+
+  .mobile-card-title strong {
+    overflow: hidden;
+    color: #173b65;
+    font-size: 13px;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-row-selector {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #fff;
+  }
+
+  .mobile-row-selector input {
+    width: 16px;
+    height: 16px;
+    accent-color: #2563eb;
+  }
+
+  .mobile-card-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    padding: 3px 10px 7px;
+  }
+
+  .mobile-card-field {
+    min-width: 0;
+    padding: 7px 8px 5px 0;
+    border-bottom: 1px dashed #e2e8f0;
+  }
+
+  .mobile-card-field:nth-last-child(-n + 2) {
+    border-bottom-color: transparent;
+  }
+
+  .mobile-card-field-wide {
+    grid-column: 1 / -1;
+  }
+
+  .mobile-card-field > span,
+  .mobile-card-field > strong {
+    display: block;
+  }
+
+  .mobile-card-field > span {
+    margin-bottom: 2px;
+    overflow: hidden;
+    color: #718096;
+    font-size: 9px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .mobile-card-field > strong {
+    overflow: hidden;
+    color: #1e293b;
+    font-size: 11px;
+    font-weight: 650;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-card-field-number {
+    text-align: right;
+  }
+
+  .mobile-card-field .grid-status-badge {
+    display: inline-flex;
+    max-width: 100%;
+    font-size: 9px;
+  }
+
+  .mobile-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 10px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #52708f;
+    font-size: 9px;
+    font-weight: 650;
+  }
+
+  .mobile-card-footer span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mobile-empty-state {
+    display: flex;
+    min-height: 190px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 24px;
+    border: 1px dashed #b8c7d8;
+    border-radius: 10px;
+    background: #fff;
+    color: #64748b;
+    text-align: center;
+  }
+
+  .mobile-empty-state > i {
+    color: #94a3b8;
+    font-size: 28px;
+  }
+
+  .mobile-empty-state > strong {
+    color: #334155;
+    font-size: 12px;
+  }
+
+  .mobile-empty-state > span {
+    font-size: 10px;
+  }
+}
+
 /* Dynamic grid font scale: text only, keep controls and layout dimensions unchanged. */
 .dynamic-grid-page {
   font-family: "Segoe UI Variable Text", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
