@@ -2073,6 +2073,10 @@ export class DynamicPopupComponent implements OnInit {
                 // Handle multiple detail sections
                 if (tab?.detail && Array.isArray(tab.detail)) {
                     tab.detail.forEach((detailSection, detailIndex) => {
+                        const detailConfig: any = detailSection;
+                        if (detailConfig?.persist === false || detailConfig?.noSave === true) {
+                            return;
+                        }
                         if (!this.isDetailSectionVisible(detailSection, selectedTab)) {
                             return;
                         }
