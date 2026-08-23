@@ -40,6 +40,7 @@ import { DynamicLookupComponent } from '../dynamic-lookup/dynamic-lookup.compone
 import { firstValueFrom, Subscription } from 'rxjs';
 import { PageTitleService } from '../services/page-title.service';
 import { ShortcutHelpService } from '../services/shortcut-help.service';
+import { GridHeaderContextService } from '../services/grid-header-context.service';
 
 type BrowserPeriodMode = 'month' | 'quarter' | 'year';
 type BrowserTimeFilterMode = 'period' | 'range';
@@ -135,7 +136,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   controll = '';
   rowHeights: { [key: number]: number } = {};
   columnWidths: { [key: string]: number } = {};
-  showColumnSettings = false;
   private defaultGridHeaders: GirdHeader[] = [];
   private customizableColumnKeys = new Set<string>();
   isFileHandle: string | undefined = 'both'; //"import" | "export" | "both"
@@ -227,6 +227,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private pageTitleService: PageTitleService,
     private shortcutHelpService: ShortcutHelpService,
+    private gridHeaderContextService: GridHeaderContextService,
     private hostElement: ElementRef<HTMLElement>,
   ) {
     this.currentLanguage = localStorage.getItem('language') ?? 'vi';
@@ -284,6 +285,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     await this.loadGridConfigFromBrowser();
     this.initializeGridColumnPreferences();
     this.initializeBrowserTimeFilter();
+    this.publishHeaderContext();
     this.rebuildGridLayoutCache();
     this.pageTitleService.setTitle(this.girdData?.title ?? '');
     this.initializePaneHeights();
@@ -662,6 +664,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     }
     document.removeEventListener('keydown', this.documentShortcutListener, true);
     document.body.classList.remove('dynamic-grid-viewport-lock');
+    this.gridHeaderContextService.clearContext(this.girdData?.id || '');
     this.pageTitleService.clearTitle();
   }
 
@@ -1732,20 +1735,25 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       this.browserPeriodToday.getMonth(),
       1,
     );
+    this.publishHeaderContext();
     this.reloadBrowserFromFirstPage();
   }
 
   selectBrowserTimeFilterMode(mode: BrowserTimeFilterMode): void {
     if (!['period', 'range'].includes(mode) || this.browserTimeFilterMode === mode) return;
     this.browserTimeFilterMode = mode;
+    this.publishHeaderContext();
     this.reloadBrowserFromFirstPage();
   }
 
-  onBrowserDateRangeChange(): void {
-    if (!this.browserDateFrom || !this.browserDateTo) return;
+  setBrowserDateRange(dateFrom: string, dateTo: string): void {
+    if (!dateFrom || !dateTo) return;
+    this.browserDateFrom = dateFrom;
+    this.browserDateTo = dateTo;
     if (this.browserDateFrom > this.browserDateTo) {
       this.browserDateTo = this.browserDateFrom;
     }
+    this.publishHeaderContext();
     this.reloadBrowserFromFirstPage();
   }
 
@@ -1760,6 +1768,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       const [year, month] = value.split('-').map(Number);
       this.browserPeriodDate = new Date(year, month - 1, 1);
     }
+    this.publishHeaderContext();
     this.reloadBrowserFromFirstPage();
   }
 
@@ -1767,11 +1776,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     return (this.girdData?.headers || []).filter((header) =>
       this.customizableColumnKeys.has(header.key),
     );
-  }
-
-  toggleColumnSettings(event: MouseEvent): void {
-    event.stopPropagation();
-    this.showColumnSettings = !this.showColumnSettings;
   }
 
   toggleColumnVisibility(header: GirdHeader): void {
@@ -1815,11 +1819,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.girdData.headers = this.defaultGridHeaders.map((header) => ({ ...header }));
     this.columnWidths = {};
     this.applyGridColumnPreferenceChange(false);
-  }
-
-  @HostListener('document:click')
-  closeColumnSettings(): void {
-    this.showColumnSettings = false;
   }
 
   private initializeGridColumnPreferences(): void {
@@ -1870,6 +1869,43 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.rebuildGridLayoutCache();
     this.rebuildMasterCellDisplayCache();
     if (save) this.saveGridColumnPreferences();
+    this.publishHeaderContext();
+  }
+
+  private publishHeaderContext(): void {
+    if (!this.girdData?.id) return;
+    this.gridHeaderContextService.setContext({
+      ownerId: this.girdData.id,
+      time: this.hasBrowserTimeFilter
+        ? {
+            filterMode: this.browserTimeFilterMode,
+            periodMode: this.browserPeriodMode,
+            selectedPeriodValue: this.selectedBrowserPeriodValue,
+            periodOptions: this.browserPeriodOptions,
+            dateFrom: this.browserDateFrom,
+            dateTo: this.browserDateTo,
+            onFilterModeChange: (mode) => this.selectBrowserTimeFilterMode(mode),
+            onPeriodModeChange: (mode) => this.selectBrowserPeriodMode(mode),
+            onPeriodValueChange: (value) => this.selectBrowserPeriodValue(value),
+            onDateRangeChange: (dateFrom, dateTo) => this.setBrowserDateRange(dateFrom, dateTo),
+          }
+        : undefined,
+      columns: this.configurableHeaders.map((header) => ({
+        key: header.key,
+        label: header.label,
+        visible: !header.hidden,
+        canHide: this.canHideColumn(header),
+      })),
+      onToggleColumn: (key) => {
+        const header = this.configurableHeaders.find((item) => item.key === key);
+        if (header) this.toggleColumnVisibility(header);
+      },
+      onMoveColumn: (key, direction) => {
+        const header = this.configurableHeaders.find((item) => item.key === key);
+        if (header) this.moveColumn(header, direction);
+      },
+      onResetColumns: () => this.resetGridColumnPreferences(),
+    });
   }
 
   private saveGridColumnPreferences(): void {

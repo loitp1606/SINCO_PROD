@@ -8,6 +8,116 @@
     <span class="page-title">{{ pageTitle | translate }}</span>
   </div>
   <div class="navbar-right">
+    <div class="context-actions" *ngIf="gridContext" (click)="$event.stopPropagation()">
+      <div class="context-action" *ngIf="gridContext.time">
+        <button
+          type="button"
+          class="context-action-btn"
+          [class.active]="activeContextPanel === 'time'"
+          (click)="toggleContextPanel($event, 'time')"
+          title="Lọc dữ liệu theo thời gian"
+        >
+          <i class="fas fa-calendar-alt"></i>
+          <span class="context-badge">{{ timeFilterBadge }}</span>
+        </button>
+
+        <section *ngIf="activeContextPanel === 'time'" class="context-popover time-popover">
+          <header class="popover-header">
+            <div class="popover-icon time-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div>
+              <strong>Bộ lọc thời gian</strong>
+              <span>Chọn khoảng dữ liệu cần hiển thị</span>
+            </div>
+          </header>
+
+          <div class="popover-content" *ngIf="gridContext.time as time">
+            <label class="context-field full-field">
+              <span>Cách lọc</span>
+              <select [value]="time.filterMode" (change)="onFilterModeChange($any($event.target).value)">
+                <option value="range">Từ ngày đến ngày</option>
+                <option value="period">Theo kỳ</option>
+              </select>
+            </label>
+
+            <div *ngIf="time.filterMode === 'range'" class="date-range-grid">
+              <label class="context-field">
+                <span>Từ ngày</span>
+                <input type="date" [value]="time.dateFrom" [max]="time.dateTo" (change)="onDateBoundaryChange('from', $any($event.target).value)" />
+              </label>
+              <label class="context-field">
+                <span>Đến ngày</span>
+                <input type="date" [value]="time.dateTo" [min]="time.dateFrom" (change)="onDateBoundaryChange('to', $any($event.target).value)" />
+              </label>
+            </div>
+
+            <div *ngIf="time.filterMode === 'period'" class="date-range-grid">
+              <label class="context-field">
+                <span>Loại kỳ</span>
+                <select [value]="time.periodMode" (change)="onPeriodModeChange($any($event.target).value)">
+                  <option value="month">Tháng</option>
+                  <option value="quarter">Quý</option>
+                  <option value="year">Năm</option>
+                </select>
+              </label>
+              <label class="context-field">
+                <span>Kỳ dữ liệu</span>
+                <select [value]="time.selectedPeriodValue" (change)="time.onPeriodValueChange($any($event.target).value)">
+                  <option *ngFor="let option of time.periodOptions" [value]="option.value">{{ option.label }}</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="active-filter-note">
+              <i class="fas fa-filter"></i>
+              <span>Đang áp dụng: <strong>{{ timeFilterBadge }}</strong></span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="context-action">
+        <button
+          type="button"
+          class="context-action-btn icon-only"
+          [class.active]="activeContextPanel === 'columns'"
+          (click)="toggleContextPanel($event, 'columns')"
+          title="Tùy chỉnh cột"
+          aria-label="Tùy chỉnh cột"
+        >
+          <i class="fas fa-sliders-h"></i>
+        </button>
+
+        <section *ngIf="activeContextPanel === 'columns'" class="context-popover columns-popover">
+          <header class="popover-header">
+            <div class="popover-icon columns-icon"><i class="fas fa-columns"></i></div>
+            <div class="popover-heading-copy">
+              <strong>Tùy chỉnh cột</strong>
+              <span>Ẩn, hiện và thay đổi thứ tự</span>
+            </div>
+            <button type="button" class="reset-columns-btn" (click)="gridContext.onResetColumns()">Mặc định</button>
+          </header>
+
+          <div class="columns-list">
+            <div *ngFor="let column of gridContext.columns; let first = first; let last = last" class="column-option">
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="column.visible"
+                  [disabled]="column.visible && !column.canHide"
+                  (change)="gridContext.onToggleColumn(column.key)"
+                />
+                <span>{{ column.label | translate }}</span>
+              </label>
+              <div class="column-move-actions">
+                <button type="button" [disabled]="first" title="Chuyển sang trái" (click)="gridContext.onMoveColumn(column.key, -1)"><i class="fas fa-arrow-up"></i></button>
+                <button type="button" [disabled]="last" title="Chuyển sang phải" (click)="gridContext.onMoveColumn(column.key, 1)"><i class="fas fa-arrow-down"></i></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
     <button class="shortcut-btn" (click)="toggleShortcutHelp()" *ngIf="isAuthenticated" title="Hướng dẫn phím tắt (?)">
       <i class="fas fa-keyboard"></i>
       <span>Phím tắt</span>
