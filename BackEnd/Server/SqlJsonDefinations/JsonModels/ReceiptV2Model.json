@@ -1,12 +1,8 @@
 {
 	"model": "receiptV2",
 	"schema": {
-		"foriegn": [
-			"receiptdetailV2"
-		],
-		"foriegnKey": [
-			"idGui"
-		],
+		"foriegn": [],
+		"foriegnKey": [],
 		"partition": true,
 		"isMaster": true,
 		"fields": [
@@ -344,15 +340,7 @@
 		}
 	},
 	"checking": {
-		"rules": [
-			{
-				"fieldName": "invoiceNumber",
-				"type": "length",
-				"minLength": "1",
-				"maxLength": "50",
-				"message": "Price name is required and maximum 50 characters."
-			}
-		]
+		"rules": []
 	},
 	"dataProcessing": {
 		"sqlStatements": [
@@ -362,106 +350,5 @@
 			}
 		]
 	},
-	"foriegnModel": [
-		{
-			"model": "receiptdetailV2",
-			"schema": {
-				"partition": true,
-				"fields": [
-					{
-						"name": "idGui",
-						"property": "idGui",
-						"type": "string",
-						"sqlType": "VARCHAR(64)",
-						"primaryKey": true,
-						"required": true
-					},
-					{
-						"name": "line_nbr",
-						"property": "line_nbr",
-						"type": "number",
-						"sqlType": "INT",
-						"primaryKey": true,
-						"required": true
-					},
-					{
-						"name": "invoiceNumber",
-						"property": "invoiceNumber",
-						"type": "string",
-						"sqlType": "VARCHAR(100)"
-					},
-					{
-						"name": "invoiceDate",
-						"property": "invoiceDate",
-						"type": "date",
-						"sqlType": "datetime"
-					},
-					{
-						"name": "invoiceAmount",
-						"property": "invoiceAmount",
-						"type": "number",
-						"sqlType": "NUMERIC(19,4)"
-					},
-					{
-						"name": "paidAmount",
-						"property": "paidAmount",
-						"type": "number",
-						"sqlType": "NUMERIC(19,4)"
-					},
-					{
-						"name": "debtAmount",
-						"property": "debtAmount",
-						"type": "number",
-						"sqlType": "NUMERIC(19,4)"
-					},
-					{
-						"name": "accountReceiveCode",
-						"property": "accountReceiveCode",
-						"type": "string",
-						"sqlType": "VARCHAR(50)"
-					},
-					{
-						"name": "amountCur",
-						"property": "amountCur",
-						"type": "number",
-						"sqlType": "NUMERIC(19,4)"
-					},
-					{
-						"name": "amount",
-						"property": "amount",
-						"type": "number",
-						"sqlType": "NUMERIC(19,4)"
-					},
-					{
-						"name": "idGuiDN",
-						"property": "idGuiDN",
-						"type": "string",
-						"sqlType": "VARCHAR(64)"
-					},
-					{
-						"name": "lnDN",
-						"property": "lnDN",
-						"type": "number",
-						"sqlType": "INT"
-					},
-					{
-						"name": "vcNumberDN",
-						"property": "vcNumberDN",
-						"type": "string",
-						"sqlType": "VARCHAR(32)"
-					},
-					{
-						"name": "note",
-						"property": "note",
-						"type": "string",
-						"sqlType": "NVARCHAR(432)"
-					}
-				]
-			},
-			"excelIntegration": {
-				"sheetName": "receiptdetailV2",
-				"columnMapping": []
-			}
-		}
-	]
+	"foriegnModel": []
 }

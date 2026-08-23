@@ -231,7 +231,7 @@
             [(ngModel)]="formData[selectedTab][field.key]"
             (ngModelChange)="onMasterFieldChange(field.key, $event)">
             <option value="">-- {{ "COMMON.SELECT" | translate}} {{ field.label | translate}} --</option>
-            <option *ngFor="let opt of field.options || []" [value]="opt.value" [disabled]="isSelectOptionDisabled(field, opt)">
+            <option *ngFor="let opt of field.options || []" [value]="opt.value">
               {{ opt.label | translate}}
             </option>
           </select>

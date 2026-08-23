@@ -1299,13 +1299,6 @@ export class DynamicPopupComponent implements OnInit {
         this.closeReceiptAllocationDialog();
     }
 
-    isSelectOptionDisabled(field: any, option: any): boolean {
-        if (option?.disabled === true) return true;
-        if (option?.legacyOnly !== true) return false;
-        const currentValue = String(this.formData?.[this.selectedTab]?.[field?.key] ?? '');
-        return currentValue !== String(option?.value ?? '');
-    }
-
     private parseReceiptAllocationJson(value: any): any[] {
         if (Array.isArray(value)) return value;
         if (typeof value !== 'string' || value.trim() === '') return [];

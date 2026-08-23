@@ -104,76 +104,7 @@ BEGIN
             RETURN;
         END;
 
-        IF @receiptType = N'INVOICE'
-        BEGIN
-            IF OBJECT_ID('tempdb..#dt') IS NOT NULL DROP TABLE #dt;
-            SELECT TOP 0 d.* INTO #dt FROM dbo.receiptdetailV2$000000 d WHERE 1 = 0;
-
-            SET @q = N'
-                INSERT INTO #dt
-                SELECT d.*
-                FROM dbo.receiptdetailV2$' + @sync + N' d
-                WHERE d.idGui = @p_idGui;
-            ';
-            EXEC sp_executesql
-                @q,
-                N'@p_idGui NVARCHAR(50)',
-                @p_idGui = @idGui;
-
-            SET @q = N'
-                INSERT dbo.CustomerDebtLedger
-                (
-                    UnitCode,
-                    CustomerId,
-                    ReceiptIdGui,
-                    VoucherNumber,
-                    VoucherDate,
-                    ReceiptType,
-                    DebitAmount,
-                    CreditAmount,
-                    DepositAmount,
-                    CollectedAmount,
-                    ReceivableAmount,
-                    RefController,
-                    RefIdGui,
-                    RefLineNbr,
-                    Note,
-                    CreatedBy,
-                    CreatedAt
-                )
-                SELECT
-                    @p_unitCode,
-                    @p_customerCode,
-                    @p_idGui,
-                    @p_voucherNumber,
-                    @p_voucherDate,
-                    N''RECEIPT_INVOICE'',
-                    0,
-                    0,
-                    0,
-                    ISNULL(TRY_CONVERT(decimal(24,6), d.amount), 0),
-                    0,
-                    N''receiptV2'',
-                    COALESCE(CONVERT(nvarchar(50), d.idGuiDN), CONVERT(nvarchar(50), d.invoiceNumber), CONVERT(nvarchar(50), d.idGui)),
-                    TRY_CONVERT(int, d.line_nbr),
-                    N''Thu theo hóa đơn'',
-                    @p_userId,
-                    SYSDATETIME()
-                FROM #dt d
-                WHERE ISNULL(TRY_CONVERT(decimal(24,6), d.amount), 0) > 0;
-            ';
-
-            EXEC sp_executesql
-                @q,
-                N'@p_unitCode NVARCHAR(50), @p_customerCode NVARCHAR(50), @p_idGui NVARCHAR(50), @p_voucherNumber NVARCHAR(100), @p_voucherDate DATE, @p_userId NVARCHAR(50)',
-                @p_unitCode = @resolvedUnitCode,
-                @p_customerCode = @customerCode,
-                @p_idGui = @idGui,
-                @p_voucherNumber = @voucherNumber,
-                @p_voucherDate = @voucherDate,
-                @p_userId = @userId;
-        END
-        ELSE IF @receiptType = N'DEPOSIT'
+        IF @receiptType = N'DEPOSIT'
         BEGIN
             IF @masterAmount > 0
             BEGIN

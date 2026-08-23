@@ -55,10 +55,6 @@
 				{
 					"label": "Thu khác",
 					"value": "OTHER"
-				},
-				{
-					"label": "Thu theo hóa đơn (dữ liệu cũ)",
-					"value": "INVOICE"
 				}
 			]
 		},
@@ -126,8 +122,7 @@
 			"idVC": "Z07",
 			"value": [],
 			"listTable": [
-				"receiptV2",
-				"receiptdetailV2"
+				"receiptV2"
 			],
 			"VCDate": "voucherDate",
 			"isFileHandle": "both",

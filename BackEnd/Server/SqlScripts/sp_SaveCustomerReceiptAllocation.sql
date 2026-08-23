@@ -75,13 +75,6 @@ BEGIN
         IF @resolvedUnitCode IS NULL OR LTRIM(RTRIM(@resolvedUnitCode)) = N''
             SET @resolvedUnitCode = N'CTY';
 
-        -- Rule: INVOICE không dùng màn phân bổ
-        IF @receiptType = N'INVOICE'
-        BEGIN
-            RAISERROR(N'Loại thu INVOICE không dùng phân bổ. Vui lòng nhập theo detail.', 16, 1);
-            RETURN;
-        END;
-
         SET @clearAllocationOnly = CASE
             WHEN @receiptType IN (N'DEPOSIT', N'OTHER') THEN 1
             ELSE 0
@@ -191,7 +184,7 @@ BEGIN
                     ISNULL(RefController, N'''') = N''deliveryNote''
                     OR (
                         ISNULL(RefController, N'''') = N''receiptV2''
-                        AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_INVOICE'', N''RECEIPT_DEPOSIT_OFFSET'')
+                        AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_DEPOSIT_OFFSET'')
                     )
               )
             GROUP BY RefIdGui;';
@@ -331,7 +324,7 @@ BEGIN
                 DECLARE @receiptTypeFilter NVARCHAR(400) = N'';
                 IF COL_LENGTH('dbo.CustomerDebtLedger', 'ReceiptType') IS NOT NULL
                     SET @receiptTypeFilter = N'
-                                      AND UPPER(ISNULL(l.ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_INVOICE'', N''RECEIPT_DEPOSIT_OFFSET'')';
+                                      AND UPPER(ISNULL(l.ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_DEPOSIT_OFFSET'')';
                 DECLARE @hasAppointment BIT = CASE WHEN COL_LENGTH('dbo.deliveryNote$000000', 'appointmentDate') IS NOT NULL THEN 1 ELSE 0 END;
 
                 IF COL_LENGTH('dbo.deliveryNote$000000', 'paidAmount') IS NOT NULL

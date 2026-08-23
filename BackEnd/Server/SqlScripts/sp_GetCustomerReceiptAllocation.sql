@@ -77,7 +77,7 @@ BEGIN
                         ISNULL(RefController, N'''') = N''deliveryNote''
                         OR (
                             ISNULL(RefController, N'''') = N''receiptV2''
-                            AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_INVOICE'', N''RECEIPT_DEPOSIT_OFFSET'')
+                            AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_DEPOSIT_OFFSET'')
                         )
                   )
             ),
@@ -219,7 +219,7 @@ BEGIN
                             ISNULL(RefController, N'''') = N''deliveryNote''
                             OR (
                                 ISNULL(RefController, N'''') = N''receiptV2''
-                                AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_INVOICE'', N''RECEIPT_DEPOSIT_OFFSET'')
+                                AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''RECEIPT_CUSTOMER'', N''RECEIPT_DEPOSIT_OFFSET'')
                             )
                       )
                 ),

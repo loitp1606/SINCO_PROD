@@ -180,7 +180,7 @@ BEGIN
 				(
 					l.RefController = N'receiptV2'
 					AND UPPER(ISNULL(l.ReceiptType, N'')) IN
-						(N'RECEIPT_CUSTOMER', N'RECEIPT_INVOICE', N'RECEIPT_DEPOSIT_OFFSET')
+						(N'RECEIPT_CUSTOMER', N'RECEIPT_DEPOSIT_OFFSET')
 				)
 			  )
 		) calc

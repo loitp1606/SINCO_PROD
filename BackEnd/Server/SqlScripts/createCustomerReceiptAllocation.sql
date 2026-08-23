@@ -1,7 +1,7 @@
 /*
     Bảng phân bổ tiền thu theo hóa đơn (AR)
     - Dùng cho receiptV2 loại CUSTOMER
-    - Không đụng luồng INVOICE hiện hữu (INVOICE đã theo detail riêng)
+    - Phân bổ trực tiếp theo phiếu xuất, không dùng detail hóa đơn cũ
 */
 IF OBJECT_ID('dbo.CustomerReceiptAllocation', 'U') IS NULL
 BEGIN
@@ -37,4 +37,3 @@ BEGIN
         ON dbo.CustomerReceiptAllocation(UnitCode, CustomerId, RefIdGuiDN);
 END
 GO
-

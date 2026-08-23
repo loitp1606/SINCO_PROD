@@ -62,11 +62,6 @@
 							{
 								"label": "Thu khác",
 								"value": "OTHER"
-							},
-							{
-								"label": "Thu theo hóa đơn (dữ liệu cũ)",
-								"value": "INVOICE",
-								"legacyOnly": true
 							}
 						]
 					},
@@ -279,102 +274,7 @@
 				],
 				"initialData": {}
 			},
-			"detail": [
-				{
-					"title": "Thu tiền chi tiết theo hóa đơn",
-					"quickEditable": true,
-					"visibleWhen": {
-						"field": "receiptType",
-						"operator": "=",
-						"value": "INVOICE"
-					},
-					"controllerDetail": "receiptdetailV2",
-					"formId": "receiptdetailV2",
-					"foreignKey": "idGui,line_nbr",
-					"fields": [
-						{
-							"key": "line_nbr",
-							"label": "Stt",
-							"disabled": true,
-							"type": "text",
-							"width": "70px"
-						},
-						{
-							"key": "invoiceNumber",
-							"label": "Số hóa đơn",
-							"type": "text",
-							"required": true,
-							"width": "160px"
-						},
-						{
-							"key": "invoiceDate",
-							"label": "Ngày HĐ",
-							"type": "date",
-							"required": false,
-							"width": "130px"
-						},
-						{
-							"key": "invoiceAmount",
-							"label": "Tiền HĐ",
-							"type": "number",
-							"currency": "VN",
-							"required": false,
-							"width": "100px",
-							"trigger": [
-								"debtAmount"
-							]
-						},
-						{
-							"key": "paidAmount",
-							"label": "Đã thu",
-							"type": "number",
-							"currency": "VN",
-							"required": false,
-							"width": "100px",
-							"trigger": [
-								"debtAmount"
-							]
-						},
-						{
-							"key": "debtAmount",
-							"label": "Còn phải thu",
-							"type": "number",
-							"currency": "VN",
-							"disabled": true,
-							"width": "100px",
-							"calculation": {
-								"calculations": [
-									{
-										"formula": "[debtAmount] = [invoiceAmount] - [paidAmount]",
-										"dependencies": [
-											"invoiceAmount",
-											"paidAmount"
-										],
-										"precision": 0
-									}
-								]
-							}
-						},
-						{
-							"key": "amount",
-							"label": "Số tiền thu",
-							"type": "number",
-							"currency": "VN",
-							"required": true,
-							"width": "100px"
-						},
-						{
-							"key": "note",
-							"label": "Ghi chú",
-							"type": "text",
-							"uiTab": "Ghi chú",
-							"required": false,
-							"width": "220px"
-						}
-					],
-					"initialData": []
-				}
-			]
+			"detail": []
 		},
 		{
 			"title": "Tệp đính kèm",
@@ -385,14 +285,9 @@
 		"actions": {
 			"post": [
 				{
-					"step": "beforeUpdate",
-					"type": "sql01",
-					"query": "exec beforeUpdateReceiptV2 N'@idGui', N'@voucherNumber', N'@voucherDate';"
-				},
-				{
 					"step": "afterUpdate",
 					"type": "sql02",
-					"query": "exec afterUpdateReceiptV2 N'@idGui', N'@voucherNumber', N'@voucherDate';EXEC dbo.sp_PostDebtFromReceiptV2 N'@idGui', '@unit', '@userId';IF NULLIF(N'@allocationJson', N'') IS NOT NULL OR UPPER(N'@receiptType') IN (N'DEPOSIT', N'OTHER') EXEC dbo.sp_SaveCustomerReceiptAllocation N'@idGui', N'@allocationJson', '@unit', '@userId';EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2 N'@idGui', '@unit', '@userId';"
+					"query": "EXEC dbo.sp_PostDebtFromReceiptV2 N'@idGui', '@unit', '@userId';IF NULLIF(N'@allocationJson', N'') IS NOT NULL OR UPPER(N'@receiptType') IN (N'DEPOSIT', N'OTHER') EXEC dbo.sp_SaveCustomerReceiptAllocation N'@idGui', N'@allocationJson', '@unit', '@userId';EXEC dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2 N'@idGui', '@unit', '@userId';"
 				}
 			]
 		}
