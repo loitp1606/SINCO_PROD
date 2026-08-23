@@ -42,6 +42,7 @@ import { PageTitleService } from '../services/page-title.service';
 import { ShortcutHelpService } from '../services/shortcut-help.service';
 
 type BrowserPeriodMode = 'month' | 'quarter' | 'year';
+type BrowserTimeFilterMode = 'period' | 'range';
 
 interface BrowserPeriodOption {
   value: string;
@@ -182,6 +183,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   browserPeriodMode: BrowserPeriodMode = 'month';
   browserPeriodDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   private readonly browserPeriodToday = new Date();
+  browserTimeFilterMode: BrowserTimeFilterMode = 'range';
+  browserDateFrom = this.formatBrowserDateYmd(this.addBrowserMonthsClamped(this.browserPeriodToday, -3));
+  browserDateTo = this.formatBrowserDateYmd(this.browserPeriodToday);
 
   // Detail
   detailRowsData: { [tabIndex: number]: { [detailIndex: number]: any[] } } = {};
@@ -1732,6 +1736,22 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.reloadBrowserFromFirstPage();
   }
 
+  selectBrowserTimeFilterMode(mode: BrowserTimeFilterMode): void {
+    if (!['period', 'range'].includes(mode) || this.browserTimeFilterMode === mode) return;
+    this.browserTimeFilterMode = mode;
+    this.saveBrowserTimeFilterPreference();
+    this.reloadBrowserFromFirstPage();
+  }
+
+  onBrowserDateRangeChange(): void {
+    if (!this.browserDateFrom || !this.browserDateTo) return;
+    if (this.browserDateFrom > this.browserDateTo) {
+      this.browserDateTo = this.browserDateFrom;
+    }
+    this.saveBrowserTimeFilterPreference();
+    this.reloadBrowserFromFirstPage();
+  }
+
   selectBrowserPeriodValue(value: string): void {
     if (!value || value === this.selectedBrowserPeriodValue) return;
     if (this.browserPeriodMode === 'year') {
@@ -2822,9 +2842,23 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     try {
       const stored = JSON.parse(
         localStorage.getItem(this.browserTimeFilterStorageKey) || '{}',
-      ) as { mode?: BrowserPeriodMode; value?: string };
-      if (stored.mode && ['month', 'quarter', 'year'].includes(stored.mode)) {
-        this.browserPeriodMode = stored.mode;
+      ) as {
+        filterMode?: BrowserTimeFilterMode;
+        periodMode?: BrowserPeriodMode;
+        mode?: BrowserPeriodMode;
+        value?: string;
+        dateFrom?: string;
+        dateTo?: string;
+      };
+      if (stored.filterMode && ['period', 'range'].includes(stored.filterMode)) {
+        this.browserTimeFilterMode = stored.filterMode;
+      } else if (stored.mode && ['month', 'quarter', 'year'].includes(stored.mode)) {
+        // Tương thích dữ liệu localStorage của phiên bản chỉ có lọc theo kỳ.
+        this.browserTimeFilterMode = 'period';
+      }
+      const storedPeriodMode = stored.periodMode || stored.mode;
+      if (storedPeriodMode && ['month', 'quarter', 'year'].includes(storedPeriodMode)) {
+        this.browserPeriodMode = storedPeriodMode;
       }
       if (stored.value) {
         if (this.browserPeriodMode === 'year') {
@@ -2837,20 +2871,53 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
           this.browserPeriodDate = new Date(year, month - 1, 1);
         }
       }
+      if (stored.dateFrom && /^\d{4}-\d{2}-\d{2}$/.test(stored.dateFrom)) {
+        this.browserDateFrom = stored.dateFrom;
+      }
+      if (stored.dateTo && /^\d{4}-\d{2}-\d{2}$/.test(stored.dateTo)) {
+        this.browserDateTo = stored.dateTo;
+      }
+      if (this.browserDateFrom > this.browserDateTo) {
+        this.browserDateTo = this.browserDateFrom;
+      }
       if (Number.isNaN(this.browserPeriodDate.getTime())) throw new Error('Invalid period');
     } catch {
+      this.browserTimeFilterMode = 'range';
       this.browserPeriodMode = 'month';
       this.browserPeriodDate = new Date(
         this.browserPeriodToday.getFullYear(),
         this.browserPeriodToday.getMonth(),
         1,
       );
+      this.browserDateFrom = this.formatBrowserDateYmd(
+        this.addBrowserMonthsClamped(this.browserPeriodToday, -3),
+      );
+      this.browserDateTo = this.formatBrowserDateYmd(this.browserPeriodToday);
     }
   }
 
   private getBrowserTimeFilters(): FilterCondition[] {
     const field = this.browserTimeFilterField;
     if (!field) return [];
+    if (this.browserTimeFilterMode === 'range') {
+      if (!this.browserDateFrom || !this.browserDateTo) return [];
+      return [
+        {
+          id: 'browser-range-from',
+          field,
+          operator: '>=',
+          value: this.browserDateFrom,
+          columnType: 'date',
+        },
+        {
+          id: 'browser-range-to',
+          field,
+          operator: '<=',
+          value: this.browserDateTo,
+          columnType: 'date',
+        },
+      ];
+    }
     const start = new Date(this.browserPeriodDate.getFullYear(), this.browserPeriodDate.getMonth(), 1);
     let end: Date;
     if (this.browserPeriodMode === 'year') {
@@ -2899,8 +2966,11 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     localStorage.setItem(
       this.browserTimeFilterStorageKey,
       JSON.stringify({
-        mode: this.browserPeriodMode,
+        filterMode: this.browserTimeFilterMode,
+        periodMode: this.browserPeriodMode,
         value: this.selectedBrowserPeriodValue,
+        dateFrom: this.browserDateFrom,
+        dateTo: this.browserDateTo,
       }),
     );
   }
@@ -2912,6 +2982,13 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   private formatBrowserDateYmd(value: Date): string {
     return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
+  }
+
+  private addBrowserMonthsClamped(value: Date, months: number): Date {
+    const target = new Date(value.getFullYear(), value.getMonth() + months, 1);
+    const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+    target.setDate(Math.min(value.getDate(), lastDay));
+    return target;
   }
 
   private normalizeAdvancedFilterConditions(conditions: FilterCondition[]): FilterCondition[] {

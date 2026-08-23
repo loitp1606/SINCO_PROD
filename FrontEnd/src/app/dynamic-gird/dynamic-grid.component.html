@@ -80,6 +80,15 @@
 
       <div *ngIf="hasBrowserTimeFilter" class="browser-time-filter" title="Lọc dữ liệu theo thời gian">
         <select
+          [ngModel]="browserTimeFilterMode"
+          (ngModelChange)="selectBrowserTimeFilterMode($event)"
+          aria-label="Cách lọc thời gian"
+        >
+          <option value="period">Theo kỳ</option>
+          <option value="range">Từ ngày đến ngày</option>
+        </select>
+        <select
+          *ngIf="browserTimeFilterMode === 'period'"
           [ngModel]="browserPeriodMode"
           (ngModelChange)="selectBrowserPeriodMode($event)"
           aria-label="Loại kỳ thời gian"
@@ -89,6 +98,7 @@
           <option value="year">Năm</option>
         </select>
         <select
+          *ngIf="browserTimeFilterMode === 'period'"
           [ngModel]="selectedBrowserPeriodValue"
           (ngModelChange)="selectBrowserPeriodValue($event)"
           aria-label="Kỳ dữ liệu"
@@ -97,6 +107,25 @@
             {{ option.label }}
           </option>
         </select>
+        <ng-container *ngIf="browserTimeFilterMode === 'range'">
+          <input
+            type="date"
+            [(ngModel)]="browserDateFrom"
+            [max]="browserDateTo"
+            (change)="onBrowserDateRangeChange()"
+            title="Từ ngày"
+            aria-label="Từ ngày"
+          />
+          <span class="browser-time-separator">–</span>
+          <input
+            type="date"
+            [(ngModel)]="browserDateTo"
+            [min]="browserDateFrom"
+            (change)="onBrowserDateRangeChange()"
+            title="Đến ngày"
+            aria-label="Đến ngày"
+          />
+        </ng-container>
       </div>
 
       <button
