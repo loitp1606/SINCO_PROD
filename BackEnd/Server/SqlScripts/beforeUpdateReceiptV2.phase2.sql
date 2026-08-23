@@ -7,6 +7,14 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE @q NVARCHAR(4000), @sync VARCHAR(6), @partition VARCHAR(6);
+    ---kiem tra truoc khi luu
+    if exists (select 1 from CustomerReceiptAllocation where ReceiptIdGui = @idGui)
+    begin
+        select (N'Phiếu thu đã phân bổ, vui lòng xóa phân bổ trước khi thực hiện.') as message;
+        RETURN;
+    end
+
+    ---
     SELECT @sync = CONVERT(VARCHAR(6), voucherDate, 112) FROM receiptV2$000000 WHERE idgui = @idGui;
 
     SELECT TOP 0 a.*, @sync AS sync INTO #detail FROM receiptdetailV2$000000 a WHERE idGui = @idGui;
@@ -106,4 +114,3 @@ BEGIN
     END;
     EXEC (@q);
 END;
-
