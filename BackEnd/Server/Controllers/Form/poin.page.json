@@ -403,6 +403,7 @@
 							"key": "discountRate",
 							"label": "% Chiết khấu",
 							"type": "number",
+							"precision": 2,
 							"width": "100px",
 							"currency": "VN",
 							"trigger": [
@@ -449,7 +450,7 @@
 							"calculation": {
 								"calculations": [
 									{
-										"formula": "[amount] = [quantity] * [price] + [discount]",
+										"formula": "[amount] = [quantity] * [price] - [discount]",
 										"dependencies": [
 											"quantity",
 											"price"
@@ -532,7 +533,7 @@
 							"calculation": {
 								"calculations": [
 									{
-										"formula": "[payment] = [amount] + [tax] - [discount]",
+										"formula": "[payment] = [amount] + [tax]",
 										"dependencies": [
 											"amount",
 											"tax",
