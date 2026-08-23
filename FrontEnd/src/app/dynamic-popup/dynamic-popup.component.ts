@@ -945,7 +945,12 @@ export class DynamicPopupComponent implements OnInit {
             values: ['@customerCode', '@unitCode']
         };
 
-        this.executePopupDataSource(dataSource, currentData).then((rows: any[]) => {
+        const queryData = {
+            ...currentData,
+            customerCode: this.getReceiptV2ScalarValue(currentData['customerCode'])
+        };
+
+        this.executePopupDataSource(dataSource, queryData).then((rows: any[]) => {
             const row = rows?.[0] || {};
             currentData['depositAmount'] = this.parseNumberInput(row.depositAmount);
             this.cdr.detectChanges();
@@ -1005,6 +1010,56 @@ export class DynamicPopupComponent implements OnInit {
         this.calculateAggregateValues();
         this.applyFilters();
         this.cdr.detectChanges();
+    }
+
+    private normalizeReceiptV2DepositOffsetPayload(formData: any, details: any[]): void {
+        if (`${this.metadata?.formId || this.metadata?.controller || ''}` !== 'receiptV2') {
+            return;
+        }
+
+        if (`${formData?.['receiptType'] ?? ''}`.toUpperCase() !== 'DEPOSIT_OFFSET') {
+            return;
+        }
+
+        ['idGui', 'voucherNumber', 'customerCode', 'collectorCode', 'reason', 'accountReceiveCode', 'depositReceiptNo'].forEach((fieldKey) => {
+            if (Object.prototype.hasOwnProperty.call(formData, fieldKey)) {
+                formData[fieldKey] = this.getReceiptV2ScalarValue(formData[fieldKey]);
+            }
+        });
+
+        details.forEach((detailSection: any) => {
+            if (`${detailSection?.formIdDetail || ''}` !== 'receiptdetailV2') {
+                return;
+            }
+
+            (detailSection?.data || []).forEach((row: any) => {
+                ['idGui', 'idGuiDN', 'lnDN', 'vcNumberDN', 'invoiceNumber', 'accountReceiveCode'].forEach((fieldKey) => {
+                    if (Object.prototype.hasOwnProperty.call(row, fieldKey)) {
+                        row[fieldKey] = this.getReceiptV2ScalarValue(row[fieldKey]);
+                    }
+                });
+            });
+        });
+    }
+
+    private getReceiptV2ScalarValue(value: any): any {
+        if (value === null || value === undefined || typeof value !== 'object') {
+            return value;
+        }
+
+        if (Array.isArray(value)) {
+            return value.map((item) => this.getReceiptV2ScalarValue(item)).join(',');
+        }
+
+        const preferredKeys = ['value', 'id', 'idGui', 'customer_id', 'employee_id', 'incomeExpenditure_id', 'account_sinco_id', 'voucherNumber'];
+        for (const key of preferredKeys) {
+            const candidate = value[key];
+            if (candidate !== null && candidate !== undefined && typeof candidate !== 'object') {
+                return candidate;
+            }
+        }
+
+        return '';
     }
 
     private evaluateVisibilityRule(rule: any, tabIndex: number = this.selectedTab): boolean {
@@ -2073,10 +2128,6 @@ export class DynamicPopupComponent implements OnInit {
                 // Handle multiple detail sections
                 if (tab?.detail && Array.isArray(tab.detail)) {
                     tab.detail.forEach((detailSection, detailIndex) => {
-                        const detailConfig: any = detailSection;
-                        if (detailConfig?.persist === false || detailConfig?.noSave === true) {
-                            return;
-                        }
                         if (!this.isDetailSectionVisible(detailSection, selectedTab)) {
                             return;
                         }
@@ -2098,6 +2149,7 @@ export class DynamicPopupComponent implements OnInit {
 
         // const formData = this.mergeFormData()
         const formData = this.removeTransientMasterFields(this.normalizeValues(this.mergeFormData()))
+        this.normalizeReceiptV2DepositOffsetPayload(formData, details);
 
         // Determine action based on whether this is a new record or update
         let action = 'insert'

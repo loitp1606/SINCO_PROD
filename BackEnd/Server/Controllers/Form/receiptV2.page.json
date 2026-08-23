@@ -300,7 +300,6 @@
 					"allowDelete": false,
 					"allowMove": false,
 					"allowSelect": false,
-					"persist": false,
 					"visibleWhen": {
 						"field": "receiptType",
 						"operator": "in",
