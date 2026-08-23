@@ -116,6 +116,9 @@
 }
 
 @media (max-width: 520px) {
+  .chart-card { min-height: 300px; padding: 17px 14px; }
+  .line-svg { height: 180px; }
+  .chart-labels { padding: 0 2px; font-size: 9px; }
   .pie-chart { align-items: stretch; flex-direction: column; }
   .donut-wrap { align-self: center; }
 }

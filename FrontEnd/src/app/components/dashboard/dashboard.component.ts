@@ -10,11 +10,14 @@ interface DashboardStatistic {
   title: string;
   value: string;
   icon: string;
-  trend: number;
+  trend: number | null;
   trendText: string;
   trendUp: boolean;
   color: string;
   caption: string;
+  route: string;
+  tooltip?: string;
+  emptyState?: boolean;
 }
 
 interface DashboardActivity {
@@ -52,24 +55,19 @@ interface DashboardTimeBucket {
   end: Date;
 }
 
-interface DashboardPeriodOption {
-  value: string;
-  label: string;
-}
-
 interface FinancialPerformanceRow {
   label: string;
   current: number;
   previous: number;
-  trend: number;
+  trend: number | null;
   favorable: boolean;
   color: string;
 }
 
 interface ProfitGauge {
   label: string;
-  value: number;
-  benchmark: number;
+  value: number | null;
+  benchmark: number | null;
   color: string;
 }
 
@@ -125,8 +123,8 @@ export class DashboardComponent implements OnInit {
     previousCost: 0,
     expense: 0,
     previousExpense: 0,
-    margin: 0,
-    revenueTrend: 0,
+    margin: null as number | null,
+    revenueTrend: null as number | null,
   };
 
   statistics: DashboardStatistic[] = [];
@@ -187,45 +185,26 @@ export class DashboardComponent implements OnInit {
     return 'so với tháng trước';
   }
 
-  get selectedPeriodValue(): string {
-    const year = this.selectedDate.getFullYear();
-    if (this.periodMode === 'year') return String(year);
-    if (this.periodMode === 'quarter') {
-      return `${year}-Q${Math.floor(this.selectedDate.getMonth() / 3) + 1}`;
-    }
-    return `${year}-${String(this.selectedDate.getMonth() + 1).padStart(2, '0')}`;
-  }
-
-  get periodOptions(): DashboardPeriodOption[] {
-    const options: DashboardPeriodOption[] = [];
+  get periodYearOptions(): number[] {
+    const options: number[] = [];
     const currentYear = this.today.getFullYear();
     const firstYear = currentYear - this.periodHistoryYears + 1;
 
     for (let year = currentYear; year >= firstYear; year -= 1) {
-      if (this.periodMode === 'year') {
-        options.push({ value: String(year), label: `Năm ${year}` });
-        continue;
-      }
-
-      if (this.periodMode === 'quarter') {
-        const lastQuarter = year === currentYear
-          ? Math.floor(this.today.getMonth() / 3) + 1
-          : 4;
-        for (let quarter = lastQuarter; quarter >= 1; quarter -= 1) {
-          options.push({ value: `${year}-Q${quarter}`, label: `Quý ${quarter}/${year}` });
-        }
-        continue;
-      }
-
-      const lastMonth = year === currentYear ? this.today.getMonth() + 1 : 12;
-      for (let month = lastMonth; month >= 1; month -= 1) {
-        options.push({
-          value: `${year}-${String(month).padStart(2, '0')}`,
-          label: `Tháng ${month}/${year}`,
-        });
-      }
+      options.push(year);
     }
     return options;
+  }
+
+  get selectedPeriodUnit(): number {
+    return this.periodMode === 'quarter'
+      ? Math.floor(this.selectedDate.getMonth() / 3) + 1
+      : this.selectedDate.getMonth() + 1;
+  }
+
+  get periodUnitOptions(): number[] {
+    const count = this.periodMode === 'quarter' ? 4 : 12;
+    return Array.from({ length: count }, (_, index) => index + 1);
   }
 
   get canGoNextPeriod(): boolean {
@@ -244,17 +223,18 @@ export class DashboardComponent implements OnInit {
     this.loadDashboardData();
   }
 
-  selectPeriodValue(value: string): void {
-    if (!value || value === this.selectedPeriodValue) return;
-    if (this.periodMode === 'year') {
-      this.selectedDate = new Date(Number(value), 0, 1);
-    } else if (this.periodMode === 'quarter') {
-      const [yearText, quarterText] = value.split('-Q');
-      this.selectedDate = new Date(Number(yearText), (Number(quarterText) - 1) * 3, 1);
-    } else {
-      const [yearText, monthText] = value.split('-');
-      this.selectedDate = new Date(Number(yearText), Number(monthText) - 1, 1);
-    }
+  selectPeriodUnit(value: string): void {
+    const unit = Number(value);
+    if (!unit || unit === this.selectedPeriodUnit) return;
+    const month = this.periodMode === 'quarter' ? (unit - 1) * 3 : unit - 1;
+    this.selectedDate = new Date(this.selectedDate.getFullYear(), month, 1);
+    this.loadDashboardData();
+  }
+
+  selectPeriodYear(value: string): void {
+    const year = Number(value);
+    if (!year || year === this.selectedDate.getFullYear()) return;
+    this.selectedDate = new Date(year, this.selectedDate.getMonth(), 1);
     this.loadDashboardData();
   }
 
@@ -315,9 +295,7 @@ export class DashboardComponent implements OnInit {
           previousCost: financial.previousCost,
           expense: financial.expense,
           previousExpense: financial.previousExpense,
-          margin: financial.revenue
-            ? Number(((financial.grossProfit / financial.revenue) * 100).toFixed(1))
-            : 0,
+          margin: this.ratioPercent(financial.grossProfit, financial.revenue),
           revenueTrend: this.calculateTrendPercent(financial.revenue, financial.previousRevenue),
         };
 
@@ -354,8 +332,8 @@ export class DashboardComponent implements OnInit {
     const delivered = currentDeliveries.filter((row) => String(row?.status) === '1').length;
     const pendingDelivery = currentDeliveries.filter((row) => String(row?.status) === '0').length;
     const currentReceipts = this.rowsInRange(receipts, period.start, period.end);
-    const collectedThisMonth = currentReceipts
-      .filter((row) => this.isTruthy(row?.isReceived))
+    const confirmedReceipts = currentReceipts.filter((row) => this.isTruthy(row?.isReceived));
+    const collectedThisMonth = confirmedReceipts
       .reduce((sum, row) => sum + this.amountOf(row, ['total_amount']), 0);
     const collectedPreviousPeriod = this.rowsInRange(receipts, period.previousStart, period.previousEnd)
       .filter((row) => this.isTruthy(row?.isReceived))
@@ -372,41 +350,52 @@ export class DashboardComponent implements OnInit {
         title: 'Đơn hàng trong kỳ',
         value: this.formatNumber(currentOrders.length),
         icon: 'fas fa-bag-shopping',
-        trend: Math.abs(this.calculateTrendPercent(currentOrders.length, previousOrders.length)),
+        trend: this.absoluteTrend(currentOrders.length, previousOrders.length),
         trendText: this.comparisonPeriodLabel,
         trendUp: currentOrders.length >= previousOrders.length,
         color: '#7c3aed',
         caption: this.formatCurrencyVnd(this.sumAmounts(currentOrders, ['total_payment'])),
+        route: '/order',
       },
       {
         title: 'Tiến độ giao hàng',
-        value: `${delivered}/${currentDeliveries.length}`,
+        value: currentDeliveries.length ? `${delivered}/${currentDeliveries.length}` : 'Chưa phát sinh',
         icon: 'fas fa-truck-fast',
-        trend: currentDeliveries.length ? Number(((delivered / currentDeliveries.length) * 100).toFixed(1)) : 0,
+        trend: currentDeliveries.length ? Number(((delivered / currentDeliveries.length) * 100).toFixed(1)) : null,
         trendText: 'đã hoàn tất',
         trendUp: true,
         color: '#059669',
-        caption: `${this.formatNumber(pendingDelivery)} phiếu đang chờ giao`,
+        caption: currentDeliveries.length
+          ? `${this.formatNumber(pendingDelivery)} phiếu đang chờ giao`
+          : 'Không có phiếu xuất trong kỳ',
+        route: '/deliveryNote',
+        emptyState: !currentDeliveries.length,
       },
       {
-        title: 'Đã thu trong kỳ',
+        title: 'Đã xác nhận thu',
         value: this.formatCurrencyCompact(collectedThisMonth),
         icon: 'fas fa-wallet',
-        trend: Math.abs(this.calculateTrendPercent(collectedThisMonth, collectedPreviousPeriod)),
+        trend: this.absoluteTrend(collectedThisMonth, collectedPreviousPeriod),
         trendText: this.comparisonPeriodLabel,
         trendUp: collectedThisMonth >= collectedPreviousPeriod,
         color: '#0891b2',
-        caption: `${this.formatNumber(currentReceipts.length)} phiếu thu`,
+        caption: `${this.formatNumber(confirmedReceipts.length)} phiếu đã xác nhận`,
+        route: '/receiptV2',
+        tooltip: 'Chỉ tính các phiếu thu đã được đánh dấu xác nhận thu.',
       },
       {
         title: 'Tỷ lệ chuyển đổi',
-        value: `${conversion.toFixed(1)}%`,
+        value: currentQuotations.length ? this.formatPercent(conversion) : '—',
         icon: 'fas fa-arrow-trend-up',
-        trend: Math.abs(this.calculateTrendPercent(conversion, previousConversion)),
+        trend: currentQuotations.length ? this.absoluteTrend(conversion, previousConversion) : null,
         trendText: this.comparisonPeriodLabel,
         trendUp: conversion >= previousConversion,
         color: '#ea580c',
-        caption: `${currentOrders.length}/${currentQuotations.length} báo giá thành đơn`,
+        caption: currentQuotations.length
+          ? `${currentOrders.length}/${currentQuotations.length} báo giá thành đơn`
+          : 'Chưa có báo giá trong kỳ',
+        route: '/quotationPaper',
+        emptyState: !currentQuotations.length,
       },
     ];
   }
@@ -444,7 +433,7 @@ export class DashboardComponent implements OnInit {
       { label: 'Báo giá', value: this.rowsInRange(quotations, period.start, period.end).length, color: '#2563eb', route: '/quotationPaper' },
       { label: 'Đơn hàng', value: this.rowsInRange(orders, period.start, period.end).length, color: '#7c3aed', route: '/order' },
       { label: 'Đã giao', value: this.rowsInRange(deliveries, period.start, period.end).filter((row) => String(row?.status) === '1').length, color: '#059669', route: '/deliveryNote' },
-      { label: 'Đã thu', value: this.rowsInRange(receipts, period.start, period.end).filter((row) => this.isTruthy(row?.isReceived)).length, color: '#0891b2', route: '/receiptV2' },
+      { label: 'Đã xác nhận thu', value: this.rowsInRange(receipts, period.start, period.end).filter((row) => this.isTruthy(row?.isReceived)).length, color: '#0891b2', route: '/receiptV2' },
     ];
   }
 
@@ -481,10 +470,16 @@ export class DashboardComponent implements OnInit {
     const debt = currentDeliveries.reduce((sum, row) => sum + this.amountOf(row, ['debtAmount']), 0);
     const pendingReceipt = currentReceipts.filter((row) => !this.isTruthy(row?.isReceived));
     this.alerts = [
-      { label: 'Chờ giao hàng', value: this.formatNumber(pendingDelivery.length), note: 'phiếu cần theo dõi tiến độ', icon: 'fas fa-clock', tone: 'warning', route: '/deliveryNote' },
-      { label: 'Công nợ phiếu xuất', value: this.formatCurrencyCompact(debt), note: 'giá trị còn phải thu', icon: 'fas fa-triangle-exclamation', tone: 'danger', route: '/deliveryNote' },
-      { label: 'Phiếu thu chưa xác nhận', value: this.formatNumber(pendingReceipt.length), note: 'phiếu chưa đánh dấu đã thu', icon: 'fas fa-circle-info', tone: 'info', route: '/receiptV2' },
-    ];
+      pendingDelivery.length
+        ? { label: 'Chờ giao hàng', value: this.formatNumber(pendingDelivery.length), note: 'phiếu cần theo dõi tiến độ', icon: 'fas fa-clock', tone: 'warning' as const, route: '/deliveryNote' }
+        : null,
+      debt > 0
+        ? { label: 'Công nợ phiếu xuất', value: this.formatCurrencyCompact(debt), note: 'giá trị còn phải thu', icon: 'fas fa-triangle-exclamation', tone: 'danger' as const, route: '/deliveryNote' }
+        : null,
+      pendingReceipt.length
+        ? { label: 'Phiếu thu chưa xác nhận', value: this.formatNumber(pendingReceipt.length), note: 'phiếu chưa đánh dấu đã thu', icon: 'fas fa-circle-info', tone: 'info' as const, route: '/receiptV2' }
+        : null,
+    ].filter((alert): alert is DashboardAlert => alert !== null);
   }
 
   private buildFinancialAnalysis(financial: FinancialMetrics): void {
@@ -564,7 +559,8 @@ export class DashboardComponent implements OnInit {
     return Math.max((value / this.maxDebtAgingAmount) * 100, value ? 4 : 0);
   }
 
-  gaugeProgress(value: number): number {
+  gaugeProgress(value: number | null): number {
+    if (value === null) return 0;
     return Math.min(Math.max(value, 0), 100);
   }
 
@@ -586,8 +582,8 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  private ratioPercent(numerator: number, denominator: number): number {
-    return denominator ? Number(((numerator / denominator) * 100).toFixed(1)) : 0;
+  private ratioPercent(numerator: number, denominator: number): number | null {
+    return denominator ? Number(((numerator / denominator) * 100).toFixed(1)) : null;
   }
 
   private rowsInRange(rows: any[], start: Date, end: Date): any[] {
@@ -644,7 +640,7 @@ export class DashboardComponent implements OnInit {
       while (day <= period.end.getDate()) {
         const endDay = Math.min(day + 6, period.end.getDate());
         buckets.push({
-          label: `T${week}`,
+          label: `Tuần ${week}`,
           start: new Date(period.start.getFullYear(), period.start.getMonth(), day),
           end: new Date(period.start.getFullYear(), period.start.getMonth(), endDay, 23, 59, 59, 999),
         });
@@ -665,10 +661,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private calculateTrendPercent(current: number, previous: number): number {
-    if (!previous && !current) return 0;
-    if (!previous) return 100;
+  private calculateTrendPercent(current: number, previous: number): number | null {
+    if (previous <= 0) return null;
     return Number((((current - previous) / previous) * 100).toFixed(1));
+  }
+
+  private absoluteTrend(current: number, previous: number): number | null {
+    const trend = this.calculateTrendPercent(current, previous);
+    return trend === null ? null : Math.abs(trend);
+  }
+
+  formatPercent(value: number): string {
+    return `${new Intl.NumberFormat('vi-VN', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }).format(value)}%`;
   }
 
   formatCurrencyVnd(value: number): string {

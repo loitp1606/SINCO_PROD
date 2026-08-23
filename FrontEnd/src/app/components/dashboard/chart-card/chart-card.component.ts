@@ -70,6 +70,10 @@ export class ChartCardComponent {
     return this.data.reduce((sum, value) => sum + (Number(value) || 0), 0);
   }
 
+  get hasData(): boolean {
+    return this.data.some((value) => Number(value) !== 0);
+  }
+
   formatValue(value: number): string {
     if (this.valueFormat === 'currency') {
       if (Math.abs(value) >= 1_000_000) {

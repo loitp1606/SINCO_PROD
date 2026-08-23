@@ -1,10 +1,15 @@
 :host {
   display: block;
+  width: 100%;
+  min-width: 0;
   color: #172033;
 }
 
 .dashboard-shell {
+  width: 100%;
+  min-width: 0;
   min-height: calc(100vh - 64px);
+  overflow-x: clip;
   padding: 26px;
   background:
     radial-gradient(circle at 5% 0%, rgba(37, 99, 235, 0.07), transparent 26%),
@@ -190,6 +195,20 @@
   }
 }
 
+.period-unit-select { min-width: 130px; }
+.period-year-select { min-width: 118px; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .period-arrow {
   display: grid;
   width: 35px;
@@ -205,6 +224,16 @@
   &:hover:not(:disabled) { color: #2563eb; border-color: #93c5fd; background: #eff6ff; }
   &:disabled { color: #cbd5e1; background: #f8fafc; cursor: not-allowed; }
   i { font-size: 10px; }
+}
+
+.refresh-button:focus-visible,
+.period-modes button:focus-visible,
+.period-arrow:focus-visible,
+.funnel-row:focus-visible,
+.activity-row:focus-visible,
+.alert-row:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.34);
+  outline-offset: 2px;
 }
 
 .error-banner {
@@ -299,6 +328,11 @@
     border-color: rgba(251, 113, 133, 0.26);
     background: rgba(244, 63, 94, 0.13);
     color: #fecdd3;
+  }
+
+  &.neutral {
+    background: rgba(148, 163, 184, 0.16);
+    color: #e2e8f0;
   }
 }
 
@@ -663,6 +697,9 @@
   font-size: 12px;
 
   i { font-size: 28px; color: #cbd5e1; }
+
+  &.compact { min-height: 138px; text-align: center; }
+  &.compact i { color: #22c55e; }
 }
 
 .is-loading { opacity: 0.48; pointer-events: none; }
@@ -707,14 +744,16 @@
 }
 
 @media (max-width: 720px) {
-  .dashboard-shell { padding: 16px; }
+  .dashboard-shell { padding: 16px 12px; }
   .dashboard-header { align-items: flex-start; flex-direction: column; }
   .header-actions { width: 100%; justify-content: space-between; }
   .period-toolbar { align-items: stretch; flex-direction: column; }
   .period-modes { justify-content: stretch; }
   .period-modes button { min-width: 0; flex: 1; }
-  .period-navigation { justify-content: space-between; }
-  .period-select-wrap { flex: 1; }
+  .period-navigation { display: grid; grid-template-columns: 44px minmax(0, 1fr) minmax(0, 0.85fr) 44px; width: 100%; }
+  .period-navigation.year-mode { grid-template-columns: 44px minmax(0, 1fr) 44px; }
+  .period-select-wrap { width: auto; min-width: 0; }
+  .period-arrow { width: 44px; height: 44px; }
   .update-status { align-items: flex-start; }
   .hero { padding: 26px 20px; border-radius: 18px; }
   .hero-value { white-space: normal; }
@@ -727,4 +766,28 @@
   .activity-side { display: none; }
   .gauge-grid { grid-template-columns: 1fr; gap: 12px; }
   .gauge-item:not(:last-child) { border-right: 0; border-bottom: 1px solid #edf1f6; padding-bottom: 12px; }
+
+  .refresh-button,
+  .period-modes button,
+  .funnel-row,
+  .activity-row,
+  .alert-row { min-height: 44px; }
+}
+
+@media (max-width: 430px) {
+  .dashboard-header h1 { font-size: 25px; }
+  .dashboard-header p { font-size: 12px; }
+  .header-actions { gap: 10px; }
+  .update-status strong { font-size: 11px; }
+  .refresh-button { padding: 0 13px; }
+  .period-toolbar { gap: 10px; padding: 7px; }
+  .period-navigation { grid-template-columns: 44px minmax(0, 1fr) minmax(0, 0.9fr) 44px; gap: 4px; }
+  .period-navigation.year-mode { grid-template-columns: 44px minmax(0, 1fr) 44px; }
+  .period-select-wrap { padding-left: 7px; }
+  .period-select-wrap select { padding-right: 20px; font-size: 11px; }
+  .period-select-wrap .select-chevron { right: 7px; }
+  .panel { padding: 17px 14px; }
+  .hero { padding: 23px 17px; }
+  .hero-metric { padding: 16px; }
+  .alert-row { padding: 11px 9px; }
 }

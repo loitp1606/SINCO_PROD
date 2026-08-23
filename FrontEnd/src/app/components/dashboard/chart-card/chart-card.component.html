@@ -14,7 +14,7 @@
       <span>Tổng trong kỳ</span>
       <strong>{{ formatValue(total) }}</strong>
     </div>
-    <svg viewBox="0 0 400 190" preserveAspectRatio="none" class="line-svg" *ngIf="data.length; else emptyChart">
+    <svg viewBox="0 0 400 190" preserveAspectRatio="none" class="line-svg" *ngIf="hasData; else emptyChart">
       <defs>
         <linearGradient [id]="'area-' + color.replace('#', '')" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" [attr.stop-color]="color" stop-opacity="0.24"></stop>
@@ -26,28 +26,30 @@
       <polyline [attr.points]="getLinePoints()" fill="none" [attr.stroke]="color" stroke-width="3" vector-effect="non-scaling-stroke"></polyline>
       <circle *ngFor="let point of getLinePoints().split(' ')" [attr.cx]="point.split(',')[0]" [attr.cy]="point.split(',')[1]" r="4" [attr.fill]="color" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke"></circle>
     </svg>
-    <div class="chart-labels">
+    <div class="chart-labels" *ngIf="hasData">
       <span *ngFor="let label of labels">{{ label }}</span>
     </div>
   </div>
 
   <div class="pie-chart" *ngIf="chartType === 'pie'">
-    <div class="donut-wrap" *ngIf="total; else emptyChart">
-      <svg viewBox="0 0 200 200" class="pie-svg">
-        <g transform="translate(100,100)">
-          <path *ngFor="let slice of getPieSlices(); let i = index" [attr.d]="slice.path" [attr.fill]="getSliceColor(i)" stroke="#fff" stroke-width="3"></path>
-          <circle cx="0" cy="0" r="47" fill="#fff"></circle>
-        </g>
-      </svg>
-      <div class="donut-total"><strong>{{ formatValue(total) }}</strong><span>Tổng phiếu</span></div>
-    </div>
-    <div class="pie-legend">
-      <div class="legend-item" *ngFor="let label of labels; let i = index">
-        <span class="legend-color" [style.background]="getSliceColor(i)"></span>
-        <span>{{ label }}</span>
-        <strong>{{ formatValue(data[i] || 0) }}</strong>
+    <ng-container *ngIf="hasData; else emptyChart">
+      <div class="donut-wrap">
+        <svg viewBox="0 0 200 200" class="pie-svg">
+          <g transform="translate(100,100)">
+            <path *ngFor="let slice of getPieSlices(); let i = index" [attr.d]="slice.path" [attr.fill]="getSliceColor(i)" stroke="#fff" stroke-width="3"></path>
+            <circle cx="0" cy="0" r="47" fill="#fff"></circle>
+          </g>
+        </svg>
+        <div class="donut-total"><strong>{{ formatValue(total) }}</strong><span>Tổng phiếu</span></div>
       </div>
-    </div>
+      <div class="pie-legend">
+        <div class="legend-item" *ngFor="let label of labels; let i = index">
+          <span class="legend-color" [style.background]="getSliceColor(i)"></span>
+          <span>{{ label }}</span>
+          <strong>{{ formatValue(data[i] || 0) }}</strong>
+        </div>
+      </div>
+    </ng-container>
   </div>
 
   <ng-template #emptyChart>

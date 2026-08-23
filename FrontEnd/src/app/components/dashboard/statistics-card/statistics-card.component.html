@@ -1,14 +1,23 @@
-<article class="statistics-card" [style.--accent]="color">
+<article
+  class="statistics-card"
+  [class.clickable]="clickable"
+  [class.empty-state-card]="emptyState"
+  [style.--accent]="color"
+  [attr.role]="clickable ? 'button' : null"
+  [attr.tabindex]="clickable ? 0 : null"
+  [attr.title]="tooltip || null"
+  (click)="activate()"
+  (keydown)="handleKeydown($event)">
   <div class="card-top">
     <span class="icon-container" [style.background]="color + '14'" [style.color]="color">
       <i [class]="icon"></i>
     </span>
-    <span class="trend" [class.down]="!trendUp">
-      <i [class]="trendUp ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
-      {{ trend | number:'1.0-1' }}%
+    <span class="trend" [class.down]="trend !== null && !trendUp" [class.neutral]="trend === null">
+      <i [class]="trend === null ? 'fas fa-minus' : trendUp ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+      {{ trend === null ? 'Không so sánh' : formatPercent(trend) }}
     </span>
   </div>
-  <span class="card-title">{{ title }}</span>
+  <span class="card-title">{{ title }} <i *ngIf="tooltip" class="fas fa-circle-info" aria-hidden="true"></i></span>
   <strong class="card-value">{{ value }}</strong>
   <div class="card-footer">
     <span>{{ caption }}</span>

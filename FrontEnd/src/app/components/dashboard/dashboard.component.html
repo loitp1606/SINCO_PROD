@@ -28,19 +28,38 @@
         {{ mode.label }}
       </button>
     </div>
-    <div class="period-navigation">
+    <div class="period-navigation" [class.year-mode]="periodMode === 'year'">
       <button type="button" class="period-arrow" (click)="shiftPeriod(-1)" [disabled]="isLoading || !canGoPreviousPeriod" title="Kỳ trước">
         <i class="fas fa-chevron-left"></i>
       </button>
-      <label class="period-select-wrap">
+      <label class="period-select-wrap period-unit-select" *ngIf="periodMode !== 'year'">
         <i class="far fa-calendar"></i>
         <select
-          aria-label="Chọn kỳ dữ liệu"
-          [value]="selectedPeriodValue"
+          [attr.aria-label]="periodMode === 'quarter' ? 'Chọn quý' : 'Chọn tháng'"
+          [value]="selectedPeriodUnit"
           [disabled]="isLoading"
-          (change)="selectPeriodValue($any($event.target).value)">
-          <option *ngFor="let option of periodOptions" [value]="option.value">
-            {{ option.label }}
+          (change)="selectPeriodUnit($any($event.target).value)">
+          <option
+            *ngFor="let unit of periodUnitOptions"
+            [value]="unit"
+            [selected]="unit === selectedPeriodUnit">
+            {{ periodMode === 'quarter' ? 'Quý ' + unit : 'Tháng ' + unit }}
+          </option>
+        </select>
+        <i class="fas fa-chevron-down select-chevron"></i>
+      </label>
+      <label class="period-select-wrap period-year-select">
+        <span class="visually-hidden">Chọn năm</span>
+        <select
+          aria-label="Chọn năm"
+          [value]="selectedDate.getFullYear()"
+          [disabled]="isLoading"
+          (change)="selectPeriodYear($any($event.target).value)">
+          <option
+            *ngFor="let year of periodYearOptions"
+            [value]="year"
+            [selected]="year === selectedDate.getFullYear()">
+            Năm {{ year }}
           </option>
         </select>
         <i class="fas fa-chevron-down select-chevron"></i>
@@ -62,17 +81,17 @@
     <div class="hero-main">
       <span class="hero-label">Doanh thu {{ currentPeriodLabel | lowercase }}</span>
       <div class="hero-value">{{ formatCurrencyVnd(financialHighlights.revenue) }}</div>
-      <div class="hero-trend" [class.down]="financialHighlights.revenueTrend < 0">
-        <i [class]="financialHighlights.revenueTrend >= 0 ? 'fas fa-arrow-trend-up' : 'fas fa-arrow-trend-down'"></i>
-        <strong>{{ financialHighlights.revenueTrend >= 0 ? '+' : '' }}{{ financialHighlights.revenueTrend }}%</strong>
-        <span>{{ comparisonPeriodLabel }}</span>
+      <div class="hero-trend" [class.down]="financialHighlights.revenueTrend !== null && financialHighlights.revenueTrend < 0" [class.neutral]="financialHighlights.revenueTrend === null">
+        <i [class]="financialHighlights.revenueTrend === null ? 'fas fa-minus' : financialHighlights.revenueTrend >= 0 ? 'fas fa-arrow-trend-up' : 'fas fa-arrow-trend-down'"></i>
+        <strong>{{ financialHighlights.revenueTrend === null ? 'Không thể so sánh' : formatPercent(financialHighlights.revenueTrend) }}</strong>
+        <span>{{ financialHighlights.revenueTrend === null ? 'Kỳ trước bằng 0 hoặc âm' : comparisonPeriodLabel }}</span>
       </div>
     </div>
     <div class="hero-metrics">
       <div class="hero-metric">
         <span>Lợi nhuận gộp</span>
         <strong>{{ formatCurrencyVnd(financialHighlights.grossProfit) }}</strong>
-        <small>Biên lợi nhuận {{ financialHighlights.margin | number:'1.0-1' }}%</small>
+        <small>Biên lợi nhuận {{ financialHighlights.margin === null ? '—' : formatPercent(financialHighlights.margin) }}</small>
       </div>
       <div class="hero-metric">
         <span>Giá vốn</span>
@@ -82,7 +101,7 @@
       <div class="hero-metric accent">
         <span>Lãi / lỗ ròng</span>
         <strong>{{ formatCurrencyVnd(financialHighlights.netProfit) }}</strong>
-        <small>Nguồn BCĐTLN</small>
+        <small title="Báo cáo tổng hợp doanh thu lợi nhuận">Nguồn: Báo cáo doanh thu lợi nhuận <i class="fas fa-circle-info" aria-hidden="true"></i></small>
       </div>
     </div>
   </section>
@@ -97,7 +116,11 @@
       [trendText]="stat.trendText"
       [trendUp]="stat.trendUp"
       [color]="stat.color"
-      [caption]="stat.caption">
+      [caption]="stat.caption"
+      [tooltip]="stat.tooltip || ''"
+      [emptyState]="!!stat.emptyState"
+      [clickable]="!!stat.route"
+      (selected)="navigateTo(stat.route)">
     </app-statistics-card>
   </section>
 
@@ -124,9 +147,9 @@
                 [attr.stroke-dasharray]="gaugeProgress(gauge.value) + ' 100'">
               </path>
             </svg>
-            <strong [style.color]="gauge.color">{{ gauge.value | number:'1.0-1' }}%</strong>
+            <strong [style.color]="gauge.color">{{ gauge.value === null ? '—' : formatPercent(gauge.value) }}</strong>
           </div>
-          <small>Kỳ trước <b>{{ gauge.benchmark | number:'1.0-1' }}%</b></small>
+          <small>Kỳ trước <b>{{ gauge.benchmark === null ? 'Không thể tính' : formatPercent(gauge.benchmark) }}</b></small>
         </div>
       </div>
     </article>
@@ -145,8 +168,11 @@
             <span>{{ row.label }}</span>
             <strong>{{ formatCurrencyCompact(row.current) }}</strong>
             <small [class.favorable]="row.favorable" [class.unfavorable]="!row.favorable">
-              <i [class]="row.trend >= 0 ? 'fas fa-caret-up' : 'fas fa-caret-down'"></i>
-              {{ row.trend | number:'1.0-1' }}%
+              <ng-container *ngIf="row.trend !== null; else noPerformanceTrend">
+                <i [class]="row.trend >= 0 ? 'fas fa-caret-up' : 'fas fa-caret-down'"></i>
+                {{ formatPercent(row.trend) }}
+              </ng-container>
+              <ng-template #noPerformanceTrend><i class="fas fa-minus"></i> Không so sánh</ng-template>
             </small>
           </div>
           <div class="performance-track">
@@ -255,14 +281,19 @@
         </div>
         <i class="fas fa-bell panel-icon"></i>
       </div>
-      <button type="button" class="alert-row" *ngFor="let alert of alerts" [ngClass]="alert.tone" (click)="navigateTo(alert.route)">
-        <span class="alert-icon"><i [class]="alert.icon"></i></span>
-        <span class="alert-content">
-          <span>{{ alert.label }}</span>
-          <small>{{ alert.note }}</small>
-        </span>
-        <strong>{{ alert.value }}</strong>
-      </button>
+      <ng-container *ngIf="alerts.length; else noAlerts">
+        <button type="button" class="alert-row" *ngFor="let alert of alerts" [ngClass]="alert.tone" (click)="navigateTo(alert.route)">
+          <span class="alert-icon"><i [class]="alert.icon"></i></span>
+          <span class="alert-content">
+            <span>{{ alert.label }}</span>
+            <small>{{ alert.note }}</small>
+          </span>
+          <strong>{{ alert.value }}</strong>
+        </button>
+      </ng-container>
+      <ng-template #noAlerts>
+        <div class="empty-state compact"><i class="fas fa-circle-check"></i><span>Không có vấn đề cần ưu tiên trong kỳ</span></div>
+      </ng-template>
     </article>
   </section>
 
