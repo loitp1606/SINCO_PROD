@@ -36,26 +36,47 @@
     <div *ngIf="response" class="dynamic-grid-content">
       <div #stickyControls class="master-grid-sticky-controls">
       <div class="toolbar-actions flex flex-wrap items-center gap-2">
-      <button
-        type="button"
-        (click)="toggleFilter()"
-        class="erp-toolbar-btn erp-toolbar-secondary inline-flex items-center gap-2 rounded-md border bg-white px-3 py-1.5 text-sm transition"
-      >
-        <svg
-          class="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
+      <div class="column-settings" (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          class="erp-toolbar-btn erp-toolbar-primary inline-flex items-center justify-center rounded-md border px-2.5 py-1.5 transition"
+          title="Tùy chỉnh cột"
+          aria-label="Tùy chỉnh cột"
+          (click)="toggleColumnSettings($event)"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3 4h18M7 12h10m-7 8h4"
-          />
-        </svg>
-        {{ showFilter ? "Ẩn bộ lọc" : "Hiện bộ lọc" }}
-      </button>
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16M4 12h16M4 19h16M8 3v4m8 3v4m-5 3v4" />
+          </svg>
+        </button>
+
+        <div *ngIf="showColumnSettings" class="column-settings-panel">
+          <div class="column-settings-heading">
+            <div>
+              <strong>Cột hiển thị</strong>
+              <span>Thiết lập được lưu riêng cho màn hình này</span>
+            </div>
+            <button type="button" (click)="resetGridColumnPreferences()">Mặc định</button>
+          </div>
+
+          <div class="column-settings-list">
+            <div *ngFor="let header of configurableHeaders; let first = first; let last = last" class="column-settings-item">
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="!header.hidden"
+                  [disabled]="!header.hidden && !canHideColumn(header)"
+                  (change)="toggleColumnVisibility(header)"
+                />
+                <span>{{ header.label | translate }}</span>
+              </label>
+              <div class="column-order-actions">
+                <button type="button" [disabled]="first" title="Chuyển cột sang trái" (click)="moveColumn(header, -1)">↑</button>
+                <button type="button" [disabled]="last" title="Chuyển cột sang phải" (click)="moveColumn(header, 1)">↓</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <button
         (click)="handleClickAdd()"
@@ -168,48 +189,6 @@
           />
         </svg>
       </button>
-
-      <div class="column-settings" (click)="$event.stopPropagation()">
-        <button
-          type="button"
-          class="erp-toolbar-btn erp-toolbar-secondary inline-flex items-center gap-2 rounded-md border bg-white px-3 py-1.5 text-sm transition"
-          title="Ẩn, hiện và sắp xếp các cột"
-          (click)="toggleColumnSettings($event)"
-        >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16M4 12h16M4 19h16M8 3v4m8 3v4m-5 3v4" />
-          </svg>
-          Tùy chỉnh cột
-        </button>
-
-        <div *ngIf="showColumnSettings" class="column-settings-panel">
-          <div class="column-settings-heading">
-            <div>
-              <strong>Cột hiển thị</strong>
-              <span>Thiết lập được lưu riêng cho màn hình này</span>
-            </div>
-            <button type="button" (click)="resetGridColumnPreferences()">Mặc định</button>
-          </div>
-
-          <div class="column-settings-list">
-            <div *ngFor="let header of configurableHeaders; let first = first; let last = last" class="column-settings-item">
-              <label>
-                <input
-                  type="checkbox"
-                  [checked]="!header.hidden"
-                  [disabled]="!header.hidden && !canHideColumn(header)"
-                  (change)="toggleColumnVisibility(header)"
-                />
-                <span>{{ header.label | translate }}</span>
-              </label>
-              <div class="column-order-actions">
-                <button type="button" [disabled]="first" title="Chuyển cột sang trái" (click)="moveColumn(header, -1)">↑</button>
-                <button type="button" [disabled]="last" title="Chuyển cột sang phải" (click)="moveColumn(header, 1)">↓</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <app-file-handle
         #fileHandler
