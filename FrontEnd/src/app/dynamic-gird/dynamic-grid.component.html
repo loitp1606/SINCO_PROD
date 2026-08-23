@@ -78,6 +78,27 @@
         </div>
       </div>
 
+      <div *ngIf="hasBrowserTimeFilter" class="browser-time-filter" title="Lọc dữ liệu theo thời gian">
+        <select
+          [ngModel]="browserPeriodMode"
+          (ngModelChange)="selectBrowserPeriodMode($event)"
+          aria-label="Loại kỳ thời gian"
+        >
+          <option value="month">Tháng</option>
+          <option value="quarter">Quý</option>
+          <option value="year">Năm</option>
+        </select>
+        <select
+          [ngModel]="selectedBrowserPeriodValue"
+          (ngModelChange)="selectBrowserPeriodValue($event)"
+          aria-label="Kỳ dữ liệu"
+        >
+          <option *ngFor="let option of browserPeriodOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
       <button
         (click)="handleClickAdd()"
         class="erp-toolbar-btn erp-toolbar-primary inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition"

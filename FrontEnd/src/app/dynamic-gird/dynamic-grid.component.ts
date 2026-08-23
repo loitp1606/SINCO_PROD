@@ -41,6 +41,13 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { PageTitleService } from '../services/page-title.service';
 import { ShortcutHelpService } from '../services/shortcut-help.service';
 
+type BrowserPeriodMode = 'month' | 'quarter' | 'year';
+
+interface BrowserPeriodOption {
+  value: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-grid',
   standalone: true,
@@ -172,6 +179,9 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   masterCellDisplayRows: Record<string, string>[] = [];
   masterCellStatusClasses: Record<string, string>[] = [];
   statusHeaderKeys: Record<string, boolean> = {};
+  browserPeriodMode: BrowserPeriodMode = 'month';
+  browserPeriodDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  private readonly browserPeriodToday = new Date();
 
   // Detail
   detailRowsData: { [tabIndex: number]: { [detailIndex: number]: any[] } } = {};
@@ -269,6 +279,7 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     }
     await this.loadGridConfigFromBrowser();
     this.initializeGridColumnPreferences();
+    this.initializeBrowserTimeFilter();
     this.rebuildGridLayoutCache();
     this.pageTitleService.setTitle(this.girdData?.title ?? '');
     this.initializePaneHeights();
@@ -1665,6 +1676,77 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     this.rebuildGridLayoutCache();
   }
 
+  get hasBrowserTimeFilter(): boolean {
+    return !!this.browserTimeFilterField;
+  }
+
+  get selectedBrowserPeriodValue(): string {
+    const year = this.browserPeriodDate.getFullYear();
+    if (this.browserPeriodMode === 'year') return String(year);
+    if (this.browserPeriodMode === 'quarter') {
+      return `${year}-Q${Math.floor(this.browserPeriodDate.getMonth() / 3) + 1}`;
+    }
+    return `${year}-${String(this.browserPeriodDate.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  get browserPeriodOptions(): BrowserPeriodOption[] {
+    const options: BrowserPeriodOption[] = [];
+    const currentYear = this.browserPeriodToday.getFullYear();
+    const historyYears = Math.max(1, this.girdData?.ui?.timeFilter?.historyYears || 10);
+    const firstYear = currentYear - historyYears + 1;
+
+    for (let year = currentYear; year >= firstYear; year -= 1) {
+      if (this.browserPeriodMode === 'year') {
+        options.push({ value: String(year), label: `Năm ${year}` });
+        continue;
+      }
+      if (this.browserPeriodMode === 'quarter') {
+        const lastQuarter = year === currentYear
+          ? Math.floor(this.browserPeriodToday.getMonth() / 3) + 1
+          : 4;
+        for (let quarter = lastQuarter; quarter >= 1; quarter -= 1) {
+          options.push({ value: `${year}-Q${quarter}`, label: `Quý ${quarter}/${year}` });
+        }
+        continue;
+      }
+      const lastMonth = year === currentYear ? this.browserPeriodToday.getMonth() + 1 : 12;
+      for (let month = lastMonth; month >= 1; month -= 1) {
+        options.push({
+          value: `${year}-${String(month).padStart(2, '0')}`,
+          label: `Tháng ${month}/${year}`,
+        });
+      }
+    }
+    return options;
+  }
+
+  selectBrowserPeriodMode(mode: BrowserPeriodMode): void {
+    if (!['month', 'quarter', 'year'].includes(mode) || this.browserPeriodMode === mode) return;
+    this.browserPeriodMode = mode;
+    this.browserPeriodDate = new Date(
+      this.browserPeriodToday.getFullYear(),
+      this.browserPeriodToday.getMonth(),
+      1,
+    );
+    this.saveBrowserTimeFilterPreference();
+    this.reloadBrowserFromFirstPage();
+  }
+
+  selectBrowserPeriodValue(value: string): void {
+    if (!value || value === this.selectedBrowserPeriodValue) return;
+    if (this.browserPeriodMode === 'year') {
+      this.browserPeriodDate = new Date(Number(value), 0, 1);
+    } else if (this.browserPeriodMode === 'quarter') {
+      const [year, quarter] = value.split('-Q').map(Number);
+      this.browserPeriodDate = new Date(year, (quarter - 1) * 3, 1);
+    } else {
+      const [year, month] = value.split('-').map(Number);
+      this.browserPeriodDate = new Date(year, month - 1, 1);
+    }
+    this.saveBrowserTimeFilterPreference();
+    this.reloadBrowserFromFirstPage();
+  }
+
   get configurableHeaders(): GirdHeader[] {
     return (this.girdData?.headers || []).filter((header) =>
       this.customizableColumnKeys.has(header.key),
@@ -2715,7 +2797,121 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
   private getCombinedServerFilters(): FilterCondition[] {
     const advancedFilters = this.getStoredAdvancedFilters();
     const headerFilters = this.getHeaderServerFilters();
-    return this.sanitizeFilterConditions([...advancedFilters, ...headerFilters]);
+    const timeFilters = this.getBrowserTimeFilters();
+    return this.sanitizeFilterConditions([...advancedFilters, ...headerFilters, ...timeFilters]);
+  }
+
+  private get browserTimeFilterField(): string {
+    if (this.girdData?.ui?.timeFilter?.enabled === false) return '';
+    const configuredField = this.girdData?.ui?.timeFilter?.field?.trim();
+    if (configuredField) {
+      return this.girdData.headers.some(
+        (header) => header.key === configuredField && header.type === 'date',
+      )
+        ? configuredField
+        : '';
+    }
+    const voucherDate = this.girdData?.headers?.find(
+      (header) => header.key === 'voucherDate' && header.type === 'date',
+    );
+    return voucherDate?.key || '';
+  }
+
+  private initializeBrowserTimeFilter(): void {
+    if (!this.browserTimeFilterField) return;
+    try {
+      const stored = JSON.parse(
+        localStorage.getItem(this.browserTimeFilterStorageKey) || '{}',
+      ) as { mode?: BrowserPeriodMode; value?: string };
+      if (stored.mode && ['month', 'quarter', 'year'].includes(stored.mode)) {
+        this.browserPeriodMode = stored.mode;
+      }
+      if (stored.value) {
+        if (this.browserPeriodMode === 'year') {
+          this.browserPeriodDate = new Date(Number(stored.value), 0, 1);
+        } else if (this.browserPeriodMode === 'quarter') {
+          const [year, quarter] = stored.value.split('-Q').map(Number);
+          this.browserPeriodDate = new Date(year, (quarter - 1) * 3, 1);
+        } else {
+          const [year, month] = stored.value.split('-').map(Number);
+          this.browserPeriodDate = new Date(year, month - 1, 1);
+        }
+      }
+      if (Number.isNaN(this.browserPeriodDate.getTime())) throw new Error('Invalid period');
+    } catch {
+      this.browserPeriodMode = 'month';
+      this.browserPeriodDate = new Date(
+        this.browserPeriodToday.getFullYear(),
+        this.browserPeriodToday.getMonth(),
+        1,
+      );
+    }
+  }
+
+  private getBrowserTimeFilters(): FilterCondition[] {
+    const field = this.browserTimeFilterField;
+    if (!field) return [];
+    const start = new Date(this.browserPeriodDate.getFullYear(), this.browserPeriodDate.getMonth(), 1);
+    let end: Date;
+    if (this.browserPeriodMode === 'year') {
+      start.setMonth(0, 1);
+      end = new Date(start.getFullYear(), 11, 31);
+    } else if (this.browserPeriodMode === 'quarter') {
+      const quarterStartMonth = Math.floor(start.getMonth() / 3) * 3;
+      start.setMonth(quarterStartMonth, 1);
+      end = new Date(start.getFullYear(), quarterStartMonth + 3, 0);
+    } else {
+      end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+    }
+    return [
+      {
+        id: 'browser-period-from',
+        field,
+        operator: '>=',
+        value: this.formatBrowserDateYmd(start),
+        columnType: 'date',
+      },
+      {
+        id: 'browser-period-to',
+        field,
+        operator: '<=',
+        value: this.formatBrowserDateYmd(end),
+        columnType: 'date',
+      },
+    ];
+  }
+
+  private reloadBrowserFromFirstPage(): void {
+    this.gridSummaryCache.clear();
+    this.girdData.query.page = 1;
+    if ((this.route.snapshot.queryParamMap.get('page') || '1') === '1') {
+      this.loadData();
+      return;
+    }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: 1 },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private saveBrowserTimeFilterPreference(): void {
+    localStorage.setItem(
+      this.browserTimeFilterStorageKey,
+      JSON.stringify({
+        mode: this.browserPeriodMode,
+        value: this.selectedBrowserPeriodValue,
+      }),
+    );
+  }
+
+  private get browserTimeFilterStorageKey(): string {
+    const userId = localStorage.getItem('userId') || 'anonymous';
+    return `sinco:browser-period:${userId}:${this.girdData?.id || 'unknown'}`;
+  }
+
+  private formatBrowserDateYmd(value: Date): string {
+    return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
   }
 
   private normalizeAdvancedFilterConditions(conditions: FilterCondition[]): FilterCondition[] {

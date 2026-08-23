@@ -89,6 +89,13 @@ export interface GirdInitData {
 
 export interface GridUiConfig {
   summary?: GridSummaryConfig
+  timeFilter?: GridTimeFilterConfig
+}
+
+export interface GridTimeFilterConfig {
+  enabled?: boolean
+  field?: string
+  historyYears?: number
 }
 
 export interface GridSummaryConfig {
