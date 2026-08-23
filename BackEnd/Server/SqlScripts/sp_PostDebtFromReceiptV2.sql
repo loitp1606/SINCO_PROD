@@ -25,7 +25,6 @@ BEGIN
             @receiptType NVARCHAR(30),
             @masterAmount DECIMAL(24, 6),
             @resolvedUnitCode NVARCHAR(50),
-            @depositReceiptNo NVARCHAR(50),
             @status NVARCHAR(10),
             @isReceived INT;
 
@@ -48,13 +47,12 @@ BEGIN
             receiptType NVARCHAR(30) NULL,
             total_amount DECIMAL(24, 6) NULL,
             unitCode NVARCHAR(50) NULL,
-            depositReceiptNo NVARCHAR(50) NULL,
             status NVARCHAR(10) NULL,
             isReceived INT NULL
         );
 
         SET @q = N'
-            INSERT INTO #mt(customerCode, voucherNumber, voucherDate, receiptType, total_amount, unitCode, depositReceiptNo, status, isReceived)
+            INSERT INTO #mt(customerCode, voucherNumber, voucherDate, receiptType, total_amount, unitCode, status, isReceived)
             SELECT TOP 1
                 customerCode,
                 voucherNumber,
@@ -62,7 +60,6 @@ BEGIN
                 ISNULL(receiptType, N''CUSTOMER''),
                 TRY_CONVERT(decimal(24,6), total_amount),
                 unitCode,
-                CASE WHEN COL_LENGTH(''receiptV2$000000'', ''depositReceiptNo'') IS NOT NULL THEN depositReceiptNo ELSE NULL END,
                 status,
                 TRY_CONVERT(int, isReceived)
             FROM dbo.receiptV2$' + @sync + N'
@@ -80,7 +77,6 @@ BEGIN
             @receiptType = UPPER(ISNULL(receiptType, N'CUSTOMER')),
             @masterAmount = ISNULL(total_amount, 0),
             @resolvedUnitCode = unitCode,
-            @depositReceiptNo = depositReceiptNo,
             @status = status,
             @isReceived = ISNULL(isReceived, 0)
         FROM #mt;
@@ -227,7 +223,7 @@ BEGIN
         BEGIN
             -- Hai loại thu công nợ được ghi theo từng phiếu xuất bởi
             -- sp_ApplyCustomerReceiptAllocationFromReceiptV2.
-            -- Không ghi một dòng tổng tại đây để tránh trùng công nợ.
+            -- Không ghi thêm dòng tổng tại đây để tránh trùng công nợ.
         END
         ELSE
         BEGIN
