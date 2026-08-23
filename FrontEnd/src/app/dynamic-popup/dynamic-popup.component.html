@@ -330,6 +330,13 @@
               [disabled]="selectedDetailRows.size === 0" (click)="removeSelectedDetailRows()">
               Xóa dòng đã chọn ({{ selectedDetailRows.size }})
             </button>
+
+            <button *ngIf="shouldShowDetailAutoAllocateButton(detail)" type="button"
+              class="btn-modern btn-primary btn-small w-full sm:w-auto"
+              [disabled]="currentDetailRows.length === 0"
+              (click)="autoAllocateReceiptDetail(detail)">
+              {{ getDetailAutoAllocateLabel(detail) }}
+            </button>
           </div>
         </div>
 

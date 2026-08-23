@@ -44,7 +44,7 @@
 						"type": "select",
 						"width": "150px",
 						"required": true,
-						"default": "CUSTOMER",
+						"default": "DEPOSIT",
 						"quickEditable": true,
 						"options": [
 							{
@@ -110,9 +110,25 @@
 						"required": false
 					},
 					{
+						"key": "depositAmount",
+						"label": "Tiền đặt cọc hiện có",
+						"type": "number",
+						"currency": "VN",
+						"disabled": true,
+						"readonly": true,
+						"transient": true,
+						"width": "150px",
+						"required": false,
+						"visibleWhen": {
+							"field": "receiptType",
+							"operator": "=",
+							"value": "DEPOSIT_OFFSET"
+						}
+					},
+					{
 						"key": "depositReceiptNo",
 						"label": "Phiếu thu cọc tham chiếu",
-						"type": "text",
+						"type": "hidden",
 						"width": "150px",
 						"required": false,
 						"visibleWhen": {
@@ -350,6 +366,17 @@
 						"outstandingAmountField": "debtAmount",
 						"allocatedAmountField": "amount",
 						"noteField": "note"
+					},
+					"autoAllocate": {
+						"enabled": true,
+						"label": "Phân bổ tự động",
+						"receiptTypes": [
+							"DEPOSIT_OFFSET"
+						],
+						"sourceAmountField": "depositAmount",
+						"targetTotalField": "total_amount",
+						"outstandingAmountField": "debtAmount",
+						"allocatedAmountField": "amount"
 					},
 					"fields": [
 						{

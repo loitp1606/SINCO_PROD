@@ -698,6 +698,7 @@ export class DynamicPopupComponent implements OnInit {
         // Hoàn thành initial loading
         this.isInitialLoading = false
         this.runVisibleDetailAutoLoads()
+        this.refreshReceiptDepositAmountIfNeeded(this.selectedTab)
     }
 
     // Getter methods for current active detail section
@@ -781,6 +782,25 @@ export class DynamicPopupComponent implements OnInit {
 
     shouldShowDetailDeleteButton(detailSection: any = this.currentDetailSection): boolean {
         return detailSection?.allowDelete !== false && this.mode !== 'view';
+    }
+
+    shouldShowDetailAutoAllocateButton(detailSection: any = this.currentDetailSection): boolean {
+        const config = detailSection?.autoAllocate;
+        if (!config?.enabled || this.mode === 'view') {
+            return false;
+        }
+
+        const allowedTypes = Array.isArray(config.receiptTypes) ? config.receiptTypes : [];
+        if (allowedTypes.length === 0) {
+            return true;
+        }
+
+        const receiptType = `${this.formData?.[this.selectedTab]?.['receiptType'] ?? ''}`.toUpperCase();
+        return allowedTypes.map((x: any) => `${x}`.toUpperCase()).includes(receiptType);
+    }
+
+    getDetailAutoAllocateLabel(detailSection: any = this.currentDetailSection): string {
+        return detailSection?.autoAllocate?.label || 'Phân bổ tự động';
     }
 
     shouldShowDetailMoveButtons(detailSection: any = this.currentDetailSection): boolean {
@@ -893,6 +913,98 @@ export class DynamicPopupComponent implements OnInit {
         this.columnFiltersData[tabIndex][detailIndex] = {};
         this.selectedDetailRows.clear();
         this.applyFilters();
+    }
+
+    private refreshReceiptDepositAmountIfNeeded(tabIndex: number = this.selectedTab): void {
+        const currentData = this.formData?.[tabIndex];
+        if (!currentData) {
+            return;
+        }
+
+        const hasDepositField = (this.metadata?.tabs?.[tabIndex]?.form?.fields || [])
+            .some((field: any) => field?.key === 'depositAmount');
+        if (!hasDepositField) {
+            return;
+        }
+
+        if (`${currentData['receiptType'] ?? ''}`.toUpperCase() !== 'DEPOSIT_OFFSET') {
+            currentData['depositAmount'] = 0;
+            return;
+        }
+
+        if (!this.normalizeVisibilityValue(currentData['customerCode'])) {
+            currentData['depositAmount'] = 0;
+            return;
+        }
+
+        const dataSource = {
+            api: '/api/CustomQuery/execute',
+            query: 'exec sp_GetCustomerDebtSummary @customerCode, @unitCode',
+            params: ['customerCode', 'unitCode'],
+            dataType: ['String', 'String'],
+            values: ['@customerCode', '@unitCode']
+        };
+
+        this.executePopupDataSource(dataSource, currentData).then((rows: any[]) => {
+            const row = rows?.[0] || {};
+            currentData['depositAmount'] = this.parseNumberInput(row.depositAmount);
+            this.cdr.detectChanges();
+        }).catch((error) => {
+            console.warn('Unable to refresh receipt deposit amount:', error);
+            currentData['depositAmount'] = 0;
+            this.cdr.detectChanges();
+        });
+    }
+
+    autoAllocateReceiptDetail(detailSection: any = this.currentDetailSection): void {
+        if (!this.shouldShowDetailAutoAllocateButton(detailSection)) {
+            return;
+        }
+
+        const config = detailSection?.autoAllocate || {};
+        const sourceAmountField = config.sourceAmountField || 'depositAmount';
+        const targetTotalField = config.targetTotalField || 'total_amount';
+        const outstandingField = config.outstandingAmountField || 'debtAmount';
+        const amountField = config.allocatedAmountField || 'amount';
+        const currentData = this.formData?.[this.selectedTab] || {};
+        const availableAmount = Math.max(0, this.parseNumberInput(currentData[sourceAmountField]));
+
+        if (availableAmount <= 0) {
+            alert('Khách hàng chưa có tiền đặt cọc để phân bổ.');
+            return;
+        }
+
+        const rows = this.currentDetailRows || [];
+        if (rows.length === 0) {
+            alert('Không có phiếu xuất còn nợ để phân bổ.');
+            return;
+        }
+
+        let remaining = availableAmount;
+        let allocatedTotal = 0;
+
+        rows.forEach((row: any) => {
+            row[amountField] = 0;
+        });
+
+        rows.forEach((row: any) => {
+            if (remaining <= 0) {
+                return;
+            }
+
+            const outstandingAmount = Math.max(0, this.parseNumberInput(row?.[outstandingField]));
+            const allocatedAmount = Math.min(outstandingAmount, remaining);
+            row[amountField] = allocatedAmount;
+            remaining -= allocatedAmount;
+            allocatedTotal += allocatedAmount;
+        });
+
+        currentData[targetTotalField] = allocatedTotal;
+        this.prepareAllocationJsonFromDetail();
+        this.updateMasterCalculations();
+        this.calculateAggregateValues();
+        this.applyFilters();
+        this.cdr.detectChanges();
     }
 
     private evaluateVisibilityRule(rule: any, tabIndex: number = this.selectedTab): boolean {
@@ -1981,7 +2093,7 @@ export class DynamicPopupComponent implements OnInit {
         }
 
         // const formData = this.mergeFormData()
-        const formData = this.normalizeValues(this.mergeFormData())
+        const formData = this.removeTransientMasterFields(this.normalizeValues(this.mergeFormData()))
 
         // Determine action based on whether this is a new record or update
         let action = 'insert'
@@ -2692,6 +2804,18 @@ export class DynamicPopupComponent implements OnInit {
         return normalized
     }
 
+    private removeTransientMasterFields(formData: any): any {
+        const cleaned = { ...(formData || {}) };
+        (this.metadata?.tabs || []).forEach((tab: any) => {
+            (tab?.form?.fields || []).forEach((field: any) => {
+                if (field?.transient === true || field?.noSave === true || field?.persist === false) {
+                    delete cleaned[field.key];
+                }
+            });
+        });
+        return cleaned;
+    }
+
     applyFilters(): void {
         this.ensureDetailState()
         const currentRows = this.currentDetailRows
@@ -3295,6 +3419,9 @@ export class DynamicPopupComponent implements OnInit {
             this.handleOnChange(field, value)
         }
         this.runDetailAutoLoadForMasterField(field.key);
+        if (field.key === 'customerCode' || field.key === 'receiptType') {
+            this.refreshReceiptDepositAmountIfNeeded(this.selectedTab);
+        }
 
         this.updateMasterSubtotals();
     }
@@ -3490,6 +3617,9 @@ export class DynamicPopupComponent implements OnInit {
             this.handleOnChange(field, value);
         }
         this.runDetailAutoLoadForMasterField(fieldKey);
+        if (fieldKey === 'customerCode' || fieldKey === 'receiptType') {
+            this.refreshReceiptDepositAmountIfNeeded(this.selectedTab);
+        }
     }
 
     isCheckboxChecked(value: any): boolean {
