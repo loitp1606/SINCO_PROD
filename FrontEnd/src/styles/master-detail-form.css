@@ -1444,6 +1444,51 @@
 }
 
 @media (max-width: 767px) {
+  .dynamic-grid-page .toolbar-actions {
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: 6px;
+    padding: 1px 1px 4px;
+  }
+
+  .dynamic-grid-page .toolbar-actions > button {
+    width: auto !important;
+    min-width: 88px;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .dynamic-grid-page .toolbar-actions > button[aria-label="Làm mới dữ liệu"] {
+    min-width: 42px;
+    max-width: 48px;
+    flex: 0 0 42px;
+  }
+
+  .dynamic-grid-page .toolbar-actions app-file-handle {
+    width: 100% !important;
+    flex: 1 0 100%;
+  }
+
+  .dynamic-grid-page .toolbar-actions app-file-handle > div {
+    display: flex !important;
+    width: 100%;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+  }
+
+  .dynamic-grid-page .toolbar-actions app-file-handle > div > .relative {
+    min-width: 0;
+    flex: 1 1 0;
+  }
+
+  .dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn {
+    width: 100%;
+  }
+
+  .dynamic-grid-page .toolbar-actions app-file-handle .toolbar-file-btn {
+    justify-content: center;
+  }
+
   .dynamic-grid-page .master-scroll-zone {
     padding: 7px;
     background: #edf3f9;
