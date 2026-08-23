@@ -1732,14 +1732,12 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       this.browserPeriodToday.getMonth(),
       1,
     );
-    this.saveBrowserTimeFilterPreference();
     this.reloadBrowserFromFirstPage();
   }
 
   selectBrowserTimeFilterMode(mode: BrowserTimeFilterMode): void {
     if (!['period', 'range'].includes(mode) || this.browserTimeFilterMode === mode) return;
     this.browserTimeFilterMode = mode;
-    this.saveBrowserTimeFilterPreference();
     this.reloadBrowserFromFirstPage();
   }
 
@@ -1748,7 +1746,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
     if (this.browserDateFrom > this.browserDateTo) {
       this.browserDateTo = this.browserDateFrom;
     }
-    this.saveBrowserTimeFilterPreference();
     this.reloadBrowserFromFirstPage();
   }
 
@@ -1763,7 +1760,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       const [year, month] = value.split('-').map(Number);
       this.browserPeriodDate = new Date(year, month - 1, 1);
     }
-    this.saveBrowserTimeFilterPreference();
     this.reloadBrowserFromFirstPage();
   }
 
@@ -2839,61 +2835,20 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
 
   private initializeBrowserTimeFilter(): void {
     if (!this.browserTimeFilterField) return;
-    try {
-      const stored = JSON.parse(
-        localStorage.getItem(this.browserTimeFilterStorageKey) || '{}',
-      ) as {
-        filterMode?: BrowserTimeFilterMode;
-        periodMode?: BrowserPeriodMode;
-        mode?: BrowserPeriodMode;
-        value?: string;
-        dateFrom?: string;
-        dateTo?: string;
-      };
-      if (stored.filterMode && ['period', 'range'].includes(stored.filterMode)) {
-        this.browserTimeFilterMode = stored.filterMode;
-      } else if (stored.mode && ['month', 'quarter', 'year'].includes(stored.mode)) {
-        // Tương thích dữ liệu localStorage của phiên bản chỉ có lọc theo kỳ.
-        this.browserTimeFilterMode = 'period';
-      }
-      const storedPeriodMode = stored.periodMode || stored.mode;
-      if (storedPeriodMode && ['month', 'quarter', 'year'].includes(storedPeriodMode)) {
-        this.browserPeriodMode = storedPeriodMode;
-      }
-      if (stored.value) {
-        if (this.browserPeriodMode === 'year') {
-          this.browserPeriodDate = new Date(Number(stored.value), 0, 1);
-        } else if (this.browserPeriodMode === 'quarter') {
-          const [year, quarter] = stored.value.split('-Q').map(Number);
-          this.browserPeriodDate = new Date(year, (quarter - 1) * 3, 1);
-        } else {
-          const [year, month] = stored.value.split('-').map(Number);
-          this.browserPeriodDate = new Date(year, month - 1, 1);
-        }
-      }
-      if (stored.dateFrom && /^\d{4}-\d{2}-\d{2}$/.test(stored.dateFrom)) {
-        this.browserDateFrom = stored.dateFrom;
-      }
-      if (stored.dateTo && /^\d{4}-\d{2}-\d{2}$/.test(stored.dateTo)) {
-        this.browserDateTo = stored.dateTo;
-      }
-      if (this.browserDateFrom > this.browserDateTo) {
-        this.browserDateTo = this.browserDateFrom;
-      }
-      if (Number.isNaN(this.browserPeriodDate.getTime())) throw new Error('Invalid period');
-    } catch {
-      this.browserTimeFilterMode = 'range';
-      this.browserPeriodMode = 'month';
-      this.browserPeriodDate = new Date(
-        this.browserPeriodToday.getFullYear(),
-        this.browserPeriodToday.getMonth(),
-        1,
-      );
-      this.browserDateFrom = this.formatBrowserDateYmd(
-        this.addBrowserMonthsClamped(this.browserPeriodToday, -3),
-      );
-      this.browserDateTo = this.formatBrowserDateYmd(this.browserPeriodToday);
-    }
+    this.browserTimeFilterMode = 'range';
+    this.browserPeriodMode = 'month';
+    this.browserPeriodDate = new Date(
+      this.browserPeriodToday.getFullYear(),
+      this.browserPeriodToday.getMonth(),
+      1,
+    );
+    this.browserDateFrom = this.formatBrowserDateYmd(
+      this.addBrowserMonthsClamped(this.browserPeriodToday, -3),
+    );
+    this.browserDateTo = this.formatBrowserDateYmd(this.browserPeriodToday);
+
+    const userId = localStorage.getItem('userId') || 'anonymous';
+    localStorage.removeItem(`sinco:browser-period:${userId}:${this.girdData?.id || 'unknown'}`);
   }
 
   private getBrowserTimeFilters(): FilterCondition[] {
@@ -2960,24 +2915,6 @@ export class DynamicGridComponent implements OnInit, OnDestroy {
       queryParams: { page: 1 },
       queryParamsHandling: 'merge',
     });
-  }
-
-  private saveBrowserTimeFilterPreference(): void {
-    localStorage.setItem(
-      this.browserTimeFilterStorageKey,
-      JSON.stringify({
-        filterMode: this.browserTimeFilterMode,
-        periodMode: this.browserPeriodMode,
-        value: this.selectedBrowserPeriodValue,
-        dateFrom: this.browserDateFrom,
-        dateTo: this.browserDateTo,
-      }),
-    );
-  }
-
-  private get browserTimeFilterStorageKey(): string {
-    const userId = localStorage.getItem('userId') || 'anonymous';
-    return `sinco:browser-period:${userId}:${this.girdData?.id || 'unknown'}`;
   }
 
   private formatBrowserDateYmd(value: Date): string {
