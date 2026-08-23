@@ -1,4 +1,4 @@
-CREATE OR ALTER PROCEDURE dbo.sp_ApplyCustomerReceiptAllocationFromReceiptV2
+ALTER PROCEDURE [dbo].[sp_ApplyCustomerReceiptAllocationFromReceiptV2]
     @idGui NVARCHAR(50),
     @unitCode NVARCHAR(50) = NULL,
     @userId NVARCHAR(50) = NULL
@@ -32,7 +32,7 @@ BEGIN
 
         IF @sync IS NULL RETURN;
 
-        CREATE TABLE #mt
+        CREATE TABLE #$_mt
         (
             customerCode NVARCHAR(50) NULL,
             voucherNumber NVARCHAR(100) NULL,
@@ -45,7 +45,7 @@ BEGIN
         );
 
         SET @q = N'
-            INSERT INTO #mt(customerCode, voucherNumber, voucherDate, receiptType, total_amount, unitCode, status, isReceived)
+            INSERT INTO #$_mt(customerCode, voucherNumber, voucherDate, receiptType, total_amount, unitCode, status, isReceived)
             SELECT TOP 1
                 customerCode, voucherNumber, TRY_CONVERT(date, voucherDate),
                 ISNULL(receiptType, N''CUSTOMER''), TRY_CONVERT(decimal(24,6), total_amount),
@@ -64,7 +64,7 @@ BEGIN
             @resolvedUnitCode = unitCode,
             @status = status,
             @isReceived = ISNULL(isReceived, 0)
-        FROM #mt;
+        FROM #$_mt;
 
         IF @customerCode IS NULL OR @receiptType NOT IN (N'CUSTOMER', N'DEPOSIT_OFFSET')
             RETURN;
