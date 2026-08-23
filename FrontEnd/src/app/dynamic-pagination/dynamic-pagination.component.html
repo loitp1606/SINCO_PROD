@@ -80,12 +80,12 @@
     </button>
     </div>
   </div>
-  <div class="flex md:hidden justify-between items-center mt-2 px-1 gap-2">
+  <div class="mobile-pagination flex md:hidden justify-between items-center mt-2 px-1 gap-2">
     <select
       *ngIf="showPageSizeSelector"
       [ngModel]="itemsPerPage"
       (ngModelChange)="handleItemsPerPageChange($event)"
-      class="rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+      class="mobile-pagination-size rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-cyan-500"
     >
       <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
         {{ size }}/trang
@@ -100,7 +100,7 @@
         'bg-indigo-500 text-white hover:bg-indigo-600 cursor-pointer':
           currentPage !== 1
       }"
-      class="flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition duration-150 ease-in-out"
+      class="mobile-pagination-button flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition duration-150 ease-in-out"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +118,7 @@
       </svg>
     </button>
 
-    <span class="text-xs font-medium text-gray-700">
+    <span class="mobile-pagination-status text-xs font-medium text-gray-700">
       {{ currentPage }} / {{ totalPages }}
     </span>
 
@@ -131,7 +131,7 @@
         'bg-indigo-500 text-white hover:bg-indigo-600 cursor-pointer':
           currentPage !== totalPages
       }"
-      class="flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition duration-150 ease-in-out"
+      class="mobile-pagination-button flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition duration-150 ease-in-out"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

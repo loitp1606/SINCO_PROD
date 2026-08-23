@@ -1489,6 +1489,63 @@
     justify-content: center;
   }
 
+  .dynamic-grid-page .master-grid-pagination {
+    min-height: 0;
+    padding: 1px 0 3px;
+  }
+
+  .dynamic-grid-page app-dynamic-pagination {
+    width: 100%;
+  }
+
+  .dynamic-grid-page app-dynamic-pagination .mobile-pagination {
+    width: 100%;
+    max-width: 320px;
+    min-height: 38px;
+    justify-content: flex-start;
+    gap: 7px;
+    margin-top: 0;
+    padding: 3px 4px;
+    border: 1px solid #d8e2ee;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  }
+
+  .dynamic-grid-page app-dynamic-pagination .mobile-pagination-size {
+    width: 126px;
+    height: 32px;
+    flex: 0 0 126px;
+    padding: 0 9px;
+    border-color: #c8d5e4;
+    border-radius: 7px;
+    color: #294563;
+    font-weight: 600;
+  }
+
+  .dynamic-grid-page app-dynamic-pagination .mobile-pagination-button {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .dynamic-grid-page app-dynamic-pagination .mobile-pagination-button:disabled {
+    border-color: #e2e8f0;
+    background: #f1f5f9 !important;
+  }
+
+  .dynamic-grid-page app-dynamic-pagination .mobile-pagination-status {
+    min-width: 40px;
+    color: #334155;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
   .dynamic-grid-page .master-scroll-zone {
     padding: 7px;
     background: #edf3f9;
@@ -1498,6 +1555,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding-top: 3px;
   }
 
   .mobile-master-card {
