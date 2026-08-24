@@ -2,85 +2,133 @@
 	"type": "report",
 	"action": "loading",
 	"language": "V",
-	"title": "Báo cáo tổng hợp doanh thu lợi nhuận chi tiết",
+	"title": "Báo cáo tổng hợp doanh thu khách hàng theo năm",
 	"title2": "Revenue and Profit Report",
 	"data": [],
 	"header": [
 		{
-			"label": "STT",
+			"label": "Stt",
 			"key": "stt",
-			"type": "number",
-			"width": 200,
-			"align": "text-left font-bold",
+			"type": "text",
+			"width": 90,
+			"align": "text-left",
 			"format": ""
 		},
 		{
-			"label": "Mã",
-			"key": "item_id",
+			"label": "Mã khách hàng",
+			"key": "customer_id",
 			"type": "text",
 			"width": 200,
 			"align": "text-left",
 			"format": ""
 		},
 		{
-			"label": "Diễn giải",
-			"key": "dien_giai",
+			"label": "Tên khách hàng",
+			"key": "customer_name",
 			"type": "text",
-			"width": 200,
+			"width": 300,
 			"align": "text-left",
 			"format": ""
 		},
 		{
-			"label": "ĐVT",
-			"key": "uom",
-			"type": "text",
-			"width": 200,
-			"align": "text-left",
-			"format": ""
-		},
-		{
-			"label": "Số lượng",
-			"key": "quantity",
+			"label": "Tổng tiền",
+			"key": "tien_total",
 			"type": "number",
 			"width": 120,
 			"align": "text-right",
 			"format": "decimal-2"
 		},
 		{
-			"label": "Đơn giá",
-			"key": "price",
+			"label": "Tháng 1",
+			"key": "tien01",
 			"type": "number",
 			"width": 120,
 			"align": "text-right",
 			"format": "decimal-2"
 		},
 		{
-			"label": "Doanh thu",
-			"key": "doanh_thu",
+			"label": "Tháng 2",
+			"key": "tien02",
 			"type": "number",
 			"width": 120,
 			"align": "text-right",
 			"format": "decimal-2"
 		},
 		{
-			"label": "Giá vốn",
-			"key": "purchasePrice",
+			"label": "Tháng 3",
+			"key": "tien03",
 			"type": "number",
 			"width": 120,
 			"align": "text-right",
 			"format": "decimal-2"
 		},
 		{
-			"label": "Thành tiền",
-			"key": "tien_von",
+			"label": "Tháng 4",
+			"key": "tien04",
 			"type": "number",
 			"width": 120,
 			"align": "text-right",
 			"format": "decimal-2"
 		},
 		{
-			"label": "Lãi gộp",
-			"key": "lai_gop",
+			"label": "Tháng 5",
+			"key": "tien05",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": "decimal-2"
+		},
+		{
+			"label": "Tháng 6",
+			"key": "tien06",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": "decimal-2"
+		},
+		{
+			"label": "Tháng 7",
+			"key": "tien07",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": "decimal-2"
+		},
+		{
+			"label": "Tháng 8",
+			"key": "tien08",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": "decimal-2"
+		},
+		{
+			"label": "Tháng 9",
+			"key": "tien09",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": "decimal-2"
+		},
+		{
+			"label": "Tháng 10",
+			"key": "tien10",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": "decimal-2"
+		},
+		{
+			"label": "Tháng 11",
+			"key": "tien11",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": "decimal-2"
+		},
+		{
+			"label": "Tháng 12",
+			"key": "tien12",
 			"type": "number",
 			"width": 120,
 			"align": "text-right",
@@ -89,20 +137,14 @@
 	],
 	"total": 5,
 	"page": 1,
-	"pageSize": 10,
+	"pageSize": 100,
 	"sort": "",
 	"filters": [
 		{
-			"key": "dateFrom",
-			"label": "Ngày bắt đầu",
+			"key": "year",
+			"label": "Năm",
 			"required": true,
-			"type": "date"
-		},
-		{
-			"key": "dateTo",
-			"label": "Ngày kết thúc",
-			"required": true,
-			"type": "date"
+			"type": "number"
 		},
 		{
 			"key": "item_group",
@@ -172,7 +214,7 @@
 	"dataProcessing": {
 		"report": [
 			{
-				"query": "exec rp_bcdtlnct   N'@dateFrom', N'@dateTo', N'@item_group', N'@customer', N'@Employee', N'@item_id', N'@userId';"
+				"query": "exec rp_bcthdtkhtnam @year, N'@item_group', N'@customer', N'@Employee', N'@item_id', N'@userId';"
 			}
 		]
 	}

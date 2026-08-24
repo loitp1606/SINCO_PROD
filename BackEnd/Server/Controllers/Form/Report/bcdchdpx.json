@@ -1,0 +1,189 @@
+{
+	"type": "report",
+	"action": "loading",
+	"language": "V",
+	"title": "Báo cáo đối chiếu hóa đơn và phiếu nhập",
+	"title2": "Invoice and Goods Receipt Reconciliation Report",
+	"data": [],
+	"header": [
+		{
+			"label": "Ngày hóa đơn",
+			"key": "invoice_date",
+			"type": "date",
+			"width": 140,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Số hóa đơn",
+			"key": "invoice_no",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Nhà cung cấp XHĐ",
+			"key": "invoiceCustomerName",
+			"type": "text",
+			"width": 220,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Ngày phiếu xuất",
+			"key": "receipt_date",
+			"type": "date",
+			"width": 140,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Số phiếu xuất",
+			"key": "receipt_no",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Khách hàng",
+			"key": "supplier_name",
+			"type": "text",
+			"width": 220,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Đã nhận",
+			"key": "isReceived",
+			"type": "text",
+			"width": 120,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Mã vật tư",
+			"key": "item_id",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Tên vật tư",
+			"key": "item_name",
+			"type": "text",
+			"width": 220,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+			"label": "Đơn vị tính",
+			"key": "uom",
+			"type": "text",
+			"width": 180,
+			"align": "text-left",
+			"format": ""
+		},
+		{
+		  "label": "Số lượng",
+		  "key": "quantity",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Giá",
+		  "key": "price",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Tiền",
+		  "key": "invoice_amount",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Thuế suất",
+		  "key": "tax_rate",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Thuế",
+		  "key": "tax",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		},
+		{
+		  "label": "Thanh toán",
+		  "key": "receipt_amount",
+		  "type": "number",
+		  "width": 180,
+		  "align": "text-left",
+		  "format": ""
+		}
+],
+	"total": 0,
+	"page": 1,
+	"pageSize": 100,
+	"sort": "",
+	"filters": [
+		{
+			"key": "dateFrom",
+			"label": "Từ ngày",
+			"required": true,
+			"type": "date"
+		},
+		{
+			"key": "dateTo",
+			"label": "Đến ngày",
+			"required": true,
+			"type": "date"
+		},
+		{
+			"key": "customer",
+			"label": "Nhà cung cấp",
+			"type": "lookup",
+			"placeholder": "",
+			"default": {
+				"controller": "customer",
+				"filter": [
+					{
+						"field": "status",
+						"value": "1",
+						"operator": "="
+					}
+				]
+			}
+		},
+		{
+			"key": "invoiceNo",
+			"label": "Số hóa đơn",
+			"type": "text"
+		},
+		{
+			"key": "receiptNo",
+			"label": "Số phiếu xuất",
+			"type": "text"
+		}
+	],
+	"dataProcessing": {
+		"report": [
+			{
+				"query": "exec rp_bcdchdpx N'@dateFrom', N'@dateTo', N'@customer', N'@invoiceNo', N'@receiptNo', N'@userId';"
+			}
+		]
+	}
+}

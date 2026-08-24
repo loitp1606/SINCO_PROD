@@ -32,16 +32,16 @@
     },
     {
       "label": "Ngày nợ lâu nhất",
-      "key": "ngay_no_lau",
-      "type": "date",
+      "key": "ngay_no_lau_c",
+      "type": "text",
       "width": 120,
       "align": "text-left",
       "format": ""
     },
 	{
       "label": "Ngày giao dịch gần nhất",
-      "key": "ngay_gd_gn",
-      "type": "date",
+      "key": "ngay_gd_gn_c",
+      "type": "text",
       "width": 120,
       "align": "text-left",
       "format": ""
@@ -49,6 +49,14 @@
     {
       "label": "Số ngày nợ trung bình",
       "key": "so_ngay_no_tb",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+	{
+      "label": "Tổng công nợ",
+      "key": "tong_tien_no",
       "type": "number",
       "width": 120,
       "align": "text-left",

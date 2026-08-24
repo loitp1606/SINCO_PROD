@@ -93,12 +93,33 @@
           }
         ]
       }
-    }
+    },
+	{
+		"key": "htttType",
+		"label": "Loại thanh toán",
+		"type": "select",
+		"required": true,
+		"default": "*",
+		"options": [
+			{
+				"label": "Tiền mặt",
+				"value": "TM"
+			},
+			{
+				"label": "Chuyển khoản",
+				"value": "CK"
+			},
+			{
+				"label": "Tất cả",
+				"value": "*"
+			}
+		]
+	}
   ],
   "dataProcessing": {
     "report": [
       {
-        "query": "exec rp_bcthuchi81 N'@dateFrom', N'@dateTo', N'@accountSinco', N'@userId';"
+        "query": "exec rp_bcthuchi81 N'@dateFrom', N'@dateTo', N'@accountSinco', N'@htttType', N'@userId';"
       }
     ]
   }

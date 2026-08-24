@@ -108,8 +108,8 @@ namespace FastReport
         <TableRow Name="Row1" Height="66.15" AutoSize="true">
           <TableCell Name="Cell1" Border.Lines="All" Fill.Color="LimeGreen" Text="STT" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
           <TableCell Name="Cell288" Border.Lines="All" Fill.Color="LimeGreen" Text="NHÂN VIÊN KINH DOANH" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell275" Border.Lines="All" Fill.Color="LimeGreen" Text="SỐ BÁO GIÁ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell2" Border.Lines="All" Fill.Color="LimeGreen" Text="NGÀY BÁO GIÁ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell275" Border.Lines="All" Fill.Color="LimeGreen" Text="SỐ CHỨNG TỪ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="All" Fill.Color="LimeGreen" Text="NGÀY CHỨNG TỪ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
           <TableCell Name="Cell3" Border.Lines="All" Fill.Color="LimeGreen" Text="MÃ KHÁCH HÀNG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
           <TableCell Name="Cell4" Border.Lines="All" Fill.Color="LimeGreen" Text="TÊN KHÁCH HÀNG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
           <TableCell Name="Cell26" Border.Lines="All" Fill.Color="LimeGreen" Text="MÃ VẬT TƯ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>

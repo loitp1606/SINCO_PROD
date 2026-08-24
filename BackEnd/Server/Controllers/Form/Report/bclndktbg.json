@@ -78,6 +78,22 @@
       "align": "text-left",
       "format": ""
     },
+	{
+      "label": "Nhân viên KD",
+      "key": "employee_name",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
+	{
+      "label": "Trạng thái báo giá",
+      "key": "status_name",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
     {
       "label": "Số lượng",
       "key": "quantity",

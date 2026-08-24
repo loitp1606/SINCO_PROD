@@ -24,8 +24,8 @@
     },
     {
       "label": "Ngày chứng từ",
-      "key": "voucherDate",
-      "type": "date",
+      "key": "voucherDate_c",
+      "type": "text",
       "width": 120,
       "align": "text-left",
       "format": ""

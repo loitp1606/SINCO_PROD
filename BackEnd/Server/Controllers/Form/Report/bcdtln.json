@@ -19,7 +19,7 @@
 			"key": "dt_kn",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -27,7 +27,7 @@
 			"key": "dt_ktr",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -35,7 +35,7 @@
 			"key": "tl_dt",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -43,7 +43,7 @@
 			"key": "gv_kn",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": "decimal-2"
 		},
 		{
@@ -51,7 +51,7 @@
 			"key": "gv_ktr",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": "decimal-2"
 		},
 		{
@@ -59,7 +59,7 @@
 			"key": "tl_gv",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -67,7 +67,7 @@
 			"key": "loi_nhuan_kn",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -75,7 +75,7 @@
 			"key": "loi_nhuan_ktr",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -83,7 +83,23 @@
 			"key": "tl_gv",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
+			"format": ""
+		},
+		{
+			"label": "Thu khác kỳ này",
+			"key": "thu_kn",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
+			"format": ""
+		},
+		{
+			"label": "Thu khác kỳ trước",
+			"key": "thu_ktr",
+			"type": "number",
+			"width": 120,
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -91,7 +107,7 @@
 			"key": "cp_kn",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -99,7 +115,7 @@
 			"key": "cp_ktr",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -107,7 +123,7 @@
 			"key": "tl_cp",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -115,7 +131,7 @@
 			"key": "lai_lo_kn",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -123,7 +139,7 @@
 			"key": "lai_lo_ktr",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		},
 		{
@@ -131,7 +147,7 @@
 			"key": "tl_lai_lo",
 			"type": "number",
 			"width": 120,
-			"align": "text-left",
+			"align": "text-right",
 			"format": ""
 		}
 	],

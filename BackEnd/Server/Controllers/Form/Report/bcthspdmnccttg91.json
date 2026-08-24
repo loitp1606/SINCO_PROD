@@ -54,6 +54,14 @@
       "align": "text-left",
       "format": ""
     },
+	{
+      "label": "Trạng thái",
+      "key": "status_name",
+      "type": "text",
+      "width": 300,
+      "align": "text-left",
+      "format": ""
+    },
     {
       "label": "Mã vật tư",
       "key": "item_id",
