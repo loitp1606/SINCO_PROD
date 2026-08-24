@@ -4,12 +4,13 @@
   "storeProcedure": "oot$exportVatGoodsReceipt",
   "templateFile": "Mau_Phieunhapmua.xlsx",
   "filePrefix": "goodsReceipt_tax",
-  "groupBy": "idGui",
+  "groupBy": "TaxGroupKey",
   "sheets": [
     {
       "name": "PH",
       "startRow": 2,
       "rowMode": "firstOfGroup",
+      "orderBy": ["SortVoucherDate", "SortVoucherNumber", "SortIdGui", "SortVatTaxCode"],
       "columns": [
         { "column": "A", "sources": ["voucherDate"], "type": "date", "format": "dd/MM/yyyy" },
         { "column": "B", "sources": ["voucherNumber"] },
@@ -35,7 +36,7 @@
       "name": "CT",
       "startRow": 2,
       "rowMode": "allRows",
-      "orderBy": ["idGui", "line_nbr"],
+      "orderBy": ["SortVoucherDate", "SortVoucherNumber", "SortIdGui", "SortVatTaxCode", "SortLineNbr"],
       "columns": [
         { "column": "A", "sources": ["voucherNumber"] },
         { "column": "B", "sources": ["itemCode", "item_id"] },
