@@ -236,24 +236,6 @@
 						"placeholder": ""
 					},
 					{
-						"key": "status",
-						"default": "0",
-						"label": "Trạng thái",
-						"type": "select",
-						"width": "150px",
-						"required": true,
-						"options": [
-							{
-								"label": "Lập chứng từ",
-								"value": "0"
-							},
-							{
-								"label": "Tạo hợp đồng",
-								"value": "1"
-							}
-						]
-					},
-					{
 						"key": "isReceived",
 						"label": "Đã nhận",
 						"type": "checkbox",
