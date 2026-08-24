@@ -1,8 +1,12 @@
 {
 	"model": "receiptV2",
 	"schema": {
-		"foriegn": [],
-		"foriegnKey": [],
+		"foriegn": [
+			"receiptdetailV2"
+		],
+		"foriegnKey": [
+			"idGui"
+		],
 		"partition": true,
 		"isMaster": true,
 		"fields": [
@@ -350,5 +354,34 @@
 			}
 		]
 	},
-	"foriegnModel": []
+	"foriegnModel": [
+		{
+			"model": "receiptdetailV2",
+			"schema": {
+				"partition": true,
+				"fields": [
+					{
+						"name": "idGui",
+						"property": "idGui",
+						"type": "string",
+						"sqlType": "VARCHAR(64)",
+						"primaryKey": true,
+						"required": true
+					},
+					{
+						"name": "line_nbr",
+						"property": "line_nbr",
+						"type": "number",
+						"sqlType": "INT"
+					},
+					{
+						"name": "amount",
+						"property": "amount",
+						"type": "number",
+						"sqlType": "NUMERIC(19,4)"
+					}
+				]
+			}
+		}
+	]
 }
