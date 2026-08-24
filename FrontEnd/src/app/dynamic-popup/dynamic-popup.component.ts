@@ -965,15 +965,16 @@ export class DynamicPopupComponent implements OnInit {
 
         const dataSource = {
             api: '/api/CustomQuery/execute',
-            query: 'exec sp_GetCustomerDebtSummary @customerCode, @unitCode',
-            params: ['customerCode', 'unitCode'],
-            dataType: ['String', 'String'],
-            values: ['@customerCode', '@unitCode']
+            query: 'exec sp_GetCustomerDebtSummary @customerCode, @unitCode, @excludeReceiptIdGui',
+            params: ['customerCode', 'unitCode', 'excludeReceiptIdGui'],
+            dataType: ['String', 'String', 'String'],
+            values: ['@customerCode', '@unitCode', '@excludeReceiptIdGui']
         };
 
         const queryData = {
             ...currentData,
-            customerCode: this.getReceiptV2ScalarValue(currentData['customerCode'])
+            customerCode: this.getReceiptV2ScalarValue(currentData['customerCode']),
+            excludeReceiptIdGui: this.getReceiptV2ScalarValue(currentData['idGui'])
         };
 
         this.executePopupDataSource(dataSource, queryData).then((rows: any[]) => {

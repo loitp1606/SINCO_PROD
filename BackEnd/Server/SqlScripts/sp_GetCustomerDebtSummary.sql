@@ -1,6 +1,7 @@
 ALTER PROCEDURE [dbo].[sp_GetCustomerDebtSummary]
     @customerCode NVARCHAR(50),
-    @unitCode NVARCHAR(20) = NULL
+    @unitCode NVARCHAR(20) = NULL,
+    @excludeReceiptIdGui NVARCHAR(50) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -20,7 +21,12 @@ BEGIN
     INTO #tmp
     FROM dbo.CustomerDebtLedger
     WHERE CustomerId = @customerCode
-      AND (@unitCode IS NULL OR @unitCode = '' OR UnitCode = @unitCode);
+      AND (@unitCode IS NULL OR @unitCode = '' OR UnitCode = @unitCode)
+      AND (
+            @excludeReceiptIdGui IS NULL
+            OR @excludeReceiptIdGui = ''
+            OR ISNULL(ReceiptIdGui, '') <> @excludeReceiptIdGui
+          );
 
     -- Quy ước mới:
     -- - receiptType = RECEIPT_DEPOSIT / RECEIPT_DEPOSIT_OFFSET (luồng receiptV2 mới)
