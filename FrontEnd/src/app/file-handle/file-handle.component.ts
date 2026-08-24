@@ -894,4 +894,11 @@ export class FileHandleComponent implements OnInit {
       this.showExportOptions = false;
     }
   }
+
+  @HostListener('window:scroll')
+  @HostListener('window:resize')
+  closeFloatingMenus(): void {
+    this.showImportOptions = false;
+    this.showExportOptions = false;
+  }
 }

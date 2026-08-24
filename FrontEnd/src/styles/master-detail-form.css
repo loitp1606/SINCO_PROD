@@ -1427,8 +1427,7 @@
 
 .dynamic-grid-page .toolbar-actions {
   flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding: 1px 1px 3px;
   scrollbar-color: #9fb7d1 transparent;
   scrollbar-width: thin;
@@ -1476,7 +1475,7 @@
     gap: 6px !important;
   }
 
-  .dynamic-grid-page .toolbar-actions app-file-handle > div > .relative {
+  .dynamic-grid-page .toolbar-actions app-file-handle > div > .toolbar-file-wrapper {
     min-width: 0;
     flex: 1 1 0;
   }
