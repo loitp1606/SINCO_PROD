@@ -229,6 +229,20 @@
 						]
 					},
 					{
+						"key": "dien_giai",
+						"label": "Diễn giải",
+						"type": "textarea",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Nhập diễn giải"
+					},
+					{
+						"key": "isReceived",
+						"label": "Đã thu",
+						"type": "checkbox",
+						"width": "100px"
+					},
+					{
 						"key": "total_amount",
 						"label": "Số tiền thu (*)",
 						"type": "number",
@@ -249,14 +263,6 @@
 						}
 					},
 					{
-						"key": "dien_giai",
-						"label": "Diễn giải",
-						"type": "textarea",
-						"width": "150px",
-						"required": false,
-						"placeholder": "Nhập diễn giải"
-					},
-					{
 						"key": "status",
 						"label": "Trạng thái",
 						"type": "hidden",
@@ -272,12 +278,6 @@
 								"value": "1"
 							}
 						]
-					},
-					{
-						"key": "isReceived",
-						"label": "Đã thu",
-						"type": "checkbox",
-						"width": "100px"
 					},
 					{
 						"key": "note",
@@ -370,6 +370,7 @@
 					"autoAllocate": {
 						"enabled": true,
 						"label": "Phân bổ tự động",
+						"clearLabel": "Xóa phân bổ",
 						"receiptTypes": [
 							"DEPOSIT_OFFSET"
 						],

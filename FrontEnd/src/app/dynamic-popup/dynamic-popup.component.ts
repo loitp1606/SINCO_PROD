@@ -162,6 +162,7 @@ export class DynamicPopupComponent implements OnInit {
         rows: [] as any[],
         config: null as any,
     };
+    private receiptAllocationDeleteRequested = false;
 
     constructor(
         private http: HttpClient,
@@ -803,6 +804,31 @@ export class DynamicPopupComponent implements OnInit {
         return detailSection?.autoAllocate?.label || 'Phân bổ tự động';
     }
 
+    shouldShowDetailClearAllocationButton(detailSection: any = this.currentDetailSection): boolean {
+        const config = detailSection?.allocationJson;
+        if (!config?.enabled || this.mode === 'view') {
+            return false;
+        }
+
+        const receiptType = `${this.formData?.[this.selectedTab]?.[config.receiptTypeField || 'receiptType'] ?? ''}`.toUpperCase();
+        return ['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType);
+    }
+
+    getDetailClearAllocationLabel(detailSection: any = this.currentDetailSection): string {
+        return detailSection?.autoAllocate?.clearLabel || detailSection?.clearAllocation?.label || 'Xóa phân bổ';
+    }
+
+    hasReceiptDetailAllocation(detailSection: any = this.currentDetailSection): boolean {
+        const config = detailSection?.allocationJson || {};
+        const amountField = config.allocatedAmountField || 'amount';
+        const rows = this.currentDetailRows || [];
+        const currentData = this.formData?.[this.selectedTab] || {};
+        const rawAllocation = currentData?.[config.allocationJsonField || 'allocationJson'];
+
+        return rows.some((row: any) => this.parseNumberInput(row?.[amountField]) > 0)
+            || this.parseReceiptAllocationJson(rawAllocation).length > 0;
+    }
+
     shouldShowDetailMoveButtons(detailSection: any = this.currentDetailSection): boolean {
         return detailSection?.allowMove !== false && this.mode !== 'view';
     }
@@ -1005,7 +1031,32 @@ export class DynamicPopupComponent implements OnInit {
         });
 
         currentData[targetTotalField] = allocatedTotal;
+        this.receiptAllocationDeleteRequested = false;
         this.prepareAllocationJsonFromDetail();
+        this.updateMasterCalculations();
+        this.calculateAggregateValues();
+        this.applyFilters();
+        this.cdr.detectChanges();
+    }
+
+    clearReceiptDetailAllocation(detailSection: any = this.currentDetailSection): void {
+        if (!this.shouldShowDetailClearAllocationButton(detailSection)) {
+            return;
+        }
+
+        const config = detailSection?.allocationJson || {};
+        const amountField = config.allocatedAmountField || 'amount';
+        const targetTotalField = detailSection?.autoAllocate?.targetTotalField || config.receiptAmountField || 'total_amount';
+        const allocationJsonField = config.allocationJsonField || 'allocationJson';
+        const currentData = this.formData?.[this.selectedTab] || {};
+
+        (this.currentDetailRows || []).forEach((row: any) => {
+            row[amountField] = 0;
+        });
+
+        currentData[targetTotalField] = 0;
+        currentData[allocationJsonField] = '[]';
+        this.receiptAllocationDeleteRequested = true;
         this.updateMasterCalculations();
         this.calculateAggregateValues();
         this.applyFilters();
@@ -1722,6 +1773,9 @@ export class DynamicPopupComponent implements OnInit {
         const allocatedRows = rows.filter((row: any) => this.parseNumberInput(row?.[amountField]) > 0);
 
         if (!allocatedRows.length) {
+            if (this.receiptAllocationDeleteRequested) {
+                return null;
+            }
             return 'Phiếu thu công nợ phải nhập số tiền thu cho ít nhất một phiếu xuất trước khi xác nhận.';
         }
 
@@ -2829,6 +2883,9 @@ export class DynamicPopupComponent implements OnInit {
         }
 
         row[amountField] = amount;
+        if (amount > 0) {
+            this.receiptAllocationDeleteRequested = false;
+        }
         this.prepareAllocationJsonFromDetail();
     }
 

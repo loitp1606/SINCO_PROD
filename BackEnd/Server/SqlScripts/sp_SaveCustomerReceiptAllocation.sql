@@ -24,7 +24,8 @@ BEGIN
             @resolvedUnitCode NVARCHAR(50),
             @status NVARCHAR(10),
             @isReceived INT,
-            @clearAllocationOnly BIT;
+            @clearAllocationOnly BIT,
+            @deleteAllocationRequested BIT;
 
         SELECT @sync = CONVERT(VARCHAR(6), voucherDate, 112)
         FROM dbo.receiptV2$000000
@@ -77,6 +78,10 @@ BEGIN
 
         SET @clearAllocationOnly = CASE
             WHEN @receiptType IN (N'DEPOSIT', N'OTHER') THEN 1
+            ELSE 0
+        END;
+        SET @deleteAllocationRequested = CASE
+            WHEN ISNULL(LTRIM(RTRIM(@allocationJson)), N'') = N'[]' THEN 1
             ELSE 0
         END;
 
@@ -137,7 +142,7 @@ BEGIN
             ELSE 0
         END;
 
-        IF @clearAllocationOnly = 0 AND @isConfirmed = 1 AND @sumAlloc <= 0
+        IF @clearAllocationOnly = 0 AND @deleteAllocationRequested = 0 AND @isConfirmed = 1 AND @sumAlloc <= 0
         BEGIN
             RAISERROR(N'Phiếu thu công nợ phải phân bổ ít nhất một phiếu xuất.', 16, 1);
             RETURN;
@@ -149,7 +154,7 @@ BEGIN
             RETURN;
         END;
 
-        IF @isConfirmed = 1 AND @receiptType = N'DEPOSIT_OFFSET' AND @sumAlloc <> ISNULL(@masterAmount, 0)
+        IF @deleteAllocationRequested = 0 AND @isConfirmed = 1 AND @receiptType = N'DEPOSIT_OFFSET' AND @sumAlloc <> ISNULL(@masterAmount, 0)
         BEGIN
             RAISERROR(N'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.', 16, 1);
             RETURN;

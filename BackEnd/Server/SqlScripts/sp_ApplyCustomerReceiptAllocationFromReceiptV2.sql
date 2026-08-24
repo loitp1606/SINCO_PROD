@@ -83,7 +83,17 @@ BEGIN
         WHERE ReceiptIdGui = @idGui;
 
         IF @allocatedTotal <= 0
-            RAISERROR(N'Phiếu thu công nợ phải phân bổ ít nhất một phiếu xuất.', 16, 1);
+        BEGIN
+            BEGIN TRAN;
+
+            DELETE dbo.CustomerDebtLedger
+            WHERE RefController = N'receiptV2'
+              AND ReceiptIdGui = @idGui
+              AND ReceiptType IN (N'RECEIPT_CUSTOMER', N'RECEIPT_DEPOSIT_OFFSET', N'RECEIPT_DEPOSIT');
+
+            COMMIT;
+            RETURN;
+        END;
 
         IF @allocatedTotal > ISNULL(@masterAmount, 0)
             RAISERROR(N'Tổng phân bổ vượt quá số tiền phiếu thu.', 16, 1);

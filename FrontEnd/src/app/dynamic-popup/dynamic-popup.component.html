@@ -337,6 +337,13 @@
               (click)="autoAllocateReceiptDetail(detail)">
               {{ getDetailAutoAllocateLabel(detail) }}
             </button>
+
+            <button *ngIf="shouldShowDetailClearAllocationButton(detail)" type="button"
+              class="btn-modern btn-warning btn-small w-full sm:w-auto"
+              [disabled]="!hasReceiptDetailAllocation(detail)"
+              (click)="clearReceiptDetailAllocation(detail)">
+              {{ getDetailClearAllocationLabel(detail) }}
+            </button>
           </div>
         </div>
 
