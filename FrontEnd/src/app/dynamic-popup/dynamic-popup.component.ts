@@ -920,8 +920,8 @@ export class DynamicPopupComponent implements OnInit {
             const sourceKey = map[field.key] || field.key;
             row[field.key] = source?.[sourceKey] ?? '';
 
-            if (field.type === 'number' && (row[field.key] === '' || row[field.key] === null || row[field.key] === undefined)) {
-                row[field.key] = 0;
+            if (field.type === 'number') {
+                row[field.key] = this.parseNumberInput(this.getReceiptV2ScalarValue(row[field.key]));
             }
 
             if (field.type === 'date' && row[field.key]) {
@@ -1088,6 +1088,12 @@ export class DynamicPopupComponent implements OnInit {
                 ['idGui', 'idGuiDN', 'lnDN', 'vcNumberDN', 'invoiceNumber', 'accountReceiveCode'].forEach((fieldKey) => {
                     if (Object.prototype.hasOwnProperty.call(row, fieldKey)) {
                         row[fieldKey] = this.getReceiptV2ScalarValue(row[fieldKey]);
+                    }
+                });
+
+                ['line_nbr', 'lnDN', 'invoiceAmount', 'paidAmount', 'debtAmount', 'amount'].forEach((fieldKey) => {
+                    if (Object.prototype.hasOwnProperty.call(row, fieldKey)) {
+                        row[fieldKey] = this.parseNumberInput(this.getReceiptV2ScalarValue(row[fieldKey]));
                     }
                 });
             });
