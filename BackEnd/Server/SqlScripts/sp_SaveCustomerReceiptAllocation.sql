@@ -137,12 +137,12 @@ BEGIN
         DECLARE @sumAlloc DECIMAL(24,6) =
             ISNULL((SELECT SUM(ISNULL(allocatedAmount, 0)) FROM #alloc), 0);
 
-        DECLARE @isConfirmed BIT = CASE
-            WHEN ISNULL(@status, N'0') = N'1' OR ISNULL(@isReceived, 0) = 1 THEN 1
+        DECLARE @shouldValidateAllocation BIT = CASE
+            WHEN @clearAllocationOnly = 0 THEN 1
             ELSE 0
         END;
 
-        IF @clearAllocationOnly = 0 AND @deleteAllocationRequested = 0 AND @isConfirmed = 1 AND @sumAlloc <= 0
+        IF @shouldValidateAllocation = 1 AND @deleteAllocationRequested = 0 AND @sumAlloc <= 0
         BEGIN
             RAISERROR(N'Phiếu thu công nợ phải phân bổ ít nhất một phiếu xuất.', 16, 1);
             RETURN;
@@ -154,7 +154,7 @@ BEGIN
             RETURN;
         END;
 
-        IF @deleteAllocationRequested = 0 AND @isConfirmed = 1 AND @receiptType = N'DEPOSIT_OFFSET' AND @sumAlloc <> ISNULL(@masterAmount, 0)
+        IF @deleteAllocationRequested = 0 AND @receiptType = N'DEPOSIT_OFFSET' AND @sumAlloc <> ISNULL(@masterAmount, 0)
         BEGIN
             RAISERROR(N'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.', 16, 1);
             RETURN;

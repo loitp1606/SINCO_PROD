@@ -97,13 +97,6 @@ BEGIN
         WHERE RefController = N'receiptV2'
           AND ReceiptIdGui = @idGui;
 
-        -- Chỉ ghi sổ khi phiếu đã xác nhận/đã thu
-        IF ISNULL(@status, N'0') <> N'1' AND ISNULL(@isReceived, 0) <> 1
-        BEGIN
-            COMMIT;
-            RETURN;
-        END;
-
         IF @receiptType = N'DEPOSIT'
         BEGIN
             IF @masterAmount > 0

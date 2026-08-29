@@ -69,10 +69,6 @@ BEGIN
         IF @customerCode IS NULL OR @receiptType NOT IN (N'CUSTOMER', N'DEPOSIT_OFFSET')
             RETURN;
 
-        -- Phiếu nháp không làm thay đổi công nợ hay tiền đặt cọc.
-        IF ISNULL(@status, N'0') <> N'1' AND ISNULL(@isReceived, 0) <> 1
-            RETURN;
-
         IF NULLIF(LTRIM(RTRIM(@unitCode)), N'') IS NOT NULL
             SET @resolvedUnitCode = @unitCode;
         IF NULLIF(LTRIM(RTRIM(@resolvedUnitCode)), N'') IS NULL
