@@ -21,7 +21,9 @@ BEGIN
             @supplierCode NVARCHAR(50),
             @paymentType NVARCHAR(30),
             @masterAmount DECIMAL(24,6),
-            @resolvedUnitCode NVARCHAR(50);
+            @resolvedUnitCode NVARCHAR(50),
+            @clearAllocationOnly BIT,
+            @deleteAllocationRequested BIT;
 
         SELECT @sync = CONVERT(VARCHAR(6), voucherDate, 112)
         FROM dbo.paymentslip$000000
@@ -73,14 +75,16 @@ BEGIN
         IF @resolvedUnitCode IS NULL OR LTRIM(RTRIM(@resolvedUnitCode)) = N''
             SET @resolvedUnitCode = N'CTY';
 
-        -- INVOICE không dùng màn phân bổ
-        IF @paymentType = N'INVOICE'
-        BEGIN
-            RAISERROR(N'Loại chi INVOICE không dùng phân bổ. Vui lòng nhập theo detail.', 16, 1);
-            RETURN;
+        SET @clearAllocationOnly = CASE
+            WHEN @paymentType = N'DEPOSIT' THEN 1
+            ELSE 0
+        END;
+        SET @deleteAllocationRequested = CASE
+            WHEN ISNULL(LTRIM(RTRIM(@allocationJson)), N'') = N'[]' THEN 1
+            ELSE 0
         END;
 
-        IF @paymentType = N'DEPOSIT'
+        IF @clearAllocationOnly = 1
         BEGIN
             DELETE dbo.SupplierPaymentAllocation WHERE PaymentIdGui = @idGui;
             RETURN;
@@ -141,10 +145,41 @@ BEGIN
         END;
 
         DECLARE @sumAlloc DECIMAL(24,6) = ISNULL((SELECT SUM(ISNULL(allocatedAmount, 0)) FROM #alloc), 0);
+
+        IF @clearAllocationOnly = 0 AND @deleteAllocationRequested = 0 AND @sumAlloc <= 0
+        BEGIN
+            RAISERROR(N'Phiếu chi công nợ phải phân bổ ít nhất một phiếu nhập.', 16, 1);
+            RETURN;
+        END;
+
         IF @sumAlloc > ISNULL(@masterAmount, 0)
         BEGIN
             RAISERROR(N'Tổng phân bổ vượt quá số tiền chứng từ.', 16, 1);
             RETURN;
+        END;
+
+        IF @deleteAllocationRequested = 0 AND @paymentType = N'DEPOSIT_OFFSET' AND @sumAlloc <> ISNULL(@masterAmount, 0)
+        BEGIN
+            RAISERROR(N'Chi công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.', 16, 1);
+            RETURN;
+        END;
+
+        IF @paymentType = N'DEPOSIT_OFFSET'
+        BEGIN
+            DECLARE @depositBalance DECIMAL(24,6);
+
+            SELECT @depositBalance = ISNULL(SUM(ISNULL(TRY_CONVERT(decimal(24,6), AdvanceAmount), 0)), 0)
+            FROM dbo.SupplierDebtLedger
+            WHERE SupplierId = @supplierCode
+              AND UnitCode = @resolvedUnitCode
+              AND ISNULL(ReceiptIdGui, N'') <> @idGui
+              AND UPPER(ISNULL(ReceiptType, N'')) IN (N'DEPOSIT', N'PAYMENT_DEPOSIT', N'PAYMENT_DEPOSIT_OFFSET', N'SUPPLIER_ADVANCE');
+
+            IF @masterAmount > @depositBalance
+            BEGIN
+                RAISERROR(N'Số tiền cấn trừ vượt quá tiền đặt cọc hiện có của nhà cung cấp.', 16, 1);
+                RETURN;
+            END;
         END;
 
         IF OBJECT_ID('tempdb..#open') IS NOT NULL DROP TABLE #open;
@@ -170,20 +205,22 @@ BEGIN
             FROM dbo.SupplierDebtLedger
             WHERE SupplierId = @p_supplierCode
               AND UnitCode = @p_unitCode
+              AND ISNULL(ReceiptIdGui, N'''') <> @p_idGui
               AND ISNULL(RefIdGui, N'''') <> N''''
               AND (
                     ISNULL(RefController, N'''') = N''goodsReceipt''
                     OR (
                         ISNULL(RefController, N'''') = N''paymentSlip''
-                        AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_INVOICE'')
+                        AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_DEPOSIT_OFFSET'')
                     )
                   )
             GROUP BY RefIdGui;';
         EXEC sp_executesql
             @sql,
-            N'@p_supplierCode nvarchar(50), @p_unitCode nvarchar(50)',
+            N'@p_supplierCode nvarchar(50), @p_unitCode nvarchar(50), @p_idGui nvarchar(50)',
             @p_supplierCode = @supplierCode,
-            @p_unitCode = @resolvedUnitCode;
+            @p_unitCode = @resolvedUnitCode,
+            @p_idGui = @idGui;
 
         IF EXISTS
         (
@@ -286,7 +323,7 @@ BEGIN
                 DECLARE @receiptTypeFilter NVARCHAR(400) = N'';
                 IF COL_LENGTH('dbo.SupplierDebtLedger', 'ReceiptType') IS NOT NULL
                     SET @receiptTypeFilter = N'
-                                      AND UPPER(ISNULL(l.ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_INVOICE'', N''SUPPLIER_PAYMENT'')';
+                                      AND UPPER(ISNULL(l.ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_DEPOSIT_OFFSET'', N''SUPPLIER_PAYMENT'')';
 
                 IF COL_LENGTH('dbo.goodsReceipt$000000', 'paidAmount') IS NOT NULL
                     SET @setClause = @setClause + N', paidAmount = ISNULL(agg.paidAmount, 0)';

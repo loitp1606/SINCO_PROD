@@ -5,6 +5,7 @@ DECLARE @EndYear INT = 2027;
 -- Master paymentslip: bổ sung loại chi
 EXEC dbo.sp_AddColumnToPartitionTables N'paymentslip', N'paymentType', N'NVARCHAR(20) NULL', @StartYear, @EndYear;
 EXEC dbo.sp_AddColumnToPartitionTables N'paymentslip', N'dien_giai', N'NVARCHAR(1000) NULL', @StartYear, @EndYear;
+EXEC dbo.sp_AddColumnToPartitionTables N'paymentslip', N'allocationJson', N'NVARCHAR(MAX) NULL', @StartYear, @EndYear;
 
 -- Detail paymentslipDetail: chi theo hóa đơn
 EXEC dbo.sp_AddColumnToPartitionTables N'paymentslipDetail', N'invoiceNumber', N'NVARCHAR(100) NULL', @StartYear, @EndYear;

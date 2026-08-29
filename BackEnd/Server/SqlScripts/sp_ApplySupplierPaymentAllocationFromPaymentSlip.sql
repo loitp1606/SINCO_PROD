@@ -78,8 +78,8 @@ BEGIN
             @spentMoney = ISNULL(spentMoney, 0)
         FROM #$mt;
 
-        IF @supplierCode IS NULL OR @paymentType <> N'SUPPLIER' RETURN;
-        IF ISNULL(@spentMoney, 0) <> 1 RETURN;
+        IF @supplierCode IS NULL OR @paymentType NOT IN (N'SUPPLIER', N'DEPOSIT_OFFSET')
+            RETURN;
 
         IF @unitCode IS NOT NULL AND LTRIM(RTRIM(@unitCode)) <> N''
             SET @resolvedUnitCode = @unitCode;
@@ -90,10 +90,47 @@ BEGIN
         FROM dbo.SupplierPaymentAllocation
         WHERE PaymentIdGui = @idGui;
 
+        IF @allocatedTotal <= 0
+        BEGIN
+            BEGIN TRAN;
+
+            DELETE dbo.SupplierDebtLedger
+            WHERE RefController = N'paymentSlip'
+              AND ReceiptIdGui = @idGui
+              AND ReceiptType IN (N'PAYMENT_SUPPLIER', N'PAYMENT_DEPOSIT_OFFSET', N'PAYMENT_DEPOSIT');
+
+            COMMIT;
+            RETURN;
+        END;
+
         IF @allocatedTotal > ISNULL(@masterAmount, 0)
         BEGIN
             RAISERROR(N'Tổng phân bổ vượt quá số tiền phiếu chi.', 16, 1);
             RETURN;
+        END;
+
+        IF @paymentType = N'DEPOSIT_OFFSET' AND @allocatedTotal <> ISNULL(@masterAmount, 0)
+        BEGIN
+            RAISERROR(N'Chi công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.', 16, 1);
+            RETURN;
+        END;
+
+        IF @paymentType = N'DEPOSIT_OFFSET'
+        BEGIN
+            DECLARE @depositBalance DECIMAL(24,6);
+
+            SELECT @depositBalance = ISNULL(SUM(ISNULL(TRY_CONVERT(decimal(24,6), AdvanceAmount), 0)), 0)
+            FROM dbo.SupplierDebtLedger
+            WHERE SupplierId = @supplierCode
+              AND UnitCode = @resolvedUnitCode
+              AND ISNULL(ReceiptIdGui, N'') <> @idGui
+              AND UPPER(ISNULL(ReceiptType, N'')) IN (N'DEPOSIT', N'PAYMENT_DEPOSIT', N'PAYMENT_DEPOSIT_OFFSET', N'SUPPLIER_ADVANCE');
+
+            IF @masterAmount > @depositBalance
+            BEGIN
+                RAISERROR(N'Số tiền cấn trừ vượt quá tiền đặt cọc hiện có của nhà cung cấp.', 16, 1);
+                RETURN;
+            END;
         END;
 
         BEGIN TRAN;
@@ -101,7 +138,7 @@ BEGIN
         DELETE dbo.SupplierDebtLedger
         WHERE RefController = N'paymentSlip'
           AND ReceiptIdGui = @idGui
-          AND ReceiptType = N'PAYMENT_SUPPLIER';
+          AND ReceiptType IN (N'PAYMENT_SUPPLIER', N'PAYMENT_DEPOSIT_OFFSET', N'PAYMENT_DEPOSIT');
 
         INSERT dbo.SupplierDebtLedger
         (
@@ -110,15 +147,26 @@ BEGIN
             RefController, RefIdGui, RefLineNbr, Note, CreatedBy, CreatedAt
         )
         SELECT
-            @resolvedUnitCode, @supplierCode, @idGui, @voucherNumber, @voucherDate, N'PAYMENT_SUPPLIER',
-            0, 0, 0, ISNULL(a.AllocatedAmount, 0), 0,
+            @resolvedUnitCode,
+            @supplierCode,
+            @idGui,
+            @voucherNumber,
+            @voucherDate,
+            CASE WHEN @paymentType = N'DEPOSIT_OFFSET' THEN N'PAYMENT_DEPOSIT_OFFSET' ELSE N'PAYMENT_SUPPLIER' END,
+            0,
+            0,
+            CASE WHEN @paymentType = N'DEPOSIT_OFFSET' THEN -ISNULL(a.AllocatedAmount, 0) ELSE 0 END,
+            ISNULL(a.AllocatedAmount, 0),
+            0,
             N'paymentSlip', ISNULL(a.RefIdGuiPN, @idGui), a.RefLineNbrPN,
-            N'Chi tiền NCC (phân bổ hóa đơn)', @userId, SYSDATETIME()
+            CASE WHEN @paymentType = N'DEPOSIT_OFFSET' THEN N'Cấn trừ công nợ từ tiền đặt cọc NCC' ELSE N'Chi tiền NCC (phân bổ phiếu nhập)' END,
+            @userId,
+            SYSDATETIME()
         FROM dbo.SupplierPaymentAllocation a
         WHERE a.PaymentIdGui = @idGui
           AND ISNULL(a.AllocatedAmount, 0) > 0;
 
-        IF @masterAmount > @allocatedTotal
+        IF @paymentType = N'SUPPLIER' AND @masterAmount > @allocatedTotal
         BEGIN
             INSERT dbo.SupplierDebtLedger
             (
@@ -128,9 +176,9 @@ BEGIN
             )
             VALUES
             (
-                @resolvedUnitCode, @supplierCode, @idGui, @voucherNumber, @voucherDate, N'PAYMENT_SUPPLIER',
-                0, 0, 0, @masterAmount - @allocatedTotal, 0,
-                N'paymentSlip', @idGui, NULL, N'Chi tiền NCC (chưa phân bổ hóa đơn)', @userId, SYSDATETIME()
+                @resolvedUnitCode, @supplierCode, @idGui, @voucherNumber, @voucherDate, N'PAYMENT_DEPOSIT',
+                0, 0, @masterAmount - @allocatedTotal, 0, 0,
+                N'paymentSlip', @idGui, NULL, N'Chi dư chuyển thành tiền đặt cọc NCC', @userId, SYSDATETIME()
             );
         END;
 

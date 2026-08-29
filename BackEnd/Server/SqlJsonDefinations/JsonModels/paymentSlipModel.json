@@ -133,6 +133,12 @@
 				"sqlType": "NVARCHAR(20)"
 			},
 			{
+				"name": "allocationJson",
+				"property": "allocationJson",
+				"type": "string",
+				"sqlType": "NVARCHAR(MAX)"
+			},
+			{
 				"name": "htttType",
 				"property": "htttType",
 				"type": "string",

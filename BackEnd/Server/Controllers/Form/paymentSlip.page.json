@@ -62,10 +62,6 @@
 								"value": "SUPPLIER"
 							},
 							{
-								"label": "Chi theo hóa đơn",
-								"value": "INVOICE"
-							},
-							{
 								"label": "Chi tiền đặt cọc",
 								"value": "DEPOSIT"
 							},
@@ -100,9 +96,10 @@
 							"dataType": [
 								"String"
 							],
-							"query": "select isnull(address,'') as supplierAddress from supplier where supplier_id = @supplierCode",
+							"query": "select isnull(s.address,'') as supplierAddress, isnull(d.depositAmount,0) as depositAmount from supplier s outer apply (select sum(case when upper(isnull(ReceiptType,'')) in ('DEPOSIT','PAYMENT_DEPOSIT','PAYMENT_DEPOSIT_OFFSET','SUPPLIER_ADVANCE') then isnull(try_convert(decimal(24,6), AdvanceAmount),0) else 0 end) as depositAmount from SupplierDebtLedger where SupplierId = s.supplier_id) d where s.supplier_id = @supplierCode",
 							"map": {
-								"supplierAddress": "supplierAddress"
+								"supplierAddress": "supplierAddress",
+								"depositAmount": "depositAmount"
 							}
 						}
 					},
@@ -112,6 +109,22 @@
 						"type": "text",
 						"width": "150px",
 						"required": false
+					},
+					{
+						"key": "depositAmount",
+						"label": "Tiền đặt cọc hiện có",
+						"type": "number",
+						"currency": "VN",
+						"disabled": true,
+						"readonly": true,
+						"transient": true,
+						"width": "150px",
+						"required": false,
+						"visibleWhen": {
+							"field": "paymentType",
+							"operator": "=",
+							"value": "DEPOSIT_OFFSET"
+						}
 					},
 					{
 						"key": "cashier",
@@ -227,6 +240,12 @@
 						"placeholder": "Nhập diễn giải"
 					},
 					{
+						"key": "allocationJson",
+						"label": "Dữ liệu phân bổ",
+						"type": "hidden",
+						"required": false
+					},
+					{
 						"key": "note",
 						"label": "Ghi chú",
 						"type": "textarea",
@@ -259,16 +278,93 @@
 			},
 			"detail": [
 				{
-					"title": "Chi tiết chi theo hóa đơn",
+					"title": "Danh sách phiếu nhập còn phải trả",
 					"quickEditable": true,
+					"allowAdd": false,
+					"allowDelete": false,
+					"allowMove": false,
+					"allowSelect": false,
 					"visibleWhen": {
 						"field": "paymentType",
-						"operator": "=",
-						"value": "INVOICE"
+						"operator": "in",
+						"value": [
+							"SUPPLIER",
+							"DEPOSIT_OFFSET"
+						]
 					},
 					"controllerDetail": "PaymentSlipDetail",
 					"formId": "paymentSlipdetail",
 					"foreignKey": "idGui, line_nbr",
+					"autoLoad": {
+						"whenFieldsChange": [
+							"paymentType",
+							"supplierCode"
+						],
+						"clearWhenEmpty": true,
+						"dataSource": {
+							"api": "/api/CustomQuery/execute",
+							"query": "exec dbo.sp_GetSupplierPaymentAllocation @mode, @idGui, @supplierCode, @unitCode, @keyword",
+							"params": [
+								"mode",
+								"idGui",
+								"supplierCode",
+								"unitCode",
+								"keyword"
+							],
+							"dataType": [
+								"String",
+								"String",
+								"String",
+								"String",
+								"String"
+							],
+							"values": [
+								"EDIT",
+								"@idGui",
+								"@supplierCode",
+								"@unitCode",
+								""
+							]
+						},
+						"map": {
+							"idGuiPN": "refIdGuiPN",
+							"lnPN": "refLineNbrPN",
+							"invoiceNumber": "voucherNumber",
+							"invoiceDate": "voucherDate",
+							"invoiceAmount": "payableAmount",
+							"paidAmount": "paidAmount",
+							"debtAmount": "outstandingAmount",
+							"amount": "allocatedAmount",
+							"note": "note"
+						}
+					},
+					"allocationJson": {
+						"enabled": true,
+						"allocationJsonField": "allocationJson",
+						"receiptAmountField": "total_amount",
+						"receiptTypeField": "paymentType",
+						"lineNbrField": "line_nbr",
+						"refIdGuiField": "idGuiPN",
+						"refLineNbrField": "lnPN",
+						"voucherNumberField": "invoiceNumber",
+						"invoiceDateField": "invoiceDate",
+						"invoiceAmountField": "invoiceAmount",
+						"outstandingAmountField": "debtAmount",
+						"allocatedAmountField": "amount",
+						"noteField": "note"
+					},
+					"autoAllocate": {
+						"enabled": true,
+						"label": "Phân bổ tự động",
+						"clearLabel": "Xóa phân bổ",
+						"receiptTypes": [
+							"DEPOSIT_OFFSET"
+						],
+						"sourceAmountField": "depositAmount",
+						"targetTotalField": "total_amount",
+						"outstandingAmountField": "debtAmount",
+						"allocatedAmountField": "amount"
+					},
 					"fields": [
 						{
 							"key": "line_nbr",
@@ -279,23 +375,26 @@
 						},
 						{
 							"key": "invoiceNumber",
-							"label": "Số hóa đơn",
+							"label": "Số phiếu nhập",
 							"type": "text",
+							"disabled": true,
 							"required": true,
 							"width": "160px"
 						},
 						{
 							"key": "invoiceDate",
-							"label": "Ngày HĐ",
+							"label": "Ngày nhập",
 							"type": "date",
+							"disabled": true,
 							"required": false,
 							"width": "130px"
 						},
 						{
 							"key": "invoiceAmount",
-							"label": "Tiền HĐ",
+							"label": "Tiền phiếu nhập",
 							"type": "number",
 							"currency": "VN",
+							"disabled": true,
 							"required": false,
 							"width": "100px",
 							"trigger": [
@@ -307,6 +406,7 @@
 							"label": "Đã chi",
 							"type": "number",
 							"currency": "VN",
+							"disabled": true,
 							"required": false,
 							"width": "100px",
 							"trigger": [
@@ -348,6 +448,16 @@
 							"width": "220px",
 							"type": "text",
 							"uiTab": "Ghi chú"
+						},
+						{
+							"key": "idGuiPN",
+							"label": "Key phiếu nhập",
+							"type": "hidden"
+						},
+						{
+							"key": "lnPN",
+							"label": "Dòng phiếu nhập",
+							"type": "hidden"
 						}
 					],
 					"initialData": []
@@ -370,7 +480,7 @@
 				{
 					"step": "afterUpdate",
 					"type": "sql02",
-					"query": "exec afterUpdatePaymentSlip N'@idGui', N'@voucherNumber', N'@voucherDate';EXEC dbo.sp_PostDebtFromPaymentSlip N'@idGui', N'@unit', N'@userId';EXEC dbo.sp_ApplySupplierPaymentAllocationFromPaymentSlip N'@idGui', N'@unit', N'@userId';"
+					"query": "exec afterUpdatePaymentSlip N'@idGui', N'@voucherNumber', N'@voucherDate';EXEC dbo.sp_PostDebtFromPaymentSlip N'@idGui', N'@unit', N'@userId';IF UPPER(N'@paymentType') IN (N'SUPPLIER', N'DEPOSIT_OFFSET') EXEC dbo.sp_SaveSupplierPaymentAllocation N'@idGui', N'@allocationJson', N'@unit', N'@userId';IF UPPER(N'@paymentType') IN (N'SUPPLIER', N'DEPOSIT_OFFSET') EXEC dbo.sp_ApplySupplierPaymentAllocationFromPaymentSlip N'@idGui', N'@unit', N'@userId';"
 				}
 			]
 		}
@@ -410,64 +520,6 @@
 						"receivable": "paidAmount",
 						"payable": "payableAmount"
 					}
-				}
-			}
-		},
-		{
-			"id": "paymentAllocation",
-			"label": "Phân bổ phải trả",
-			"type": "receiptAllocation",
-			"style": "primary",
-			"showInView": false,
-			"config": {
-				"title": "Phân bổ chi theo hóa đơn",
-				"receiptAmountField": "total_amount",
-				"openInvoiceDataSource": {
-					"api": "/api/CustomQuery/execute",
-					"query": "exec dbo.sp_GetSupplierPaymentAllocation @mode, @idGui, @supplierCode, @unitCode, @keyword",
-					"params": [
-						"mode",
-						"idGui",
-						"supplierCode",
-						"unitCode",
-						"keyword"
-					],
-					"dataType": [
-						"String",
-						"String",
-						"String",
-						"String",
-						"String"
-					],
-					"values": [
-						"EDIT",
-						"@idGui",
-						"@supplierCode",
-						"@unitCode",
-						"@keyword"
-					]
-				},
-				"saveAllocationDataSource": {
-					"api": "/api/CustomQuery/execute",
-					"query": "exec dbo.sp_SaveSupplierPaymentAllocation @idGui, @allocationJson, @unitCode, @userId",
-					"params": [
-						"idGui",
-						"allocationJson",
-						"unitCode",
-						"userId"
-					],
-					"dataType": [
-						"String",
-						"String",
-						"String",
-						"String"
-					],
-					"values": [
-						"@idGui",
-						"@allocationJson",
-						"@unit",
-						"@userId"
-					]
 				}
 			}
 		}

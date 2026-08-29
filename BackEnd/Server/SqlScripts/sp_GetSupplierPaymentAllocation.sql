@@ -87,7 +87,7 @@ BEGIN
                         ISNULL(RefController, N'''') = N''goodsReceipt''
                         OR (
                             ISNULL(RefController, N'''') = N''paymentSlip''
-                            AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_INVOICE'', N''PAYMENT_DEPOSIT'')
+                            AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_DEPOSIT_OFFSET'', N''PAYMENT_DEPOSIT'')
                         )
                   )
             ),
@@ -237,7 +237,7 @@ BEGIN
                             ISNULL(RefController, N'''') = N''goodsReceipt''
                             OR (
                                 ISNULL(RefController, N'''') = N''paymentSlip''
-                                AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_INVOICE'', N''PAYMENT_DEPOSIT'')
+                                AND UPPER(ISNULL(ReceiptType, N'''')) IN (N''PAYMENT_SUPPLIER'', N''PAYMENT_DEPOSIT_OFFSET'', N''PAYMENT_DEPOSIT'')
                             )
                       )
                 ),
@@ -423,4 +423,3 @@ BEGIN
     ORDER BY Id;
 END
 GO
-
