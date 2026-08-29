@@ -2200,7 +2200,7 @@ export class DynamicPopupComponent implements OnInit {
                                 formIdDetail: detailSection.formId,
                                 foreignKey: detailSection.foreignKey,
                                 //data: detailData
-                                data: detailData.map((row) => this.normalizeValues(row)),
+                                data: detailData.map((row) => this.normalizeValuesForSave(row, detailSection?.fields || [])),
                             })
                         }
                     })
@@ -2209,7 +2209,9 @@ export class DynamicPopupComponent implements OnInit {
         }
 
         // const formData = this.mergeFormData()
-        const formData = this.removeTransientMasterFields(this.normalizeValues(this.mergeFormData()))
+        const formData = this.removeTransientMasterFields(
+            this.normalizeValuesForSave(this.mergeFormData(), this.getMasterFieldsForSave())
+        )
         this.normalizeReceiptV2DepositOffsetPayload(formData, details);
 
         // Determine action based on whether this is a new record or update
@@ -2922,6 +2924,109 @@ export class DynamicPopupComponent implements OnInit {
             normalized[key] = value
         }
         return normalized
+    }
+
+    private getMasterFieldsForSave(): any[] {
+        return (this.metadata?.tabs || [])
+            .flatMap((tab: any) => tab?.form?.fields || []);
+    }
+
+    private normalizeValuesForSave(obj: any, fields: any[] = []): any {
+        const normalized: any = {};
+        const fieldMap = new Map<string, any>(
+            (fields || [])
+                .filter((field: any) => field?.key)
+                .map((field: any) => [`${field.key}`.toLowerCase(), field])
+        );
+
+        for (const key in (obj || {})) {
+            const field = fieldMap.get(`${key}`.toLowerCase());
+            normalized[key] = this.normalizeSaveFieldValue(obj[key], field, key);
+        }
+
+        return normalized;
+    }
+
+    private normalizeSaveFieldValue(value: any, field: any, fieldKey: string): any {
+        const type = `${field?.type || ''}`.toLowerCase();
+        const key = `${field?.key || fieldKey || ''}`.toLowerCase();
+
+        if (type === 'number' || type === 'integer' || type === 'decimal' || type === 'currency') {
+            return this.parseNumberInput(this.getReceiptV2ScalarValue(value));
+        }
+
+        if (type === 'date' || type === 'datetime') {
+            return this.normalizeDateForSave(value, type);
+        }
+
+        if (key.includes('json') && value !== null && value !== undefined && typeof value === 'object') {
+            return JSON.stringify(value);
+        }
+
+        if (
+            type === 'text' ||
+            type === 'textarea' ||
+            type === 'hidden' ||
+            type === 'select' ||
+            type === 'lookup' ||
+            type === 'password' ||
+            type === 'email' ||
+            type === 'radio'
+        ) {
+            const scalar = this.getReceiptV2ScalarValue(value);
+            return scalar === null || scalar === undefined ? '' : `${scalar}`;
+        }
+
+        if (value === null || value === undefined) {
+            return '';
+        }
+
+        if (typeof value === 'string') {
+            return value.trim() === '' ? '' : value;
+        }
+
+        return value;
+    }
+
+    private normalizeDateForSave(value: any, type: string = 'date'): string | null {
+        if (value instanceof Date && !isNaN(value.getTime())) {
+            return type === 'datetime'
+                ? value.toISOString()
+                : value.toISOString().slice(0, 10);
+        }
+
+        const scalar = this.getReceiptV2ScalarValue(value);
+        if (scalar === null || scalar === undefined || scalar === '') {
+            return null;
+        }
+
+        if (typeof scalar === 'string') {
+            const trimmed = scalar.trim();
+            if (!trimmed) {
+                return null;
+            }
+
+            const viDateMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+            if (viDateMatch) {
+                const [, day, month, year] = viDateMatch;
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            }
+
+            const isoDateMatch = trimmed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+            if (isoDateMatch) {
+                const [, year, month, day] = isoDateMatch;
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            }
+
+            const parsedDate = new Date(trimmed);
+            if (!isNaN(parsedDate.getTime())) {
+                return type === 'datetime'
+                    ? parsedDate.toISOString()
+                    : parsedDate.toISOString().slice(0, 10);
+            }
+        }
+
+        return null;
     }
 
     private removeTransientMasterFields(formData: any): any {
