@@ -2951,11 +2951,11 @@ export class DynamicPopupComponent implements OnInit {
         const type = `${field?.type || ''}`.toLowerCase();
         const key = `${field?.key || fieldKey || ''}`.toLowerCase();
 
-        if (type === 'number' || type === 'integer' || type === 'decimal' || type === 'currency') {
+        if (this.isNumericSaveField(field, fieldKey)) {
             return this.parseNumberInput(this.getReceiptV2ScalarValue(value));
         }
 
-        if (type === 'date' || type === 'datetime') {
+        if (this.isDateSaveField(field)) {
             return this.normalizeDateForSave(value, type);
         }
 
@@ -2977,6 +2977,14 @@ export class DynamicPopupComponent implements OnInit {
             return scalar === null || scalar === undefined ? '' : `${scalar}`;
         }
 
+        if (!field) {
+            if (value === null || value === undefined) {
+                return null;
+            }
+
+            return value;
+        }
+
         if (value === null || value === undefined) {
             return '';
         }
@@ -2986,6 +2994,59 @@ export class DynamicPopupComponent implements OnInit {
         }
 
         return value;
+    }
+
+    private isNumericSaveField(field: any, fieldKey: string): boolean {
+        const type = `${field?.type || ''}`.toLowerCase();
+        const valueType = `${field?.valueType || field?.dataType || field?.sqlType || ''}`.toLowerCase();
+        const key = `${field?.key || fieldKey || ''}`.toLowerCase();
+        const numericTypes = new Set([
+            'number',
+            'numeric',
+            'decimal',
+            'int',
+            'integer',
+            'bigint',
+            'smallint',
+            'tinyint',
+            'float',
+            'double',
+            'real',
+            'money',
+            'smallmoney',
+            'currency'
+        ]);
+
+        if (numericTypes.has(type) || numericTypes.has(valueType)) {
+            return true;
+        }
+
+        if (/(decimal|numeric|int|bigint|smallint|tinyint|float|real|money|number)/.test(valueType)) {
+            return true;
+        }
+
+        return [
+            'line_nbr',
+            'line_nbr0',
+            'ln',
+            'lndn',
+            'lnpn',
+            'reflinenbrdn',
+            'reflinenbrpn',
+            'receiptlinenbr',
+            'paymentlinenbr'
+        ].includes(key);
+    }
+
+    private isDateSaveField(field: any): boolean {
+        const type = `${field?.type || ''}`.toLowerCase();
+        const valueType = `${field?.valueType || field?.dataType || field?.sqlType || ''}`.toLowerCase();
+        return type === 'date'
+            || type === 'datetime'
+            || valueType === 'date'
+            || valueType === 'datetime'
+            || valueType.includes('date')
+            || valueType.includes('time');
     }
 
     private normalizeDateForSave(value: any, type: string = 'date'): string | null {
