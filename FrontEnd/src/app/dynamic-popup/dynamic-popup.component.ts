@@ -699,7 +699,7 @@ export class DynamicPopupComponent implements OnInit {
         // Hoàn thành initial loading
         this.isInitialLoading = false
         this.runVisibleDetailAutoLoads()
-        this.refreshReceiptDepositAmountIfNeeded(this.selectedTab)
+        this.refreshDepositAmountIfNeeded(this.selectedTab)
     }
 
     // Getter methods for current active detail section
@@ -796,7 +796,8 @@ export class DynamicPopupComponent implements OnInit {
             return true;
         }
 
-        const receiptType = `${this.formData?.[this.selectedTab]?.['receiptType'] ?? ''}`.toUpperCase();
+        const receiptTypeField = detailSection?.allocationJson?.receiptTypeField || config.receiptTypeField || 'receiptType';
+        const receiptType = `${this.formData?.[this.selectedTab]?.[receiptTypeField] ?? ''}`.toUpperCase();
         return allowedTypes.map((x: any) => `${x}`.toUpperCase()).includes(receiptType);
     }
 
@@ -811,7 +812,7 @@ export class DynamicPopupComponent implements OnInit {
         }
 
         const receiptType = `${this.formData?.[this.selectedTab]?.[config.receiptTypeField || 'receiptType'] ?? ''}`.toUpperCase();
-        return ['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType);
+        return this.isAllocationReceiptType(config, receiptType);
     }
 
     getDetailClearAllocationLabel(detailSection: any = this.currentDetailSection): string {
@@ -881,7 +882,13 @@ export class DynamicPopupComponent implements OnInit {
         }
 
         const currentData = this.formData?.[tabIndex] || {};
-        if (!this.normalizeVisibilityValue(currentData['customerCode'])) {
+        const requiredFields = Array.isArray(detailSection?.autoLoad?.requiredFields)
+            ? detailSection.autoLoad.requiredFields
+            : ['customerCode'];
+        const hasMissingRequiredField = requiredFields.some((fieldKey: string) =>
+            !this.normalizeVisibilityValue(currentData[fieldKey])
+        );
+        if (hasMissingRequiredField) {
             if (detailSection?.autoLoad?.clearWhenEmpty !== false) {
                 this.setDetailRows(tabIndex, detailIndex, []);
             }
@@ -941,29 +948,49 @@ export class DynamicPopupComponent implements OnInit {
         this.applyFilters();
     }
 
-    private refreshReceiptDepositAmountIfNeeded(tabIndex: number = this.selectedTab): void {
+    private getDepositRefreshField(tabIndex: number = this.selectedTab): any | null {
+        return (this.metadata?.tabs?.[tabIndex]?.form?.fields || [])
+            .find((field: any) => field?.key === 'depositAmount') || null;
+    }
+
+    private getDepositRefreshTriggerFields(tabIndex: number = this.selectedTab): string[] {
+        const field = this.getDepositRefreshField(tabIndex);
+        const configuredFields = field?.refreshDeposit?.whenFieldsChange;
+        if (Array.isArray(configuredFields) && configuredFields.length) {
+            return configuredFields;
+        }
+        return ['customerCode', 'receiptType'];
+    }
+
+    private refreshDepositAmountIfNeeded(tabIndex: number = this.selectedTab): void {
         const currentData = this.formData?.[tabIndex];
         if (!currentData) {
             return;
         }
 
-        const hasDepositField = (this.metadata?.tabs?.[tabIndex]?.form?.fields || [])
-            .some((field: any) => field?.key === 'depositAmount');
-        if (!hasDepositField) {
+        const depositField = this.getDepositRefreshField(tabIndex);
+        if (!depositField) {
             return;
         }
 
-        if (`${currentData['receiptType'] ?? ''}`.toUpperCase() !== 'DEPOSIT_OFFSET') {
+        const refreshConfig = depositField.refreshDeposit || {};
+        if (!this.evaluateVisibilityRule(refreshConfig.activeWhen || depositField.visibleWhen, tabIndex)) {
             currentData['depositAmount'] = 0;
             return;
         }
 
-        if (!this.normalizeVisibilityValue(currentData['customerCode'])) {
+        const requiredFields = Array.isArray(refreshConfig.requiredFields) && refreshConfig.requiredFields.length
+            ? refreshConfig.requiredFields
+            : ['customerCode'];
+        const hasMissingRequiredField = requiredFields.some((fieldKey: string) =>
+            !this.normalizeVisibilityValue(currentData[fieldKey])
+        );
+        if (hasMissingRequiredField) {
             currentData['depositAmount'] = 0;
             return;
         }
 
-        const dataSource = {
+        const dataSource = refreshConfig.dataSource || {
             api: '/api/CustomQuery/execute',
             query: 'exec sp_GetCustomerDebtSummary @customerCode, @unitCode, @excludeReceiptIdGui',
             params: ['customerCode', 'unitCode', 'excludeReceiptIdGui'],
@@ -974,15 +1001,17 @@ export class DynamicPopupComponent implements OnInit {
         const queryData = {
             ...currentData,
             customerCode: this.getReceiptV2ScalarValue(currentData['customerCode']),
+            supplierCode: this.getReceiptV2ScalarValue(currentData['supplierCode']),
             excludeReceiptIdGui: this.getReceiptV2ScalarValue(currentData['idGui'])
         };
 
         this.executePopupDataSource(dataSource, queryData).then((rows: any[]) => {
             const row = rows?.[0] || {};
-            currentData['depositAmount'] = this.parseNumberInput(row.depositAmount);
+            const sourceField = refreshConfig.map?.depositAmount || refreshConfig.sourceField || 'depositAmount';
+            currentData['depositAmount'] = this.parseNumberInput(row[sourceField]);
             this.cdr.detectChanges();
         }).catch((error) => {
-            console.warn('Unable to refresh receipt deposit amount:', error);
+            console.warn('Unable to refresh deposit amount:', error);
             currentData['depositAmount'] = 0;
             this.cdr.detectChanges();
         });
@@ -1008,7 +1037,8 @@ export class DynamicPopupComponent implements OnInit {
 
         const rows = this.currentDetailRows || [];
         if (rows.length === 0) {
-            alert('Không có phiếu xuất còn nợ để phân bổ.');
+            const allocationConfig = detailSection?.allocationJson || {};
+            alert(`Không có ${this.getAllocationSourceDocumentLabel(allocationConfig)} còn nợ để phân bổ.`);
             return;
         }
 
@@ -1656,6 +1686,40 @@ export class DynamicPopupComponent implements OnInit {
         }
     }
 
+    private getAllocationReceiptTypes(config: any): string[] {
+        const configuredTypes = Array.isArray(config?.eligibleReceiptTypes)
+            ? config.eligibleReceiptTypes
+            : Array.isArray(config?.receiptTypes)
+                ? config.receiptTypes
+                : null;
+        const types = configuredTypes?.length ? configuredTypes : ['CUSTOMER', 'DEPOSIT_OFFSET'];
+        return types.map((item: any) => String(item || '').toUpperCase()).filter(Boolean);
+    }
+
+    private isAllocationReceiptType(config: any, receiptType: string): boolean {
+        return this.getAllocationReceiptTypes(config).includes(String(receiptType || '').toUpperCase());
+    }
+
+    private getAllocationOffsetType(config: any): string {
+        return String(config?.offsetType || 'DEPOSIT_OFFSET').toUpperCase();
+    }
+
+    private getAllocationDocumentLabel(config: any): string {
+        return config?.documentLabel || 'Phiếu thu công nợ';
+    }
+
+    private getAllocationSourceDocumentLabel(config: any): string {
+        return config?.sourceDocumentLabel || 'phiếu xuất';
+    }
+
+    private getAllocationAmountLabel(config: any): string {
+        return config?.amountLabel || 'tiền thu';
+    }
+
+    private getAllocationPayloadKey(config: any, key: string, fallback: string): string {
+        return config?.payloadMap?.[key] || fallback;
+    }
+
     private async openInitialReceiptAllocationIfNeeded(): Promise<void> {
         const action = this.getPopupActions().find((item: any) => {
             const actionType = String(item?.type || item?.id || '').toLowerCase();
@@ -1684,7 +1748,7 @@ export class DynamicPopupComponent implements OnInit {
         const config = action.config || {};
         const currentData = this.formData?.[this.selectedTab] || {};
         const receiptType = String(currentData?.[config.receiptTypeField || 'receiptType'] || '').toUpperCase();
-        if (!['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType)) return null;
+        if (!this.isAllocationReceiptType(config, receiptType)) return null;
 
         const isConfirmed = String(currentData?.['status'] ?? '0') === '1' || this.isCheckboxChecked(currentData?.['isReceived']);
         if (!isConfirmed) return null;
@@ -1692,7 +1756,7 @@ export class DynamicPopupComponent implements OnInit {
         const rawAllocation = currentData?.[config.allocationJsonField || 'allocationJson'];
         const rows = this.parseReceiptAllocationJson(rawAllocation);
         if (!rows.length && !this.girdData) {
-            return 'Phiếu thu công nợ phải phân bổ ít nhất một phiếu xuất trước khi xác nhận.';
+            return `${this.getAllocationDocumentLabel(config)} phải phân bổ ít nhất một ${this.getAllocationSourceDocumentLabel(config)} trước khi xác nhận.`;
         }
         if (!rows.length) return null;
 
@@ -1702,13 +1766,13 @@ export class DynamicPopupComponent implements OnInit {
             0,
         );
         if (allocatedTotal <= 0) {
-            return 'Phiếu thu công nợ phải có số tiền phân bổ lớn hơn 0.';
+            return `${this.getAllocationDocumentLabel(config)} phải có số tiền phân bổ lớn hơn 0.`;
         }
         if (allocatedTotal > receiptAmount) {
-            return 'Tổng phân bổ không được vượt số tiền phiếu thu.';
+            return `Tổng phân bổ không được vượt số ${this.getAllocationAmountLabel(config)}.`;
         }
-        if (receiptType === 'DEPOSIT_OFFSET' && allocatedTotal !== receiptAmount) {
-            return 'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.';
+        if (receiptType === this.getAllocationOffsetType(config) && allocatedTotal !== receiptAmount) {
+            return config?.offsetFullAllocationMessage || 'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.';
         }
         return null;
     }
@@ -1740,7 +1804,7 @@ export class DynamicPopupComponent implements OnInit {
         const receiptType = String(currentData?.[config.receiptTypeField || 'receiptType'] || '').toUpperCase();
         const allocationJsonField = config.allocationJsonField || 'allocationJson';
 
-        if (!['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType)) {
+        if (!this.isAllocationReceiptType(config, receiptType)) {
             currentData[allocationJsonField] = '';
             return;
         }
@@ -1748,17 +1812,22 @@ export class DynamicPopupComponent implements OnInit {
         const rows = this.detailRowsData?.[tabIndex]?.[detailIndex] || [];
         const payloadRows = rows
             .filter((row: any) => this.parseNumberInput(row?.[config.allocatedAmountField || 'amount']) > 0)
-            .map((row: any, index: number) => ({
-                refIdGuiDN: row?.[config.refIdGuiField || 'idGuiDN'] || '',
-                refLineNbrDN: this.parseNumberInput(row?.[config.refLineNbrField || 'lnDN']) || null,
-                receiptLineNbr: this.parseNumberInput(row?.[config.lineNbrField || 'line_nbr']) || index + 1,
-                invoiceNumber: row?.[config.voucherNumberField || 'vcNumberDN'] || row?.['invoiceNumber'] || '',
-                invoiceDate: row?.[config.invoiceDateField || 'invoiceDate'] || null,
-                invoiceAmount: this.parseNumberInput(row?.[config.invoiceAmountField || 'invoiceAmount']),
-                outstandingAmount: this.parseNumberInput(row?.[config.outstandingAmountField || 'debtAmount']),
-                allocatedAmount: this.parseNumberInput(row?.[config.allocatedAmountField || 'amount']),
-                note: row?.[config.noteField || 'note'] || '',
-            }));
+            .map((row: any, index: number) => {
+                const payload: any = {
+                    invoiceNumber: row?.[config.voucherNumberField || 'vcNumberDN'] || row?.['invoiceNumber'] || '',
+                    invoiceDate: row?.[config.invoiceDateField || 'invoiceDate'] || null,
+                    invoiceAmount: this.parseNumberInput(row?.[config.invoiceAmountField || 'invoiceAmount']),
+                    outstandingAmount: this.parseNumberInput(row?.[config.outstandingAmountField || 'debtAmount']),
+                    allocatedAmount: this.parseNumberInput(row?.[config.allocatedAmountField || 'amount']),
+                    note: row?.[config.noteField || 'note'] || '',
+                };
+                payload[this.getAllocationPayloadKey(config, 'refIdGui', 'refIdGuiDN')] = row?.[config.refIdGuiField || 'idGuiDN'] || '';
+                payload[this.getAllocationPayloadKey(config, 'refLineNbr', 'refLineNbrDN')] =
+                    this.parseNumberInput(row?.[config.refLineNbrField || 'lnDN']) || null;
+                payload[this.getAllocationPayloadKey(config, 'lineNbr', 'receiptLineNbr')] =
+                    this.parseNumberInput(row?.[config.lineNbrField || 'line_nbr']) || index + 1;
+                return payload;
+            });
 
         currentData[allocationJsonField] = JSON.stringify(payloadRows);
     }
@@ -1768,7 +1837,7 @@ export class DynamicPopupComponent implements OnInit {
         const config = detailSection.allocationJson || {};
         const currentData = this.formData?.[tabIndex] || {};
         const receiptType = String(currentData?.[config.receiptTypeField || 'receiptType'] || '').toUpperCase();
-        if (!['CUSTOMER', 'DEPOSIT_OFFSET'].includes(receiptType)) return null;
+        if (!this.isAllocationReceiptType(config, receiptType)) return null;
 
         const isConfirmed = String(currentData?.['status'] ?? '0') === '1' || this.isCheckboxChecked(currentData?.['isReceived']);
         if (!isConfirmed) return null;
@@ -1783,15 +1852,15 @@ export class DynamicPopupComponent implements OnInit {
             if (this.receiptAllocationDeleteRequested) {
                 return null;
             }
-            return 'Phiếu thu công nợ phải nhập số tiền thu cho ít nhất một phiếu xuất trước khi xác nhận.';
+            return `${this.getAllocationDocumentLabel(config)} phải nhập số ${this.getAllocationAmountLabel(config)} cho ít nhất một ${this.getAllocationSourceDocumentLabel(config)} trước khi xác nhận.`;
         }
 
         if (allocatedRows.some((row: any) => !row?.[refIdGuiField])) {
-            return 'Dòng thu công nợ thiếu tham chiếu phiếu xuất.';
+            return `Dòng phân bổ thiếu tham chiếu ${this.getAllocationSourceDocumentLabel(config)}.`;
         }
 
         if (allocatedRows.some((row: any) => this.parseNumberInput(row?.[amountField]) > this.parseNumberInput(row?.[outstandingField]))) {
-            return 'Số tiền thu không được vượt nợ còn lại của phiếu xuất.';
+            return `Số ${this.getAllocationAmountLabel(config)} không được vượt nợ còn lại của ${this.getAllocationSourceDocumentLabel(config)}.`;
         }
 
         const receiptAmount = this.parseNumberInput(currentData?.[config.receiptAmountField || 'total_amount']);
@@ -1801,11 +1870,11 @@ export class DynamicPopupComponent implements OnInit {
         );
 
         if (allocatedTotal > receiptAmount) {
-            return 'Tổng tiền thu chi tiết không được vượt số tiền phiếu thu.';
+            return `Tổng ${this.getAllocationAmountLabel(config)} chi tiết không được vượt số ${this.getAllocationAmountLabel(config)}.`;
         }
 
-        if (receiptType === 'DEPOSIT_OFFSET' && allocatedTotal !== receiptAmount) {
-            return 'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.';
+        if (receiptType === this.getAllocationOffsetType(config) && allocatedTotal !== receiptAmount) {
+            return config?.offsetFullAllocationMessage || 'Thu công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.';
         }
 
         return null;
@@ -3694,8 +3763,8 @@ export class DynamicPopupComponent implements OnInit {
             this.handleOnChange(field, value)
         }
         this.runDetailAutoLoadForMasterField(field.key);
-        if (field.key === 'customerCode' || field.key === 'receiptType') {
-            this.refreshReceiptDepositAmountIfNeeded(this.selectedTab);
+        if (this.getDepositRefreshTriggerFields(this.selectedTab).includes(field.key)) {
+            this.refreshDepositAmountIfNeeded(this.selectedTab);
         }
 
         this.updateMasterSubtotals();
@@ -3892,8 +3961,8 @@ export class DynamicPopupComponent implements OnInit {
             this.handleOnChange(field, value);
         }
         this.runDetailAutoLoadForMasterField(fieldKey);
-        if (fieldKey === 'customerCode' || fieldKey === 'receiptType') {
-            this.refreshReceiptDepositAmountIfNeeded(this.selectedTab);
+        if (this.getDepositRefreshTriggerFields(this.selectedTab).includes(fieldKey)) {
+            this.refreshDepositAmountIfNeeded(this.selectedTab);
         }
     }
 

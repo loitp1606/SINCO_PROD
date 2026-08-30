@@ -91,7 +91,7 @@ END
             idGui, voucherCode, voucherNumber, voucherDate, createdDate,
             supplierCode, supplierAddress, receiptCode, invoiceNumber, cashier,
             spentMoney, paymentType, reason, employeeCode, amountTransfer, amountCash, note,
-            datetime0, datetime2, user_id0, user_id2, status, total_amount, unitCode
+            datetime0, datetime2, user_id0, user_id2, status, total_amount, unitCode, allocationJson
         INTO #paymentmt
         FROM paymentslip$000000;
 
@@ -106,7 +106,7 @@ END
             idGui, voucherCode, voucherNumber, voucherDate, createdDate,
             supplierCode, supplierAddress, receiptCode, invoiceNumber, cashier,
             spentMoney, paymentType, reason, employeeCode, amountTransfer, amountCash, note,
-            datetime0, datetime2, user_id0, user_id2, status, total_amount, unitCode
+            datetime0, datetime2, user_id0, user_id2, status, total_amount, unitCode, allocationJson
         )
         SELECT
             @newid,
@@ -120,7 +120,7 @@ END
             MAX(a.number_invoice) AS invoiceNumber,
             MAX(a.employeeCode) AS cashier,
             1 AS spentMoney,
-            'INVOICE' AS paymentType,
+            'SUPPLIER' AS paymentType,
             N'' AS reason,
             MAX(a.employeeCode) AS employeeCode,
             0 AS amountTransfer,
@@ -132,7 +132,8 @@ END
             TRY_CONVERT(INT, @UserId) AS user_id2,
             '0' AS status,
             SUM(ISNULL(a.totalPayment, 0)) AS total_amount,
-            @Unit AS unitCode
+            @Unit AS unitCode,
+            N'' AS allocationJson
         FROM #master a
         GROUP BY a.supplierCode;
 
@@ -199,6 +200,26 @@ END
             SELECT 0 AS type, N'Phiếu nhập đã kế thừa hết sang phiếu chi!!' AS message;
             RETURN;
         END;
+
+        DECLARE @allocationJson NVARCHAR(MAX) =
+        (
+            SELECT
+                refIdGuiPN = idGuiPN,
+                refLineNbrPN = lnPN,
+                paymentLineNbr = line_nbr,
+                invoiceNumber,
+                invoiceDate,
+                invoiceAmount,
+                outstandingAmount = debtAmount,
+                allocatedAmount = amount,
+                note
+            FROM #paymentdt
+            ORDER BY invoiceDate, invoiceNumber
+            FOR JSON PATH
+        );
+
+        UPDATE #paymentmt
+        SET allocationJson = @allocationJson;
 
         UPDATE m
         SET total_amount = x.total_amount

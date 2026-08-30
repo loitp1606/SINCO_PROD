@@ -121,6 +121,39 @@
 							"field": "paymentType",
 							"operator": "=",
 							"value": "DEPOSIT_OFFSET"
+						},
+						"refreshDeposit": {
+							"whenFieldsChange": [
+								"paymentType",
+								"supplierCode"
+							],
+							"activeWhen": {
+								"field": "paymentType",
+								"operator": "=",
+								"value": "DEPOSIT_OFFSET"
+							},
+							"requiredFields": [
+								"supplierCode"
+							],
+							"dataSource": {
+								"api": "/api/CustomQuery/execute",
+								"query": "exec sp_GetSupplierDebtSummary @supplierCode, @unitCode",
+								"params": [
+									"supplierCode",
+									"unitCode"
+								],
+								"dataType": [
+									"String",
+									"String"
+								],
+								"values": [
+									"@supplierCode",
+									"@unit"
+								]
+							},
+							"map": {
+								"depositAmount": "depositAmount"
+							}
 						}
 					},
 					{
@@ -299,6 +332,9 @@
 							"paymentType",
 							"supplierCode"
 						],
+						"requiredFields": [
+							"supplierCode"
+						],
 						"clearWhenEmpty": true,
 						"dataSource": {
 							"api": "/api/CustomQuery/execute",
@@ -339,6 +375,20 @@
 					},
 					"allocationJson": {
 						"enabled": true,
+						"eligibleReceiptTypes": [
+							"SUPPLIER",
+							"DEPOSIT_OFFSET"
+						],
+						"documentLabel": "Phiếu chi công nợ",
+						"sourceDocumentLabel": "phiếu nhập",
+						"amountLabel": "tiền chi",
+						"offsetType": "DEPOSIT_OFFSET",
+						"offsetFullAllocationMessage": "Chi công nợ từ tiền đặt cọc phải phân bổ hết số tiền cấn trừ.",
+						"payloadMap": {
+							"refIdGui": "refIdGuiPN",
+							"refLineNbr": "refLineNbrPN",
+							"lineNbr": "paymentLineNbr"
+						},
 						"allocationJsonField": "allocationJson",
 						"receiptAmountField": "total_amount",
 						"receiptTypeField": "paymentType",

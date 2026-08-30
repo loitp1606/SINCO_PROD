@@ -49,20 +49,20 @@
 			"width": "150px",
 			"options": [
 				{
-					"label": "Chi tiền nhà cung cấp",
+					"label": "Chi tiền đặt cọc",
+					"value": "DEPOSIT"
+				},
+				{
+					"label": "Chi công nợ trực tiếp",
 					"value": "SUPPLIER"
 				},
 				{
-					"label": "Chi theo hóa đơn",
-					"value": "INVOICE"
-				},
-				{
-					"label": "Chi tiền đặt cọc",
-					"value": "PAYDEPOSIT"
-				},
-				{
-					"label": "Chi từ tiền đặt cọc",
+					"label": "Chi công nợ từ tiền đặt cọc",
 					"value": "DEPOSIT_OFFSET"
+				},
+				{
+					"label": "Chi khác",
+					"value": "OTHER"
 				}
 			]
 		},
@@ -108,24 +108,6 @@
 			"key": "reason",
 			"label": "Lý do chi",
 			"type": "lookup",
-			"width": "150px"
-		},
-		{
-			"key": "receiptCode",
-			"label": "Phiếu nhập hàng",
-			"type": "text",
-			"width": "150px"
-		},
-		{
-			"key": "invoiceNumber",
-			"label": "Số hóa đơn",
-			"type": "text",
-			"width": "150px"
-		},
-		{
-			"key": "note",
-			"label": "Ghi chú",
-			"type": "text",
 			"width": "150px"
 		}
 	],
