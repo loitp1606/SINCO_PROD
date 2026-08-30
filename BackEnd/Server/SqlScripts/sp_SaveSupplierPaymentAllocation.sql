@@ -76,7 +76,7 @@ BEGIN
             SET @resolvedUnitCode = N'CTY';
 
         SET @clearAllocationOnly = CASE
-            WHEN @paymentType = N'DEPOSIT' THEN 1
+            WHEN @paymentType IN (N'DEPOSIT', N'OTHER') THEN 1
             ELSE 0
         END;
         SET @deleteAllocationRequested = CASE

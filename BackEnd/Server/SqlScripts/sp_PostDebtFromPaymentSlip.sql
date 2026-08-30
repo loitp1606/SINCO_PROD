@@ -79,12 +79,6 @@ BEGIN
             @resolvedUnitCode = unitCode
         FROM #ps;
         
-        IF @supplierCode IS NULL
-        BEGIN
-            COMMIT;
-            RETURN;
-        END;
-
         IF @unitCode IS NOT NULL AND LTRIM(RTRIM(@unitCode)) <> ''
             SET @resolvedUnitCode = @unitCode;
         IF @resolvedUnitCode IS NULL OR LTRIM(RTRIM(@resolvedUnitCode)) = ''
@@ -94,6 +88,18 @@ BEGIN
         WHERE RefController = N'paymentSlip'
           AND ReceiptIdGui = @idGui;
          
+        IF @paymentType = N'OTHER'
+        BEGIN
+            COMMIT;
+            RETURN;
+        END;
+
+        IF @supplierCode IS NULL
+        BEGIN
+            COMMIT;
+            RETURN;
+        END;
+
         SET @receiptType = CASE
             WHEN @paymentType = N'DEPOSIT' THEN N'PAYMENT_DEPOSIT'
             WHEN @paymentType = N'DEPOSIT_OFFSET' THEN N'PAYMENT_DEPOSIT_OFFSET'

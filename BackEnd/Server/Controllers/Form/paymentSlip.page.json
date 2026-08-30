@@ -42,32 +42,29 @@
 						"width": "100px"
 					},
 					{
-						"key": "receiptCode",
-						"label": "Phiếu nhập hàng",
-						"type": "text",
-						"width": "150px",
-						"required": false
-					},
-					{
 						"key": "paymentType",
 						"label": "Loại chi",
 						"type": "select",
 						"width": "150px",
 						"required": true,
-						"default": "SUPPLIER",
+						"default": "DEPOSIT",
 						"quickEditable": true,
 						"options": [
-							{
-								"label": "Chi tiền nhà cung cấp",
-								"value": "SUPPLIER"
-							},
 							{
 								"label": "Chi tiền đặt cọc",
 								"value": "DEPOSIT"
 							},
 							{
-								"label": "Chi từ tiền đặt cọc",
+								"label": "Chi công nợ trực tiếp",
+								"value": "SUPPLIER"
+							},
+							{
+								"label": "Chi công nợ từ tiền đặt cọc",
 								"value": "DEPOSIT_OFFSET"
+							},
+							{
+								"label": "Chi khác",
+								"value": "OTHER"
 							}
 						]
 					},
@@ -170,15 +167,28 @@
 					{
 						"key": "invoiceNumber",
 						"label": "Số hóa đơn",
-						"type": "text",
+						"type": "hidden",
 						"width": "150px",
 						"required": false
+					},
+					{
+						"key": "bank_name",
+						"label": "Ngân hàng",
+						"type": "lookup",
+						"width": "150px",
+						"required": false,
+						"placeholder": "Chọn ngân hàng",
+						"default": {
+							"controller": "bank",
+							"filter": []
+						}
 					},
 					{
 						"key": "htttType",
 						"label": "Loại thanh toán",
 						"type": "select",
 						"width": "150px",
+						"default":"CK",
 						"required": true,
 						"options": [
 							{
@@ -196,35 +206,6 @@
 						]
 					},
 					{
-						"key": "status",
-						"label": "Trạng thái",
-						"type": "select",
-						"width": "150px",
-						"required": true,
-						"options": [
-							{
-								"label": "Tạo phiếu",
-								"value": "0"
-							},
-							{
-								"label": "Xác nhận",
-								"value": "1"
-							}
-						]
-					},
-					{
-						"key": "bank_name",
-						"label": "Ngân hàng",
-						"type": "lookup",
-						"width": "150px",
-						"required": false,
-						"placeholder": "Chọn ngân hàng",
-						"default": {
-							"controller": "bank",
-							"filter": []
-						}
-					},
-					{
 						"key": "spentMoney",
 						"label": "Đã chi",
 						"type": "checkbox",
@@ -238,6 +219,24 @@
 						"width": "150px",
 						"required": false,
 						"placeholder": "Nhập diễn giải"
+					},
+					{
+						"key": "status",
+						"label": "Trạng thái",
+						"type": "hidden",
+						"width": "150px",
+						"default":"1",
+						"required": false,
+						"options": [
+							{
+								"label": "Tạo phiếu",
+								"value": "0"
+							},
+							{
+								"label": "Xác nhận",
+								"value": "1"
+							}
+						]
 					},
 					{
 						"key": "allocationJson",
@@ -371,6 +370,7 @@
 							"label": "Stt",
 							"disabled": true,
 							"type": "text",
+							"valueType": "number",
 							"width": "40px"
 						},
 						{
@@ -457,7 +457,8 @@
 						{
 							"key": "lnPN",
 							"label": "Dòng phiếu nhập",
-							"type": "hidden"
+							"type": "hidden",
+							"valueType": "number"
 						}
 					],
 					"initialData": []
