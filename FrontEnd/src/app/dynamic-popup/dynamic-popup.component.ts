@@ -2999,7 +2999,6 @@ export class DynamicPopupComponent implements OnInit {
     private isNumericSaveField(field: any, fieldKey: string): boolean {
         const type = `${field?.type || ''}`.toLowerCase();
         const valueType = `${field?.valueType || field?.dataType || field?.sqlType || ''}`.toLowerCase();
-        const key = `${field?.key || fieldKey || ''}`.toLowerCase();
         const numericTypes = new Set([
             'number',
             'numeric',
@@ -3025,17 +3024,7 @@ export class DynamicPopupComponent implements OnInit {
             return true;
         }
 
-        return [
-            'line_nbr',
-            'line_nbr0',
-            'ln',
-            'lndn',
-            'lnpn',
-            'reflinenbrdn',
-            'reflinenbrpn',
-            'receiptlinenbr',
-            'paymentlinenbr'
-        ].includes(key);
+        return false;
     }
 
     private isDateSaveField(field: any): boolean {

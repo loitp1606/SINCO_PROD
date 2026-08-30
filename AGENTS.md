@@ -27,6 +27,9 @@ QC là cổng nghiệm thu, không thay thế ba nhóm triển khai.
 8. Không tự spawn sub-agent. Chỉ dùng sub-agent khi người dùng yêu cầu phân công song song hoặc giao việc cho nhiều agent.
 9. Không báo PASS khi mới kiểm tra code. PASS phải dựa trên build/test hoặc evidence phù hợp.
 10. Nếu production build lỗi do hạ tầng ngoài phạm vi, phải ghi rõ nguyên nhân và chạy phương án kiểm chứng thay thế hợp lệ.
+11. Không hardcode tên field/key nghiệp vụ trong core dynamic để suy luận kiểu dữ liệu hoặc hành vi. Core chỉ được dựa vào metadata rõ ràng như `type`, `sqlType`, `dataType`, `valueType` hoặc cấu hình JSON. Nếu thiếu metadata, phải bổ sung metadata ở JSON/model thay vì đoán theo tên key.
+12. Khi normalize payload trước khi lưu, không được tự đổi field thiếu metadata thành chuỗi rỗng theo kiểu blanket. Hành vi nền cũ là chuỗi rỗng thành `null`, còn số/ngày/object giữ nguyên trừ khi metadata chỉ định cách xử lý khác.
+13. Trước khi sửa stored procedure, phải lấy definition mới nhất từ database đang chạy, so sánh với script trong repo, rồi sửa dựa trên bản DB hiện tại. Sau khi deploy DB phải cập nhật script trong repo và commit riêng.
 
 ## 3. Quy trình xử lý một issue
 
