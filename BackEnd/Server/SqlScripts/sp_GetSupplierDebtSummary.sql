@@ -1,60 +1,69 @@
 ALTER PROCEDURE [dbo].[sp_GetSupplierDebtSummary]
     @supplierCode NVARCHAR(50),
-    @unitCode NVARCHAR(50) = NULL
+    @unitCode NVARCHAR(50) = NULL,
+    @excludePaymentIdGui NVARCHAR(50) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @resolvedUnitCode NVARCHAR(50) = NULLIF(LTRIM(RTRIM(@unitCode)), N'');
-    DECLARE @depositAmount DECIMAL(24, 6) = 0;
-    DECLARE @paidAmount DECIMAL(24, 6) = 0;
-    DECLARE @payableAmount DECIMAL(24, 6) = 0;
-
-    IF OBJECT_ID('dbo.SupplierDebtLedger', 'U') IS NOT NULL
+    IF OBJECT_ID('dbo.SupplierDebtLedger', 'U') IS NULL
     BEGIN
-        ;WITH src AS
-        (
-            SELECT
-                AdvanceAmount = ISNULL(TRY_CONVERT(DECIMAL(24, 6), AdvanceAmount), 0),
-                PayableAmount = ISNULL(TRY_CONVERT(DECIMAL(24, 6), PayableAmount), 0),
-                DebitAmount = ISNULL(TRY_CONVERT(DECIMAL(24, 6), DebitAmount), 0),
-                CreditAmount = ISNULL(TRY_CONVERT(DECIMAL(24, 6), CreditAmount), 0),
-                PaidAmount = ISNULL(TRY_CONVERT(DECIMAL(24, 6), PaidAmount), 0),
-                ReceiptType = UPPER(ISNULL(ReceiptType, N'')),
-                RefController = ISNULL(RefController, N''),
-                IsLegacy = CASE WHEN ISNULL(ReceiptType, N'') = N'' THEN 1 ELSE 0 END
-            FROM dbo.SupplierDebtLedger
-            WHERE SupplierId = @supplierCode
-              AND (@resolvedUnitCode IS NULL OR UnitCode = @resolvedUnitCode)
-        )
         SELECT
-            @depositAmount = ISNULL(SUM(CASE
-                WHEN ReceiptType IN (N'SUPPLIER_ADVANCE', N'PAYMENT_DEPOSIT', N'PAYMENT_DEPOSIT_OFFSET', N'GOODS_RECEIPT')
-                  OR (IsLegacy = 1 AND RefController = N'paymentSlip' AND AdvanceAmount > 0)
-                THEN AdvanceAmount + PayableAmount
-                ELSE 0
-            END), 0),
-            @paidAmount = ISNULL(SUM(CASE
-                WHEN ReceiptType IN (N'PAYMENT_SUPPLIER', N'PAYMENT_INVOICE', N'PAYMENT_DEPOSIT_OFFSET', N'SUPPLIER_PAYMENT')
-                  OR (IsLegacy = 1 AND RefController = N'paymentSlip' AND PaidAmount > 0)
-                THEN PaidAmount
-                ELSE 0
-            END), 0),
-            @payableAmount = ISNULL(SUM(CASE
-                WHEN ReceiptType IN (N'GOODS_RECEIPT', N'PAYMENT_SUPPLIER', N'PAYMENT_INVOICE', N'PAYMENT_DEPOSIT_OFFSET', N'SUPPLIER_PAYMENT')
-                  OR (IsLegacy = 1 AND RefController IN (N'goodsReceipt', N'paymentSlip'))
-                THEN (PayableAmount + DebitAmount - CreditAmount - PaidAmount)
-                ELSE 0
-            END), 0)
-        FROM src;
+            supplierCode = @supplierCode,
+            unitCode = ISNULL(@unitCode, N''),
+            depositAmount = CAST(0 AS DECIMAL(24,6)),
+            paidAmount = CAST(0 AS DECIMAL(24,6)),
+            receivableAmount = CAST(0 AS DECIMAL(24,6)),
+            payableAmount = CAST(0 AS DECIMAL(24,6));
+        RETURN;
     END;
 
+    IF OBJECT_ID('tempdb..#tmp') IS NOT NULL DROP TABLE #tmp;
+
+    SELECT *
+    INTO #tmp
+    FROM dbo.SupplierDebtLedger
+    WHERE SupplierId = @supplierCode
+      AND (@unitCode IS NULL OR @unitCode = N'' OR UnitCode = @unitCode)
+      AND (
+            @excludePaymentIdGui IS NULL
+            OR @excludePaymentIdGui = N''
+            OR ISNULL(ReceiptIdGui, N'') <> @excludePaymentIdGui
+          );
+
     SELECT
-        @supplierCode AS supplierCode,
-        COALESCE(@resolvedUnitCode, N'') AS unitCode,
-        @depositAmount AS depositAmount,
-        @paidAmount AS paidAmount,
-        @paidAmount AS receivableAmount, -- giữ tương thích popupActions cũ đang map receivable
-        @payableAmount AS payableAmount;
+        supplierCode = @supplierCode,
+        unitCode = ISNULL(@unitCode, N''),
+        depositAmount = ISNULL(SUM(
+            CASE
+                WHEN UPPER(ISNULL(ReceiptType, N'')) IN
+                    (N'DEPOSIT', N'PAYMENT_DEPOSIT', N'PAYMENT_DEPOSIT_OFFSET', N'SUPPLIER_ADVANCE')
+                    THEN ISNULL(TRY_CONVERT(DECIMAL(24,6), AdvanceAmount), 0)
+                ELSE 0
+            END
+        ), 0),
+        paidAmount = ISNULL(SUM(
+            CASE
+                WHEN UPPER(ISNULL(ReceiptType, N'')) IN
+                    (N'DEPOSIT', N'PAYMENT_DEPOSIT', N'SUPPLIER_ADVANCE')
+                    THEN 0
+                ELSE ISNULL(TRY_CONVERT(DECIMAL(24,6), PaidAmount), 0)
+            END
+        ), 0),
+        receivableAmount = ISNULL(SUM(
+            CASE
+                WHEN UPPER(ISNULL(ReceiptType, N'')) IN
+                    (N'DEPOSIT', N'PAYMENT_DEPOSIT', N'SUPPLIER_ADVANCE')
+                    THEN 0
+                ELSE ISNULL(TRY_CONVERT(DECIMAL(24,6), PaidAmount), 0)
+            END
+        ), 0),
+        payableAmount = ISNULL(SUM(
+            ISNULL(TRY_CONVERT(DECIMAL(24,6), PayableAmount), 0)
+            - ISNULL(TRY_CONVERT(DECIMAL(24,6), CreditAmount), 0)
+            + ISNULL(TRY_CONVERT(DECIMAL(24,6), DebitAmount), 0)
+            - ISNULL(TRY_CONVERT(DECIMAL(24,6), PaidAmount), 0)
+        ), 0)
+    FROM #tmp;
 END
 GO

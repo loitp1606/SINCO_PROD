@@ -1002,7 +1002,8 @@ export class DynamicPopupComponent implements OnInit {
             ...currentData,
             customerCode: this.getReceiptV2ScalarValue(currentData['customerCode']),
             supplierCode: this.getReceiptV2ScalarValue(currentData['supplierCode']),
-            excludeReceiptIdGui: this.getReceiptV2ScalarValue(currentData['idGui'])
+            excludeReceiptIdGui: this.getReceiptV2ScalarValue(currentData['idGui']),
+            excludePaymentIdGui: this.getReceiptV2ScalarValue(currentData['idGui'])
         };
 
         this.executePopupDataSource(dataSource, queryData).then((rows: any[]) => {

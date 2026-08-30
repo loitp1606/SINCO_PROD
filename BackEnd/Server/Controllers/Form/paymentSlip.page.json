@@ -137,18 +137,21 @@
 							],
 							"dataSource": {
 								"api": "/api/CustomQuery/execute",
-								"query": "exec sp_GetSupplierDebtSummary @supplierCode, @unitCode",
+								"query": "exec sp_GetSupplierDebtSummary @supplierCode, @unitCode, @excludePaymentIdGui",
 								"params": [
 									"supplierCode",
-									"unitCode"
+									"unitCode",
+									"excludePaymentIdGui"
 								],
 								"dataType": [
+									"String",
 									"String",
 									"String"
 								],
 								"values": [
 									"@supplierCode",
-									"@unit"
+									"@unit",
+									"@excludePaymentIdGui"
 								]
 							},
 							"map": {
@@ -553,18 +556,21 @@
 				"payableField": "payableAmount",
 				"dataSource": {
 					"api": "/api/CustomQuery/execute",
-					"query": "exec sp_GetSupplierDebtSummary @supplierCode, @unitCode",
+					"query": "exec sp_GetSupplierDebtSummary @supplierCode, @unitCode, @excludePaymentIdGui",
 					"params": [
 						"supplierCode",
-						"unitCode"
+						"unitCode",
+						"excludePaymentIdGui"
 					],
 					"dataType": [
+						"String",
 						"String",
 						"String"
 					],
 					"values": [
 						"@supplierCode",
-						"@unit"
+						"@unit",
+						"@idGui"
 					],
 					"map": {
 						"deposit": "depositAmount",
