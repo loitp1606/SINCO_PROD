@@ -267,6 +267,7 @@
 						"label": "Trạng thái",
 						"type": "hidden",
 						"width": "150px",
+						"default":"1",
 						"required": false,
 						"options": [
 							{

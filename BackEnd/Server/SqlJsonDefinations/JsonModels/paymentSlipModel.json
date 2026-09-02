@@ -301,7 +301,8 @@
 			{
 				"excelColumn": "Ngân hàng",
 				"fieldName": "bank_name",
-				"required": false
+				"required": false,
+				"clauseForiegn": "select bank_code, bank_name from bank where status = '1'"
 			},
 			{
 				"excelColumn": "Diễn giải",
@@ -372,7 +373,7 @@
 		"sqlStatements": [
 			{
 				"statement": "update",
-				"query": "UPDATE a SET a.paymentType = 'SUPPLIER', a.voucherCode = ISNULL(NULLIF(a.voucherCode, ''), 'Z06'), a.status = ISNULL(NULLIF(a.status, ''), '0'), a.htttType = 'CK', a.spentMoney = 0, a.datetime0 = ISNULL(a.datetime0, GETDATE()) FROM paymentSlip@partition a INNER JOIN #TempTableName t ON a.idGui = t.idGui;exec [UpdateImportPhieuChi] 'paymentslip@partition', '#TempTableName';"
+				"query": "UPDATE a SET a.paymentType = 'DEPOSIT', a.voucherCode = ISNULL(NULLIF(a.voucherCode, ''), 'Z06'), a.status = ISNULL(NULLIF(a.status, ''), '0'), a.htttType = 'CK', a.spentMoney = 0, a.datetime0 = ISNULL(a.datetime0, GETDATE()) FROM paymentSlip@partition a INNER JOIN #TempTableName t ON a.idGui = t.idGui;exec [UpdateImportPhieuChi] 'paymentslip@partition', '#TempTableName';"
 			}
 		]
 	},

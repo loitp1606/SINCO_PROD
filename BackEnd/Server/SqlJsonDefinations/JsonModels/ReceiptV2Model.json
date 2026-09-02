@@ -350,7 +350,7 @@
 		"sqlStatements": [
 			{
 				"statement": "update",
-				"query": "UPDATE a SET paymentType = 'CK', unitCode = a.unitCode, user_id0 = a.user_id0, a.receiptType = 'CUSTOMER', a.voucherCode = ISNULL(NULLIF(a.voucherCode, ''), 'Z07'), a.status = ISNULL(NULLIF(a.status, ''), '0'),  a.datetime0 = ISNULL(a.datetime0, GETDATE()), a.isReceived = ISNULL(a.isReceived, 0) FROM receiptV2@partition a INNER JOIN #TempTableName t ON a.idGui = t.idGui;exec [UpdateImportPhieuThu] 'receiptV2@partition', '#TempTableName';"
+				"query": "UPDATE a SET paymentType = 'CK', unitCode = a.unitCode, user_id0 = a.user_id0, a.receiptType = 'DEPOSIT', a.voucherCode = ISNULL(NULLIF(a.voucherCode, ''), 'Z07'), a.status = ISNULL(NULLIF(a.status, ''), '0'),  a.datetime0 = ISNULL(a.datetime0, GETDATE()), a.isReceived = ISNULL(a.isReceived, 0) FROM receiptV2@partition a INNER JOIN #TempTableName t ON a.idGui = t.idGui;exec [UpdateImportPhieuThu] 'receiptV2@partition', '#TempTableName';"
 			}
 		]
 	},
@@ -372,7 +372,9 @@
 						"name": "line_nbr",
 						"property": "line_nbr",
 						"type": "number",
-						"sqlType": "INT"
+						"sqlType": "INT",
+						"primaryKey": true,
+						"required": true
 					},
 					{
 						"name": "amount",
@@ -381,6 +383,10 @@
 						"sqlType": "NUMERIC(19,4)"
 					}
 				]
+			},
+			"excelIntegration": {
+				"sheetName": "receiptdetailV2",
+				"columnMapping": []
 			}
 		}
 	]

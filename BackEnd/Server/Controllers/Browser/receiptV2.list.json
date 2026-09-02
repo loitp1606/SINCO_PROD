@@ -41,16 +41,16 @@
 			"width": "190px",
 			"options": [
 				{
+					"label": "Thu tiền đặt cọc",
+					"value": "DEPOSIT"
+				},
+				{
 					"label": "Thu công nợ trực tiếp",
 					"value": "CUSTOMER"
 				},
 				{
 					"label": "Thu công nợ từ tiền đặt cọc",
 					"value": "DEPOSIT_OFFSET"
-				},
-				{
-					"label": "Thu tiền đặt cọc",
-					"value": "DEPOSIT"
 				},
 				{
 					"label": "Thu khác",

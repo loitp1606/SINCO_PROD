@@ -93,10 +93,9 @@
 							"dataType": [
 								"String"
 							],
-							"query": "select isnull(s.address,'') as supplierAddress, isnull(d.depositAmount,0) as depositAmount from supplier s outer apply (select sum(case when upper(isnull(ReceiptType,'')) in ('DEPOSIT','PAYMENT_DEPOSIT','PAYMENT_DEPOSIT_OFFSET','SUPPLIER_ADVANCE') then isnull(try_convert(decimal(24,6), AdvanceAmount),0) else 0 end) as depositAmount from SupplierDebtLedger where SupplierId = s.supplier_id) d where s.supplier_id = @supplierCode",
+							"query": "select isnull(s.address,'') as supplierAddress from supplier s  where s.supplier_id = @supplierCode",
 							"map": {
-								"supplierAddress": "supplierAddress",
-								"depositAmount": "depositAmount"
+								"supplierAddress": "supplierAddress"
 							}
 						}
 					},
