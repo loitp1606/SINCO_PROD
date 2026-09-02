@@ -333,7 +333,7 @@
 						},
 						{
 							"key": "quantity",
-							"label": "Số lượng",
+							"label": "Số lượng TL",
 							"required": true,
 							"type": "number",
 							"precision": 2,
@@ -345,9 +345,10 @@
 							]
 						},
 						{
-							"key": "sl_tl",
-							"label": "SL trả lại",
-							"required": true,
+							"key": "sl_pn",
+							"label": "SL Phiếu nhập",
+							"required": false,
+							"disabled": true,
 							"type": "number",
 							"precision": 2,
 							"width": "100px"
