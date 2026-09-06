@@ -85,7 +85,9 @@ export class UserPermissionComponent implements OnInit {
   openPermissionDialog(user: User) {
     const dialogRef = this.dialog.open(PermissionDialogComponent, {
       data: { userId: user.userId },
-      width: '800px'
+      width: 'min(920px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'user-admin-dialog-panel'
     });
 
     dialogRef.afterClosed().subscribe(result => {

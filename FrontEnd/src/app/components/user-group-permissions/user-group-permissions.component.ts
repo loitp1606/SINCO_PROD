@@ -82,7 +82,9 @@ export class UserGroupPermissionsComponent implements OnInit {
   openPermissionDialog(userGroup: UserGroupDto) {
     const dialogRef = this.dialog.open(UserGroupPermissionDialogComponent, {
       data: { userGroupId: userGroup.userGroupId, groupName: userGroup.groupName },
-      width: '800px'
+      width: 'min(920px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'user-admin-dialog-panel'
     });
 
     dialogRef.afterClosed().subscribe(result => {

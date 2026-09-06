@@ -1,23 +1,28 @@
 .dialog-content {
-  min-width: 560px;
+  min-width: 0;
   max-height: 70vh;
   overflow-y: auto;
 }
 
 .dialog-subtitle {
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   color: #64748b;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .full-width {
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .form-field {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border: 1px solid #dbe7f5;
+  border-radius: 16px;
+  background: #f8fbff;
 }
 
 .field-label {

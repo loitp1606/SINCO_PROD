@@ -3,18 +3,19 @@
 }
 
 .dialog-subtitle {
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   color: #64748b;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .full-width {
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 mat-dialog-content {
-  min-width: 420px;
+  min-width: 0;
   padding-top: 4px;
 }
 
@@ -23,9 +24,18 @@ mat-dialog-actions {
   gap: 10px;
 }
 
+mat-checkbox {
+  display: inline-flex;
+  min-height: 44px;
+  margin: 2px 0 8px;
+  padding: 8px 10px;
+  border: 1px solid #dbe7f5;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
 @media (max-width: 600px) {
   mat-dialog-content {
-    min-width: 0;
     width: 100%;
   }
 }

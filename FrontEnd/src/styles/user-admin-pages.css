@@ -221,6 +221,77 @@
   width: 150px;
 }
 
+.user-admin-dialog-panel .mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 22px;
+}
+
+.user-admin-dialog-panel .mdc-dialog__surface {
+  overflow: hidden;
+  border-radius: 22px !important;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.28) !important;
+}
+
+.user-admin-dialog-panel .mat-mdc-dialog-title {
+  margin: 0;
+  padding: 24px 28px 10px;
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 850;
+  color: #0f172a;
+}
+
+.user-admin-dialog-panel .mat-mdc-dialog-content {
+  display: block;
+  max-height: min(72vh, 680px);
+  padding: 0 28px 10px !important;
+  color: #172033;
+  overflow-x: hidden;
+}
+
+.user-admin-dialog-panel .mat-mdc-dialog-actions {
+  min-height: 76px;
+  padding: 16px 28px 24px !important;
+  background: linear-gradient(180deg, rgba(248, 251, 255, 0.2), #f8fbff);
+  border-top: 1px solid #e2e8f0;
+}
+
+.user-admin-dialog-panel .mat-mdc-form-field {
+  width: 100%;
+}
+
+.user-admin-dialog-panel .mat-mdc-text-field-wrapper {
+  background: #ffffff;
+  border-radius: 14px;
+}
+
+.user-admin-dialog-panel .mat-mdc-form-field-infix {
+  min-height: 50px;
+  padding-top: 13px;
+  padding-bottom: 9px;
+}
+
+.user-admin-dialog-panel .mdc-text-field--outlined .mdc-notched-outline__leading {
+  border-radius: 14px 0 0 14px;
+}
+
+.user-admin-dialog-panel .mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-radius: 0 14px 14px 0;
+}
+
+.user-admin-dialog-panel .mat-mdc-raised-button.mat-primary {
+  min-width: 128px;
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 800;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.28);
+}
+
+.user-admin-dialog-panel .mat-mdc-button {
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
 @media (max-width: 768px) {
   .user-admin-page {
     padding: 14px;
@@ -255,5 +326,18 @@
 
   .user-admin-table {
     min-width: 760px;
+  }
+
+  .user-admin-dialog-panel .mat-mdc-dialog-title {
+    padding: 20px 18px 8px;
+    font-size: 22px;
+  }
+
+  .user-admin-dialog-panel .mat-mdc-dialog-content {
+    padding: 0 18px 8px !important;
+  }
+
+  .user-admin-dialog-panel .mat-mdc-dialog-actions {
+    padding: 14px 18px 18px !important;
   }
 }

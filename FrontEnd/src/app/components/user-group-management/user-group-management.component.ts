@@ -71,7 +71,9 @@ export class UserGroupManagementComponent implements OnInit {
 
   openCreateDialog() {
     const dialogRef = this.dialog.open(UserGroupDialogComponent, {
-      width: '600px',
+      width: 'min(720px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'user-admin-dialog-panel',
       data: { mode: 'create' }
     });
 
@@ -92,7 +94,9 @@ export class UserGroupManagementComponent implements OnInit {
 
   openEditDialog(userGroup: UserGroupDto) {
     const dialogRef = this.dialog.open(UserGroupDialogComponent, {
-      width: '600px',
+      width: 'min(720px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'user-admin-dialog-panel',
       data: { mode: 'edit', userGroup }
     });
 

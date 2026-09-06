@@ -75,7 +75,9 @@ export class UserManagementComponent implements OnInit {
 
   openCreateDialog() {
     const dialogRef = this.dialog.open(UserDialogComponent, {
-      width: '400px',
+      width: 'min(560px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'user-admin-dialog-panel',
       data: { mode: 'create' }
     });
 
@@ -97,7 +99,9 @@ export class UserManagementComponent implements OnInit {
 
   openEditDialog(user: User) {
     const dialogRef = this.dialog.open(UserDialogComponent, {
-      width: '400px',
+      width: 'min(560px, calc(100vw - 32px))',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'user-admin-dialog-panel',
       data: { mode: 'edit', user }
     });
 
