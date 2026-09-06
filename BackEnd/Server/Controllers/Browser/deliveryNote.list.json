@@ -44,8 +44,12 @@
 					"value": "0"
 				},
 				{
-					"label": "Đã giao hàng",
+					"label": "Đã giao một phần",
 					"value": "1"
+				},
+				{
+					"label": "Đã giao hàng",
+					"value": "2"
 				}
 			]
 		},
@@ -64,8 +68,26 @@
 		{
 			"key": "paymentStatus",
 			"label": "TT thanh toán",
-			"type": "text",
-			"width": "160px"
+			"type": "select",
+			"width": "160px",
+			"options": [
+				{
+					"label": "Chưa thu",
+					"value": "UNPAID"
+				},
+				{
+					"label": "Thu một phần",
+					"value": "PARTIAL"
+				},
+				{
+					"label": "Đã thu đủ",
+					"value": "PAID"
+				},
+				{
+					"label": "Quá hạn",
+					"value": "OVERDUE"
+				}
+			]
 		},
 		{
 			"key": "debtAmount",
@@ -76,8 +98,22 @@
 		{
 			"key": "signReceiptStatus",
 			"label": "TT ký nhận",
-			"type": "text",
-			"width": "170px"
+			"type": "select",
+			"width": "170px",
+			"options": [
+				{
+					"label": "Chưa nhận ký",
+					"value": "PENDING"
+				},
+				{
+					"label": "Đã nhận ký",
+					"value": "RECEIVED"
+				},
+				{
+					"label": "Thiếu chứng từ",
+					"value": "MISSING"
+				}
+			]
 		},
 		{
 			"key": "overdueDays",

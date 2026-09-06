@@ -300,8 +300,12 @@
 								"value": "0"
 							},
 							{
-								"label": "Đã giao hàng",
+								"label": "Đã giao một phần",
 								"value": "1"
+							},
+							{
+								"label": "Đã giao hàng",
+								"value": "2"
 							}
 						]
 					},
@@ -726,7 +730,7 @@
 						},
 						{
 							"key": "isReceived",
-							"label": "Đã nhận",
+							"label": "Đã giao",
 							"type": "checkbox",
 							"quickEditable": true,
 							"width": "100px"
