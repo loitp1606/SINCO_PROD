@@ -1,12 +1,18 @@
 .dialog-content {
-  min-width: 500px;
+  min-width: 560px;
   max-height: 70vh;
   overflow-y: auto;
 }
 
+.dialog-subtitle {
+  margin: 0 0 18px;
+  color: #64748b;
+  font-size: 14px;
+}
+
 .full-width {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .form-field {
@@ -17,8 +23,8 @@
 .field-label {
   display: block;
   font-size: 14px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.6);
+  font-weight: 700;
+  color: #475569;
   margin-bottom: 8px;
 }
 
@@ -28,12 +34,18 @@ mat-error {
 }
 
 mat-dialog-actions {
-  padding: 16px 0 0 0;
+  padding: 16px 24px 20px;
   margin: 0;
-  gap: 8px;
+  gap: 10px;
 }
 
 textarea {
   resize: vertical;
   min-height: 60px;
+}
+
+@media (max-width: 600px) {
+  .dialog-content {
+    min-width: 0;
+  }
 }

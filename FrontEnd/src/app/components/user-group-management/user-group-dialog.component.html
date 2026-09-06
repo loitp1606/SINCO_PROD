@@ -1,7 +1,11 @@
 <h2 mat-dialog-title>{{data.mode === 'create' ? 'Tạo nhóm người dùng' : 'Sửa nhóm người dùng'}}</h2>
 <form [formGroup]="userGroupForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content class="dialog-content">
-    <mat-form-field appearance="fill" class="full-width">
+    <p class="dialog-subtitle">
+      Khai báo thông tin nhóm và chọn danh sách người dùng thuộc nhóm.
+    </p>
+
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Mã nhóm</mat-label>
       <input matInput formControlName="groupName" maxlength="100">
       <mat-error *ngIf="userGroupForm.get('groupName')?.invalid && userGroupForm.get('groupName')?.touched">
@@ -9,7 +13,7 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Tên nhóm</mat-label>
       <textarea matInput formControlName="description" rows="3"></textarea>
     </mat-form-field>

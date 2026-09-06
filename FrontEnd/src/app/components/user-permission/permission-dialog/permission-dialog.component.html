@@ -1,5 +1,6 @@
-<h2 mat-dialog-title>Phân Quyền Người Dùng</h2>
+﻿<h2 mat-dialog-title>Phân quyền người dùng</h2>
 <mat-dialog-content>
+  <p class="permission-dialog-subtitle">Chọn màn hình được truy cập và các quyền thao tác tương ứng.</p>
   <div class="permission-tree">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <!-- Node template -->
@@ -13,7 +14,7 @@
               {{node.name}}
             </mat-checkbox>
           </div>
-          
+
           <div class="permission-actions" *ngIf="node.hasAccess">
             <mat-checkbox
               [checked]="node.hasAccess"
@@ -60,7 +61,7 @@
               {{node.name}}
             </mat-checkbox>
           </div>
-          
+
           <div class="permission-actions" *ngIf="node.hasAccess">
             <mat-checkbox
               [checked]="node.hasAccess"
@@ -96,4 +97,4 @@
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Hủy</button>
   <button mat-raised-button color="primary" (click)="onSave()">Lưu</button>
-</mat-dialog-actions> 
+</mat-dialog-actions>

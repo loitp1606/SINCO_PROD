@@ -25,8 +25,7 @@ import { UserGroupDialogComponent } from './user-group-dialog.component';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule,
-    UserGroupDialogComponent
+    MatSnackBarModule
   ],
   templateUrl: './user-group-management.component.html',
   styleUrls: ['./user-group-management.component.scss']

@@ -1,48 +1,53 @@
-<h2 mat-dialog-title>{{data.mode === 'create' ? 'Create User' : 'Edit User'}}</h2>
+<h2 mat-dialog-title>{{data.mode === 'create' ? 'Thêm người dùng' : 'Cập nhật người dùng'}}</h2>
+
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Username</mat-label>
+    <p class="dialog-subtitle">
+      {{data.mode === 'create' ? 'Nhập thông tin để tạo tài khoản mới.' : 'Cập nhật thông tin và trạng thái tài khoản.'}}
+    </p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tên đăng nhập</mat-label>
       <input matInput formControlName="userName" [readonly]="data.mode === 'edit'">
-      <mat-error *ngIf="userForm.get('userName')?.hasError('required')">Username is required</mat-error>
+      <mat-error *ngIf="userForm.get('userName')?.hasError('required')">Vui lòng nhập tên đăng nhập</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Full Name</mat-label>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Họ và tên</mat-label>
       <input matInput formControlName="fullName">
-      <mat-error *ngIf="userForm.get('fullName')?.hasError('required')">Full name is required</mat-error>
+      <mat-error *ngIf="userForm.get('fullName')?.hasError('required')">Vui lòng nhập họ và tên</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" type="email">
-      <mat-error *ngIf="userForm.get('email')?.hasError('required')">Email is required</mat-error>
-      <mat-error *ngIf="userForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
+      <mat-error *ngIf="userForm.get('email')?.hasError('required')">Vui lòng nhập email</mat-error>
+      <mat-error *ngIf="userForm.get('email')?.hasError('email')">Email chưa đúng định dạng</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width" *ngIf="data.mode === 'create'">
-      <mat-label>Password</mat-label>
+    <mat-form-field appearance="outline" class="full-width" *ngIf="data.mode === 'create'">
+      <mat-label>Mật khẩu</mat-label>
       <input matInput formControlName="password" type="password">
-      <mat-error *ngIf="userForm.get('password')?.hasError('required')">Password is required</mat-error>
-      <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">Password must be at least 6 characters</mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('required')">Vui lòng nhập mật khẩu</mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">Mật khẩu tối thiểu 6 ký tự</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width" *ngIf="data.mode === 'create'">
-      <mat-label>Confirm Password</mat-label>
+    <mat-form-field appearance="outline" class="full-width" *ngIf="data.mode === 'create'">
+      <mat-label>Xác nhận mật khẩu</mat-label>
       <input matInput formControlName="confirmPassword" type="password">
-      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('required')">Please confirm your password</mat-error>
-      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('passwordMismatch')">Passwords do not match</mat-error>
+      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('required')">Vui lòng xác nhận mật khẩu</mat-error>
+      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('passwordMismatch')">Mật khẩu xác nhận không khớp</mat-error>
     </mat-form-field>
 
     <mat-checkbox formControlName="isLocked" *ngIf="data.mode === 'edit'">
-      Lock User
+      Khóa tài khoản
     </mat-checkbox>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-button type="button" (click)="onCancel()">Hủy</button>
     <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
-      {{data.mode === 'create' ? 'Create' : 'Update'}}
+      {{data.mode === 'create' ? 'Tạo người dùng' : 'Cập nhật'}}
     </button>
   </mat-dialog-actions>
-</form> 
+</form>

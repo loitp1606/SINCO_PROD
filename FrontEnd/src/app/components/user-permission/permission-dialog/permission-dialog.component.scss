@@ -1,47 +1,84 @@
+:host {
+  display: block;
+}
+
+.permission-dialog-subtitle {
+  margin: 0 0 14px;
+  color: #64748b;
+  font-size: 14px;
+}
+
 .permission-tree {
-  padding: 20px;
   max-height: 70vh;
-  overflow-y: auto;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid #dbe7f5;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
 }
 
 .permission-node {
   display: flex;
   align-items: center;
-  padding: 8px 0;
+  justify-content: space-between;
+  gap: 20px;
   width: 100%;
+  min-height: 48px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  transition: background-color 0.16s ease;
+}
+
+.permission-node:hover {
+  background: #eef6ff;
 }
 
 .permission-main {
-  min-width: 200px;
+  min-width: 220px;
+  font-weight: 700;
 }
 
 .permission-actions {
   display: flex;
-  gap: 16px;
-  margin-left: 24px;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
-mat-checkbox {
-  margin-right: 8px;
+.permission-actions ::ng-deep .mat-mdc-checkbox-label {
+  font-size: 13px;
+  color: #475569;
 }
 
 mat-tree-node {
-  min-height: 40px;
+  min-height: 48px;
 }
 
-.mat-tree-node {
-  padding: 8px 0;
-}
-
-.mat-icon-button {
-  margin-right: 8px;
+button[matTreeNodeToggle] {
+  margin-right: 4px;
 }
 
 mat-dialog-content {
-  min-width: 600px;
+  min-width: 680px;
 }
 
 mat-dialog-actions {
-  padding: 16px;
-  margin: 0;
-} 
+  padding: 16px 24px 20px;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  mat-dialog-content {
+    min-width: 0;
+  }
+
+  .permission-node {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .permission-main {
+    min-width: 0;
+  }
+}

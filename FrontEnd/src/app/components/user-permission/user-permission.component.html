@@ -1,66 +1,82 @@
-<div class="user-permission-container">
-  <div class="header">
-    <h2>Phân quyền người sử dụng</h2>
-    
-  </div>
-  
-  <div class="search-bar">
-    <mat-form-field>
-      <mat-label>Search Users</mat-label>
-      <input matInput [(ngModel)]="searchText" (keyup)="searchUsers()">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-  </div>
+<div class="user-admin-page">
+  <div class="user-admin-shell">
+    <div class="user-admin-hero">
+      <div class="user-admin-title">
+        <span class="user-admin-title-icon">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </span>
+        <div>
+          <h2>Phân quyền người sử dụng</h2>
+          <p>Thiết lập quyền truy cập theo từng tài khoản người dùng.</p>
+        </div>
+      </div>
+    </div>
 
-  <div class="table-container" [class.loading]="isLoading">
-    <table mat-table [dataSource]="users" class="mat-elevation-z8">
-      <!-- User ID Column -->
-      <ng-container matColumnDef="userId">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let user">{{user.userId}}</td>
-      </ng-container>
+    <div class="user-admin-toolbar">
+      <mat-form-field appearance="outline" class="user-admin-search">
+        <mat-label>Tìm kiếm người dùng</mat-label>
+        <input matInput [(ngModel)]="searchText" (keyup)="searchUsers()" placeholder="Tên đăng nhập, họ tên...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
 
-      <!-- Username Column -->
-      <ng-container matColumnDef="userName">
-        <th mat-header-cell *matHeaderCellDef>Tên đăng nhập</th>
-        <td mat-cell *matCellDef="let user">{{user.userName}}</td>
-      </ng-container>
+    <div class="user-admin-card" [class.loading]="isLoading">
+      <div class="user-admin-table-wrap">
+        <table mat-table [dataSource]="users" class="user-admin-table mat-elevation-z8">
+          <ng-container matColumnDef="userId">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="user-admin-id">#{{user.userId}}</span>
+            </td>
+          </ng-container>
 
-      <!-- Full Name Column -->
-      <ng-container matColumnDef="fullName">
-        <th mat-header-cell *matHeaderCellDef>Họ và tên</th>
-        <td mat-cell *matCellDef="let user">{{user.fullName}}</td>
-      </ng-container>
+          <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef>Tên đăng nhập</th>
+            <td mat-cell *matCellDef="let user">{{user.userName}}</td>
+          </ng-container>
 
-      <!-- Is Locked Column -->
-      <ng-container matColumnDef="isLocked">
-        <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
-        <td mat-cell *matCellDef="let user">{{user.isLocked ? 'Khóa' : 'Hoạt động'}}</td>
-      </ng-container>
+          <ng-container matColumnDef="fullName">
+            <th mat-header-cell *matHeaderCellDef>Họ và tên</th>
+            <td mat-cell *matCellDef="let user">{{user.fullName}}</td>
+          </ng-container>
 
-      <!-- Created At Column -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef>Ngày tạo</th>
-        <td mat-cell *matCellDef="let user">{{user.createdAt | date}}</td>
-      </ng-container>
+          <ng-container matColumnDef="isLocked">
+            <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="user-admin-status" [class.is-locked]="user.isLocked" [class.is-active]="!user.isLocked">
+                {{user.isLocked ? 'Đã khóa' : 'Hoạt động'}}
+              </span>
+            </td>
+          </ng-container>
 
-      <!-- Permissions Column -->
-      <ng-container matColumnDef="permissions">
-        <th mat-header-cell *matHeaderCellDef>Quyền</th>
-        <td mat-cell *matCellDef="let user">
-          <button mat-button color="primary" (click)="openPermissionDialog(user)">
-            <mat-icon>admin_panel_settings</mat-icon> 
-            Phân quyền
-          </button>
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Ngày tạo</th>
+            <td mat-cell *matCellDef="let user">{{user.createdAt | date:'dd/MM/yyyy'}}</td>
+          </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+          <ng-container matColumnDef="permissions">
+            <th mat-header-cell *matHeaderCellDef>Quyền</th>
+            <td mat-cell *matCellDef="let user">
+              <button mat-stroked-button color="primary" (click)="openPermissionDialog(user)">
+                <mat-icon>admin_panel_settings</mat-icon>
+                Phân quyền
+              </button>
+            </td>
+          </ng-container>
 
-    <div class="loading-spinner" *ngIf="isLoading">
-      <mat-spinner diameter="40"></mat-spinner>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="user-admin-empty" [attr.colspan]="displayedColumns.length">
+              Không có người dùng phù hợp.
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="user-admin-loading" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
     </div>
   </div>
-</div> 
+</div>

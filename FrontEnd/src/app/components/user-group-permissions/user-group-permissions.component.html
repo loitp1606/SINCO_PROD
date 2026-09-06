@@ -1,69 +1,82 @@
-<div class="user-group-permissions-container">
-  <div class="header">
-    <h2>Phân quyền nhóm người dùng</h2>
-  </div>
-  
-  <div class="search-bar">
-    <mat-form-field>
-      <mat-label>Tìm kiếm nhóm</mat-label>
-      <input matInput [(ngModel)]="searchText" (keyup)="searchUserGroups()">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-  </div>
+<div class="user-admin-page">
+  <div class="user-admin-shell">
+    <div class="user-admin-hero">
+      <div class="user-admin-title">
+        <span class="user-admin-title-icon">
+          <mat-icon>shield</mat-icon>
+        </span>
+        <div>
+          <h2>Phân quyền nhóm người dùng</h2>
+          <p>Thiết lập quyền theo nhóm để đồng bộ quyền cho nhiều người dùng.</p>
+        </div>
+      </div>
+    </div>
 
-  <div class="table-container" [class.loading]="isLoading">
-    <table mat-table [dataSource]="userGroups" class="mat-elevation-z8">
-      <!-- User Group ID Column -->
-      <ng-container matColumnDef="userGroupId">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let userGroup">{{userGroup.userGroupId}}</td>
-      </ng-container>
+    <div class="user-admin-toolbar">
+      <mat-form-field appearance="outline" class="user-admin-search">
+        <mat-label>Tìm kiếm nhóm</mat-label>
+        <input matInput [(ngModel)]="searchText" (keyup)="searchUserGroups()" placeholder="Mã nhóm, tên nhóm...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
 
-      <!-- Group Name Column -->
-      <ng-container matColumnDef="groupName">
-        <th mat-header-cell *matHeaderCellDef>Nhóm người dùng</th>
-        <td mat-cell *matCellDef="let userGroup">{{userGroup.groupName}}</td>
-      </ng-container>
+    <div class="user-admin-card" [class.loading]="isLoading">
+      <div class="user-admin-table-wrap">
+        <table mat-table [dataSource]="userGroups" class="user-admin-table mat-elevation-z8">
+          <ng-container matColumnDef="userGroupId">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let userGroup">
+              <span class="user-admin-id">#{{userGroup.userGroupId}}</span>
+            </td>
+          </ng-container>
 
-      <!-- Description Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Tên nhóm</th>
-        <td mat-cell *matCellDef="let userGroup">{{userGroup.description || 'N/A'}}</td>
-      </ng-container>
+          <ng-container matColumnDef="groupName">
+            <th mat-header-cell *matHeaderCellDef>Mã nhóm</th>
+            <td mat-cell *matCellDef="let userGroup">{{userGroup.groupName}}</td>
+          </ng-container>
 
-      <!-- List User Column -->
-      <ng-container matColumnDef="listUser">
-        <th mat-header-cell *matHeaderCellDef>Danh sách người dùng</th>
-        <td mat-cell *matCellDef="let userGroup">
-          <span class="users-display" [title]="userGroup.listUser">
-            {{getUsersDisplay(userGroup.listUser)}}
-          </span>
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Tên nhóm</th>
+            <td mat-cell *matCellDef="let userGroup">{{userGroup.description || '—'}}</td>
+          </ng-container>
 
-      <!-- Created At Column -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef>Ngày tạo</th>
-        <td mat-cell *matCellDef="let userGroup">{{userGroup.createdAt | date}}</td>
-      </ng-container>
+          <ng-container matColumnDef="listUser">
+            <th mat-header-cell *matHeaderCellDef>Người dùng</th>
+            <td mat-cell *matCellDef="let userGroup">
+              <span class="user-admin-users-display" [title]="userGroup.listUser">
+                {{getUsersDisplay(userGroup.listUser)}}
+              </span>
+            </td>
+          </ng-container>
 
-      <!-- Permissions Column -->
-      <ng-container matColumnDef="permissions">
-        <th mat-header-cell *matHeaderCellDef>Phân quyền</th>
-        <td mat-cell *matCellDef="let userGroup">
-          <button mat-button color="primary" (click)="openPermissionDialog(userGroup)">
-            <mat-icon>admin_panel_settings</mat-icon> 
-            Phân quyền
-          </button>
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Ngày tạo</th>
+            <td mat-cell *matCellDef="let userGroup">{{userGroup.createdAt | date:'dd/MM/yyyy'}}</td>
+          </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+          <ng-container matColumnDef="permissions">
+            <th mat-header-cell *matHeaderCellDef>Phân quyền</th>
+            <td mat-cell *matCellDef="let userGroup">
+              <button mat-stroked-button color="primary" (click)="openPermissionDialog(userGroup)">
+                <mat-icon>admin_panel_settings</mat-icon>
+                Phân quyền
+              </button>
+            </td>
+          </ng-container>
 
-    <div class="loading-spinner" *ngIf="isLoading">
-      <mat-spinner diameter="40"></mat-spinner>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="user-admin-empty" [attr.colspan]="displayedColumns.length">
+              Không có nhóm người dùng phù hợp.
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="user-admin-loading" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
     </div>
   </div>
 </div>

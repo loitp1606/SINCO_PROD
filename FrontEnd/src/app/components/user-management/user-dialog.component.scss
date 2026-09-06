@@ -1,8 +1,31 @@
+:host {
+  display: block;
+}
+
+.dialog-subtitle {
+  margin: 0 0 18px;
+  color: #64748b;
+  font-size: 14px;
+}
+
 .full-width {
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 }
 
 mat-dialog-content {
-  min-width: 350px;
-} 
+  min-width: 420px;
+  padding-top: 4px;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px 20px;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  mat-dialog-content {
+    min-width: 0;
+    width: 100%;
+  }
+}

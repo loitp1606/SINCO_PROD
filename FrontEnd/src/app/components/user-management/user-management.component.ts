@@ -27,8 +27,7 @@ import { UserDialogComponent } from './user-dialog.component';
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
-    MatSnackBarModule,
-    UserDialogComponent
+    MatSnackBarModule
   ],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.scss']
@@ -54,7 +53,7 @@ export class UserManagementComponent implements OnInit {
         this.users = users;
       },
       error: (error) => {
-        this.showMessage('Error loading users');
+        this.showMessage('Lỗi khi tải danh sách người dùng');
       }
     });
   }
@@ -66,7 +65,7 @@ export class UserManagementComponent implements OnInit {
           this.users = users;
         },
         error: (error) => {
-          this.showMessage('Error searching users');
+          this.showMessage('Lỗi khi tìm kiếm người dùng');
         }
       });
     } else {
@@ -86,10 +85,10 @@ export class UserManagementComponent implements OnInit {
         this.userService.createUser(result).subscribe({
           next: () => {
             this.loadUsers();
-            this.showMessage('User created successfully');
+            this.showMessage('Tạo người dùng thành công');
           },
           error: (error) => {
-            this.showMessage('Error creating user');
+            this.showMessage('Lỗi khi tạo người dùng');
           }
         });
       }
@@ -107,10 +106,10 @@ export class UserManagementComponent implements OnInit {
         this.userService.updateUser(user.userId, result).subscribe({
           next: () => {
             this.loadUsers();
-            this.showMessage('User updated successfully');
+            this.showMessage('Cập nhật người dùng thành công');
           },
           error: (error) => {
-            this.showMessage('Error updating user');
+            this.showMessage('Lỗi khi cập nhật người dùng');
           }
         });
       }
@@ -118,22 +117,22 @@ export class UserManagementComponent implements OnInit {
   }
 
   deleteUser(userId: number) {
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
       this.userService.deleteUser(userId).subscribe({
         next: () => {
           this.loadUsers();
-          this.showMessage('User deleted successfully');
+          this.showMessage('Xóa người dùng thành công');
         },
         error: (error) => {
-          this.showMessage('Error deleting user');
+          this.showMessage('Lỗi khi xóa người dùng');
         }
       });
     }
   }
 
   protected showMessage(message: string) {
-    this.snackBar.open(message, 'Close', {
+    this.snackBar.open(message, 'Đóng', {
       duration: 3000
     });
   }
-} 
+}
