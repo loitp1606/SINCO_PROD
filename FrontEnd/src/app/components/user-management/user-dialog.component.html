@@ -1,47 +1,70 @@
-<h2 mat-dialog-title>{{data.mode === 'create' ? 'Thêm người dùng' : 'Cập nhật người dùng'}}</h2>
+<div class="user-dialog-header">
+  <div class="user-dialog-icon">
+    <span>{{data.mode === 'create' ? '+' : '✎'}}</span>
+  </div>
+  <div>
+    <h2>{{data.mode === 'create' ? 'Thêm người dùng' : 'Cập nhật người dùng'}}</h2>
+    <p>
+      {{data.mode === 'create' ? 'Tạo tài khoản đăng nhập mới cho hệ thống.' : 'Cập nhật thông tin và trạng thái tài khoản.'}}
+    </p>
+  </div>
+</div>
 
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
-    <p class="dialog-subtitle">
-      {{data.mode === 'create' ? 'Nhập thông tin để tạo tài khoản mới.' : 'Cập nhật thông tin và trạng thái tài khoản.'}}
-    </p>
+    <div class="user-field">
+      <label for="userName">Tên đăng nhập <span>*</span></label>
+      <input id="userName" formControlName="userName" [readonly]="data.mode === 'edit'" autocomplete="username">
+      <div class="field-error" *ngIf="userForm.get('userName')?.hasError('required') && userForm.get('userName')?.touched">
+        Vui lòng nhập tên đăng nhập
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Tên đăng nhập</mat-label>
-      <input matInput formControlName="userName" [readonly]="data.mode === 'edit'">
-      <mat-error *ngIf="userForm.get('userName')?.hasError('required')">Vui lòng nhập tên đăng nhập</mat-error>
-    </mat-form-field>
+    <div class="user-field">
+      <label for="fullName">Họ và tên <span>*</span></label>
+      <input id="fullName" formControlName="fullName" autocomplete="name">
+      <div class="field-error" *ngIf="userForm.get('fullName')?.hasError('required') && userForm.get('fullName')?.touched">
+        Vui lòng nhập họ và tên
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Họ và tên</mat-label>
-      <input matInput formControlName="fullName">
-      <mat-error *ngIf="userForm.get('fullName')?.hasError('required')">Vui lòng nhập họ và tên</mat-error>
-    </mat-form-field>
+    <div class="user-field">
+      <label for="email">Email <span>*</span></label>
+      <input id="email" formControlName="email" type="email" autocomplete="email">
+      <div class="field-error" *ngIf="userForm.get('email')?.hasError('required') && userForm.get('email')?.touched">
+        Vui lòng nhập email
+      </div>
+      <div class="field-error" *ngIf="userForm.get('email')?.hasError('email') && userForm.get('email')?.touched">
+        Email chưa đúng định dạng
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" type="email">
-      <mat-error *ngIf="userForm.get('email')?.hasError('required')">Vui lòng nhập email</mat-error>
-      <mat-error *ngIf="userForm.get('email')?.hasError('email')">Email chưa đúng định dạng</mat-error>
-    </mat-form-field>
+    <div class="user-field" *ngIf="data.mode === 'create'">
+      <label for="password">Mật khẩu <span>*</span></label>
+      <input id="password" formControlName="password" type="password" autocomplete="new-password">
+      <div class="field-error" *ngIf="userForm.get('password')?.hasError('required') && userForm.get('password')?.touched">
+        Vui lòng nhập mật khẩu
+      </div>
+      <div class="field-error" *ngIf="userForm.get('password')?.hasError('minlength') && userForm.get('password')?.touched">
+        Mật khẩu tối thiểu 6 ký tự
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width" *ngIf="data.mode === 'create'">
-      <mat-label>Mật khẩu</mat-label>
-      <input matInput formControlName="password" type="password">
-      <mat-error *ngIf="userForm.get('password')?.hasError('required')">Vui lòng nhập mật khẩu</mat-error>
-      <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">Mật khẩu tối thiểu 6 ký tự</mat-error>
-    </mat-form-field>
+    <div class="user-field" *ngIf="data.mode === 'create'">
+      <label for="confirmPassword">Xác nhận mật khẩu <span>*</span></label>
+      <input id="confirmPassword" formControlName="confirmPassword" type="password" autocomplete="new-password">
+      <div class="field-error" *ngIf="userForm.get('confirmPassword')?.hasError('required') && userForm.get('confirmPassword')?.touched">
+        Vui lòng xác nhận mật khẩu
+      </div>
+      <div class="field-error" *ngIf="userForm.get('confirmPassword')?.hasError('passwordMismatch') && userForm.get('confirmPassword')?.touched">
+        Mật khẩu xác nhận không khớp
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width" *ngIf="data.mode === 'create'">
-      <mat-label>Xác nhận mật khẩu</mat-label>
-      <input matInput formControlName="confirmPassword" type="password">
-      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('required')">Vui lòng xác nhận mật khẩu</mat-error>
-      <mat-error *ngIf="userForm.get('confirmPassword')?.hasError('passwordMismatch')">Mật khẩu xác nhận không khớp</mat-error>
-    </mat-form-field>
-
-    <mat-checkbox formControlName="isLocked" *ngIf="data.mode === 'edit'">
-      Khóa tài khoản
-    </mat-checkbox>
+    <label class="lock-toggle" *ngIf="data.mode === 'edit'">
+      <mat-checkbox formControlName="isLocked">Khóa tài khoản</mat-checkbox>
+      <span>Người dùng bị khóa sẽ không thể đăng nhập cho đến khi mở lại.</span>
+    </label>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
