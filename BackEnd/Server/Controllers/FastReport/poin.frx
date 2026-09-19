@@ -55,7 +55,7 @@
       <TextObject Name="Text3" Left="132.3" Top="18.9" Width="585.9" Height="66.15" CanGrow="true" CanBreak="false" Text="Địa chỉ: 489/9 Khu phố 1, Phường Bình Hưng Hòa, TP Hồ Chí Minh&#13;&#10;ĐT: 0946 556 058 - 028 3750 2826&#13;&#10;Email: saigonsinco@gmail.com         -  Website: saigonsinco.com       &#13;&#10;Fanpage: https://www.facebook.com/saigonsinco.com.vn&#13;&#10;" VertAlign="Center" Font="Arial, 10pt"/>
     </ReportTitleBand>
     <PageHeaderBand Name="PageHeader1" Top="87.72" Width="718.2" Height="47.25" CanGrow="true">
-      <TextObject Name="Text13" Left="-9.45" Width="737.1" Height="47.25" CanBreak="false" Text="PHIẾU NHẬP KHO" HorzAlign="Center" VertAlign="Center" Font="Arial, 20pt, style=Bold"/>
+      <TextObject Name="Text13" Left="-9.45" Width="737.1" Height="47.25" CanBreak="false" Text="ĐƠN ĐẶT HÀNG NHẬP" HorzAlign="Center" VertAlign="Center" Font="Arial, 20pt, style=Bold"/>
     </PageHeaderBand>
     <DataBand Name="Data1" Top="137.63" Width="718.2" Height="113.4" CanGrow="true" KeepTogether="true">
       <TextObject Name="Text14" Width="132.3" Height="18.9" CanGrow="true" Text="Tên nhà cung cấp: " VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
@@ -116,7 +116,7 @@
     <DataBand Name="Data4" Top="296.83" Width="718.2" Height="132.3" CanGrow="true" CanBreak="true" KeepTogether="true">
       <TextObject Name="Text36" Left="359.1" Top="18.9" Width="359.1" Height="18.9" CanGrow="true" CanBreak="false" Text="Người lập" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>
       <TextObject Name="Text39" Left="359.1" Top="37.8" Width="359.1" Height="18.9" CanGrow="true" CanBreak="false" Text="(Ký, ghi rõ họ tên)" HorzAlign="Center" Font="Arial, 7pt, style=Italic"/>
-      <TextObject Name="Text37" Left="359.1" Width="359.1" Height="18.9" CanGrow="true" CanBreak="false" Text="[Format(&quot;{0}, {1}&quot;, &quot;TP.HCM&quot;, FormatDateTime([poin.approveDate], &quot;dd/MM/yyyy&quot;))]" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 8pt"/>
+      <TextObject Name="Text37" Left="359.1" Width="359.1" Height="18.9" CanGrow="true" CanBreak="false" Text="[[poin.approveDate] == null || [poin.approveDate] == DateTime.MinValue ? &quot;&quot; : Format(&quot;TPHCM, ngày {0} tháng {1} năm {2}&quot;, FormatDateTime([poin.approveDate], &quot;dd&quot;), FormatDateTime([poin.approveDate], &quot;MM&quot;), FormatDateTime([poin.approveDate], &quot;yyyy&quot;))]" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 8pt"/>
       <TextObject Name="Text49" Left="359.1" Top="56.7" Width="359.1" Height="56.7" CanGrow="true" CanBreak="false" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt"/>
       <TextObject Name="Text40" Left="359.1" Top="113.4" Width="359.1" Height="18.9" CanGrow="true" CanBreak="false" Text="[poin.employeeCode]" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt"/>
       <TextObject Name="Text50" Top="18.9" Width="359.1" Height="18.9" CanGrow="true" CanBreak="false" Text="Người nhận" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold"/>

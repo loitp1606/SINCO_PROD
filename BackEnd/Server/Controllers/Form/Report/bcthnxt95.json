@@ -30,12 +30,20 @@
       "align": "text-left",
       "format": ""
     },
+	{
+      "label": "ĐVT",
+      "key": "uomName",
+      "type": "text",
+      "width": 100,
+      "align": "text-left",
+      "format": ""
+    },
     {
       "label": "Tồn đầu",
       "key": "ton_dau",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -43,7 +51,7 @@
       "key": "du_dau",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -51,7 +59,7 @@
       "key": "sl_nhap",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -59,7 +67,7 @@
       "key": "tien_nhap",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -67,7 +75,7 @@
       "key": "sl_xuat",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -75,7 +83,7 @@
       "key": "tien_xuat",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -83,7 +91,7 @@
       "key": "ton_cuoi",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -91,7 +99,7 @@
       "key": "du_cuoi",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     }
   ],

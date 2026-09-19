@@ -36,7 +36,7 @@
       "type": "number",
 	  "currency": "VN",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -44,7 +44,7 @@
       "key": "trong_han",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -52,7 +52,7 @@
       "key": "tong_7_ngay",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -60,7 +60,7 @@
       "key": "tong_8_15_ngay",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -68,7 +68,7 @@
       "key": "tong_16_30_ngay",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -76,7 +76,15 @@
       "key": "tong_30_ngay",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
+      "format": ""
+    },
+	{
+      "label": "Tổng công nợ",
+      "key": "t_tien_tt",
+      "type": "number",
+      "width": 120,
+      "align": "text-right",
       "format": ""
     },
     {
@@ -84,7 +92,7 @@
       "key": "ngay_phat_sinh",
       "type": "date",
       "width": 120,
-      "align": "text-left",
+      "align": "text-center",
       "format": ""
     },
     {
@@ -92,7 +100,7 @@
       "key": "thue_con_lai",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -100,7 +108,7 @@
       "key": "tam_ung",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -108,7 +116,7 @@
       "key": "tien_du",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -116,7 +124,7 @@
       "key": "ngay_hen",
       "type": "date",
       "width": 120,
-      "align": "text-left",
+      "align": "text-center",
       "format": ""
     },
     {
@@ -231,7 +239,7 @@
   "dataProcessing": {
     "report": [
       {
-        "query": "exec rp_bthcnncc N'@dateFrom', N'@dateTo', N'@customer', N'@Employee', N'@status', @amount, N'@vuotHanMuc', N'@userId';"
+        "query": "exec rp_bthcnncc N'@dateFrom', N'@dateTo', N'@supplier', N'@Employee', N'@status', @amount, N'@vuotHanMuc', N'@userId';"
       }
     ]
   }

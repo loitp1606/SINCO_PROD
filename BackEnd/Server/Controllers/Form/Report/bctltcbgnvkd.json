@@ -63,36 +63,52 @@
       "format": ""
     },
     {
-      "label": "Ngày tạm ứng",
-      "key": "ngay_tam_ung",
-      "type": "date",
-      "width": 120,
-      "align": "text-left",
-      "format": ""
-    },
-    {
-      "label": "Ngày thanh toán",
-      "key": "ngay_thanh_toan",
-      "type": "date",
-      "width": 120,
-      "align": "text-left",
-      "format": ""
-    },
-    {
-      "label": "Ngày xuất hàng",
-      "key": "ngay_xuat_hang",
-      "type": "date",
-      "width": 120,
-      "align": "text-left",
-      "format": ""
-    },
-    {
       "label": "Giá trị báo giá",
       "key": "total_payment",
       "type": "number",
       "width": 120,
       "align": "text-left",
       "format": ""
+    },
+    {
+      "label": "Tổng báo giá",
+      "key": "sl",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Báo giá thành công",
+      "key": "sl_bg_tc",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Báo giá không thành công",
+      "key": "sl_bg_ktc",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "Tỷ lệ theo số lượng (%)",
+      "key": "ty_le",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": "decimal-2"
+    },
+    {
+      "label": "Tỷ lệ theo giá trị (%)",
+      "key": "ty_le_gt",
+      "type": "number",
+      "width": 120,
+      "align": "text-left",
+      "format": "decimal-2"
     }
   ],
   "total": 5,

@@ -30,6 +30,14 @@
       "align": "text-left",
       "format": ""
     },
+	{
+      "label": "Số báo giá",
+      "key": "number_quotation",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
     {
       "label": "Ngày chứng từ",
       "key": "voucherDate",
@@ -75,7 +83,7 @@
       "key": "quantity",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -83,7 +91,7 @@
       "key": "amount",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -99,7 +107,7 @@
       "key": "tax",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -107,7 +115,7 @@
       "key": "payment",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {

@@ -51,7 +51,7 @@
       "key": "so_ngay_no_tb",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
 	{
@@ -59,7 +59,7 @@
       "key": "tong_tien_no",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     }
   ],

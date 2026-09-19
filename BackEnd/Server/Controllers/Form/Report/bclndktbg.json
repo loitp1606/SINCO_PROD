@@ -70,6 +70,7 @@
       "align": "text-left",
       "format": ""
     },
+	
     {
       "label": "Hãng sản xuất",
       "key": "manufacturer",
@@ -94,12 +95,20 @@
       "align": "text-left",
       "format": ""
     },
+	{
+      "label": "ĐVT",
+      "key": "uomName",
+      "type": "text",
+      "width": 100,
+      "align": "text-left",
+      "format": ""
+    },
     {
       "label": "Số lượng",
       "key": "quantity",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -107,7 +116,7 @@
       "key": "price2",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -115,7 +124,7 @@
       "key": "purchasePrice",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -123,15 +132,15 @@
       "key": "loi_nhuan_dk",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
       "label": "Tỷ suất lợi nhuận %",
-      "key": "ty_le_ln",
-      "type": "number",
+      "key": "ty_le_ln_c",
+      "type": "text",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     }
   ],

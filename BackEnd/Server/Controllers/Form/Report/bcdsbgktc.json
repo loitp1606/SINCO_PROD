@@ -59,7 +59,7 @@
       "key": "waitNumberDay",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -67,7 +67,7 @@
       "key": "total_payment",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {

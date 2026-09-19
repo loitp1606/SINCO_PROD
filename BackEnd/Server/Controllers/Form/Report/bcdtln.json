@@ -31,9 +31,9 @@
 			"format": ""
 		},
 		{
-			"label": "Tỷ lệ",
-			"key": "tl_dt",
-			"type": "number",
+			"label": "Tỷ lệ (%)",
+			"key": "tl_dt_c",
+			"type": "text",
 			"width": 120,
 			"align": "text-right",
 			"format": ""
@@ -55,9 +55,9 @@
 			"format": "decimal-2"
 		},
 		{
-			"label": "Tỷ lệ",
-			"key": "tl_gv",
-			"type": "number",
+			"label": "Tỷ lệ (%)",
+			"key": "tl_gv_c",
+			"type": "text",
 			"width": 120,
 			"align": "text-right",
 			"format": ""
@@ -79,9 +79,9 @@
 			"format": ""
 		},
 		{
-			"label": "Tỷ lệ",
-			"key": "tl_gv",
-			"type": "number",
+			"label": "Tỷ lệ (%)",
+			"key": "tl_gv_c",
+			"type": "text",
 			"width": 120,
 			"align": "text-right",
 			"format": ""
@@ -119,9 +119,9 @@
 			"format": ""
 		},
 		{
-			"label": "Tỷ lệ",
-			"key": "tl_cp",
-			"type": "number",
+			"label": "Tỷ lệ (%)",
+			"key": "tl_cp_c",
+			"type": "text",
 			"width": 120,
 			"align": "text-right",
 			"format": ""
@@ -143,9 +143,9 @@
 			"format": ""
 		},
 		{
-			"label": "Tỷ lệ",
-			"key": "tl_lai_lo",
-			"type": "number",
+			"label": "Tỷ lệ (%)",
+			"key": "tl_lai_lo_c",
+			"type": "text",
 			"width": 120,
 			"align": "text-right",
 			"format": ""

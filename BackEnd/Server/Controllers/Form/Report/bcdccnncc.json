@@ -1,0 +1,141 @@
+{
+  "type": "report",
+  "action": "loading",
+  "language": "V",
+  "title":"Báo cáo thu đối chiếu công nợ nhà cung cấp",
+  "title2":"Báo cáo thu đối chiếu công nợ nhà cung cấp",
+  "data": [],
+  "header": [
+	{
+      "label": "Ngày",
+      "key": "voucherDate",
+      "type": "date",
+      "width": 120,
+      "align": "text-center",
+      "format": ""
+    },
+	{
+      "label": "Số phiếu",
+      "key": "voucherNumber",
+      "type": "text",
+      "width": 120,
+      "align": "text-left",
+      "format": ""
+    },
+
+    {
+      "label": "Diễn giải/Tên hàng",
+      "key": "note",
+      "type": "text",
+      "width": 600,
+      "align": "text-left",
+      "format": ""
+    },
+    {
+      "label": "SL",
+      "key": "quantity",
+      "type": "number",
+	  "currency": "VN",
+      "width": 120,
+      "align": "text-right",
+      "format": "decimal-2"
+    },
+    {
+      "label": "Giá",
+      "key": "price",
+      "type": "number",
+      "width": 120,
+      "align": "text-right",
+      "format": "decimal-2"
+    },
+    {
+      "label": "Thành tiền",
+      "key": "amount",
+      "type": "number",
+      "width": 120,
+      "align": "text-right",
+      "format": ""
+    },
+    {
+      "label": "Cộng phiếu",
+      "key": "payment",
+      "type": "number",
+      "width": 120,
+      "align": "text-right",
+      "format": ""
+    },
+    {
+      "label": "Thanh toán",
+      "key": "thu_tien",
+      "type": "number",
+      "width": 120,
+      "align": "text-right",
+      "format": ""
+    },
+    {
+      "label": "Dư nợ",
+      "key": "du_no",
+      "type": "number",
+      "width": 120,
+      "align": "text-right",
+      "format": ""
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "pageSize": 10,
+  "sort": "",
+  "filters": [
+    {
+      "key": "dateFrom",
+      "label": "Ngày từ",
+      "type": "date"
+    },
+    {
+      "key": "dateTo",
+      "label": "Ngày đến",
+      "type": "date"
+    },
+    {
+      "key": "supplier",
+      "label": "Mã nhà cung cấp",
+      "type": "lookup",
+      "placeholder": "",
+	  "required": true,
+      "default": {
+        "controller": "supplier",
+        "filter": [
+          {
+            "field": "status",
+            "value": "1",
+            "operator": "="
+          }
+        ]
+      }
+    },
+    {
+      "key": "option",
+      "label": "Tùy chọn",
+      "type": "select",
+      "options": [
+        {
+          "value": "1",
+          "label": "Tổng hợp"
+        },
+        {
+          "value": "2",
+          "label": "Chi tiết"
+        } 
+      ],
+      "default": "1"
+    }
+
+  ],
+  "dataProcessing": {
+    "report": [
+      {
+        "query": "exec rp_bthcnnccct N'@dateFrom', N'@dateTo', N'@supplier', N'@option', N'@userId';"
+      }
+    ]
+  }
+}

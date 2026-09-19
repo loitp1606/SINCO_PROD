@@ -43,7 +43,7 @@
       "key": "price",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },  
     {
@@ -51,7 +51,7 @@
       "key": "sl_nhap",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -59,7 +59,7 @@
       "key": "sl_xuat",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     }, 
     {
@@ -67,7 +67,7 @@
       "key": "ton_cuoi",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     }
   ],

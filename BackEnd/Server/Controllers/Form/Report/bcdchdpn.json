@@ -91,7 +91,7 @@
 		  "key": "quantity",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -99,7 +99,7 @@
 		  "key": "price",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -107,7 +107,7 @@
 		  "key": "invoice_amount",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -115,7 +115,7 @@
 		  "key": "tax_rate",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -123,7 +123,7 @@
 		  "key": "tax",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -131,7 +131,7 @@
 		  "key": "ratioDiscount",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -139,7 +139,7 @@
 		  "key": "discount",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -147,7 +147,7 @@
 		  "key": "receipt_amount",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		}
 ],

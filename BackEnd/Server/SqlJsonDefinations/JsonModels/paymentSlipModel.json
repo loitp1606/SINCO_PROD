@@ -104,8 +104,8 @@
 				"sqlType": "NVARCHAR(4000)",
 				"foreign": {
 					"table": "bank",
-					"key": "bank_code",
-					"lookup": "bank_name"
+					"key": "bankCode",
+					"lookup": "bankName"
 				}
 			},
 			{
@@ -302,7 +302,7 @@
 				"excelColumn": "Ngân hàng",
 				"fieldName": "bank_name",
 				"required": false,
-				"clauseForiegn": "select bank_code, bank_name from bank where status = '1'"
+				"clauseForiegn": "select bankCode as bank_code, bankName as bank_name from bank where status = '1'"
 			},
 			{
 				"excelColumn": "Diễn giải",

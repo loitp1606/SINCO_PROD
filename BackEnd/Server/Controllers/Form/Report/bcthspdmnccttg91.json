@@ -35,7 +35,7 @@
       "key": "voucherDate",
       "type": "date",
       "width": 120,
-      "align": "text-left",
+      "align": "text-center",
       "format": ""
     },
     {
@@ -78,12 +78,20 @@
       "align": "text-left",
       "format": ""
     },
+	{
+      "label": "ĐVT",
+      "key": "uomName",
+      "type": "text",
+      "width": 100,
+      "align": "text-left",
+      "format": ""
+    },
     {
       "label": "Số lượng",
       "key": "quantity",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -91,15 +99,23 @@
       "key": "price",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
+    },
+	{
+      "label": "Thanh toán trước VAT",
+      "key": "amount",
+      "type": "number",
+      "width": 120,
+      "align": "text-right",
+      "format": ""
     },
     {
       "label": "Giảm giá",
       "key": "discount",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": "decimal-2"
     },
     {
@@ -107,7 +123,7 @@
       "key": "taxCode",
       "type": "text",
       "width": 100,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -115,15 +131,15 @@
       "key": "tax",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
-      "label": "Thanh toán",
+      "label": "Thanh toán sau VAT",
       "key": "payment",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     }
   ],

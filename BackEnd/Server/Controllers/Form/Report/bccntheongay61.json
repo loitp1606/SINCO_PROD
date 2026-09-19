@@ -27,7 +27,7 @@
       "key": "voucherDate",
       "type": "date",
       "width": 120,
-      "align": "text-left",
+      "align": "text-center",
       "format": ""
     },
     {
@@ -35,7 +35,7 @@
       "key": "deliveryDate",
       "type": "date",
       "width": 120,
-      "align": "text-left",
+      "align": "text-center",
       "format": ""
     },
     {
@@ -67,7 +67,7 @@
       "key": "t_tt",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -75,15 +75,15 @@
       "key": "thue_suat",
       "type": "number",
       "width": 120,
-      "align": "text-left",
-      "format": ""
+      "align": "text-right",
+      "format": "decimal-2"
     },
     {
       "label": "Tổng thu",
       "key": "tong_thu",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -91,7 +91,7 @@
       "key": "tong_chua_thu",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -111,7 +111,7 @@
       "format": ""
     },
     {
-      "label": "Trạng thái",
+      "label": "Trạng thái thanh toán",
       "key": "ten_trang_thai2",
       "type": "text",
       "width": 150,

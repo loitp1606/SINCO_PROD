@@ -15,14 +15,6 @@
       "format": ""
     },
     {
-      "label": "Ngày hiệu lực",
-      "key": "ngay_hl",
-      "type": "date",
-      "width": 120,
-      "align": "text-left",
-      "format": ""
-    },
-    {
       "label": "Ngày giao dịch",
       "key": "ngay_gd",
       "type": "date",
@@ -30,11 +22,27 @@
       "align": "text-left",
       "format": ""
     },
+	{
+      "label": "Tên ngân hàng",
+      "key": "bank_name",
+      "type": "text",
+      "width": 250,
+      "align": "text-left",
+      "format": ""
+    },
+	{
+      "label": "Hình thức thanh toán",
+      "key": "paymentType",
+      "type": "text",
+      "width": 200,
+      "align": "text-left",
+      "format": ""
+    },
     {
       "label": "Diễn giải",
       "key": "note_detail",
       "type": "text",
-      "width": 300,
+      "width": 600,
       "align": "text-left",
       "format": ""
     },
@@ -43,7 +51,7 @@
       "key": "chi",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },
     {
@@ -51,7 +59,7 @@
       "key": "thu",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     },  
     {
@@ -59,7 +67,7 @@
       "key": "so_du",
       "type": "number",
       "width": 120,
-      "align": "text-left",
+      "align": "text-right",
       "format": ""
     } 
   ],

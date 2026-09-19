@@ -31,7 +31,6 @@
 			"key": "total_amount",
 			"label": "Số tiền chi",
 			"type": "number",
-			"currency": "VN",
 			"width": "100px"
 		},
 		{

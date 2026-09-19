@@ -2,7 +2,7 @@
 	"type": "report",
 	"action": "loading",
 	"language": "V",
-	"title": "Báo cáo đối chiếu hóa đơn và phiếu nhập",
+	"title": "Báo cáo đối chiếu hóa đơn và phiếu xuất",
 	"title2": "Invoice and Goods Receipt Reconciliation Report",
 	"data": [],
 	"header": [
@@ -11,7 +11,7 @@
 			"key": "invoice_date",
 			"type": "date",
 			"width": 140,
-			"align": "text-left",
+			"align": "text-center",
 			"format": ""
 		},
 		{
@@ -23,7 +23,7 @@
 			"format": ""
 		},
 		{
-			"label": "Nhà cung cấp XHĐ",
+			"label": "Khách hàng XHĐ",
 			"key": "invoiceCustomerName",
 			"type": "text",
 			"width": 220,
@@ -35,7 +35,7 @@
 			"key": "receipt_date",
 			"type": "date",
 			"width": 140,
-			"align": "text-left",
+			"align": "text-center",
 			"format": ""
 		},
 		{
@@ -48,7 +48,7 @@
 		},
 		{
 			"label": "Khách hàng",
-			"key": "supplier_name",
+			"key": "customer_name",
 			"type": "text",
 			"width": 220,
 			"align": "text-left",
@@ -91,7 +91,7 @@
 		  "key": "quantity",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -99,7 +99,7 @@
 		  "key": "price",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -107,7 +107,7 @@
 		  "key": "invoice_amount",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -115,7 +115,7 @@
 		  "key": "tax_rate",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
@@ -123,15 +123,15 @@
 		  "key": "tax",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		},
 		{
-		  "label": "Thanh toán",
+		  "label": "Thành tiền sau VAT",
 		  "key": "receipt_amount",
 		  "type": "number",
 		  "width": 180,
-		  "align": "text-left",
+		  "align": "text-right",
 		  "format": ""
 		}
 ],
@@ -154,7 +154,7 @@
 		},
 		{
 			"key": "customer",
-			"label": "Nhà cung cấp",
+			"label": "Mã khách hàng",
 			"type": "lookup",
 			"placeholder": "",
 			"default": {
