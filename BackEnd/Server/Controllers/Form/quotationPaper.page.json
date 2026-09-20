@@ -134,9 +134,9 @@
 					{
 						"key": "employeeName",
 						"label": "Tên nhân viên",
-						"type": "text",
+						"type": "hidden",
 						"width": "150px",
-						"required": true,
+						"required": false,
 						"placeholder": "Nhập tên nhân viên"
 					},
 					{

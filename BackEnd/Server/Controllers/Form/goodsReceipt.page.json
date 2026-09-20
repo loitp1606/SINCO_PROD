@@ -146,7 +146,8 @@
 					{
 						"key": "term",
 						"label": "Kỳ hạn thanh toán",
-						"type": "number",
+						"type": "hidden",
+						"default": "0",
 						"width": "100px",
 						"placeholder": ""
 					},
@@ -162,7 +163,8 @@
 					{
 						"key": "paidAmount",
 						"label": "Đã thanh toán",
-						"type": "number",
+						"type": "hidden",
+						"default": "0",
 						"currency": "VN",
 						"disabled": true,
 						"width": "100px"
@@ -170,7 +172,8 @@
 					{
 						"key": "debtAmount",
 						"label": "Còn phải trả",
-						"type": "number",
+						"type": "hidden",
+						"default": "0",
 						"currency": "VN",
 						"disabled": true,
 						"width": "100px"

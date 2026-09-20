@@ -227,7 +227,8 @@
 					{
 						"key": "term",
 						"label": "Kỳ hạn thanh toán",
-						"type": "number",
+						"default": "0",
+						"type": "hidden",
 						"width": "100px",
 						"placeholder": ""
 					},
@@ -312,7 +313,7 @@
 					{
 						"key": "paymentStatus",
 						"label": "TT thanh toán",
-						"type": "select",
+						"type": "hidden",
 						"width": "150px",
 						"required": false,
 						"options": [
@@ -337,7 +338,8 @@
 					{
 						"key": "paidAmount",
 						"label": "Đã thu",
-						"type": "number",
+						"default": "0",
+						"type": "hidden",
 						"currency": "VN",
 						"required": false,
 						"width": "100px"
@@ -345,7 +347,8 @@
 					{
 						"key": "debtAmount",
 						"label": "Còn nợ",
-						"type": "number",
+						"default": "0",
+						"type": "hidden",
 						"currency": "VN",
 						"disabled": true,
 						"calculation": {
@@ -370,7 +373,7 @@
 					{
 						"key": "signReceiptStatus",
 						"label": "TT ký nhận",
-						"type": "select",
+						"type": "hidden",
 						"width": "150px",
 						"required": false,
 						"options": [
@@ -391,14 +394,14 @@
 					{
 						"key": "receiptCount",
 						"label": "Số phiếu thu",
-						"type": "number",
+						"type": "hidden",
 						"width": "100px",
 						"disabled": true
 					},
 					{
 						"key": "isOverdue",
 						"label": "Quá hạn",
-						"type": "select",
+						"type": "hidden",
 						"width": "150px",
 						"required": false,
 						"options": [
@@ -415,7 +418,8 @@
 					{
 						"key": "overdueDays",
 						"label": "Số ngày quá hạn",
-						"type": "number",
+						"type": "hidden",
+						"default": "0",
 						"width": "100px"
 					},
 					{

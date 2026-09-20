@@ -69,12 +69,14 @@
 			"key": "paidAmount",
 			"label": "Đã thanh toán",
 			"type": "number",
+			"hidden": true,
 			"width": "100px"
 		},
 		{
 			"key": "debtAmount",
 			"label": "Còn phải trả",
 			"type": "number",
+			"hidden": true,
 			"width": "100px"
 		},
 		{

@@ -69,6 +69,7 @@
 			"key": "paymentStatus",
 			"label": "TT thanh toán",
 			"type": "select",
+			"hidden": true,
 			"width": "160px",
 			"options": [
 				{
@@ -93,12 +94,14 @@
 			"key": "debtAmount",
 			"label": "Còn nợ",
 			"type": "number",
+			"hidden": true,
 			"width": "100px"
 		},
 		{
 			"key": "signReceiptStatus",
 			"label": "TT ký nhận",
 			"type": "select",
+			"hidden": true,
 			"width": "170px",
 			"options": [
 				{
@@ -119,6 +122,7 @@
 			"key": "overdueDays",
 			"label": "Ngày quá hạn",
 			"type": "number",
+			"hidden": true,
 			"width": "100px"
 		},
 		{
